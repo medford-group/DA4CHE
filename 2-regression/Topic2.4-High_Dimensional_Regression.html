@@ -1,0 +1,1867 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>High-dimensional Regression &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2-regression/Topic2.4-High_Dimensional_Regression';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Complexity Optimization" href="Topic2.3-Complexity_Optimization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">High-dimensional Regression</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/2-regression/Topic2.4-High_Dimensional_Regression.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>High-dimensional Regression</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-dimensional-data">High-dimensional Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-of-features">Visualization of features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-two-features-at-a-time-and-other-first-pass-strategies">Visualizing two features at a time and other first-pass strategies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#covariance-and-correlation-matrices">Covariance and correlation matrices</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scaling-features-and-outputs">Scaling Features and Outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-linear-regression">Multi-Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dimensionality-reduction">Dimensionality Reduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-selection">Forward Selection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis">Principal component analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-regression">Principal Component Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#partial-least-squares-pls">Partial Least Squares (PLS)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-neural-networks">A note on neural networks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="high-dimensional-regression">
+<h1>High-dimensional Regression<a class="headerlink" href="#high-dimensional-regression" title="Link to this heading">#</a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#learning-objectives" id="id3">Learning objectives</a></p></li>
+<li><p><a class="reference internal" href="#high-dimensional-data" id="id4">High-dimensional Data</a></p></li>
+<li><p><a class="reference internal" href="#visualization-of-features" id="id5">Visualization of features</a></p>
+<ul>
+<li><p><a class="reference internal" href="#visualizing-two-features-at-a-time-and-other-first-pass-strategies" id="id6">Visualizing two features at a time and other first-pass strategies</a></p></li>
+<li><p><a class="reference internal" href="#covariance-and-correlation-matrices" id="id7">Covariance and correlation matrices</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#scaling-features-and-outputs" id="id8">Scaling Features and Outputs</a></p></li>
+<li><p><a class="reference internal" href="#multi-linear-regression" id="id9">Multi-Linear Regression</a></p></li>
+<li><p><a class="reference internal" href="#dimensionality-reduction" id="id10">Dimensionality Reduction</a></p>
+<ul>
+<li><p><a class="reference internal" href="#forward-selection" id="id11">Forward Selection</a></p></li>
+<li><p><a class="reference internal" href="#principal-component-analysis" id="id12">Principal component analysis</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#principal-component-regression" id="id13">Principal Component Regression</a></p>
+<ul>
+<li><p><a class="reference internal" href="#partial-least-squares-pls" id="id14">Partial Least Squares (PLS)</a></p></li>
+<li><p><a class="reference internal" href="#a-note-on-neural-networks" id="id15">A note on neural networks</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#additional-reading" id="id16">Additional reading</a></p></li>
+</ul>
+</nav>
+<section id="learning-objectives">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Learning objectives</a><a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Explain the “curse of dimensionality” and why high-dimensional feature spaces complicate model fitting and generalization.</p></li>
+<li><p>Visualize multivariate feature relationships and identify collinearity using plots and summary statistics.</p></li>
+<li><p>Standardize and transform features and targets appropriately; justify when scaling is required.</p></li>
+<li><p>Construct and evaluate multiple linear regression models in high-dimensional settings with proper validation.</p></li>
+<li><p>Apply dimensionality reduction (e.g., PCA) and interpret explained variance and loadings; perform principal component regression and compare to baseline models.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="high-dimensional-data">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">High-dimensional Data</a><a class="headerlink" href="#high-dimensional-data" title="Link to this heading">#</a></h2>
+<p>So far we have only worked with datasets that have a single input dimension. We have generated “features” from this dimension, but we have not considered the case of a problem where multiple inputs are given. This is a very common scenario, and one of the main advantages of many machine-learning methods is that they work well for “high-dimesional” data, or data with many features.</p>
+<p>In this lecture we will work with a dataset of chemical process data provided by Dow Chemical. The data comes from a generic chemical process with the following setup:</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/dow_process.png"><img alt="../_images/dow_process.png" src="../_images/dow_process.png" style="width: 800px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Chemical process diagram for the distillation process used in the Dow process dataset.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Since this is a proprietary process, we do not have any details of the chemical process, but this is real data that was measured from an actual operating process.</p>
+<p>The dataset contains a number of operating conditions for each of the units in the process, as well as the concentration of impurities in the output stream. Let’s take a look:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;data/impurity_dataset-training.xlsx&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1">#&lt;- shows the first 10 entries</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>x1:Primary Column Reflux Flow</th>
+      <th>x2:Primary Column Tails Flow</th>
+      <th>x3:Input to Primary Column Bed 3 Flow</th>
+      <th>x4:Input to Primary Column Bed 2 Flow</th>
+      <th>x5:Primary Column Feed Flow from Feed Column</th>
+      <th>x6:Primary Column Make Flow</th>
+      <th>x7:Primary Column Base Level</th>
+      <th>x8:Primary Column Reflux Drum Pressure</th>
+      <th>x9:Primary Column Condenser Reflux Drum Level</th>
+      <th>...</th>
+      <th>x36: Feed Column Recycle Flow</th>
+      <th>x37: Feed Column Tails Flow to Primary Column</th>
+      <th>x38: Feed Column Calculated DP</th>
+      <th>x39: Feed Column Steam Flow</th>
+      <th>x40: Feed Column Tails Flow</th>
+      <th>Avg_Reactor_Outlet_Impurity</th>
+      <th>Avg_Delta_Composition Primary Column</th>
+      <th>y:Impurity</th>
+      <th>Primary Column Reflux/Feed Ratio</th>
+      <th>Primary Column Make/Reflux Ratio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2015-12-01 00:00:00</td>
+      <td>327.813</td>
+      <td>45.7920</td>
+      <td>2095.06</td>
+      <td>2156.01</td>
+      <td>98.5005</td>
+      <td>95.4674</td>
+      <td>54.3476</td>
+      <td>41.0121</td>
+      <td>52.2353</td>
+      <td>...</td>
+      <td>62.8707</td>
+      <td>45.0085</td>
+      <td>66.6604</td>
+      <td>8.68813</td>
+      <td>99.9614</td>
+      <td>5.38024</td>
+      <td>1.49709</td>
+      <td>1.77833</td>
+      <td>3.32803</td>
+      <td>0.291226</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2015-12-01 01:00:00</td>
+      <td>322.970</td>
+      <td>46.1643</td>
+      <td>2101.00</td>
+      <td>2182.90</td>
+      <td>98.0014</td>
+      <td>94.9673</td>
+      <td>54.2247</td>
+      <td>41.0076</td>
+      <td>52.5378</td>
+      <td>...</td>
+      <td>62.8651</td>
+      <td>45.0085</td>
+      <td>66.5496</td>
+      <td>8.70683</td>
+      <td>99.8637</td>
+      <td>5.33345</td>
+      <td>1.51392</td>
+      <td>1.76964</td>
+      <td>3.29556</td>
+      <td>0.294044</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2015-12-01 02:00:00</td>
+      <td>319.674</td>
+      <td>45.9927</td>
+      <td>2102.96</td>
+      <td>2151.39</td>
+      <td>98.8229</td>
+      <td>96.0785</td>
+      <td>54.6130</td>
+      <td>41.0451</td>
+      <td>52.0159</td>
+      <td>...</td>
+      <td>62.8656</td>
+      <td>45.0085</td>
+      <td>66.0599</td>
+      <td>8.69269</td>
+      <td>100.2490</td>
+      <td>5.37677</td>
+      <td>1.50634</td>
+      <td>1.76095</td>
+      <td>3.23481</td>
+      <td>0.300552</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2015-12-01 03:00:00</td>
+      <td>327.223</td>
+      <td>46.0960</td>
+      <td>2101.37</td>
+      <td>2172.14</td>
+      <td>98.7733</td>
+      <td>96.1223</td>
+      <td>54.9153</td>
+      <td>41.0405</td>
+      <td>52.9477</td>
+      <td>...</td>
+      <td>62.8669</td>
+      <td>45.0085</td>
+      <td>67.9697</td>
+      <td>8.70482</td>
+      <td>100.3200</td>
+      <td>5.32315</td>
+      <td>1.47935</td>
+      <td>1.75226</td>
+      <td>3.31287</td>
+      <td>0.293752</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2015-12-01 04:00:00</td>
+      <td>331.177</td>
+      <td>45.8493</td>
+      <td>2114.06</td>
+      <td>2157.77</td>
+      <td>99.3231</td>
+      <td>94.7521</td>
+      <td>54.0925</td>
+      <td>40.9934</td>
+      <td>53.0507</td>
+      <td>...</td>
+      <td>62.8673</td>
+      <td>45.0085</td>
+      <td>67.6454</td>
+      <td>8.70077</td>
+      <td>100.6590</td>
+      <td>5.28227</td>
+      <td>1.44489</td>
+      <td>1.74357</td>
+      <td>3.33435</td>
+      <td>0.286107</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2015-12-01 05:00:00</td>
+      <td>328.884</td>
+      <td>46.0729</td>
+      <td>2100.26</td>
+      <td>2134.76</td>
+      <td>99.3376</td>
+      <td>95.4188</td>
+      <td>53.9989</td>
+      <td>41.0217</td>
+      <td>53.0389</td>
+      <td>...</td>
+      <td>62.8690</td>
+      <td>45.0085</td>
+      <td>67.6828</td>
+      <td>8.69795</td>
+      <td>100.8260</td>
+      <td>5.28510</td>
+      <td>1.51144</td>
+      <td>1.73488</td>
+      <td>3.31077</td>
+      <td>0.290129</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2015-12-01 06:00:00</td>
+      <td>327.335</td>
+      <td>46.0581</td>
+      <td>2101.57</td>
+      <td>2191.37</td>
+      <td>98.9044</td>
+      <td>94.9811</td>
+      <td>54.0685</td>
+      <td>41.0499</td>
+      <td>52.8279</td>
+      <td>...</td>
+      <td>62.8720</td>
+      <td>45.0085</td>
+      <td>66.0828</td>
+      <td>8.70780</td>
+      <td>100.3580</td>
+      <td>5.35512</td>
+      <td>1.51096</td>
+      <td>1.72619</td>
+      <td>3.30961</td>
+      <td>0.290165</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2015-12-01 07:00:00</td>
+      <td>329.935</td>
+      <td>45.9708</td>
+      <td>2099.27</td>
+      <td>2133.95</td>
+      <td>99.6756</td>
+      <td>94.8352</td>
+      <td>54.0001</td>
+      <td>40.9886</td>
+      <td>52.7697</td>
+      <td>...</td>
+      <td>62.8694</td>
+      <td>45.0085</td>
+      <td>67.5438</td>
+      <td>8.69391</td>
+      <td>101.1360</td>
+      <td>5.31343</td>
+      <td>1.51180</td>
+      <td>1.71750</td>
+      <td>3.31009</td>
+      <td>0.287436</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2015-12-01 08:00:00</td>
+      <td>329.128</td>
+      <td>45.8875</td>
+      <td>2099.12</td>
+      <td>2055.11</td>
+      <td>98.8823</td>
+      <td>95.0573</td>
+      <td>53.9876</td>
+      <td>41.0169</td>
+      <td>52.8802</td>
+      <td>...</td>
+      <td>62.8690</td>
+      <td>45.0085</td>
+      <td>66.9394</td>
+      <td>8.70810</td>
+      <td>100.3630</td>
+      <td>5.35183</td>
+      <td>1.48168</td>
+      <td>1.70881</td>
+      <td>3.32848</td>
+      <td>0.288816</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2015-12-01 09:00:00</td>
+      <td>327.686</td>
+      <td>45.8192</td>
+      <td>2109.75</td>
+      <td>2185.82</td>
+      <td>98.8448</td>
+      <td>95.5414</td>
+      <td>54.0806</td>
+      <td>41.0029</td>
+      <td>53.0875</td>
+      <td>...</td>
+      <td>62.8690</td>
+      <td>45.0085</td>
+      <td>65.5845</td>
+      <td>8.69685</td>
+      <td>100.2790</td>
+      <td>5.31385</td>
+      <td>1.51268</td>
+      <td>1.70012</td>
+      <td>3.31516</td>
+      <td>0.291564</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 46 columns</p>
+</div></div></div>
+</div>
+<p>In order to work with this data we need to “clean” it to remove missing values. We will come back to this in the “data management” module. For now, just run the cell below and it will create a matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> of inputs and <code class="docutils literal notranslate"><span class="pre">y</span></code> of impurity concentrations:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_real_and_finite</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># used to determine if an entry is a real, finite number.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">all_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span><span class="o">.</span><span class="n">values</span> <span class="c1">#drop the first column (date)</span>
+<span class="n">numeric_map</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">is_real_and_finite</span><span class="p">)</span>
+<span class="n">real_rows</span> <span class="o">=</span> <span class="n">numeric_map</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">values</span> <span class="c1">#True if all values in a row are real numbers</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_data</span><span class="p">[</span><span class="n">real_rows</span><span class="p">,:</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span> <span class="c1">#drop the last 5 cols that are not inputs</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_data</span><span class="p">[</span><span class="n">real_rows</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10297, 40) (10297, 1)
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is the dataset we will work with. We have 10297 data points, with 40 input variables (features) and one output variable. We can pull the names of the features (and output) in case we forget later:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">41</span><span class="p">]]</span>
+<span class="n">y_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_name</span><span class="p">)</span>
+<span class="n">x_names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>y:Impurity
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;x1:Primary Column Reflux Flow&#39;,
+ &#39;x2:Primary Column Tails Flow&#39;,
+ &#39;x3:Input to Primary Column Bed 3 Flow&#39;,
+ &#39;x4:Input to Primary Column Bed 2 Flow&#39;,
+ &#39;x5:Primary Column Feed Flow from Feed Column&#39;,
+ &#39;x6:Primary Column Make Flow&#39;,
+ &#39;x7:Primary Column Base Level&#39;,
+ &#39;x8:Primary Column Reflux Drum Pressure&#39;,
+ &#39;x9:Primary Column Condenser Reflux Drum Level&#39;,
+ &#39;x10:Primary Column Bed1 DP&#39;,
+ &#39;x11:Primary Column Bed2 DP&#39;,
+ &#39;x12:Primary Column Bed3 DP&#39;,
+ &#39;x13:Primary Column Bed4 DP&#39;,
+ &#39;x14:Primary Column Base Pressure&#39;,
+ &#39;x15:Primary Column Head Pressure&#39;,
+ &#39;x16:Primary Column Tails Temperature&#39;,
+ &#39;x17:Primary Column Tails Temperature 1&#39;,
+ &#39;x18:Primary Column Bed 4 Temperature&#39;,
+ &#39;x19:Primary Column Bed 3 Temperature&#39;,
+ &#39;x20:Primary Column Bed 2 Temperature&#39;,
+ &#39;x21:Primary Column Bed 1 Temperature&#39;,
+ &#39;x22: Secondary Column Base Concentration&#39;,
+ &#39;x23: Flow from Input to Secondary Column&#39;,
+ &#39;x24: Secondary Column Tails Flow&#39;,
+ &#39;x25: Secondary Column Tray DP&#39;,
+ &#39;x26: Secondary Column Head Pressure&#39;,
+ &#39;x27: Secondary Column Base Pressure&#39;,
+ &#39;x28: Secondary Column Base Temperature&#39;,
+ &#39;x29: Secondary Column Tray 3 Temperature&#39;,
+ &#39;x30: Secondary Column Bed 1 Temperature&#39;,
+ &#39;x31: Secondary Column Bed 2 Temperature&#39;,
+ &#39;x32: Secondary Column Tray 2 Temperature&#39;,
+ &#39;x33: Secondary Column Tray 1 Temperature&#39;,
+ &#39;x34: Secondary Column Tails Temperature&#39;,
+ &#39;x35: Secondary Column Tails Concentration&#39;,
+ &#39;x36: Feed Column Recycle Flow&#39;,
+ &#39;x37: Feed Column Tails Flow to Primary Column&#39;,
+ &#39;x38: Feed Column Calculated DP&#39;,
+ &#39;x39: Feed Column Steam Flow&#39;,
+ &#39;x40: Feed Column Tails Flow&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Don’t worry if all this code doesn’t make sense, we will revisit <code class="docutils literal notranslate"><span class="pre">pandas</span></code> in more detail later. All you need to know for now is that it cleans the data and reads it from the Excel spreadsheet into a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array.</p>
+<p>In this section, the goal is to predict the output, impurity, as a function of all the input variables. Notably, in reality this data comes from a time series, which means that there are internal correlations as we will discuss more in the “time series” topic. However, for now we will (incorrectly) assume that the data are “independent”, meaning that we can shuffle the data points and treat them as random samples.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise:</p>
+<p>Write a function that takes three arguments: a desired feature name (a string), a list of feature names (e.g. <code class="docutils literal notranslate"><span class="pre">x_names</span></code>), and a data matrix (e.g. <code class="docutils literal notranslate"><span class="pre">X</span></code>). The function should select the desired feature name from the data matrix and return it as a 1-dimensional <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array.</p>
+</div>
+</section>
+<section id="visualization-of-features">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Visualization of features</a><a class="headerlink" href="#visualization-of-features" title="Link to this heading">#</a></h2>
+<p>Unlike working with a single variable where we can plot “x vs. y,” it is harder to build intuition for <strong>higher-dimensional</strong> data because we cannot directly visualize all dimensions at once. A good first step is to look at histograms of each input variable:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;X dimensions: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Feature names: </span><span class="si">{</span><span class="n">x_names</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="n">n</span><span class="p">))</span>
+<span class="n">ax_list</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c1"># Hide any unused axes (if grid has extra panels)</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax_list</span><span class="p">)):</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X dimensions: (10297, 40)
+Feature names: [&#39;x1:Primary Column Reflux Flow&#39;, &#39;x2:Primary Column Tails Flow&#39;, &#39;x3:Input to Primary Column Bed 3 Flow&#39;, &#39;x4:Input to Primary Column Bed 2 Flow&#39;, &#39;x5:Primary Column Feed Flow from Feed Column&#39;, &#39;x6:Primary Column Make Flow&#39;, &#39;x7:Primary Column Base Level&#39;, &#39;x8:Primary Column Reflux Drum Pressure&#39;, &#39;x9:Primary Column Condenser Reflux Drum Level&#39;, &#39;x10:Primary Column Bed1 DP&#39;, &#39;x11:Primary Column Bed2 DP&#39;, &#39;x12:Primary Column Bed3 DP&#39;, &#39;x13:Primary Column Bed4 DP&#39;, &#39;x14:Primary Column Base Pressure&#39;, &#39;x15:Primary Column Head Pressure&#39;, &#39;x16:Primary Column Tails Temperature&#39;, &#39;x17:Primary Column Tails Temperature 1&#39;, &#39;x18:Primary Column Bed 4 Temperature&#39;, &#39;x19:Primary Column Bed 3 Temperature&#39;, &#39;x20:Primary Column Bed 2 Temperature&#39;, &#39;x21:Primary Column Bed 1 Temperature&#39;, &#39;x22: Secondary Column Base Concentration&#39;, &#39;x23: Flow from Input to Secondary Column&#39;, &#39;x24: Secondary Column Tails Flow&#39;, &#39;x25: Secondary Column Tray DP&#39;, &#39;x26: Secondary Column Head Pressure&#39;, &#39;x27: Secondary Column Base Pressure&#39;, &#39;x28: Secondary Column Base Temperature&#39;, &#39;x29: Secondary Column Tray 3 Temperature&#39;, &#39;x30: Secondary Column Bed 1 Temperature&#39;, &#39;x31: Secondary Column Bed 2 Temperature&#39;, &#39;x32: Secondary Column Tray 2 Temperature&#39;, &#39;x33: Secondary Column Tray 1 Temperature&#39;, &#39;x34: Secondary Column Tails Temperature&#39;, &#39;x35: Secondary Column Tails Concentration&#39;, &#39;x36: Feed Column Recycle Flow&#39;, &#39;x37: Feed Column Tails Flow to Primary Column&#39;, &#39;x38: Feed Column Calculated DP&#39;, &#39;x39: Feed Column Steam Flow&#39;, &#39;x40: Feed Column Tails Flow&#39;]
+</pre></div>
+</div>
+<img alt="../_images/eab2ff19361ca4c2a6c7e1a11918d9a298d0c85bc867a6aa4e3d099aa3501db1.png" src="../_images/eab2ff19361ca4c2a6c7e1a11918d9a298d0c85bc867a6aa4e3d099aa3501db1.png" />
+</div>
+</div>
+<p>We can see that some features are approximately normally distributed, while others have obvious outliers or bimodal shapes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Why might there be bimodal distributions in a chemical process?</strong><br />
+Chemical processes often operate in distinct modes. For example, equipment may be “on” vs. “off,” or a plant may switch among steady-state setpoints (e.g., different product grades, feedstocks, or throughput targets). Such regime changes naturally yield bimodal (or multimodal) feature distributions.</p>
+</div>
+<section id="visualizing-two-features-at-a-time-and-other-first-pass-strategies">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Visualizing two features at a time and other first-pass strategies</a><a class="headerlink" href="#visualizing-two-features-at-a-time-and-other-first-pass-strategies" title="Link to this heading">#</a></h3>
+<p>A simple next step after histograms is to examine <strong>bivariate</strong> relationships:</p>
+<ul class="simple">
+<li><p><strong>Scatter plots</strong> for selected feature pairs.</p></li>
+<li><p><strong>Color by the target</strong> (<code class="docutils literal notranslate"><span class="pre">y</span></code>) to see how the response varies in the plane.</p></li>
+<li><p><strong>Small multiples</strong> (pairwise grid) for a <em>subset</em> of features when <code class="docutils literal notranslate"><span class="pre">N</span></code> is large.</p></li>
+</ul>
+<p>Here is an example that will plot two features:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick two features to compare</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># change indices to explore other pairs</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x_names</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">x_names</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1"> vs </span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s1"> (colored by </span><span class="si">{</span><span class="n">y_name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">);</span> <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">y_name</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a7c7ed433cd7abea991ab7e177d3269d5f86ca8f128703ff925a07774a031fbd.png" src="../_images/a7c7ed433cd7abea991ab7e177d3269d5f86ca8f128703ff925a07774a031fbd.png" />
+</div>
+</div>
+<p>It is not practical to visualize an entire 40 x 40 grid, but we can select a small subset:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Small pair grid for a handful of features</span>
+<span class="n">subset_idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># choose a small set to keep plots readable</span>
+<span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset_idx</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">m</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">m</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subset_idx</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subset_idx</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">jj</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_names</span><span class="p">[</span><span class="n">jj</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>   <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x_names</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c53692a6c2a6d571535a6907d5a661080d882a9ce5b43ce6f4111ac507fd9936.png" src="../_images/c53692a6c2a6d571535a6907d5a661080d882a9ce5b43ce6f4111ac507fd9936.png" />
+</div>
+</div>
+<p>At this point, nothing really jumps out in terms of correlation with the target variable, but we can still see some interesting aspects of the dataset’s structure. For example, it is even more clear from this plot that some variables (e.g. <code class="docutils literal notranslate"><span class="pre">Input</span> <span class="pre">to</span> <span class="pre">Primary</span> <span class="pre">Column</span> <span class="pre">Bed</span></code>) have some discrete values, but also vary continuously in general. This is consistent with a chemical process that has several operating “set points” where it typically runs, but it is also sometimes operated at conditions outside the typical ones.</p>
+</section>
+<section id="covariance-and-correlation-matrices">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Covariance and correlation matrices</a><a class="headerlink" href="#covariance-and-correlation-matrices" title="Link to this heading">#</a></h3>
+<p>We can also look for feature relationships through the <strong>covariance matrix</strong>. The covariance describes how features vary together. We will not go through the math here, but we will discuss the concepts:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">covar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">covar</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Feature Covariance Matrix&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d13ed81f811487b1280305a71ff0cc16768e098dde0fc3d8d8b85ee8707f5fe3.png" src="../_images/d13ed81f811487b1280305a71ff0cc16768e098dde0fc3d8d8b85ee8707f5fe3.png" />
+</div>
+</div>
+<p>This matrix suggests that some features are highly correlated. We can inspect specific entries:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Diagonal entries are variances (depend on scale); off-diagonals are covariances.</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Variance of </span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">covar</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.3g</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Variance of </span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">covar</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3g</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># Uncomment to inspect an off-diagonal covariance:</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Covariance(</span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">): </span><span class="si">{</span><span class="n">covar</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">.3g</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variance of x3:Input to Primary Column Bed 3 Flow: 3.26e+05
+Variance of x2:Primary Column Tails Flow: 69.6
+Covariance(x3:Input to Primary Column Bed 3 Flow, x4:Input to Primary Column Bed 2 Flow): 2.02e+05
+</pre></div>
+</div>
+</div>
+</div>
+<p>These numbers are difficult to compare across features because <strong>covariance depends on units/scale</strong> (e.g., °C vs. bar). A scale-invariant alternative is the <strong>correlation</strong> matrix, which rescales by standard deviations and lies in [-1, 1]:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Feature Correlation Matrix&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pearson r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/dcec8ac23b4b90235e37fa7e96114a652371e67b1720449e9143778a22b08551.png" src="../_images/dcec8ac23b4b90235e37fa7e96114a652371e67b1720449e9143778a22b08551.png" />
+</div>
+</div>
+<p>We will see how these two matrices are related shortly.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise: Highly correlated bivariate scatter plots</p>
+<ol class="arabic simple">
+<li><p>Programmatically find the top 5 <strong>absolute</strong> correlations among <strong>distinct</strong> feature pairs (ignore the diagonal).</p></li>
+<li><p>Make bivariate scatter plots for those 5 pairs (use small markers and <code class="docutils literal notranslate"><span class="pre">alpha=0.5</span></code>). Color each scatter by <code class="docutils literal notranslate"><span class="pre">y</span></code> to see whether the strongest feature–feature correlations also correspond to structure in the target.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="scaling-features-and-outputs">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Scaling Features and Outputs</a><a class="headerlink" href="#scaling-features-and-outputs" title="Link to this heading">#</a></h2>
+<p>From the visualization and covariance matrix we can see that different features have very different ranges, and different units (e.g., degrees, percent, count). Scaling data is like “non-dimensionalizing” or normalizing for different units. This is often critical to ensure that certain variables are not weighted more than others.</p>
+<p>Statistical methods do not know about physical units, so we can normalize or “scale” features to aid in comparison:</p>
+<ul class="simple">
+<li><p>rescaling: 0 = min, 1 = max</p></li>
+<li><p>mean scaling: 0 = mean, 1 = max, -1 = min</p></li>
+<li><p><strong>standard scaling: 0 = mean, 1 = standard deviation</strong></p></li>
+<li><p>unit vector: the length of each multi-dimensional vector is 1</p></li>
+</ul>
+<p>We will typically default to <strong>standard scaling</strong> in this course since it has some nice properties, but you can see the <a class="reference external" href="http://scikit-learn.org/stable/modules/preprocessing.html">scikit-learn documentation</a> for more examples and discussion.</p>
+<p>Note that scaling is not always a good idea. Sometimes the data have units that are already consistent, or rescaling can remove important aspects of the data. Figuring out the best scaling scheme is often achieved through trial and error.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The term “scaling” is common throughout science and engineering and has many different meanings. For example, in chemical engineering we often talk about “scaling” a process up, and in physics quantities are sometimes said to “scale” if they are proportional, leading to “scaling relationships”. Even within computer science, “scaling” means different things – the way an algorithm “scales” refers to how much time it takes as the size of the problem or the size of the computer changes. The term “feature scaling” is less ambiguous, and can also be referred to as “feature normalization”.</p>
+</div>
+<p>It is also important to note that feature scaling is a common source of <strong>data leakage</strong>. Data leakage occurs when information from the testing set “leaks” into the training data, which can lead to artificially good results when the model is applied to the test set. It might seem like feature scaling is not really a “model”, but in reality you are using the data to determine the parameters (mean, min, max, or standard deviation) for the scaling. It is important that you always perform any data splitting for cross validation <strong>before</strong> performing feature scaling, and you should only use the training data to determine the scaling parameters. When applying the feature scaling to the testing data, you will still use the parameters (e.g., mean, min, max, or standard deviation) from the training data. Think of an application scenario where you train a model to a large amount of data, but then want to apply it to a single new data point: you would not be able to calculate the mean, min, max, or standard deviation of that data point, so you would need to use the statistics of the training data instead.</p>
+<p>In the case of the Dow chemical process data, we can look at the features and see they clearly have different units and different ranges. For example, feature 1 (Primary column tails flow) ranges from 0 to 50, and feature 2 (Input to primary column Bed 3 Flow) ranges from 0 to ~3000. While we do not necessarily know the units (since this is proprietary data), we can see that there is a difference of range. This is why the covariance matrix did not make much sense. We can rescale the data to put everything on similar scales.</p>
+<p>First, let’s do this manually:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_scaled_manual</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">/</span><span class="n">X</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum: </span><span class="si">{}</span><span class="s2">, Maximum: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum scaled: </span><span class="si">{}</span><span class="s2">, Maximum scaled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_scaled_manual</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X_scaled_manual</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Minimum: -6.91425, Maximum: 5176.74
+Minimum scaled: -8.12009681442378, Maximum scaled: 38.10583689480496
+</pre></div>
+</div>
+</div>
+</div>
+<p>It is also possible to do this with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">ss</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">ss</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1"># &quot;fit&quot; the scaler (finds the mean and standard deviation of the data)</span>
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1">#&quot;transform&quot; the data by applying the standard scaler</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum scaled: </span><span class="si">{}</span><span class="s2">, Maximum scaled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_scaled</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X_scaled</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Minimum scaled: -8.12009681442378, Maximum scaled: 38.10583689480496
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">transform</span></code> methods may seem unintuitive or unnecessarily complex, but this standard interface to <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> models makes it possible to “chain” them together and use them interchangeably. We will see an example of this shortly as we create a “pipeline”.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What could go wrong with min-max or mean scaling?</strong></p>
+<p>Min–max and mean scaling can be <strong>highly sensitive to outliers</strong>. A single extreme value can dominate the min/max (or mean) and compress most of the other data into a narrow interval, making patterns hard to see and potentially hurting model performance. Min-max scaling is a good option if your data are guaranteed to be within a certain range, and robust alternatives include standard scaling or scaling with quantiles or medians.</p>
+</div>
+<p>Now let’s take a look at the covariance matrix with the rescaled data::</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">covar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X_scaled</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">covar</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8e386930b2db356110cc7e9b07a7f406892b7e3ef69d44cbf4b7c9284c90d79e.png" src="../_images/8e386930b2db356110cc7e9b07a7f406892b7e3ef69d44cbf4b7c9284c90d79e.png" />
+</div>
+</div>
+<p>The structure looks totally different! This is the “correlation matrix”, which tells us how correlated different features are on a scale of -1 to 1. A correlation of -1 means they are perfectly anti-correlated, while 1 means they are perfectly correlated. If any features are perfectly (anti)correlated (correlation = 1 or -1) then they are linearly dependent (and won’t count toward the rank).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Maximum entry in convariance</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;max entry in covariance matrix: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">covar</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>max entry in covariance matrix: 1.000
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that the maximum is 1, which suggests some features are perfectly correlated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(40)
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, we see that the rank is 40, equal to the number of columns, suggesting that the data is full rank. The reason is that the diagonal entries of the standardized covariance (i.e., correlation) matrix will always be 1 since features are perfectly correlated with themselves. We see that the maximum off-diagonal is less than one (although barely), so no <strong>different features</strong> are perfectly correlated. This means the matrix should be full rank, and the sanity check passes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Maximum off-diagonal entry of the covariance/correlation matrix</span>
+
+<span class="n">off_diags</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">covar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">max_offdiag</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1">#set to a number that must be smaller than the smallest real number</span>
+<span class="n">i_max</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">j_max</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">covar</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">entry</span> <span class="o">&gt;</span> <span class="n">max_offdiag</span><span class="p">:</span> <span class="c1">#must be true on first iteration!</span>
+                <span class="n">max_offdiag</span> <span class="o">=</span> <span class="n">entry</span>
+                <span class="n">i_max</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">j_max</span> <span class="o">=</span> <span class="n">j</span>
+            <span class="n">off_diags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">covar</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;max off-diagonal covariance: </span><span class="si">{</span><span class="n">max_offdiag</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> at (</span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="n">i_max</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">x_names</span><span class="p">[</span><span class="n">j_max</span><span class="p">]</span><span class="si">}</span><span class="s2">) [indices: </span><span class="si">{</span><span class="n">i_max</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">j_max</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>max off-diagonal covariance: 0.99954 at (x27: Secondary Column Base Pressure, x26: Secondary Column Head Pressure) [indices: 26, 25]
+</pre></div>
+</div>
+</div>
+</div>
+<p>In general, if the data have been <strong>standard scaled</strong> (with the same ddof convention!), then the covariance matrix will range from -1 to 1 and is equivalent to a correlation matrix, which can also be computed directly from the data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">covar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X_scaled</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">covar</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will discuss the covariance/correlation matrix much more later, but when dealing with multi-dimensional data it is always good to check.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise: Apply and explore scaling approaches</p>
+<ol class="arabic simple">
+<li><p>Split <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> into train/test (80/20) with <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>.</p></li>
+<li><p>Fit a <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> <strong>only on the training set</strong>, then transform both train and test.</p></li>
+<li><p>Confirm that the <strong>training</strong> features have mean=0 and std=1 (per feature).</p></li>
+<li><p>Check the mean and standard deviation on the <strong>testing</strong> features. Are they exactly equal to zero and one?</p></li>
+</ol>
+</div>
+</section>
+<section id="multi-linear-regression">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Multi-Linear Regression</a><a class="headerlink" href="#multi-linear-regression" title="Link to this heading">#</a></h2>
+<p>We can recall the general form of a linear regression model:</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = \sum_j w_j X_{ij} + \epsilon_i
+\]</div>
+<p>Previously, we created features (columns of <span class="math notranslate nohighlight">\(X\)</span>) by transforming the original 1-dimensional input. In this case, we already have columns of <span class="math notranslate nohighlight">\(X\)</span> provided from the data, so we can directly fit the model to the high-dimensional data matrix:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">linreg</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">linreg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train R^2: </span><span class="si">{</span><span class="n">linreg</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="w"> </span><span class="n">y_train</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train R^2: 0.716
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also scale the features before regression. In general, this can improve the accuracy or numerical stability of the model, or occasionally decrease the accuracy. As noted previously, one common pitfall in feature scaling is “data leakage”, where data from the test/validation set is used to scale the data. Sometimes, this has little effect, but in other cases it can have very significant effects. It is possible to use the <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> “pipeline” functionality to create a leakage-safe model that can easily be combined with hyperparameter optimization and other <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> workflows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#leakage-safe scaling with scikit-learn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">LinearRegression</span><span class="p">())</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_train</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train R^2 (pipeline with scaling): </span><span class="si">{</span><span class="n">r2_train</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train R^2 (pipeline with scaling): 0.716
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">make_pipeline</span></code> function chains preprocessing and modeling steps into a single estimator that fits and predicts in the correct order. For example,
+<code class="docutils literal notranslate"><span class="pre">pipe</span> <span class="pre">=</span> <span class="pre">make_pipeline(StandardScaler(),</span> <span class="pre">LinearRegression())</span></code>
+creates a workflow that:</p>
+<ul class="simple">
+<li><p><strong>Fits scaling only on training data</strong> when you call <code class="docutils literal notranslate"><span class="pre">pipe.fit(X_train,</span> <span class="pre">y_train)</span></code>, preventing leakage.</p></li>
+<li><p><strong>Applies the same scaling to new/test data</strong> automatically inside <code class="docutils literal notranslate"><span class="pre">pipe.predict(X_test)</span></code>.</p></li>
+<li><p><strong>Plays nicely with cross-validation</strong> (<code class="docutils literal notranslate"><span class="pre">cross_val_score</span></code>, <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code>): the scaler is refit <strong>inside each fold</strong>. When tuning hyperparameters of a downstream model, use the step name with a double underscore, e.g. <code class="docutils literal notranslate"><span class="pre">{'ridge__alpha':</span> <span class="pre">[0.1,</span> <span class="pre">1,</span> <span class="pre">10]}</span></code> for <code class="docutils literal notranslate"><span class="pre">make_pipeline(StandardScaler(),</span> <span class="pre">Ridge())</span></code>.</p></li>
+<li><p>Lets you <strong>access the final model</strong> with <code class="docutils literal notranslate"><span class="pre">pipe[-1]</span></code> or <code class="docutils literal notranslate"><span class="pre">pipe.named_steps['linearregression']</span></code> to inspect coefficients, etc.</p></li>
+</ul>
+<p>This pattern is the standard way to keep preprocessing and modeling coupled, avoid data leakage, and ensure reproducible evaluation. You can also use the approach to chain together different types of models or functions to create complex pipelines that act as a single estimator.</p>
+<p>We see that the <span class="math notranslate nohighlight">\(r^2\)</span> score is 0.71, which is not terrible, but not great either. We also see that it is identical to the un-scaled model. This is because, for linear models, any linear scaling approach will just change the magnitude of the coefficients. It can improve numerical stability, especially if some features have very different magnitudes, but in general it should not affect the results. However, for non-linear models (e.g. KRR, neural networks) scaling can have a much more significant impact.</p>
+<p>We cannot really visualize the model like we did for the 1-dimensional case, since we have 40-dimensional inputs. However, we can make a <strong>parity plot</strong> to visualize the performance:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">yhat</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+
+<span class="c1"># 45-degree reference line</span>
+<span class="n">lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">y_true</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_true</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">max</span><span class="p">())]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lims</span><span class="p">,</span> <span class="n">lims</span><span class="p">,</span> <span class="s1">&#39;-k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">lims</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">lims</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Actual Data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Predicted Data&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5fd342d11e24bc8df90d03cc97105aa3b04fb760788492c99f9999533833f170.png" src="../_images/5fd342d11e24bc8df90d03cc97105aa3b04fb760788492c99f9999533833f170.png" />
+</div>
+</div>
+<p>This looks reasonable, although there are quite a few outliers. We should also remember that we used hold-out here, so we can check the $r^2^ on the testing set to ensure there was no overfitting:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r2_test</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r^2 train = </span><span class="si">{</span><span class="n">r2_train</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r^2 test  = </span><span class="si">{</span><span class="n">r2_test</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 train = 0.716
+r^2 test  = 0.711
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that they are comparable, which indicates that we have not over-fit. We can also visualize both training and testing errors with a parity plot:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="n">yhat_train</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">yhat_test</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yhat_train</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training Set&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>  <span class="n">yhat_test</span><span class="p">,</span>  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Test Set&#39;</span><span class="p">)</span>
+
+<span class="c1"># 45-degree reference line common to both</span>
+<span class="n">all_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">y_train</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_test</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+<span class="n">all_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">yhat_train</span><span class="p">,</span> <span class="n">yhat_test</span><span class="p">])</span>
+<span class="n">lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">all_true</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">all_pred</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_true</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">all_pred</span><span class="o">.</span><span class="n">max</span><span class="p">())]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lims</span><span class="p">,</span> <span class="n">lims</span><span class="p">,</span> <span class="s1">&#39;-k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">lims</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">lims</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Actual Data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Predicted Data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/314146d04e0278838185883eb84bf19930b92963909d9e56a3bcdc4a7bb1e2a1.png" src="../_images/314146d04e0278838185883eb84bf19930b92963909d9e56a3bcdc4a7bb1e2a1.png" />
+</div>
+</div>
+<p>We can see that these look comparable, which confirms that we have not over-fit the model. It is always a good idea to check the parity plot to see if any patterns stand out!</p>
+<p>This basic linear regression model is simple, but by testing it we now have a <strong>baseline model</strong>. This tells us that if we have any results worse than this we have a really bad model!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What is a “baseline model,” and why use one?</strong><br />
+A baseline is the <strong>simplest reasonable model</strong> you can implement quickly and evaluate fairly. It establishes a <strong>reference performance</strong> so you can tell whether more complex methods add real value. A good baseline is:</p>
+<ul class="simple">
+<li><p><strong>Simple/fast</strong> and easy to explain (e.g., <code class="docutils literal notranslate"><span class="pre">make_pipeline(StandardScaler(),</span> <span class="pre">LinearRegression())</span></code>).</p></li>
+<li><p><strong>Evaluated fairly</strong> with proper splitting/CV, the same metrics, and fixed randomness.</p></li>
+<li><p><strong>Reproducible</strong> with recorded settings and code.</p></li>
+</ul>
+<p>If a new approach cannot <strong>beat the baseline on held‑out data</strong>, revisit your data, features, or evaluation before adding complexity.</p>
+</div>
+<p>We see that the performance of the model is not great, and to improve things we will need to add some non-linearity. In 1-dimensional space we achieved this by adding transforms of the features as new features. However, this is more challenging in a high-dimensional space since the number of features will scale with the number of dimensions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>How many features would result if third-order interactions were considered?</strong></p>
+<p>A simple estimate can be obtained by taking the cube of the number of features, which would be <span class="math notranslate nohighlight">\(40^3 = 64,000\)</span>, but this is a significant over-estimate since there will be redundant combinations. A more accurate estimate requires some combinatorics: If you include <strong>all degree-3 polynomial terms with replacement</strong> (e.g., <span class="math notranslate nohighlight">\(x_i^3,\; x_i^2 x_j,\; x_i x_j x_k\)</span>), the count is <span class="math notranslate nohighlight">\(\binom{40 + 3 - 1}{3} = \binom{42}{3} = 11,480\)</span>, which is still larger than the number of data points we have.</p>
+<p>This shows that the number of features grow <strong>combinatorially</strong> as the number of dimensions increases, and illustrates why naive feature expansion becomes impractical in high dimensions.</p>
+</div>
+<p>Kernel-based methods are very commonly used for high-dimensional spaces because they account for non-linear interactions, but the number of features does not exceed the number of data points. In your homework you will explore the application of KRR to this dataset.</p>
+</section>
+<section id="dimensionality-reduction">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Dimensionality Reduction</a><a class="headerlink" href="#dimensionality-reduction" title="Link to this heading">#</a></h2>
+<p>An alternative approach to creating high-dimensional models is to reduce the dimensionality. We will briefly look at some techniques here, and revisit this idea later in the course.</p>
+<section id="forward-selection">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Forward Selection</a><a class="headerlink" href="#forward-selection" title="Link to this heading">#</a></h3>
+<p>A very intuitive way to reduce dimensions is to just select a subset of the original features. The simplest strategy to select or rank features is to try them one-by-one, and keep the best feature at each iteration:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="n">N_features</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">X_subset</span> <span class="o">=</span> <span class="n">X_scaled</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">x_names_subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">new_X</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">new_X_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_X</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N_features</span> <span class="ow">and</span> <span class="n">X_subset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">r2_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_subset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>  <span class="c1"># create a linear regression model instance</span>
+        <span class="n">xj</span> <span class="o">=</span> <span class="n">X_subset</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">xj</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>            <span class="c1"># fit the model</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">xj</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>     <span class="c1"># r^2 for this single feature</span>
+        <span class="n">r2_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r2</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+    <span class="c1"># select highest r^2 value</span>
+    <span class="n">r2_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">r2_max</span><span class="p">,</span> <span class="n">j_max</span> <span class="o">=</span> <span class="n">r2_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">new_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_subset</span><span class="p">[:,</span> <span class="n">j_max</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">new_X_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_names_subset</span><span class="p">[</span><span class="n">j_max</span><span class="p">])</span>
+    <span class="c1"># remove selected feature from the pool</span>
+    <span class="n">x_names_subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">x_names_subset</span><span class="p">,</span> <span class="n">j_max</span><span class="p">)</span>
+    <span class="n">X_subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">X_subset</span><span class="p">,</span> <span class="n">j_max</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The </span><span class="si">{}</span><span class="s1"> most linearly correlated features are:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_X</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">new_X_names</span><span class="p">)</span>
+
+<span class="n">new_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_X</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># shape: (n_samples, k)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The 40 most linearly correlated features are:
+[&#39;x10:Primary Column Bed1 DP&#39;, &#39;x5:Primary Column Feed Flow from Feed Column&#39;, &#39;x11:Primary Column Bed2 DP&#39;, &#39;x6:Primary Column Make Flow&#39;, &#39;x13:Primary Column Bed4 DP&#39;, &#39;x40: Feed Column Tails Flow&#39;, &#39;x24: Secondary Column Tails Flow&#39;, &#39;x1:Primary Column Reflux Flow&#39;, &#39;x12:Primary Column Bed3 DP&#39;, &#39;x4:Input to Primary Column Bed 2 Flow&#39;, &#39;x37: Feed Column Tails Flow to Primary Column&#39;, &#39;x21:Primary Column Bed 1 Temperature&#39;, &#39;x3:Input to Primary Column Bed 3 Flow&#39;, &#39;x26: Secondary Column Head Pressure&#39;, &#39;x20:Primary Column Bed 2 Temperature&#39;, &#39;x31: Secondary Column Bed 2 Temperature&#39;, &#39;x27: Secondary Column Base Pressure&#39;, &#39;x14:Primary Column Base Pressure&#39;, &#39;x7:Primary Column Base Level&#39;, &#39;x19:Primary Column Bed 3 Temperature&#39;, &#39;x9:Primary Column Condenser Reflux Drum Level&#39;, &#39;x39: Feed Column Steam Flow&#39;, &#39;x18:Primary Column Bed 4 Temperature&#39;, &#39;x36: Feed Column Recycle Flow&#39;, &#39;x2:Primary Column Tails Flow&#39;, &#39;x34: Secondary Column Tails Temperature&#39;, &#39;x22: Secondary Column Base Concentration&#39;, &#39;x38: Feed Column Calculated DP&#39;, &#39;x16:Primary Column Tails Temperature&#39;, &#39;x28: Secondary Column Base Temperature&#39;, &#39;x15:Primary Column Head Pressure&#39;, &#39;x30: Secondary Column Bed 1 Temperature&#39;, &#39;x8:Primary Column Reflux Drum Pressure&#39;, &#39;x29: Secondary Column Tray 3 Temperature&#39;, &#39;x23: Flow from Input to Secondary Column&#39;, &#39;x32: Secondary Column Tray 2 Temperature&#39;, &#39;x35: Secondary Column Tails Concentration&#39;, &#39;x17:Primary Column Tails Temperature 1&#39;, &#39;x25: Secondary Column Tray DP&#39;, &#39;x33: Secondary Column Tray 1 Temperature&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>About this “forward selection” loop</strong><br />
+This implementation performs <strong>univariate ranking</strong> (pick best single feature, then the next best single feature, etc.). A full <strong>forward stepwise</strong> method would re-fit a multi-feature model at each step using the features already chosen <strong>plus</strong> each candidate feature, selecting the one that improves the model the most. We use the simpler ranking here for speed and clarity.</p>
+</div>
+<p>We can see how the <span class="math notranslate nohighlight">\(r^2\)</span> score changes with the reduced features:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>  <span class="c1"># create a linear regression model instance</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">new_X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>         <span class="c1"># fit the model on the selected features</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">new_X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># r^2 on the same data</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;r^2 = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 = 0.7168241690081087
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that with just 4 features the model performance is substantially reduced. We can keep increasing the number until it is comparable to the full model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k_max</span> <span class="o">=</span> <span class="n">new_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">r2_path</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ks</span><span class="p">:</span>
+    <span class="n">Xk</span> <span class="o">=</span> <span class="n">new_X</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xk</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">r2_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xk</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="n">r2_path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r2_path</span><span class="p">)</span>
+<span class="c1"># first k reaching target (if any)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="mf">0.60</span>
+<span class="n">hit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_path</span> <span class="o">&gt;=</span> <span class="n">target</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">r2_path</span> <span class="o">&gt;=</span> <span class="n">target</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">r2_path</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">hit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r2_path</span><span class="p">[</span><span class="n">hit</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">target</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">ks</span><span class="p">[</span><span class="n">hit</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of selected features (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$r^2$ (fit on selected features)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Forward selection (univariate ranking)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">hit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r2_path</span><span class="p">[</span><span class="n">hit</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">target</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minimum k achieving r^2 ≥ </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ks</span><span class="p">[</span><span class="n">hit</span><span class="p">]</span><span class="si">}</span><span class="s2"> (r^2 = </span><span class="si">{</span><span class="n">r2_path</span><span class="p">[</span><span class="n">hit</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target r^2 ≥ </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> not reached with up to </span><span class="si">{</span><span class="n">k_max</span><span class="si">}</span><span class="s2"> features.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Minimum k achieving r^2 ≥ 0.6: 17 (r^2 = 0.622)
+</pre></div>
+</div>
+<img alt="../_images/c13cb6ae3ffb9cfb3cab5fb55e20f3d78d0ac078f9d45d4addb315df65222ed1.png" src="../_images/c13cb6ae3ffb9cfb3cab5fb55e20f3d78d0ac078f9d45d4addb315df65222ed1.png" />
+</div>
+</div>
+<p>Be careful, since just because features are not <em>linearly</em> correlated does not mean that they are not <em>non-linearly</em> correlated (in other words, we might reject a feature that is actually very descriptive, if that description is highly non-linear) . There is also no guarantee that we are not finding correlated features, since if one feature has a high correlation with the output, and is also correlated with another feature, then that feature will also be correlated with the output. More advanced forward selection strategies can be used to reduce this, as shown with a standard implementation below:</p>
+<p><strong>Standard scikit-learn (full forward stepwise) feature selection</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full forward stepwise selection using scikit-learn&#39;s SequentialFeatureSelector (SFS)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequentialFeatureSelector</span>
+
+<span class="n">est</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">LinearRegression</span><span class="p">())</span>
+
+<span class="c1"># Choose how many features to keep (example: 10) and use forward stepwise with cross-validation</span>
+<span class="n">sfs</span> <span class="o">=</span> <span class="n">SequentialFeatureSelector</span><span class="p">(</span>
+    <span class="n">est</span><span class="p">,</span> <span class="n">n_features_to_select</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;forward&quot;</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+
+<span class="n">selected_idx</span> <span class="o">=</span> <span class="n">sfs</span><span class="o">.</span><span class="n">get_support</span><span class="p">(</span><span class="n">indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">selected_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selected_idx</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selected feature indices:&quot;</span><span class="p">,</span> <span class="n">selected_idx</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selected feature names:&quot;</span><span class="p">,</span> <span class="n">selected_names</span><span class="p">)</span>
+
+<span class="c1"># Transform X to the selected subset and fit a final model on the whole dataset</span>
+<span class="n">X_fs</span> <span class="o">=</span> <span class="n">sfs</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">final_model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_fs</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;r^2 on full data using selected subset:&quot;</span><span class="p">,</span> <span class="n">final_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_fs</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected feature indices: [ 8  9 15 16 23 24 28 32 34 36]
+Selected feature names: [&#39;x9:Primary Column Condenser Reflux Drum Level&#39;, &#39;x10:Primary Column Bed1 DP&#39;, &#39;x16:Primary Column Tails Temperature&#39;, &#39;x17:Primary Column Tails Temperature 1&#39;, &#39;x24: Secondary Column Tails Flow&#39;, &#39;x25: Secondary Column Tray DP&#39;, &#39;x29: Secondary Column Tray 3 Temperature&#39;, &#39;x33: Secondary Column Tray 1 Temperature&#39;, &#39;x35: Secondary Column Tails Concentration&#39;, &#39;x37: Feed Column Tails Flow to Primary Column&#39;]
+r^2 on full data using selected subset: 0.6055868410819696
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that the features selected with this more sophisticated approach differ from the naive approach, and that we are able to reach <span class="math notranslate nohighlight">\(r^2 &gt; 0.6\)</span> with just 10 features, instead of the 17 required above. This is because many of the features are highly correlated (as we already saw with the correlation matrix above), so some of the features selected in the naive univariate ranking were partially redundant. The <code class="docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code> approach above is much less tranparent, and uses some more advanced <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> features, but it also yields good results with relatively little code. Don’t worry if you don’t understand all the details: the main point is that there are different ways to do feature selection, and each strategy can yield different results.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Choosing <code class="docutils literal notranslate"><span class="pre">n_features_to_select</span></code></strong><br />
+<code class="docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code> requires you to specify how many features to keep. In practice you can sweep over <code class="docutils literal notranslate"><span class="pre">k</span></code> (e.g., 1–20) and pick the smallest <code class="docutils literal notranslate"><span class="pre">k</span></code> that reaches a target cross-validated score, or use a validation curve to balance performance and parsimony.</p>
+</div>
+</section>
+<section id="principal-component-analysis">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Principal component analysis</a><a class="headerlink" href="#principal-component-analysis" title="Link to this heading">#</a></h3>
+<p>An alternative strategy to avoid having correlated features is to ensure that features are orthogonal using the eigenvectors of the covariance matrix. The code below finds the eigenvectors of the covariance matrix, which we know will be orthogonal (from the “linear algebra” module).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Use the (standardized) covariance matrix for PCA</span>
+<span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X_scaled</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+<span class="c1"># For symmetric matrices (covariance), use eigh (guaranteed real eigenvalues)</span>
+<span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>  <span class="c1"># vals ascending</span>
+<span class="c1"># sort descending by variance explained</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">vals</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">PCvals</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">PCvecs</span> <span class="o">=</span> <span class="n">vecs</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+<span class="c1"># sanity checks: orthonormal eigenvectors</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dot(PC1, PC1) =&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">PCvecs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">PCvecs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dot(PC1, PC2) =&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">PCvecs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">PCvecs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dot(PC1, PC1) = 1.0000000000000004
+dot(PC1, PC2) = 4.163336342344337e-17
+</pre></div>
+</div>
+</div>
+</div>
+<p>These eigenvectors are orthogonal, and represent a linear transformation of the original features into an orthogonal space, which removes feature correlation. It turns out that by taking the eigenvalues of the covariance matrix you are actually doing something called <strong>principal mponent analysis</strong>, which is a classic dimensionality reduction technique. The eigenvectors of the covariance matrix identify the “natural” coordinate system of the data. We can visualize this with some toy data in two dimensions (note that the script to generate this file is available in “settings”):</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/pca_illustration.png"><img alt="../_images/pca_illustration.png" src="../_images/pca_illustration.png" style="width: 800px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Toy data in original 2-dimensional coordinates (left) and in rotated “principal component vector” coordinates (right).</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>PCA coordinates vs. Cartesian coordinates</strong><br />
+Think of the usual x–y axes as a fixed Cartesian frame. PCA rotates this frame to a new set of perpendicular axes (the principal components) that align with the directions of greatest variance in the data—similar to choosing an origin and x- and y-axis when solving an engineering problem. The new axes are orthonormal (like the unit vectors i, j, k), and projecting data onto them is just taking dot products with these unit vectors. In this rotated frame, covariances vanish (the off‑diagonals go to ~0), so variability is concentrated along a few axes, making analysis and modeling simpler, but the underlying data is not really changed.</p>
+</div>
+<p>The eigenvalues provide the variance in each direction, and we can use this to determine how much variance each principal component contributes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">total_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">PCvals</span><span class="p">)</span>
+<span class="n">explained_variance</span> <span class="o">=</span> <span class="n">PCvals</span> <span class="o">/</span> <span class="n">total_variance</span>  <span class="c1"># already sorted desc</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total variance (trace of covariance):&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">total_variance</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First 5 explained variance ratios:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">explained_variance</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">explained_variance</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Variance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">explained_variance</span><span class="p">),</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cumulative variance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;PCA #th Dimension&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Variance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">);</span>
+
+<span class="c1"># Report how many components capture 90% variance</span>
+<span class="n">k90</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">explained_variance</span><span class="p">),</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Components needed for ≥90% variance: </span><span class="si">{</span><span class="n">k90</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total variance (trace of covariance): 40.00388500388503
+First 5 explained variance ratios: [0.5851 0.1046 0.0583 0.0441 0.0341]
+Components needed for ≥90% variance: 8
+</pre></div>
+</div>
+<img alt="../_images/cd3b11d00988feda8e8aa4925d032476ccff550f310bf4f206c0f43183e286fc.png" src="../_images/cd3b11d00988feda8e8aa4925d032476ccff550f310bf4f206c0f43183e286fc.png" />
+</div>
+</div>
+<p>We can use this to say how many principal components are needed to capture a specified fraction of the variance (e.g., 90%).</p>
+<p>Finally, we can “project” the data onto the principal components. This is equivalent to re-defining the axes of the data. If we take the covariance of this rotated data, we will see that all of the features are now uncorrelated:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PC_projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">PCvecs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Projection shape:&#39;</span><span class="p">,</span> <span class="n">PC_projection</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">corr_PCs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">PC_projection</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">corr_PCs</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Correlation among PCs (identity matrix)&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Projection shape: (10297, 40)
+</pre></div>
+</div>
+<img alt="../_images/3936556b454e7502e145129e8f19343e700921f637e07070abcc1fc708c225f1.png" src="../_images/3936556b454e7502e145129e8f19343e700921f637e07070abcc1fc708c225f1.png" />
+</div>
+</div>
+<p>After projection, we still have 40 features but they are now orthogonal - there is no covariance! This means that each one contains unique information.</p>
+<p>We will talk a lot more about PCA throughout the course, but for now you should know:</p>
+<ul class="simple">
+<li><p>Principal component vectors are obtained from the eigenvectors of the covariance matrix</p></li>
+<li><p>Principal components are orthogonal</p></li>
+<li><p>Principal components explain the variance in multi-dimensional data</p></li>
+<li><p>Data can be projected onto principal components</p></li>
+</ul>
+</section>
+</section>
+<section id="principal-component-regression">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Principal Component Regression</a><a class="headerlink" href="#principal-component-regression" title="Link to this heading">#</a></h2>
+<p>We can also use the projected data as inputs to a regression model. This is called <strong>principal component regression</strong> (PCR):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="c1"># Use the PCA projection computed earlier in this topic (PC_projection)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>  <span class="c1"># create a linear regression model instance</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">PC_projection</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># fit the model</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">PC_projection</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># r^2 on the same data</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r^2 = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 = 0.717
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s compare this to the original data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>  <span class="c1"># create a linear regression model instance</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>      <span class="c1"># fit the model on scaled original features</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r^2 = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 = 0.717
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that the answer is the same. This is because we are still ultimately including all the same information. However, if we want to reduce the number of features we will see a difference:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">model_PC</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">model_PC</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">PC_projection</span><span class="p">[:,</span> <span class="p">:</span><span class="n">N</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model_PC</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">PC_projection</span><span class="p">[:,</span> <span class="p">:</span><span class="n">N</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r^2 PCA = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">[:,</span> <span class="p">:</span><span class="n">N</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">[:,</span> <span class="p">:</span><span class="n">N</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r^2 regular = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 PCA = 0.581
+r^2 regular = 0.476
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Why is a PCR model not always better than direct linear regression?</strong><br />
+PCA orders directions by <strong>variance in X</strong>, not by how well they <strong>predict y</strong>. A high‑variance component can be weakly related (or unrelated) to the target, while a lower‑variance component might carry most of the predictive signal. PCR is unsupervised in its dimensionality reduction; it ignores <code class="docutils literal notranslate"><span class="pre">y</span></code> when choosing components.</p>
+</div>
+<p>The PCA projection collects as much information as possible in each feature and orders components by variance. We can also check them one‑by‑one to see how they correlate:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">score_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PC_projection</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">xj</span> <span class="o">=</span> <span class="n">PC_projection</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">xj</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">xj</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">score_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r2</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+<span class="n">score_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r2j</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">score_list</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC</span><span class="si">{</span><span class="n">j</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2"> : r^2 = </span><span class="si">{</span><span class="n">r2j</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PC01 : r^2 = 0.207
+PC00 : r^2 = 0.174
+PC06 : r^2 = 0.061
+PC07 : r^2 = 0.060
+PC04 : r^2 = 0.044
+PC25 : r^2 = 0.017
+PC08 : r^2 = 0.016
+PC05 : r^2 = 0.014
+PC02 : r^2 = 0.013
+PC16 : r^2 = 0.013
+PC33 : r^2 = 0.012
+PC18 : r^2 = 0.009
+PC09 : r^2 = 0.009
+PC15 : r^2 = 0.008
+PC03 : r^2 = 0.007
+PC21 : r^2 = 0.007
+PC31 : r^2 = 0.006
+PC22 : r^2 = 0.005
+PC14 : r^2 = 0.004
+PC11 : r^2 = 0.003
+PC39 : r^2 = 0.003
+PC38 : r^2 = 0.003
+PC10 : r^2 = 0.002
+PC27 : r^2 = 0.002
+PC32 : r^2 = 0.002
+PC13 : r^2 = 0.002
+PC37 : r^2 = 0.002
+PC20 : r^2 = 0.002
+PC28 : r^2 = 0.001
+PC12 : r^2 = 0.001
+PC36 : r^2 = 0.001
+PC34 : r^2 = 0.001
+PC24 : r^2 = 0.001
+PC26 : r^2 = 0.001
+PC17 : r^2 = 0.000
+PC35 : r^2 = 0.000
+PC30 : r^2 = 0.000
+PC19 : r^2 = 0.000
+PC29 : r^2 = 0.000
+PC23 : r^2 = 0.000
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that the second principal component is actually the best, the first is the second best, and the seventh is third best. This is because the principal components only use variance of the inputs, which may or may not correlate to the outputs. </p>
+<p>It is common to use PCA or other dimensionality reduction techniques prior to regression when working with high-dimensional data. It is often possible to construct models that have better performance with fewer input dimensions, especially when working with non-linear models. However, it is important to note that <strong>each principal component feature is a linear combination of <em>all</em> input features.</strong> In other words, you still need to use all of the features to construct a PCR model. If you are trying to reduce the information that goes into the model (instead of just the dimensionality of the model), then it is necessary to use feature selection techniques instead of or in addition to principal component analysis.</p>
+<section id="partial-least-squares-pls">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Partial Least Squares (PLS)</a><a class="headerlink" href="#partial-least-squares-pls" title="Link to this heading">#</a></h3>
+<p>Unlike PCA—which is <strong>unsupervised</strong> and finds directions of maximum variance in <strong>X</strong>—Partial Least Squares is <strong>supervised</strong>: it finds latent components that maximize the <strong>covariance between X and y</strong>. As a result, PLS components are chosen to be predictive of the target. PLS is especially helpful when there are many collinear features and relatively few samples. We will return to PLS and supervised dimensionality reduction later in the course, but it is useful to contrast it with principal component regression.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PLS via scikit-learn (with scaling and a held-out test split)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cross_decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PLSRegression</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Choose number of latent components (tune this via CV in practice)</span>
+<span class="n">pls_k</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">pipe_pls</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">PLSRegression</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">pls_k</span><span class="p">))</span>
+<span class="n">pipe_pls</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PLS (k=</span><span class="si">{</span><span class="n">pls_k</span><span class="si">}</span><span class="s2">) train r^2: </span><span class="si">{</span><span class="n">pipe_pls</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="w"> </span><span class="n">y_train</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PLS (k=</span><span class="si">{</span><span class="n">pls_k</span><span class="si">}</span><span class="s2">)  test r^2: </span><span class="si">{</span><span class="n">pipe_pls</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="w">  </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PLS (k=8) train r^2: 0.672
+PLS (k=8)  test r^2: 0.701
+</pre></div>
+</div>
+</div>
+</div>
+<p>If we compare the <span class="math notranslate nohighlight">\(r^2\)</span> for PLS with 8 components, we see that it is higher than the <span class="math notranslate nohighlight">\(r^2\)</span> for PCR with the same number of features. It is also higher than the <span class="math notranslate nohighlight">\(r^2\)</span> for regular multi-linear regression with 10 features selected from forward selection. The PLS approach will generally give the highest <span class="math notranslate nohighlight">\(r^2\)</span> score of any linear model as a function of the number of features, since the features are directly constructed to maximize the correlation. However, similar to PCR, it does require all of the original features as an input, so it may be less practical than feature selection in some cases (e.g. one of the features is very hard or expensive to measure or compute).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Tuning PLS components</strong><br />
+It is possible to use cross-validation to select <code class="docutils literal notranslate"><span class="pre">n_components</span></code>. With a pipeline, you can use <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> and the step name <code class="docutils literal notranslate"><span class="pre">plsregression__n_components</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">{'plsregression__n_components':</span> <span class="pre">range(1,</span> <span class="pre">min(20,</span> <span class="pre">X.shape[1])</span> <span class="pre">+</span> <span class="pre">1)}</span></code>.</p>
+</div>
+</section>
+<section id="a-note-on-neural-networks">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">A note on neural networks</a><a class="headerlink" href="#a-note-on-neural-networks" title="Link to this heading">#</a></h3>
+<p>Neural networks (including “deep learning”) are among the best-known examples of <em>high-dimensional regression</em> models. We do not cover them here because they introduce additional concepts (e.g., network architectures, activation functions, backpropagation/optimizers, and regularization) and are challenging to use well in practice due to many hyperparameters and training options. Entire courses are dedicated to neural networks. If this topic interests you, consider exploring a dedicated deep-learning resource (e.g. the textbook <a class="reference external" href="https://www.deeplearningbook.org/">Deep Learning</a> by Goodfellow, Bengio, and Courville) after you are comfortable with the basic concepts and ideas developed in this course.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise:</p>
+<p>Here you will use pipelines to compare some of the models above:</p>
+<ol class="arabic simple">
+<li><p>Split the data with <code class="docutils literal notranslate"><span class="pre">train_test_split(X,</span> <span class="pre">y,</span> <span class="pre">test_size=0.3,</span> <span class="pre">random_state=0)</span></code>.</p></li>
+<li><p>Build three pipelines:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pipe_lr</span> <span class="pre">=</span> <span class="pre">make_pipeline(StandardScaler(),</span> <span class="pre">LinearRegression())</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pipe_pcr_k</span> <span class="pre">=</span> <span class="pre">make_pipeline(StandardScaler(),</span> <span class="pre">PCA(n_components=k),</span> <span class="pre">LinearRegression())</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pipe_pls_k</span> <span class="pre">=</span> <span class="pre">make_pipeline(StandardScaler(),</span> <span class="pre">PLSRegression(n_components=k))</span></code></p></li>
+</ul>
+</li>
+<li><p>Plot the <span class="math notranslate nohighlight">\(r^2\)</span> score of PCR and PLS as a function of the number of components and show that PLS is always higher.</p></li>
+<li><p>Show that when <code class="docutils literal notranslate"><span class="pre">k</span></code> is equal to the total number of features, the results are the same for all three models.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink">Additional reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Hastie, Tibshirani, &amp; Friedman (2009). <em>The Elements of Statistical Learning</em>, 2nd ed., Ch. 3 (Linear Methods for Regression).</p></li>
+<li><p>James, Witten, Hastie, &amp; Tibshirani (2013). <em>An Introduction to Statistical Learning</em>, Ch. 6 (Linear Model Selection).</p></li>
+<li><p>Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>, Ch. 12.1 (PCA).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./2-regression"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic2.3-Complexity_Optimization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Complexity Optimization</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-dimensional-data">High-dimensional Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-of-features">Visualization of features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-two-features-at-a-time-and-other-first-pass-strategies">Visualizing two features at a time and other first-pass strategies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#covariance-and-correlation-matrices">Covariance and correlation matrices</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scaling-features-and-outputs">Scaling Features and Outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-linear-regression">Multi-Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dimensionality-reduction">Dimensionality Reduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-selection">Forward Selection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis">Principal component analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-regression">Principal Component Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#partial-least-squares-pls">Partial Least Squares (PLS)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-neural-networks">A note on neural networks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1273 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Complexity Optimization &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2-regression/Topic2.3-Complexity_Optimization';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="High-dimensional Regression" href="Topic2.4-High_Dimensional_Regression.html" />
+    <link rel="prev" title="Model Validation" href="Topic2.2-Model_Validation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_Dimensional_Regression.html">High-dimensional Regression</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/2-regression/Topic2.3-Complexity_Optimization.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Complexity Optimization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overfitting-and-underfitting">Overfitting and Underfitting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information-criteria">Information Criteria</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-notes-on-information-criteria">Additional Notes on Information Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation-of-ridge-regression">Derivation of ridge regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-optimal-alpha-using-cross-validation">Selecting the optimal <span class="math notranslate nohighlight">\(\alpha\)</span> using cross-validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-parameter-magnitudes-with-a-histogram">Inspecting parameter magnitudes with a histogram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lasso-regularization">LASSO Regularization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning-and-data-leakage">Hyperparameter tuning and data leakage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning">Hyperparameter Tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-tips-for-optimizing-hyperparameters">Practical Tips for Optimizing Hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-leakage">Data Leakage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#complexity-optimization" id="id2">Complexity Optimization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#learning-objectives" id="id3">Learning objectives</a></p></li>
+<li><p><a class="reference internal" href="#overfitting-and-underfitting" id="id4">Overfitting and Underfitting</a></p></li>
+<li><p><a class="reference internal" href="#information-criteria" id="id5">Information Criteria</a></p></li>
+<li><p><a class="reference internal" href="#regularization" id="id6">Regularization</a></p></li>
+<li><p><a class="reference internal" href="#hyperparameter-tuning-and-data-leakage" id="id7">Hyperparameter tuning and data leakage</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id8">Additional reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="complexity-optimization">
+<h1><a class="toc-backref" href="#id2" role="doc-backlink">Complexity Optimization</a><a class="headerlink" href="#complexity-optimization" title="Link to this heading">#</a></h1>
+<section id="learning-objectives">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Learning objectives</a><a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this topic, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Compute and interpret information criteria</strong> (BIC, AIC) to select model complexity for parametric models.</p></li>
+<li><p><strong>Apply regularization</strong> (ridge/L2 and LASSO/L1) to control model smoothness and promote sparsity.</p></li>
+<li><p><strong>Tune hyperparameters</strong> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> and design sensible grids (coarse-to-fine, avoid edge optima).</p></li>
+<li><p><strong>Detect and prevent data leakage</strong> by separating training, validation, and test sets appropriately.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="overfitting-and-underfitting">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Overfitting and Underfitting</a><a class="headerlink" href="#overfitting-and-underfitting" title="Link to this heading">#</a></h2>
+<p>The key to machine learning is creating models that generalize to new examples. This means we are looking for models with enough complexity to describe the behavior, but not so much complexity that it just reproduces the data points. Let’s demonstrate this concept with a quick toy model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1">#generate some synthetic data</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">xg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>  <span class="c1"># grid for smooth curves</span>
+
+<span class="c1">#helper function to fit and plot curves</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">deg</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">deg</span><span class="p">)</span>         
+    <span class="n">y_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">xg</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">xg</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">xg</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Underfit (degree=1)&#39;</span><span class="p">,</span> <span class="s1">&#39;Just right (degree=2)&#39;</span><span class="p">,</span> <span class="s1">&#39;Overfit (degree=15)&#39;</span><span class="p">]</span>
+<span class="n">degrees</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">deg</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">degrees</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+    <span class="n">fit_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">deg</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2505d2078e595bc3e69bf540b805a377c7addba57e0de798e0bad7ce286c6514.png" src="../_images/2505d2078e595bc3e69bf540b805a377c7addba57e0de798e0bad7ce286c6514.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>Underfitting: The model is just “guessing” at the data, and will be equally bad at the data it has been trained on and the data that it is tested on.</p></li>
+<li><p>Overfitting: The model has memorized all of the training data, and will be perfect on training data and terrible on testing data.</p></li>
+<li><p>Optimal complexity: The model has <em>learned</em> from the training data and can <em>generalize</em> to the training data. The performance should be approximately as good for both sets.</p></li>
+</ul>
+<p>There is a famous quote about fitting models that is often used to criticize models that are “overfit” (i.e. models with too many parameters):</p>
+<blockquote>
+<div><p><em>”With four parameters I can fit an elephant, and with five I can make him wiggle his trunk.”</em> <br/>
+- John von Neumann -</p>
+</div></blockquote>
+<p>There is even a <a class="reference external" href="https://www.johndcook.com/blog/2011/06/21/how-to-fit-an-elephant/">fun example</a>) showing that you really can fit an elephant with four parameters! That said, despite his genius, von Neumann’s quote is only half of the truth. As we will see, there is a real danger of “overfitting” models, but if we are careful and use techniques for <em>complexity optimization</em> we can end up with meaningful models with far more than 4 parameters. Modern large languge models have hundreds of millions or even billions of parameters, but they are still widely considered useful. This is also related to the philosophical principle of “Occam’s Razor”, which, broadly speaking, states that “the simplest explanation is usually correct”. The less well known “Epicurean principle of multiple explanations” is the opposing philosophy which, broadly speaking, states that “if multiple explanations can account for a phenomenon, then all are considered plausible”. Complexity optimization seeks to turn these philosophical ideas into quantitative metrics that can find the optimum balance between the two perspectives.</p>
+<hr class="docutils" />
+<p>In this section, we will explore a few strategies for quantifying and optimizing model complexity. To start with, consider the general form of a machine-learning model introduced earlier:</p>
+<p><span class="math notranslate nohighlight">\(\vec{y} = f(\vec{x}, \vec{w}(\vec{\eta}))\)</span></p>
+<p>The “complexity” of a model is defined by its hyperparameters (<span class="math notranslate nohighlight">\(\vec{\eta}\)</span>). The goal of machine learning is to <strong>optimize the complexity</strong> of a model so that it <strong>generalizes to new examples</strong>. In order to achieve this goal we first need a way to quantify complexity so that we can optimize it.</p>
+<p>In general there are a few strategies:</p>
+<ul class="simple">
+<li><p>Number of parameters: “Complexity” varies linearly with number of parameters</p></li>
+<li><p>Information criteria: “Complexity” varies with number of parameters and is balanced by the model error.</p></li>
+<li><p>“Smoothness”: “Complexity” is related to the maximum curvature of the model</p></li>
+</ul>
+<p>We will describe these approaches and show examples of how to use them to optimize complexity below.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise:</p>
+<p>Modify the code that is used to generate the ``underfitting vs. overfitting’’ example above to calculate the <span class="math notranslate nohighlight">\(r^2\)</span> score for each example. Consider whether it is possible to determine whether a model is underfit or overfit using the <span class="math notranslate nohighlight">\(r^2\)</span> score alone.</p>
+</div>
+</section>
+<section id="information-criteria">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Information Criteria</a><a class="headerlink" href="#information-criteria" title="Link to this heading">#</a></h2>
+<p>The idea behind an <strong>information criterion</strong> is that it quantifies the trade-off between the number of parameters and the model error.  The most commonly used information criterion is the <strong>Bayesian Information Criterion</strong> (BIC).  The derivation of the BIC is beyond the scope of this course, but conceptually a lower BIC corresponds to a <em>more</em> probable model.</p>
+<p>If we assume that our error is normally distributed, the BIC can be easily computed as</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{BIC}=n\,\ln\!\left(\sigma_e^2\right)+k\,\ln n\]</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of data points, <span class="math notranslate nohighlight">\(\sigma_e\)</span> is the standard deviation of the error, and <span class="math notranslate nohighlight">\(k\)</span> is the number of parameters.</p>
+<p>There are a few other information criteria, with the <strong>Akaike Information Criterion (AIC)</strong> being the other most commonly used.  <strong>AIC</strong> is <a class="reference external" href="https://doi.org/10.1109/TAC.1974.1100705">derived from a slightly different set of statistical assumptions</a> than BIC; many more criteria exist in the statistical literature.</p>
+<p>In practice it is often difficult to verify whether a particular dataset satisfies the assumptions required by any given criterion, so practitioners commonly default to BIC.  These criteria should therefore be viewed as heuristics rather than absolute rules—use them to guide your intuition, but do not ignore domain knowledge or common-sense checks.</p>
+<p>Another important limitation is that non-parametric models do not have a fixed, well-defined set of parameters; the effective parameters (and even their number) depend on the training data.  As a result, information criteria are awkward—sometimes impossible—to apply to non-parametric models.</p>
+<p>Despite these caveats, the overarching idea of <strong>trading off the number of parameters against model error</strong> provides a powerful mental framework for thinking about complexity optimisation.  In the examples below we will focus on BIC (AIC usually selects a similar optimum).</p>
+<p>Throughout this topic we will use the following helper function that computes the BIC (under the assumption of normally distributed homoskedastic error).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">BIC</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the Bayesian information criterion.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : array_like</span>
+<span class="sd">        Observed values.</span>
+<span class="sd">    yhat : array_like</span>
+<span class="sd">        Model predictions (same shape as *y*).</span>
+<span class="sd">    k : int</span>
+<span class="sd">        Number of parameters in the model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yhat</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we can apply the BIC to the problem of fitting the ethanol spectra that we have seen in prior lectures:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/ethanol_IR.csv&#39;</span><span class="p">)</span>
+<span class="n">x_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;wavenumber [cm^-1]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;absorbance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">x_peak</span> <span class="o">=</span> <span class="n">x_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span>
+<span class="n">y_peak</span> <span class="o">=</span> <span class="n">y_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span><span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [cm$^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/aed882a0388788de036dbe84a90abed806f95db08297f5135724761044144f38.png" src="../_images/aed882a0388788de036dbe84a90abed806f95db08297f5135724761044144f38.png" />
+</div>
+</div>
+<p>Now, let’s compare some of the many different models we have used for modeling the spectrum from the previous module and this module. We will look at the following models:</p>
+<ul class="simple">
+<li><p>Polynomial regression with 40 polynomials (40 parameters)</p></li>
+<li><p>Gaussian regression 20 evenly-spaced Gaussians (20 parameters)</p></li>
+</ul>
+<p>We will re-implement the polynomial and Gaussian regressions using <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> to make things easier:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">polynomial_features</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Columns [x^1, x^2, ..., x^degree]. Intercept handled via fit_intercept=False.&quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="c1"># Vandermonde with increasing powers; drop the bias column</span>
+    <span class="c1"># The Vandermonde polynomials are generally more numerically stable.</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vander</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">increasing</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:]</span>
+
+<span class="c1"># Polynomial regression: 40 polynomials (40 parameters)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">X_poly</span> <span class="o">=</span> <span class="n">polynomial_features</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_peak</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">LR_poly</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_poly</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">yhat_poly</span> <span class="o">=</span> <span class="n">LR_poly</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_poly</span><span class="p">)</span>
+
+<span class="n">BIC_poly</span> <span class="o">=</span> <span class="n">BIC</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">yhat_poly</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># N params (no intercept)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BIC (polynomial, N=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">BIC_poly</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BIC (polynomial, N=40) = -244.673
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gaussian_features</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">25.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gaussian features with N evenly spaced centers across x&#39;s range.&quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">centers</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">**</span><span class="mi">2</span>               <span class="c1"># (n_samples, N)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">d2</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Gaussian regression: 20 Gaussians (20 parameters)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">X_gauss</span> <span class="o">=</span> <span class="n">gaussian_features</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">25.0</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_peak</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">LR_gauss</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_gauss</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">yhat_gauss</span> <span class="o">=</span> <span class="n">LR_gauss</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_gauss</span><span class="p">)</span>
+
+<span class="n">BIC_gauss</span> <span class="o">=</span> <span class="n">BIC</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">yhat_gauss</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># N params (no intercept)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BIC (gaussian, N=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">BIC_gauss</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BIC (gaussian, N=20) = -895.704
+</pre></div>
+</div>
+</div>
+</div>
+<p>The BIC is lower for the Gaussian model, which suggests that it is a better fit. Let’s visualize to see if this aligns with our intuition:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">yhat_poly</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">yhat_gauss</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Prediction&#39;</span><span class="p">])</span>
+    
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Polynomial Regression w/ n = 40&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Gaussian Regression w/ n = 20&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7a764362db25ca5f0f4197b37c4114b3ad6b98aaff66fb25a49c805ffe5a56b7.png" src="../_images/7a764362db25ca5f0f4197b37c4114b3ad6b98aaff66fb25a49c805ffe5a56b7.png" />
+</div>
+</div>
+<p>Based on the visualization, it seems clear that the BIC prediction is correct: The Gaussian model is better even though it has fewer parameters.</p>
+<p>Building on this, let’s next use the BIC to determine the optimal number of evenly-spaced Gaussian basis functions. To do this, we compute the BIC as a function of <em>N</em> and choose the value that minimises the criterion.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bic_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">N_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">N_list</span><span class="p">:</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">gaussian_features</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+    <span class="n">yhat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">bic_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BIC</span><span class="p">(</span><span class="n">y_peak</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+
+<span class="n">opt_N</span> <span class="o">=</span> <span class="n">N_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">bic_list</span><span class="p">))]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal N according to BIC = </span><span class="si">{</span><span class="n">opt_N</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_list</span><span class="p">,</span> <span class="n">bic_list</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span> <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Number of Gaussian basis functions, N&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Model complexity optimisation with BIC&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">opt_N</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;optimum N = </span><span class="si">{</span><span class="n">opt_N</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal N according to BIC = 15
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x115460a60&gt;
+</pre></div>
+</div>
+<img alt="../_images/8b4548d782503bd97304d00f67d0c23c50ae6f4223d0edc62ca91a06ac5bbcf3.png" src="../_images/8b4548d782503bd97304d00f67d0c23c50ae6f4223d0edc62ca91a06ac5bbcf3.png" />
+</div>
+</div>
+<p>The two competing factors in complexity optimization can be seen in this plot. Before the optimum, the BIC decreases quickly because it is dominated by the improvement in accuracy. After the optimum, it increases slowly, because it is dominated by the logarithmic dependence on the number of parameters. Let’s visualize again to see how the optimum from the BIC compares to models that it determined to be underfit or overfit:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+<span class="n">X_under</span> <span class="o">=</span> <span class="n">gaussian_features</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">model_under</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_under</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+<span class="n">yhat_under</span> <span class="o">=</span> <span class="n">model_under</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_under</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">yhat_under</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">X_opt</span> <span class="o">=</span> <span class="n">gaussian_features</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">opt_N</span><span class="p">)</span>
+<span class="n">model_opt</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_opt</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+<span class="n">yhat_opt</span> <span class="o">=</span> <span class="n">model_opt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_opt</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">yhat_opt</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">X_over</span> <span class="o">=</span> <span class="n">gaussian_features</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="n">model_over</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_over</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+<span class="n">yhat_over</span> <span class="o">=</span> <span class="n">model_over</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_over</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">yhat_over</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Prediction&#39;</span><span class="p">])</span>
+    
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Underfit&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Optimal&#39;</span><span class="p">);</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Overfit&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a5d4c75914fcff16fa55e8fef8c42f7f8d3a33f60cafbc45c37a7c93d9146ed5.png" src="../_images/a5d4c75914fcff16fa55e8fef8c42f7f8d3a33f60cafbc45c37a7c93d9146ed5.png" />
+</div>
+</div>
+<p>The trend in BIC is reflected in the visualization here: the underfit model is very obviously much worse than the over-fit model. The over-fit model provides a very similar fit to the data, but it is less optimal because it has too many parameters.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using evenly-spaced Gaussians is not a very clever way to fit spectra, and would not be used in practice, but it serves as a useful demonstration of the concept of BIC and complexity optimization. Consider models that instead select peak positions and widths intuitively or using non-linear optimization. Do you expect that the BIC would be higher (less probable) or lower (more probable) than an evenly-spaced Gaussian model with the same number of fitted parameters?</p>
+</div>
+<section id="additional-notes-on-information-criteria">
+<h3>Additional Notes on Information Criteria<a class="headerlink" href="#additional-notes-on-information-criteria" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Effect of error distribution.</strong>  If the residuals are far from normally distributed, the closed-form BIC above may be biased.  In that case you should compute the likelihood explicitly or use cross-validation.</p></li>
+<li><p><strong>Other information criteria.</strong> There are numerous other information criteria such as the <a class="reference external" href="https://doi.org/10.1093/biomet/76.2.297">“corrected AIC” (AICc)</a>, the <a class="reference external" href="https://www.jstor.org/stable/2985032">Hannan–Quinn Information Criterion (HQIC)</a>, the <a class="reference external" href="https://doi.org/10.1111/1467-9868.00353">Deviance Information Criterion (DIC)</a>, and the <a class="reference external" href="https://doi.org/10.1016/0005-1098(78)90005-5">Minimum Description Length (MDL)</a>. In general, the BIC favors the simplest models, the AIC favors models with lower errors, and the others are in between. If you’re unsure, try more than one and look for consensus.</p></li>
+<li><p><strong>Information criteria vs. cross validation.</strong> Information criteria are good options when you have small datasets or when you are comparing models with very similar forms. They tend to be very computationally inexpensive, but have more built-in statistical assumptions, and cannot easily be applied to non-parametric models. Cross validation is a more general approach, and works well when you have a lot of data or when you are comparing models with very different structures.</p></li>
+</ul>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Revisit the non-linear optimization examples from the numerical methods lectures and use the code to compare the BIC of non-linear optimization models with 1, 2, and 3 peaks to the BIC of the evenly-spaced Gaussians model above. Think carefully about how many fitted parameters there are in the case of non-linear regression!</p>
+</div>
+</section>
+</section>
+<section id="regularization">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Regularization</a><a class="headerlink" href="#regularization" title="Link to this heading">#</a></h2>
+<p>Another way of controlling complexity is by trying to penalize models that change very sharply. This idea is called “regularization” and involves quantifying complexity by using parameters that penalize complexity – models with large regularization parameters are expected to be less complicated. In general, regularization parameters are added to the loss function to reduce the magnitude of model weights. For example:</p>
+<div class="math notranslate nohighlight">
+\[
+L = \sum_i \epsilon_i^2 + \alpha \sqrt{\sum_j w_j^2}
+\]</div>
+<p>In this case, we introduce a new hyperparameter, <span class="math notranslate nohighlight">\(\alpha\)</span>, which controls the strength of regularization. We also choose to regularize on the square root of the sum of squared parameters, which is often called the <strong>L2 norm</strong> and written as:</p>
+<div class="math notranslate nohighlight">
+\[
+L = \sum_i \epsilon_i^2 + \alpha ||\vec{w}||_2
+\]</div>
+<p>We can also regularize in other ways, which can have advantages in some cases. We will discuss this more later, but will focus on the L2 norm for now.</p>
+<hr class="docutils" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Why does regularization promote “smooth” models?</p>
+<p>The derivative of a model output <span class="math notranslate nohighlight">\(f\)</span> with respect to an input feature often scales with the size of the fitting coefficients (you can easily verify this for linear regression!). Large coefficients therefore allow the model to wiggle sharply (large derivatives), whereas small coefficients restrict the curvature. Penalising the L2 norm of <span class="math notranslate nohighlight">\(\vec{w}\)</span> thus encourages gentler slopes and a smoother function overall.</p>
+</div>
+<hr class="docutils" />
+<section id="derivation-of-ridge-regression">
+<h3>Derivation of ridge regression<a class="headerlink" href="#derivation-of-ridge-regression" title="Link to this heading">#</a></h3>
+<p>Regularization is especially critical for <strong>non-parametric models</strong>, where the number of parameters is often similar to or larger than the number of data points, and information criteria are not easily defined. It turns out that adding an <span class="math notranslate nohighlight">\(L_2\)</span> penalty results in a relatively minor modification to the standard linear regression equations. Here, we briefly follow the linear regression derivation from the first module to show how this works out.</p>
+<p>To start, we can expand the squared error loss function (using the same transpose rules as in the least-squares derivation):</p>
+<div class="math notranslate nohighlight">
+\[
+L = (\vec{y}-\bar{\bar{X}}\vec{w})^{T}(\vec{y}-\bar{\bar{X}}\vec{w}) + \alpha\vec{w}^{T}\vec{w}
+\]</div>
+<p>We can then refactor this expansion:</p>
+<div class="math notranslate nohighlight">
+\[
+L = \vec{w}^{T}\bar{\bar{X}}^{T}\bar{\bar{X}}\vec{w} - 2\vec{y}^{T}\bar{\bar{X}}\vec{w} + \vec{y}^{T}\vec{y} + \alpha\vec{w}^{T}\vec{w}
+\]</div>
+<p>Next we take the gradient with respect to <span class="math notranslate nohighlight">\(\vec{w}\)</span> and set it to zero, as before:</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla_{\vec{w}} L = 2\bar{\bar{X}}^{T}\bar{\bar{X}}\vec{w} - 2\bar{\bar{X}}^{T}\vec{y} + 2\alpha\vec{w} = \vec{0}
+\]</div>
+<p>Rearranging gives the <strong>ridge normal equations</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\big(\bar{\bar{X}}^{T}\bar{\bar{X}} + \alpha\bar{\bar{I}}\big)\vec{w} = \bar{\bar{X}}^{T}\vec{y}
+\]</div>
+<p>Thus the penalty term adds a constant <span class="math notranslate nohighlight">\(\alpha\)</span> to the diagonal of <span class="math notranslate nohighlight">\(\bar{\bar{X}}^{T}\bar{\bar{X}}\)</span>. This not only serves to penalize the magnitude of the weights, but it also improves conditioning and ensures invertibility for <span class="math notranslate nohighlight">\(\alpha&gt;0\)</span>. It also does not add any computational cost, since the linear algebra operations are identical to linear regression.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you aren’t sure why adding a constant to the diagonal would ensure invertability, it may be worth revisiting the linear algebra section and thinking about the relationship between eigenvalues, condition numbers, and invertability.</p>
+</div>
+<p>Similar to what we have seen before, it is also possible to transform the features using a kernel, and the same basic math will hold. If we use a kernel and regularize on the sum of squared parameters we obtain <strong>Kernel Ridge Regression (KRR)</strong>, which is one of the most popular models in machine learning. KRR is relatively fast to train for small and medium (<span class="math notranslate nohighlight">\( &lt; \)</span> 10K) datasets, and the fact that the training is well-conditioned and yields a unique solution makes it straightforward to apply in practice. For very large (<span class="math notranslate nohighlight">\( &gt; \)</span>1M) datasets, KRR (and most other non-parametric models) become impractical and it is necessary to use various approximations or switch to parametric models like neural networks.</p>
+<p>Below we demonstrate KRR on the same ethanol IR peak used earlier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.kernel_ridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">KernelRidge</span>
+
+<span class="c1"># Load and isolate the peak (same slice as before)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/ethanol_IR.csv&quot;</span><span class="p">)</span>
+<span class="n">x_all</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;wavenumber [cm^-1]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;absorbance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">x_peak</span> <span class="o">=</span> <span class="n">x_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span>
+<span class="n">y_peak</span> <span class="o">=</span> <span class="n">y_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">alphas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">axes</span><span class="p">):</span>
+
+    <span class="n">KRR</span> <span class="o">=</span> <span class="n">KernelRidge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    <span class="n">KRR</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+
+    <span class="n">x_predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_peak</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_peak</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">300</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">yhat_KRR</span> <span class="o">=</span> <span class="n">KRR</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_predict</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_predict</span><span class="p">,</span> <span class="n">yhat_KRR</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Prediction&#39;</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\alpha$ = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0d144df03fbfd78b96fd2254ecaff786d1b6fe5e2c9bd94d5b1d08a0d20d864e.png" src="../_images/0d144df03fbfd78b96fd2254ecaff786d1b6fe5e2c9bd94d5b1d08a0d20d864e.png" />
+</div>
+</div>
+<p>Here we can see that increasing <span class="math notranslate nohighlight">\(\alpha\)</span> makes the model more “smooth”, and that if we increase it too far the model will not fit the data well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>What happens as <span class="math notranslate nohighlight">\(\alpha \rightarrow 0\)</span> and <span class="math notranslate nohighlight">\(\alpha \rightarrow \infty\)</span>?</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\alpha \rightarrow 0\)</span> removes the regularization term; the model can fit the training data almost perfectly because the number of parameters is equal to the number of data points (over-fitting).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha \rightarrow \infty\)</span> forces <span class="math notranslate nohighlight">\(\vec{w} \rightarrow 0\)</span>, collapsing the model toward a flat line (under-fitting).</p></li>
+</ul>
+</div>
+</section>
+<section id="selecting-the-optimal-alpha-using-cross-validation">
+<h3>Selecting the optimal <span class="math notranslate nohighlight">\(\alpha\)</span> using cross-validation<a class="headerlink" href="#selecting-the-optimal-alpha-using-cross-validation" title="Link to this heading">#</a></h3>
+<p>Cross validation is on of the most common and robust strategies for selecting hyperparameters like <span class="math notranslate nohighlight">\(\alpha\)</span>. In principle, any cross-validation strategy can be used to optimize hyperparameters, with different strategies having different trade-offs. Here we use a simple hold-out strategy by split the data once and treat 40 % as a hold-out set. We then scan <span class="math notranslate nohighlight">\(\alpha\)</span> over four orders of magnitude.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span>
+
+<span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">train_scores</span><span class="p">,</span> <span class="n">test_scores</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">alphas</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">KernelRidge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">yhat_tr</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+    <span class="n">yhat_te</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+    <span class="n">train_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">yhat_tr</span><span class="p">))</span>
+    <span class="n">test_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">yhat_te</span><span class="p">))</span>
+
+<span class="n">opt_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">test_scores</span><span class="p">))</span>
+<span class="n">opt_alpha</span> <span class="o">=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">opt_idx</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal alpha ≈ </span><span class="si">{</span><span class="n">opt_alpha</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt_alpha</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">train_scores</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;train $R^2$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;test $R^2$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">opt_alpha</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;opt $\alpha$ = </span><span class="si">{opt_alpha:.1e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt_alpha</span><span class="o">=</span><span class="n">opt_alpha</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\alpha$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$R^2$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal alpha ≈ 1.17e-02
+</pre></div>
+</div>
+<img alt="../_images/71f48f092321817184326e7035493e9af2eeefec792eb3777c6f71ce85393370.png" src="../_images/71f48f092321817184326e7035493e9af2eeefec792eb3777c6f71ce85393370.png" />
+</div>
+</div>
+<p>We see that the <span class="math notranslate nohighlight">\(r^2\)</span> on the training set always increases as <span class="math notranslate nohighlight">\(\alpha\)</span> decreases. However, the <span class="math notranslate nohighlight">\(r^2\)</span> on the testing set starts to decrease as <span class="math notranslate nohighlight">\(\alpha \rightarrow 0\)</span>. This yields an optimum regularization strength. Note that the optimum is very broad – the test <span class="math notranslate nohighlight">\(r^2\)</span> is almost identical over nearly two orders of magnitude of <span class="math notranslate nohighlight">\(\alpha\)</span>. This tells us two things:</p>
+<ol class="arabic simple">
+<li><p>When searching for an optimum regularization strength, you should search over many orders of magnitude.</p></li>
+<li><p>The exact value of the regularization strength is not very important. As long as you have a reasonable value, the results will be very similar.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="inspecting-parameter-magnitudes-with-a-histogram">
+<h3>Inspecting parameter magnitudes with a histogram<a class="headerlink" href="#inspecting-parameter-magnitudes-with-a-histogram" title="Link to this heading">#</a></h3>
+<p>In kernel ridge regression the fitted function can be written as a weighted sum over training points. Those <strong>dual coefficients</strong> act like parameters: stronger regularization (larger <span class="math notranslate nohighlight">\(\alpha\)</span>) shrinks many of them toward zero. Looking at their distribution is a quick way to see how much the model is relying on a few points versus spreading weight more evenly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit KRR on the full peak at the chosen opt_alpha and examine coefficients</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">KernelRidge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">opt_alpha</span><span class="p">),</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+
+<span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">dual_coef_</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;KRR dual coefficients&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Distribution of coefficients at optimal $\alpha$&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of training points: </span><span class="si">{</span><span class="n">coeffs</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean coeff: </span><span class="si">{</span><span class="n">coeffs</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">, Std: </span><span class="si">{</span><span class="n">coeffs</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">, L2 norm: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of training points: 100
+Mean coeff: 3.418e-02, Std: 3.542e-01, L2 norm: 3.559e+00
+</pre></div>
+</div>
+<img alt="../_images/0c85f275a60d39a09349e516de15b215af95552adc3ed85c2d6fca7699181675.png" src="../_images/0c85f275a60d39a09349e516de15b215af95552adc3ed85c2d6fca7699181675.png" />
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lasso-regularization">
+<h3>LASSO Regularization<a class="headerlink" href="#lasso-regularization" title="Link to this heading">#</a></h3>
+<p>Ridge regression provides a good way to penalize model “smoothness”, but it doesn’t actually reduce the number of parameters. We can see that all of the coefficients are non-zero:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonzero</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total number of non-zero parameters: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nonzero</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of non-zero parameters: 100
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ideally we could also use regularization to reduce the number of parameters. It turns out that this can be achieved using the L1 norm:</p>
+<p><span class="math notranslate nohighlight">\(||L_1|| = \sum_i |w_i|\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(|.|\)</span> is the absolute value. This is called “least absolute shrinkage and selection operator” regression, which is a terrible name with a great acronym: LASSO. The loss function for LASSO is defined as:</p>
+<p><span class="math notranslate nohighlight">\(L_{LASSO} = \sum_i \epsilon_i^2 + \alpha ||\vec{w}||_1\)</span></p>
+<p>This can be compared to the loss function for ridge regression:</p>
+<p><span class="math notranslate nohighlight">\(L_{ridge} = \sum_i \epsilon_i^2 + \alpha ||\vec{w}||_2\)</span></p>
+<p>We will not go through the derivation of <em>why</em> the L1 norm causes parameters to go to zero, but the following schematic, borrowed from <a class="reference external" href="https://niallmartin.wordpress.com/2016/05/12/shrinkage-methods-ridge-and-lasso-regression/">this website</a> may be useful (note that <span class="math notranslate nohighlight">\(\vec{\beta}\)</span> is equivalent to <span class="math notranslate nohighlight">\(\vec{w}\)</span>. In short, the fact that the <span class="math notranslate nohighlight">\(L_1\)</span> norm is square with points that fall on the axes makes it more likely that the combined loss function will have a minima that also falls on an axis (where one of the weights will be zero).</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/lasso_vs_ridge_regression.png"><img alt="../_images/lasso_vs_ridge_regression.png" src="../_images/lasso_vs_ridge_regression.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Illustration of <span class="math notranslate nohighlight">\(L_1\)</span> and <span class="math notranslate nohighlight">\(L_2\)</span> loss functions used for regularization.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The derivation is much more complex, and the resulting model is slightly more difficult to solve, but the cost is generally similar to KRR. We can also test LASSO regression with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>. Unfortunately, we need to create our own feature (basis) matrix, <span class="math notranslate nohighlight">\(X_{ij}\)</span>, similar to linear regression, since “kernel LASSO” is not a very common approach. Usually, LASSO is applied directly to high-dimensional regression problems, as we will see later in the course.</p>
+<p>To make a “kernel LASSO”, we will need a function to evaluate the <code class="docutils literal notranslate"><span class="pre">rbf</span></code>. Instead of using our own, we can use the one from <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics.pairwise</span><span class="w"> </span><span class="kn">import</span> <span class="n">rbf_kernel</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">rbf_kernel</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is very similar to the functions we wrote before, but will generally be a little faster and more stable. Next we will integrate it with LASSO:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">1e-4</span>
+
+<span class="n">LASSO</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">LASSO</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The number of coefficients: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">LASSO</span><span class="o">.</span><span class="n">coef_</span><span class="p">)))</span>
+
+<span class="n">x_predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="mi">300</span><span class="p">)</span> <span class="c1">#create prediction data</span>
+<span class="n">X_predict</span> <span class="o">=</span> <span class="n">rbf_kernel</span><span class="p">(</span><span class="n">x_predict</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+
+<span class="n">yhat_LASSO</span> <span class="o">=</span> <span class="n">LASSO</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_predict</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_predict</span><span class="p">,</span> <span class="n">yhat_LASSO</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Training Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Testing Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Prediction&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\alpha$ = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The number of coefficients: 60
+</pre></div>
+</div>
+<img alt="../_images/7a4a6277b076a5ab0efb750c71eb421092774c307f5e1a8f71d68f22a72c7e47.png" src="../_images/7a4a6277b076a5ab0efb750c71eb421092774c307f5e1a8f71d68f22a72c7e47.png" />
+</div>
+</div>
+<p>The results look similar to KRR. Now we can see how many non-zero parameters there are, and check the parameter values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">LASSO</span><span class="o">.</span><span class="n">coef_</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Coefficients&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Counts&#39;</span><span class="p">)</span>
+
+<span class="n">nonzero</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total number of non-zero parameters: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nonzero</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of non-zero parameters: 41
+</pre></div>
+</div>
+<img alt="../_images/64c4f94382dd160c6bffa8adb9b6e02199c2645f127cd5955afa755be73e5251.png" src="../_images/64c4f94382dd160c6bffa8adb9b6e02199c2645f127cd5955afa755be73e5251.png" />
+</div>
+</div>
+<p>We see that the LASSO regularization has a lot of coefficients that are equal to zero. This is equivalent to discarding these terms and finding which Gaussians should (or should not) be included.</p>
+<hr class="docutils" />
+<div class="tip admonition">
+<p class="admonition-title">Exercise: compare KRR and LASSO</p>
+<p>Using the same ethanol peak dataset:</p>
+<ol class="arabic simple">
+<li><p><strong>Build Gaussian-basis features</strong> (reuse the same kernel width <span class="math notranslate nohighlight">\(\sigma\)</span>. Fit a <strong>LASSO</strong> model for a grid of <span class="math notranslate nohighlight">\(\alpha\)</span> values and record test <span class="math notranslate nohighlight">\(r^2\)</span>.</p></li>
+<li><p><strong>Fit KRR</strong> on the same train/test split and <span class="math notranslate nohighlight">\(\alpha\)</span> grid (keep <span class="math notranslate nohighlight">\(\sigma\)</span> fixed) and record test <span class="math notranslate nohighlight">\(r^2\)</span>.</p></li>
+<li><p><strong>Plot</strong> test <span class="math notranslate nohighlight">\(r^2\)</span> versus <span class="math notranslate nohighlight">\(\alpha\)</span> for both models on one figure. At each model’s optimal <span class="math notranslate nohighlight">\(\alpha\)</span>, also <strong>plot coefficient histograms</strong>: LASSO weights and KRR dual coefficients.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="hyperparameter-tuning-and-data-leakage">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Hyperparameter tuning and data leakage</a><a class="headerlink" href="#hyperparameter-tuning-and-data-leakage" title="Link to this heading">#</a></h2>
+<section id="hyperparameter-tuning">
+<h3>Hyperparameter Tuning<a class="headerlink" href="#hyperparameter-tuning" title="Link to this heading">#</a></h3>
+<p>The KRR and LASSO models above have 2 hyperparameters: <span class="math notranslate nohighlight">\(\gamma\)</span> <span class="math notranslate nohighlight">\(\left(=\frac{1}{2\sigma^2}\right)\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span>. So far, we have optimized <span class="math notranslate nohighlight">\(\alpha\)</span>, but the model performance (and optimal <span class="math notranslate nohighlight">\(\alpha\)</span>) will also depend on <span class="math notranslate nohighlight">\(\sigma\)</span>. You can probably see that optimizing these will get rather tedious.</p>
+<p>Fortunately, <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> has some nice built-in tools to help. The most commonly used is <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code>, which is a brute-force approach that searches over a grid of hyperparameters, and uses cross-validation at each grid point to assess model performace.</p>
+<p>Here we will use GridSearchCV to find the optimum KRR model and its score (related to <span class="math notranslate nohighlight">\(R^2\)</span>):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">train_test_split</span>
+
+<span class="c1"># Reuse x_peak, y_peak from above</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">sigmas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
+<span class="n">gammas</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigmas</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
+<span class="n">parameter_ranges</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">alphas</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">gammas</span><span class="p">}</span>
+
+<span class="n">KRR</span> <span class="o">=</span> <span class="n">KernelRidge</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">)</span>
+
+<span class="n">KRR_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KRR</span><span class="p">,</span> <span class="n">parameter_ranges</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">KRR_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="n">KRR_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">KRR_search</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(KernelRidge(alpha=np.float64(0.01), gamma=np.float64(0.0005555555555555556),
+             kernel=&#39;rbf&#39;),
+ np.float64(0.9953287405139172))
+</pre></div>
+</div>
+</div>
+</div>
+<p>This tells us that the best performance comes from a model with <span class="math notranslate nohighlight">\(\alpha=0.01\)</span> and <span class="math notranslate nohighlight">\(\gamma=0.000555\)</span>. We can check the performance of the model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Predict on a grid covering the peak</span>
+<span class="n">x_predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_peak</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_peak</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">300</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">yhat_KRR</span> <span class="o">=</span> <span class="n">KRR_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_predict</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_predict</span><span class="p">,</span> <span class="n">yhat_KRR</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Training Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Testing Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Prediction&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\alpha$ = </span><span class="si">{}</span><span class="s1">, $\gamma$ = </span><span class="si">{:.6f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">KRR_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">KRR_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">gamma</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b2d55ad2db0e126f38579f18ab8257db4d333be0a2faa66b92856a6284532e4e.png" src="../_images/b2d55ad2db0e126f38579f18ab8257db4d333be0a2faa66b92856a6284532e4e.png" />
+</div>
+</div>
+<p>This is much faster than doing all the work yourself! Remember that, ultimately, you want to evaluate the model on “validation” data that wasn’t used in the hyperparameter tuning. This is done above: the <code class="docutils literal notranslate"><span class="pre">x_train</span></code> and <code class="docutils literal notranslate"><span class="pre">y_train</span></code> sets are used to optimize the hyperparameters (the cross validation splits happen inside the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function) and the <code class="docutils literal notranslate"><span class="pre">x_test</span></code> and <code class="docutils literal notranslate"><span class="pre">y_test</span></code> are used as a <em>validation</em> set. If we want to evaluate the model performance, we should do so on the validation set <strong>but we should not retrain the model parameters using the full or validation sets</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r2_train</span> <span class="o">=</span> <span class="n">KRR_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Training $r^2$ = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r2_train</span><span class="p">))</span>
+
+<span class="n">r2_validation</span> <span class="o">=</span> <span class="n">KRR_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Validation $r^2$ = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r2_validation</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training $r^2$ = 0.9987810785259702
+Validation $r^2$ = 0.9986040494036984
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that the results here are essentially identical, so this is a good validation that we do not have any over-fitting.</p>
+<p>One note is that the best model, and the corresponding performance, will depend on the parameters you search over, as well as the cross-validation strategy, and sometimes even the random seed. In this case, <code class="docutils literal notranslate"><span class="pre">cv=3</span></code> means that the model performs 3-fold cross-validation at each gridpoint. If you change the settings and get slightly different results, don’t worry too much. This usually just means that multiple hyperparameter settings yield similar results – which you should be able to verify by comparing performance on the validation set. If you see that the validation performance is highly sensitive to cross validation strategy, that indicates that you may not have enough data.</p>
+</section>
+<section id="practical-tips-for-optimizing-hyperparameters">
+<h3>Practical Tips for Optimizing Hyperparameters<a class="headerlink" href="#practical-tips-for-optimizing-hyperparameters" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Start coarse, on a log scale.</strong> For scale-sensitive params (e.g., α, γ), try 5–8 values spaced by orders of magnitude (for example, from 1e-6 to 1e0). For KRR, it is often convenient to grid <strong>σ</strong> and map to γ = 1/(2·σ²) since thinking about a standard deviation (σ) can be more intuitive than inverse width (γ).</p></li>
+<li><p><strong>Zoom in iteratively.</strong> After the first search, build a <strong>tighter grid centered on the best point</strong> (halve/double neighboring values). Repeat until the improvement between rounds is negligible.</p></li>
+<li><p><strong>Do not accept an “edge” optimum.</strong> If the best score occurs at the <strong>minimum or maximum</strong> of any grid axis, <strong>expand that axis</strong> and re-run. Reporting an edge value is a red flag that the true optimum lies outside the search.</p></li>
+<li><p><strong>Remember that parameters may be coupled.</strong> Some parameters trade off with each other (e.g., KRR’s α and γ). When zooming in, refine <strong>both</strong> around the current best.</p></li>
+<li><p><strong>Beware of computational time.</strong> If you are trying to optimize many parameters, start with <code class="docutils literal notranslate"><span class="pre">RandomizedSearchCV</span></code> (broad, cheap), then finish with a small <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> around the most promising region.</p></li>
+<li><p><strong>Reproducibility.</strong> If you want the results to be reproducible, fix the <code class="docutils literal notranslate"><span class="pre">random_state</span></code> for splits and record the grid you tried alongside the selected hyperparameters.</p></li>
+</ul>
+<div class="warning admonition">
+<p class="admonition-title">Terminology around “test” and “validation” sets.</p>
+<p>One key idea in machine learning is that you ultimately want to evaluate the model on data that it hasn’t seen at all. When you use data for tuning hyperparameters, this counts as “seeing” the data, since it was used to set the model up. Unfortunately, there is a major ambiguity in the literature about what to call these different sets:</p>
+<p>In older statistics books and the notes for this course “test” sets are used to optimize hyperparameters and “validation” sets are totally unseen datasets used for a final model evaluation. I personally find this intuitive: test sets are used to test out different possible settings, and a validation set is used in the end to validate the model.</p>
+<p>However, the general modern consensus seems to be the opposite: “validation” sets are used to optimize hyperparameters and “test” sets are totally unseen by the model or hyperparameter optimization. Similarly, ambiguous naming may appear in variable naming due to convenience (e.g. <code class="docutils literal notranslate"><span class="pre">x_test</span></code> above is used as a validation set).</p>
+<p>In any of your work, you may use either convention, but <strong>you must clearly explain which convention you are using</strong> in any reports or discussion of your results. This is good practice, since even in the current literature you will find both conventions used.</p>
+</div>
+</section>
+<section id="data-leakage">
+<h3>Data Leakage<a class="headerlink" href="#data-leakage" title="Link to this heading">#</a></h3>
+<p>When performing cross validation, it is important to be aware of “data leakage”, which occurs when information from the validation set (which is supposed to be totally unseen) is inadvertantly used in model construction. There are a few ways this can happen:</p>
+<ol class="arabic simple">
+<li><p>Hyperparameter optimization: Once data has been used to optimize the hyperparameters of a model, the model is biased toward that data. The distinction between “testing” and “validation” sets is meant to address this form of data leakage. If you want the most reliable evaluation of how your model will perform on new data, you should use the performance on the <em>validation</em> set that is not used in any way in hyperparameter tuning.</p></li>
+<li><p>Feature scaling: This will be discussed more in subsequent lectures, but is is common practice to “rescale” model inputs to give them consistent units before putting them into a regression or classification model. If the testing or validation data is used to scale the data, then information has leaked in. Sometimes the effect is subtle, but sometimes it is very significant (especially with time series or stratified splits).</p></li>
+<li><p>Data-specific Subtleties: There are problem-specific ways that information can flow between the training and testing sets. One example is if the target data is derived from some underlying source that is used to generate both the training and testing sets. A specific example is chemical reaction energies, which are derived from the formation energies of individual species. If the formation energy of a given molecule appears in reactions that are present in both the training and the testing set, then the model can implicitly learn the energy from the training data. Sometimes, this may be okay (e.g. if your goal is only to predict reactions that all share the same molecules), but other times it may give misleading results (e.g. if your goal is to predict new reactions based on unseen molecules). For a more detailed example of how training and testing domains can be complicated in chemistry and chemical engineering, consider the various definitions of “in domain” and “out of domain” data from the <a class="reference external" href="https://pubs.acs.org/doi/10.1021/acscatal.0c04525">Open Catalyst Project dataset and models</a>.</p></li>
+</ol>
+<p>While there are some concrete things not to do (don’t use validation data in hyperparameter tuning, and don’t use testing/validation data to scale features) there is no single specific way to avoid data leakage. Instead, the following general idea is recommended: think carefully about how you want to apply your model in practice, then ensure that the <em>validation data is generated to be as close as possible to the real use case.</em> In an ideal scenario, this means that you create your validation dataset <em>after the model is trained</em>, but this is often impractical. The next best thing is to consider how the data was generated, and “hide” some of the original raw data from the entire modeling pipeline (e.g. store it in a different folder on your computer until after the model is trained). It is often very surprising how different the performance of a model can be between “testing” and “validation” sets, and a large discrepancy</p>
+<hr class="docutils" />
+<div class="tip admonition">
+<p class="admonition-title">Exercise: Evaluating data leakage</p>
+<p>Using the ethanol peak dataset:</p>
+<ol class="arabic simple">
+<li><p><strong>Split</strong> the data into <strong>train (70%)</strong> and <strong>validation (30%)</strong> sets.</p></li>
+<li><p><strong>Tune hyperparameters</strong> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> <strong>using only the training set</strong> (e.g., KRR over <span class="math notranslate nohighlight">\(\\alpha\)</span> and <span class="math notranslate nohighlight">\(\\gamma\)</span>). Record the <strong>best CV score</strong> and the <strong>validation <span class="math notranslate nohighlight">\(R^2\)</span></strong> when evaluating the refit model on the validation set.</p></li>
+<li><p><strong>Compare</strong> the <strong>validation <span class="math notranslate nohighlight">\(R^2\)</span></strong> with the best <span class="math notranslate nohighlight">\(R^2\)</span> found during the <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">best_score_</span></code>).</p></li>
+<li><p><strong>Evaluate</strong> the impact of data leakage by incorrectly re-training the model on the full dataset, then re-evaluate the <span class="math notranslate nohighlight">\(R^2\)</span> score on the validation set.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Additional reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p> — <em>The Elements of Statistical Learning</em>, Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection).</p></li>
+<li><p> — The original LASSO paper.</p></li>
+<li><p> — Ridge regression (L2) introduction.</p></li>
+<li><p><a class="reference external" href="https://www.kaggle.com/code/dansbecker/data-leakage/notebook">Kaggle blog post on data leakage</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./2-regression"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic2.2-Model_Validation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Model Validation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic2.4-High_Dimensional_Regression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">High-dimensional Regression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overfitting-and-underfitting">Overfitting and Underfitting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information-criteria">Information Criteria</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-notes-on-information-criteria">Additional Notes on Information Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation-of-ridge-regression">Derivation of ridge regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-optimal-alpha-using-cross-validation">Selecting the optimal <span class="math notranslate nohighlight">\(\alpha\)</span> using cross-validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-parameter-magnitudes-with-a-histogram">Inspecting parameter magnitudes with a histogram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lasso-regularization">LASSO Regularization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning-and-data-leakage">Hyperparameter tuning and data leakage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning">Hyperparameter Tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-tips-for-optimizing-hyperparameters">Practical Tips for Optimizing Hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-leakage">Data Leakage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
