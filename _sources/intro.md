@@ -19,7 +19,9 @@ kernelspec:
 This Jupterbook is derived from a collection of notes, originally developed as a part of the "Data Analytics for Chemical Engineers" course at Georgia Tech (ChBE 4745/6745). The [original notes](https://github.com/medford-group/data_analytics_ChE) have been re-organized into this Jupyterbook format to make it easier to navigate, and in the process some re-organization and refining was done. Several AI assistant tools were used in this conversion process, and while all content has been manually reviewed, some artifacts may still be present. At present, this version is still in "beta testing", and the transition is not complete. Hopefully, the full transition will be done by Fall 2026. If you find any issues with these notes, including significant discrepancies from the original version or just suggestions for improvements, please open an "issue" on the Github page (preferred) or email [A.J. Medford](mailto:ajm@gatech.edu).
 
 ## How to use this book
-If you are a student in ChBE 4745/6745, you should think of this as a supplement to the [original notes](https://github.com/medford-group/data_analytics_ChE), which are still referenced in the lecture videos. This "book" form has been updated to include more content, clean up some issues, and modernize some of the code to follow current standard practices. You can download any page of this book as a Jupyter Notebook (`.ipynb`) using the links in the upper right and run them locally. You can also download the entire sours repo for this book, although the source files are now in MyST Markdown and will need to be converted using `jupytext`. There is an `environment.yml` file in the Github repo for this book which you can use to create a Conda environment with all necessary dependencies (`conda env create -n DA4CHE -f environment.yml`). The LLMs are generally quite knowledgeable about these technicalities, and may be useful in helping you get up and running.
+If you are a student in ChBE 4745/6745, you should think of this as a supplement to the [original notes](https://github.com/medford-group/data_analytics_ChE), which are still referenced in the lecture videos. This "book" form has been updated to include more content, clean up some issues, and modernize some of the code to follow current standard practices. 
+
+You can navigate the book using the left-hand table of contents for modules, and within each module you will find a dynamic table of contents on the right-hand side. You can download any page of this book as a Jupyter Notebook (`.ipynb`) using the links in the upper right and run them locally. You can also download the [entire source repo](https://github.com/medford-group/DA4CHE) for this book, although the source files are now in MyST Markdown and will need to be converted using `jupytext`. There is an `environment.yml` file in the Github repo for this book which you can use to create a Conda environment with all necessary dependencies (`conda env create -n DA4CHE -f environment.yml`). The LLMs are generally quite knowledgeable about these technicalities, and may be useful in helping you get up and running.
 
 If you are not a student in ChBE 4745/6745, congrats on finding this unpublicized resource. You are welcome to use it as you see fit and I hope you find it helpful. Feedback is always welcome and appreciated.
 
@@ -28,6 +30,18 @@ If you are an instructor of another similar course, or want to use these materia
 ## Current status
 
 At the time of this update, only the "Numerical Methods" and "Regression" modules have been converted. This should be treated as an "alpha version", and is subject to change over the coming year as additional modules are converted.
+
+# Overview of Contents
+
+## {doc}`Numerical Methods <1-numerical_methods/intro.md>
+
+## {doc}`Regression <2-regression/intro.md>
+
+## Classification - Coming Soon!
+
+## Data Management - Coming Soon!
+
+## Advanced Topics - Coming at some point...
 
 # Attributions
 
