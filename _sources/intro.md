@@ -33,9 +33,9 @@ At the time of this update, only the "Numerical Methods" and "Regression" module
 
 # Overview of Contents
 
-## {doc}`Numerical Methods <1-numerical_methods/intro.md>
+## [Numerical Methods](1-numerical_methods/intro.md)
 
-## {doc}`Regression <2-regression/intro.md>
+## [Regression](2-regression/intro.md)
 
 ## Classification - Coming Soon!
 
