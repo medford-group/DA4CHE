@@ -1,0 +1,16 @@
+format: jb-book
+root: intro
+
+chapters:
+  - file: 1-numerical_methods/intro
+    sections:
+      - file: 1-numerical_methods/Topic1.1-Python_Basics
+      - file: 1-numerical_methods/Topic1.2-Linear_Algebra
+      - file: 1-numerical_methods/Topic1.3-Linear_Regression
+      - file: 1-numerical_methods/Topic1.4-Numerical_Optimization
+  - file: 2-regression/intro
+    sections:
+      - file: 2-regression/Topic2.1-Non-parametric_Models
+      - file: 2-regression/Topic2.2-Model_Validation
+      - file: 2-regression/Topic2.3-Complexity_Optimization
+      - file: 2-regression/Topic2.4-High_Dimensional_Regression

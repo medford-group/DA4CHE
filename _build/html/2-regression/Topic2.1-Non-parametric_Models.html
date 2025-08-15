@@ -1,0 +1,1016 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Non-parametric Models &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2-regression/Topic2.1-Non-parametric_Models';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Validation" href="Topic2.2-Model_Validation.html" />
+    <link rel="prev" title="Regression" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_Dimensional_Regression.html">High-dimensional Regression</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/2-regression/Topic2.1-Non-parametric_Models.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Non-parametric Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-machine-learning-perspective-on-regression">A Machine-Learning Perspective on Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Parametric Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-vs-non-parametric-models">Parametric vs. Non-Parametric Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-interpolation">Linear Interpolation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-regression">Kernel Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-basis-functions">Visualizing the Basis Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-kernel-regression-model">Fitting a Kernel Regression Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-non-parametric-regression-models">Other Non-Parametric Regression Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-spline-regression">Example: Spline Regression</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#non-parametric-models" id="id2">Non-parametric Models</a></p>
+<ul>
+<li><p><a class="reference internal" href="#learning-objectives" id="id3">Learning Objectives</a></p></li>
+<li><p><a class="reference internal" href="#a-machine-learning-perspective-on-regression" id="id4">A Machine-Learning Perspective on Regression</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id5">Non-Parametric Models</a></p></li>
+<li><p><a class="reference internal" href="#kernel-regression" id="id6">Kernel Regression</a></p></li>
+<li><p><a class="reference internal" href="#other-non-parametric-regression-models" id="id7">Other Non-Parametric Regression Models</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id8">Additional Reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="non-parametric-models">
+<h1><a class="toc-backref" href="#id2" role="doc-backlink">Non-parametric Models</a><a class="headerlink" href="#non-parametric-models" title="Link to this heading">#</a></h1>
+<section id="learning-objectives">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Learning Objectives</a><a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>After working through this topic, you should be able to:</p>
+<ul class="simple">
+<li><p>Distinguish between parametric and non-parametric regression models</p></li>
+<li><p>Identify features, parameters, and hyperparameters in a regression problem</p></li>
+<li><p>Implement piecewise linear interpolation as a non-parametric regression model</p></li>
+<li><p>Apply kernel regression using radial basis functions and adjust kernel width</p></li>
+<li><p>Compare spline models to other non-parametric techniques using scikit-learn</p></li>
+</ul>
+</section>
+<section id="a-machine-learning-perspective-on-regression">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">A Machine-Learning Perspective on Regression</a><a class="headerlink" href="#a-machine-learning-perspective-on-regression" title="Link to this heading">#</a></h2>
+<p>In this section, we introduce the terminology used throughout the rest of this unit. These concepts apply to both simple regression models and more advanced machine learning techniques that we will explore later. Our focus here is on understanding the vocabulary: what do we mean by inputs, outputs, parameters, hyperparameters, features, and models?</p>
+<p>The goal of regression is to find a function</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{y} = f(\vec{x}) + \vec{\epsilon}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f\)</span> is the model, <span class="math notranslate nohighlight">\(x\)</span> is the model input, <span class="math notranslate nohighlight">\(y\)</span> is the model output, and <span class="math notranslate nohighlight">\(\epsilon\)</span> is the error between the model and the data. The model inputs, <span class="math notranslate nohighlight">\(\vec{x}\)</span>, are often called the <strong>features</strong> of a data point. In the previous example, we created features using transformations of <span class="math notranslate nohighlight">\(x\)</span> like polynomials and Gaussian functions. Sometimes, features may also be given in the dataset (e.g. multiple inputs correspond to a single output). Other times, the model input may be data that does not have obvious vector-based features (e.g. images, audio, molecules, etc.). In this case, we can think of the features as “fingerprints” of some more complex raw input data.</p>
+<p>Of course, representing the model as <span class="math notranslate nohighlight">\(f\)</span> is a gross oversimplification. The function must have some form, and it usually requires <strong>parameters</strong>. Previously we considered general linear regression models of the form:</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = \sum_j w_j X_{ij} + \epsilon_i
+\]</div>
+<p>where the <strong>parameters</strong> are given by <span class="math notranslate nohighlight">\(\vec{w}\)</span>. We also considered non-linear regression with Gaussian functions, which required more parameters, <span class="math notranslate nohighlight">\(\vec{w}\)</span>, <span class="math notranslate nohighlight">\(\vec{\mu}\)</span>, and <span class="math notranslate nohighlight">\(\vec{\sigma}\)</span>. We saw that in order to optimize these parameters we had to put them into a single vector. We could consider this to be a parameter vector, <span class="math notranslate nohighlight">\(\vec{\lambda} = [\vec{w}, \vec{\mu}, \vec{\sigma}]\)</span>, and re-write the model more generally as:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{y} = f(\vec{x}, \vec{\lambda}) + \vec{\epsilon}
+\]</div>
+<p>We also had to decide how many functions to include in the model (e.g., number of polynomial terms or Gaussian basis functions). This determines the number of parameters, and is referred to as a <strong>hyperparameter</strong> because it controls the overall model complexity. Hyperparameters control the complexity of the final model, and the parameters will depend on the hyperparameters, so we can think of the parameters as being a function of the hyperparameters, <span class="math notranslate nohighlight">\(\vec{\lambda}(\vec{\eta})\)</span>. If we put all this together we get a model form of:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{y} = f(\vec{x}, \vec{\lambda}(\vec{\eta})) + \vec{\epsilon}
+\]</div>
+<p>Machine learning differs from regular regression in that it seeks to optimize <span class="math notranslate nohighlight">\(\vec{\lambda}\)</span> (parameter optimization), <span class="math notranslate nohighlight">\(\vec{\eta}\)</span> (complexity optimization) in order to <strong>obtain a model that generalizes to new input data</strong>. Machine learning also sometimes involves selecting <span class="math notranslate nohighlight">\(\vec{x}\)</span> (feature selection) or generating <span class="math notranslate nohighlight">\(\vec{x}\)</span> from non-vectorized data such as text or images (feature generation).</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p><strong>Identify the features, parameters, and hyperparameters in a common regression model.</strong></p>
+<p>Consider a polynomial regression model of the form:</p>
+<div class="math notranslate nohighlight">
+\[
+y = w_0 + w_1 x + w_2 x^2
+\]</div>
+<ol class="arabic simple">
+<li><p>What is the <strong>feature vector</strong> <span class="math notranslate nohighlight">\(\vec{x}\)</span> in this model?</p></li>
+<li><p>What are the <strong>parameters</strong> <span class="math notranslate nohighlight">\(\vec{w}\)</span> that must be learned from data?</p></li>
+<li><p>If we decide to use a cubic polynomial instead (adding a <span class="math notranslate nohighlight">\(w_3 x^3\)</span> term), what quantity has changed? Is this a parameter or a hyperparameter?</p></li>
+</ol>
+<p><em>Tip: Remember that features describe the input, parameters are learned from data, and hyperparameters are set by the user before training.</em></p>
+</div>
+</section>
+<section id="id1">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Non-Parametric Models</a><a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>We covered the basic math behind parameter optimization in the numerical methods module. The basic idea is to follow two steps:</p>
+<ul class="simple">
+<li><p>Construct a loss function that quantifies how well your model fits the data</p></li>
+<li><p>Minimize the loss function with respect to the model parameters</p></li>
+</ul>
+<p>The loss function itself could be the sum of squared errors, some other measure of error (e.g. absolute value of error), and can also contain constraints on the parameters themselves (e.g. force parameters to be positive).</p>
+<p>Minimizing the loss function can be achieved analytically in the case of general linear models, or numerically for non-linear models. Moving forward we will typically default to numerical optimization.</p>
+<p>In this section we will explore another aspect of model parameters by looking at a new class of models called “non-parameteric” models. The math of parameter optimization is the same, but the way the parameters are defined is different.</p>
+<section id="parametric-vs-non-parametric-models">
+<h3>Parametric vs. Non-Parametric Models<a class="headerlink" href="#parametric-vs-non-parametric-models" title="Link to this heading">#</a></h3>
+<p>A “parametric” model has parameters that do not explicitly depend on or include the input points. The polynomial regression model is an example of a parametric model. The number of parameters is fixed with respect to the number of data points.</p>
+<p>A “non-parametric” model includes parameters that are defined on the domain of the independent variables and depend on the inputs. A spline model is an example of a non-parametric model. The number of parameters in the model varies with the number of data points.</p>
+<p>Nonparametric models are generally excellent for interpolation, but fail miserably for extrapolation, while parametric models are less accurate for interpolation but provide more reasonable extrapolations. Nonparametric models tend to have many more parameters, and proper optimization of model complexity can lead to similar performance for both types.</p>
+<p>See <a class="reference external" href="https://machinelearningmastery.com/parametric-and-nonparametric-machine-learning-algorithms/">this post</a> for more information.</p>
+</section>
+<section id="linear-interpolation">
+<h3>Linear Interpolation<a class="headerlink" href="#linear-interpolation" title="Link to this heading">#</a></h3>
+<p>To introduce non-parametric models, we will start with linear interpolation. There are much more intuitive and convenient ways to linearly interpolate, but here we will present it in a way that is meant to provide a conceptual bridge between standard linear regression and non-parametric modeling.</p>
+<p>In ordinary linear regression we pick a <strong>fixed, global</strong> set of basis functions (e.g., <span class="math notranslate nohighlight">\(1, x, x^2\)</span>) and fit a <strong>small, fixed</strong> number of coefficients—this is <em>parametric</em>. With linear interpolation we keep the <em>same linear-in-parameters machinery</em> and least-squares viewpoint, but switch the basis to <strong>piecewise-linear “hinge” functions</strong> anchored at the observed inputs:</p>
+<div class="math notranslate nohighlight">
+\[
+X_{ij}=\max(0,\,x_i-x_j),
+\]</div>
+<p>plus a constant intercept term. Fitting coefficients for these features yields a model that passes through all data points, since the number of parameters is equal to the number of data points. Because the number of basis functions (and therefore parameters) <strong>grows with the data</strong>, this is <em>non-parametric</em>.</p>
+<p>This perspective shows that the optimization and diagnostics you know from linear regression still apply—the only change is the design matrix. It also previews more flexible non-parametric methods that we will explore next, such as non-linear radial basis function kernels for smoother interpolation and regularization techniques that help trade off between interpolation and extrapolation.</p>
+<p>To demonstrate linear interpolation, we can revisit the spectra dataset that we worked with during the last module:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/ethanol_IR.csv&#39;</span><span class="p">)</span>
+<span class="n">x_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;wavenumber [cm^-1]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;absorbance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">x_peak</span> <span class="o">=</span> <span class="n">x_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span>
+<span class="n">y_peak</span> <span class="o">=</span> <span class="n">y_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span><span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;IR spectra data&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7a64a55766ceb4920e1f8c776b11d4375cf9c3bfef53f3c4d45a77204d47e3e0.png" src="../_images/7a64a55766ceb4920e1f8c776b11d4375cf9c3bfef53f3c4d45a77204d47e3e0.png" />
+</div>
+</div>
+<p>The goal here is to linearly interpolate between each point with a straight line, and we want to solve this using the machinery of linear regression that we have already seen. The key is to use a basis of “piecewise linear” functions (often called “hinge” functions):</p>
+<p><span class="math notranslate nohighlight">\(X_{ij} = max(0, x_i-x_j)\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">piecewise_linear</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">X</span>
+            
+<span class="n">X</span> <span class="o">=</span> <span class="n">piecewise_linear</span><span class="p">(</span><span class="n">x_peak</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">50</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;piecewise linear function&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/827edee7ad99a5ce764d885a35e7f8725b0b0c08452b3829de8ecf84dc7f5720.png" src="../_images/827edee7ad99a5ce764d885a35e7f8725b0b0c08452b3829de8ecf84dc7f5720.png" />
+</div>
+</div>
+<p>There is one technical detail here, since the final column will actually just be 0:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Clearly, this cannot contribute to the model. We can make it a column of 1’s instead, so that it acts like an intercept term:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
+       1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
+       1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
+       1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
+       1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
+       1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>This trick of adding an intercept with a column of 1’s (or any constant) is one we will use throughout the course. Conceptually, it is a little tricky to understand at first, but it makes the math cleaner (although it is mathematically identical to adding a simple constant intercept).</p>
+<p>Now let’s visualize all of the basis functions:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_peak</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;piecewise linear functions&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b912730faedf149df8a410bb10e36e303cfa12223dc292e98ff7b23b2dd1f0fb.png" src="../_images/b912730faedf149df8a410bb10e36e303cfa12223dc292e98ff7b23b2dd1f0fb.png" />
+</div>
+</div>
+<p>Our basis set, or “features”, consist of straight lines with slope 1 that originate at each data point. Now we can achieve linear interpolation by solving the general linear regression problem. We will use <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> to make this easy, but you can verify the solution using the equations from the foundations module if you want:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">#create a linear regression model instance (no intercept needed)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span> <span class="c1">#fit the model</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span> <span class="c1">#get the &quot;score&quot;, which is equivalent to r^2</span>
+
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1">#create the model prediction</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;IR spectra data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Linear Regression&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;r^2 = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 = 1.0
+</pre></div>
+</div>
+<img alt="../_images/3225c1a409d07130b64ac363819d5104d2057ef7f6972dc6e2b434311d8b2fbd.png" src="../_images/3225c1a409d07130b64ac363819d5104d2057ef7f6972dc6e2b434311d8b2fbd.png" />
+</div>
+</div>
+<p>We can see that the model goes through every point exactly, which we should know from <span class="math notranslate nohighlight">\(r^2=1\)</span>. However, we don’t actually know what the model is doing in between the points. For this we need to predict on a new set of <span class="math notranslate nohighlight">\(x\)</span> points that has a higher resolution:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">2650</span><span class="p">,</span> <span class="mi">3150</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">X_predict</span> <span class="o">=</span> <span class="n">piecewise_linear</span><span class="p">(</span><span class="n">x_predict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This brings up an important conceptual problem: we cannot directly predict on the new dataset because the dimensions of the matrices do not match. The column space acts as a basis set for regression, and when we trained the model we had 100 “features” (one for each data point). However, our new X matrix has 500 columns, which is a different set of “features” than the 100 that we trained on originally. <strong>If we want to make predictions we need to expand the row space while keeping the column space constant</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">piecewise_linear</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_train</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span> <span class="c1">#&lt;- number of data points</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span> <span class="c1">#&lt;- number of features</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">M</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_test</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_train</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">X</span>
+
+<span class="n">X_predict</span> <span class="o">=</span> <span class="n">piecewise_linear</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">x_predict</span><span class="p">)</span>
+<span class="n">yhat_predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_predict</span><span class="p">)</span>
+
+<span class="n">r2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_predict</span><span class="p">,</span> <span class="n">yhat_predict</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;IR spectra data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Linear Regression&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">2850</span><span class="p">,</span> <span class="mi">2900</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;r^2 = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0f4a743ca9f0eb795c297d9f6f1d30b50fa0e3b4d754d1209a429eb21d0a03ed.png" src="../_images/0f4a743ca9f0eb795c297d9f6f1d30b50fa0e3b4d754d1209a429eb21d0a03ed.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r^2 = 1.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see that the model successful at interpolating between the points. This is an example of a <strong>non-parametric</strong> model. The number of parameters, <span class="math notranslate nohighlight">\(\vec{w}\)</span> is equal to the number of <strong>training</strong> data points, and the number of columns in the linear design matrix. The number of rows is equal to the number of data points that the model will predict. These numbers do not need to be equal, and it is not necessary that the training points are included in the prediction.</p>
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Use every third data point of the spectra dataset to train a linear interpolation model and explore the predictions.</p>
+<ol class="arabic simple">
+<li><p>Select every third datapoint from the <code class="docutils literal notranslate"><span class="pre">(x_peak,</span> <span class="pre">y_peak)</span></code> dataset, and use this to train a linear interpolation model.</p></li>
+<li><p>Predict the full dataset using the model and compare the predictions to the original data.</p></li>
+<li><p>Create a new high-resolution prediction set with a total of 300 evenly-spaced points. Compare these predictions to those of the full dataset.</p></li>
+<li><p>Create another prediction dataset with 300 evenly-spaced points with the minimum and maximum being 10 wavenumbers above/below the original maximum. This shows how the model performs when asked to extrapolate.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="kernel-regression">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Kernel Regression</a><a class="headerlink" href="#kernel-regression" title="Link to this heading">#</a></h2>
+<p>Of course, we are not limited to using piecewise linear functions in non-parametric models. In fact, this is rarely done in practice, since there are easier ways to do linear interpolation. However, using the same mathematical machinery we can take a more general and powerful approach using the idea of a <strong>kernel</strong> function. In machine learning, a kernel is a function that describes the <strong>similarity</strong> between two input points. We use this to define a new type of regression model that places <strong>smooth, localized bumps</strong> (called <strong>basis functions</strong>) at each training point.</p>
+<p>A kernel takes the form:</p>
+<div class="math notranslate nohighlight">
+\[
+K(i, j) = f(x_i, x_j)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\( f \)</span> is some function of two inputs. Formally, any function that is symmetric ( <span class="math notranslate nohighlight">\(K(i,j) = K(j,i) \)</span>) and “positive semi-definite” (i.e. all entries are zero or positive) can serve as a kernel. There are many common kernels, such as the polynomial kernel,  the Laplacian/exponential kernel, or the periodic kernel, and the <a class="reference external" href="https://www.cs.toronto.edu/~duvenaud/cookbook/">kernel cookbook</a> is a good resource for learning more about these standard kernels and how to combine them. However, the most commonly used kernel is the <strong>radial basis function</strong> (RBF) or <strong>Gaussian kernel</strong>, which is the one we will focus on in this course. It is defined by:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{rbf}(i, j) = \exp\left(-\gamma (x_i - x_j)^2\right)
+\]</div>
+<p>This function is largest when <span class="math notranslate nohighlight">\( x_i \approx x_j \)</span> and quickly decays to zero as the two inputs become more distant. You can think of it as placing a <strong>smooth bump</strong> centered at every training point <span class="math notranslate nohighlight">\( x_j \)</span>, and the height of each bump at test point <span class="math notranslate nohighlight">\( x_i \)</span> depends on how close <span class="math notranslate nohighlight">\( x_i \)</span> is to <span class="math notranslate nohighlight">\( x_j \)</span>.</p>
+<p>If you look closely, this is just the standard Gaussian function:</p>
+<div class="math notranslate nohighlight">
+\[
+G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
+\]</div>
+<p>with <span class="math notranslate nohighlight">\( \mu = x_j \)</span> and <span class="math notranslate nohighlight">\( \gamma = \frac{1}{2\sigma^2} \)</span>. That means we can use the Gaussian width <span class="math notranslate nohighlight">\( \sigma \)</span> to tune how wide each bump is, or equivalently use <span class="math notranslate nohighlight">\( \gamma \)</span> to control how rapidly the kernel decays.</p>
+<hr class="docutils" />
+<section id="visualizing-the-basis-functions">
+<h3>Visualizing the Basis Functions<a class="headerlink" href="#visualizing-the-basis-functions" title="Link to this heading">#</a></h3>
+<p>Let’s start by defining a function to build the radial basis design matrix:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rbf</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_train</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_train</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can explore how the RBF basis looks for a specific value of <span class="math notranslate nohighlight">\( \sigma \)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">X_rbf</span> <span class="o">=</span> <span class="n">rbf</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="n">x_test</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">X_rbf</span><span class="p">[:,</span> <span class="mi">50</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;rbf basis $\sigma$ = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sigma</span><span class="p">)));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/357a13046b0ed28237b1d09fc947e1e829035910e26dd66cbcf0b6c786655443.png" src="../_images/357a13046b0ed28237b1d09fc947e1e829035910e26dd66cbcf0b6c786655443.png" />
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="fitting-a-kernel-regression-model">
+<h3>Fitting a Kernel Regression Model<a class="headerlink" href="#fitting-a-kernel-regression-model" title="Link to this heading">#</a></h3>
+<p>Let’s use this basis to build a regression model just like we did with linear interpolation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span> <span class="o">=</span> <span class="n">rbf</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+<span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="n">model_rbf</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">model_rbf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+
+<span class="n">X_eval</span> <span class="o">=</span> <span class="n">rbf</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="n">xx</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+<span class="n">y_eval</span> <span class="o">=</span> <span class="n">model_rbf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_eval</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">y_eval</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;rbf model fit&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/11fbfe6c9bbf9b706a94ab93663c92ac5758d70594246f73d3475dc6fa2b9026.png" src="../_images/11fbfe6c9bbf9b706a94ab93663c92ac5758d70594246f73d3475dc6fa2b9026.png" />
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>What happens when the kernel is too wide or too narrow?</p>
+<ul class="simple">
+<li><p>If the kernel is <strong>too wide</strong> (large <span class="math notranslate nohighlight">\(\sigma\)</span> , small <span class="math notranslate nohighlight">\(\gamma\)</span> ), then each basis function overlaps many others. The model becomes overly smooth and may underfit the data.</p></li>
+<li><p>If the kernel is <strong>too narrow</strong> (small <span class="math notranslate nohighlight">\( \sigma \)</span>, large <span class="math notranslate nohighlight">\( \gamma \)</span>), then each basis function only affects a tiny region, and the model can overfit the data and become unstable.</p></li>
+<li><p>A good kernel regression model requires choosing an appropriate <strong>kernel width</strong>, much like choosing the degree of a polynomial.</p></li>
+</ul>
+</div>
+<p>Let’s try several different kernel widths and observe how they affect the smoothness and flexibility of the model. For this demonstration, we will use:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( \sigma = 25 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( \sigma = 50 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( \sigma = 100 \)</span></p></li>
+</ul>
+<p>Here, we keep the same training data and model setup, and compare the resulting model fits.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sigmas</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">sigma</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">:</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">rbf</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    <span class="n">model_rbf</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">model_rbf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">)</span>
+
+    <span class="n">X_eval</span> <span class="o">=</span> <span class="n">rbf</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="n">xx</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    <span class="n">y_eval</span> <span class="o">=</span> <span class="n">model_rbf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_eval</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">y_eval</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$\sigma$ = </span><span class="si">{</span><span class="n">sigma</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;k.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [$cm^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/841c22cc86b35419a7cfc92af62748947765828f93c58afee6530bfb483773be.png" src="../_images/841c22cc86b35419a7cfc92af62748947765828f93c58afee6530bfb483773be.png" />
+</div>
+</div>
+<hr class="docutils" />
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Explore how the <strong>number of training points</strong> affects the model fit.</p>
+<ul class="simple">
+<li><p>Fix <span class="math notranslate nohighlight">\( \sigma = 50 \)</span></p></li>
+<li><p>Try using every 5th, every 3rd, and all available data points as your training set</p></li>
+<li><p>Compare the fitted curves and comment on the impact of data density</p></li>
+</ul>
+<p>This exercise helps illustrate the <strong>tradeoff between data quantity and model complexity</strong> in non-parametric regression.</p>
+</div>
+</section>
+</section>
+<section id="other-non-parametric-regression-models">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Other Non-Parametric Regression Models</a><a class="headerlink" href="#other-non-parametric-regression-models" title="Link to this heading">#</a></h2>
+<p>In previous sections, we explored two important types of non-parametric models for regression:</p>
+<ul class="simple">
+<li><p><strong>Linear interpolation</strong>, where the model constructs piecewise linear functions based directly on the data points</p></li>
+<li><p><strong>Kernel regression</strong>, which fits smooth functions by applying a local Gaussian-like influence from each data point</p></li>
+</ul>
+<p>These are both examples of <strong>instance-based models</strong>, where the complexity of the model grows with the number of training points. Many other regression techniques share this non-parametric character — they do not assume a fixed functional form with a predetermined number of parameters. Instead, the model structure adapts to the data.</p>
+<p>Here are a few additional families of non-parametric regression models:</p>
+<ul class="simple">
+<li><p><strong>Spline models</strong>: Use piecewise polynomials joined at “knots” with continuity and smoothness constraints (e.g., cubic splines).</p></li>
+<li><p><strong>Gaussian Process Regression (GPR)</strong>: Places a prior over functions using a kernel and produces a posterior predictive distribution. This is a probabilistic model with built-in uncertainty quantification.</p></li>
+<li><p><strong>Locally weighted regression (LOWESS/LOESS)</strong>: Uses local weighted least-squares fits in a moving window across the input domain.</p></li>
+</ul>
+<p>All of these methods provide flexible tools for regression, particularly when the true underlying function is complex or not well represented by a simple parametric form.</p>
+<hr class="docutils" />
+<section id="example-spline-regression">
+<h3>Example: Spline Regression<a class="headerlink" href="#example-spline-regression" title="Link to this heading">#</a></h3>
+<p>Splines are an elegant extension of piecewise polynomial interpolation. They combine flexibility with smoothness by connecting low-degree polynomials at <strong>knot points</strong>. In this example, we’ll use a cubic spline model implemented via <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>’s <code class="docutils literal notranslate"><span class="pre">SplineTransformer</span></code> along with linear regression.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SplineTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+
+<span class="c1"># Use every third point for training</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_peak</span><span class="p">[::</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_peak</span><span class="p">[::</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="c1"># Use a spline transformer with 10 knots and cubic polynomials</span>
+<span class="n">spline_model</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">SplineTransformer</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_knots</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">spline_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Evaluate on the full domain</span>
+<span class="n">x_eval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="mi">300</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">spline_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_eval</span><span class="p">)</span>
+
+<span class="c1"># Plot the result</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_eval</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Spline Fit&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavenumber (cm$^{-1}$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5d5015c0c3b380bf6bc406be0038d84f2ca68be69a8eb2edc05e4df28057fa1e.png" src="../_images/5d5015c0c3b380bf6bc406be0038d84f2ca68be69a8eb2edc05e4df28057fa1e.png" />
+</div>
+</div>
+<hr class="docutils" />
+<p>This spline model behaves similarly to kernel regression: it interpolates smoothly between training points while controlling flexibility through the <strong>number of knots</strong> and <strong>polynomial degree</strong>. It is often more stable than interpolation, and more interpretable than kernel methods when used with fixed knot locations.</p>
+<hr class="docutils" />
+<div class="tip admonition">
+<p class="admonition-title">Exercise</p>
+<p>Explore the effect of <strong>spline hyperparameters</strong> on model flexibility:</p>
+<ul class="simple">
+<li><p>Try changing the number of knots (e.g., <code class="docutils literal notranslate"><span class="pre">n_knots=5</span></code>, <code class="docutils literal notranslate"><span class="pre">n_knots=20</span></code>)</p></li>
+<li><p>Try using lower or higher-degree polynomials (e.g., <code class="docutils literal notranslate"><span class="pre">degree=2</span></code> or <code class="docutils literal notranslate"><span class="pre">degree=4</span></code>)</p></li>
+<li><p>Use a fixed training set (e.g., every third point)</p></li>
+</ul>
+<p>Plot the resulting fits and describe how the <strong>number of knots</strong> and <strong>polynomial degree</strong> affect the smoothness and flexibility of the spline model.</p>
+</div>
+</section>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://machinelearningmastery.com/parametric-and-nonparametric-machine-learning-algorithms/">Parametric vs. Nonparametric Models</a> — A brief introduction highlighting key differences and examples</p></li>
+<li><p><a class="reference external" href="https://www.cs.toronto.edu/~duvenaud/cookbook/">Kernel Cookbook</a> - Details on different types of kernels and how to combine them.</p></li>
+<li><p>Hastie, Tibshirani, and Friedman. <em>The Elements of Statistical Learning</em>, Chapter 3: “Linear Methods for Regression”. Springer. <a class="reference external" href="https://hastie.su.domains/ElemStatLearn/">Available online</a></p></li>
+<li><p><a class="reference external" href="https://sebastianraschka.com/blog/2020/model-evaluation-selection-part2.html">Nonparametric Regression: Concepts, Models, and Techniques</a> by Sebastian Raschka — An intuitive and detailed blog post covering kernel regression, local models, and model complexity tradeoffs</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./2-regression"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic2.2-Model_Validation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Model Validation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-machine-learning-perspective-on-regression">A Machine-Learning Perspective on Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Parametric Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-vs-non-parametric-models">Parametric vs. Non-Parametric Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-interpolation">Linear Interpolation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-regression">Kernel Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-basis-functions">Visualizing the Basis Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-kernel-regression-model">Fitting a Kernel Regression Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-non-parametric-regression-models">Other Non-Parametric Regression Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-spline-regression">Example: Spline Regression</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

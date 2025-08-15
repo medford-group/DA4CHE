@@ -1,0 +1,12 @@
+Notes on refining lectures:
+
+- The makefile is very useful! It was created by ChatGPT, but generally works well.
+    * Use `make serve` to automatically build the book and launch the server. It requires some dependencies to work (I forget what I had to install), but once it's running it makes it very easy to preview the build.
+    * Building the whole book is slow once it gets large. Use `make test FILE=<filename>` for a quick test of the code in a single file that does not need to build the whole notebook.
+
+- Using ChatGPT is a good and bad. It's very good at certain things, but also makes sneaky mistakes that mean you need to manually review everything. A few notes:
+
+    * I start a new chat for each topic, since the models start to hallucinate after too much interaction.
+    * Beware that, even if explicitly instructed, it will often make changes to your content. Always be sure to compare things with the original content to be sure.
+    * Generally speaking, it works better with smaller chunks. I can usually give it about one sub-section of a file at a time (e.g. the content within a level-2 header) and it is reasonably reliable.
+    * Always save intermediate files! The workspaces or code generated will be deleted and are unrecoverable. I tend to download one sub-section at a time and give a quick review, then I re-upload the lightly reviewed subsections to compile them together with header/learning objectives/reading. I then test and debug all the code and give a final review of the rendered Jupyter book version to finalize each topic.
