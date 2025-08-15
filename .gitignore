@@ -8,8 +8,12 @@ build/
 .env/
 *.egg-info/
 
-# Old versions of things
+# Old versions of things, misc setup files
 _trash/
+build.log
+lecture_refining_notes.txt
+generate_toc.py
+_config-fast.yml
 
 # OS cruft
 .DS_Store
