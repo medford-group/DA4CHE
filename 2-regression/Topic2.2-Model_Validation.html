@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/exercise.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -188,7 +188,8 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Model Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_Dimensional_Regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
 </ul>
 </details></li>
 </ul>
@@ -339,7 +340,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy-metrics">Accuracy Metrics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r-2-value"><span class="math notranslate nohighlight">\(r^2\)</span> value</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-absolute-error-mae">Mean absolute error (MAE)</a></li>
@@ -366,6 +366,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-process-regression">Gaussian Process Regression</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
             </nav>
@@ -382,10 +383,10 @@ document.write(`
 <ul class="simple">
 <li><p><a class="reference internal" href="#model-validation" id="id1">Model Validation</a></p>
 <ul>
-<li><p><a class="reference internal" href="#learning-objectives" id="id2">Learning Objectives</a></p></li>
-<li><p><a class="reference internal" href="#accuracy-metrics" id="id3">Accuracy Metrics</a></p></li>
-<li><p><a class="reference internal" href="#cross-validation" id="id4">Cross Validation</a></p></li>
-<li><p><a class="reference internal" href="#quantifying-error-and-uncertainty" id="id5">Quantifying Error and Uncertainty</a></p></li>
+<li><p><a class="reference internal" href="#accuracy-metrics" id="id2">Accuracy Metrics</a></p></li>
+<li><p><a class="reference internal" href="#cross-validation" id="id3">Cross Validation</a></p></li>
+<li><p><a class="reference internal" href="#quantifying-error-and-uncertainty" id="id4">Quantifying Error and Uncertainty</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id5">Summary</a></p></li>
 <li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
 </ul>
 </li>
@@ -393,8 +394,8 @@ document.write(`
 </nav>
 <section class="tex2jax_ignore mathjax_ignore" id="model-validation">
 <h1><a class="toc-backref" href="#id1" role="doc-backlink">Model Validation</a><a class="headerlink" href="#model-validation" title="Link to this heading">#</a></h1>
-<section id="learning-objectives">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Learning Objectives</a><a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
 <p>By the end of this chapter, you should be able to:</p>
 <ol class="arabic simple">
 <li><p><strong>Compute and interpret</strong> multiple regression accuracy metrics (e.g.\ <span class="math notranslate nohighlight">\(r^2\)</span>, MAE, RMSE) and diagnose error structure with visual tools.</p></li>
@@ -403,6 +404,7 @@ document.write(`
 <li><p><strong>Assess assumptions</strong> such as homoskedasticity and data representativeness, and explain how violating them impacts error estimates.</p></li>
 <li><p><strong>Select appropriate validation and uncertainty techniques</strong> for chemical‑engineering data sets of varying size and noise characteristics.</p></li>
 </ol>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -412,9 +414,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
 <section id="accuracy-metrics">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Accuracy Metrics</a><a class="headerlink" href="#accuracy-metrics" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Accuracy Metrics</a><a class="headerlink" href="#accuracy-metrics" title="Link to this heading">#</a></h2>
 <p>Choosing appropriate accuracy metrics is a crucial step in evaluating regression models: these metrics quantify how closely predictions match observed data and help compare model performance in a standardized way. Before applying these metrics to a real dataset, we will illustrate their utility using a classic toy example—Anscombe’s quartet.</p>
 <p>Anscombe’s quartet is a demonstration introduced by statistician Francis Anscombe in 1973. It consists of four small datasets, each with 11 (x, y) pairs, that share identical summary statistics—mean of x and y, variance, correlation coefficient, and parameters of a fitted linear regression—yet exhibit strikingly different patterns when plotted. This example underscores the importance of visualizing data before relying on numerical summaries alone. Below is a scatterplot for each dataset:</p>
 <div class="cell docutils container">
@@ -628,14 +629,17 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 </div>
 </div>
 <p>A <em>roughly Gaussian</em> residual histogram centered at zero indicates that errors are random and homoscedastic, supporting the use of aggregate metrics such as RMSE.  Skewed or heavy‑tailed residuals (as seen for Dataset IV) warn that single‑number metrics can hide important structure in the errors.</p>
-<div class="tip admonition">
-<p class="admonition-title">Exercise</p>
-<p>Compute the MAE, RMSE, and maximum error for each dataset III in Anscomb’s quartet with and without the outlier, and determine which metric is most sensitive to the outlier.</p>
+<div class="exercise admonition" id="ex-reg-outlier-sens">
+
+<p class="admonition-title"><span class="caption-number">Exercise 22 </span></p>
+<section id="exercise-content">
+<p>Compute the MAE, RMSE, and maximum error for dataset III in Anscombe’s quartet with and without the outlier, and determine which metric is most sensitive to the outlier.</p>
+</section>
 </div>
 </section>
 </section>
 <section id="cross-validation">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Cross Validation</a><a class="headerlink" href="#cross-validation" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Cross Validation</a><a class="headerlink" href="#cross-validation" title="Link to this heading">#</a></h2>
 <p>In the prior examples we computed error metrics for models that were trained with <strong>all</strong> available data.  However, what we really care about is <em>generalization</em>—how the model will perform on <strong>new</strong> data.  Gathering additional measurements is often impractical, so we <strong>simulate</strong> this situation through <strong>cross‑validation</strong>.  In cross‑validation some examples (the <em>test</em> set) are hidden while the model is fit to the remaining <em>training</em> examples; we then evaluate the loss on the hidden data to see how well the model predicts it.</p>
 <p>There are many standard strategies:</p>
 <ul class="simple">
@@ -645,6 +649,10 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 <li><p><strong>bootstrapping</strong> – sample with replacement to generate synthetic datasets of the same size, repeating many times.</p></li>
 </ul>
 <p>Different techniques balance statistical robustness and computational effort.  Hold‑out is fast but can be sensitive to unlucky splits, especially for small datasets.  k‑fold alleviates that risk at the cost of <em>k</em> model fits.  Leave‑<em>p</em>‑out becomes expensive for <em>p &gt; 1</em>.  <strong>Doing some form of cross‑validation is almost always better than none.</strong></p>
+<div class="note admonition">
+<p class="admonition-title">Key assumption: data representativeness</p>
+<p>All cross‑validation techniques rely on the critical assumption that <em>the collected data are representative of future data</em>.  An example in chemical engineering would be building a model at one set of process conditions but then applying it under very different conditions. The CV accuracy will look deceptively good in that case, and the model will perform much worse when applied to the new conditions.</p>
+</div>
 <p>In this section, we will return to the ethanol IR spectrum dataset and demonstrate various types of cross validation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -830,10 +838,13 @@ r^2 all data  = 0.949
 </div>
 </div>
 <p>When the end‑points land in the test fold, the model must <strong>extrapolate</strong> and often fails catastrophically.  k‑fold CV lowers the risk of an <strong>overly lucky</strong> (or unlucky) split—but at the computational cost of <em>k</em> separate model fits.</p>
-<div class="note admonition">
-<p class="admonition-title">Exercise</p>
+<div class="exercise admonition" id="ex-reg-kfold-shuffle">
+
+<p class="admonition-title"><span class="caption-number">Exercise 23 </span></p>
+<section id="exercise-content">
 <p>In the code block above, note that we used <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> when performing k-fold cross validation. This ensures that the data is shuffled before the folds are taken, so that each fold is effectively random rather than sequential.</p>
 <p>Re-make the plot with <code class="docutils literal notranslate"><span class="pre">shuffle=False</span></code> and visualize the result. Compare the MAE of each fold, and consider whether this is a meaningful way to do cross validation for this dataset.</p>
+</section>
 </div>
 </section>
 <section id="leaveoneout-cross-validation-loo">
@@ -881,10 +892,24 @@ std  RMSE (LOO) = 3.727e-01
 </div>
 <p>Note that since we compute the metric on a single data point, we need to use something like RMSE or MAE rather than <span class="math notranslate nohighlight">\(r^2\)</span>, since <span class="math notranslate nohighlight">\(r^2\)</span> is not defined for a single point.</p>
 <p>Because each LOO model is trained on nearly the entire dataset, the variation in the models and predictions will be low.  However, the variation of the <strong>error estimate</strong> can be high: a single anomalous observation can strongly influence one iteration’s score.  Computationally, LOO requires <em>N</em> model fits, which is feasible for small‑to‑medium data but prohibitive for very large datasets.</p>
+<div class="exercise admonition" id="ex-reg-split-stab">
+
+<p class="admonition-title"><span class="caption-number">Exercise 24 </span></p>
+<section id="exercise-content">
+<p>Investigate how the <strong>test‑set fraction</strong> influences the stability of performance estimates for the RBF model at <span class="math notranslate nohighlight">\(\sigma = 10\)</span>.</p>
+<ol class="arabic simple">
+<li><p>Choose three fractions: 20 %, 30 %, and 40 %.</p></li>
+<li><p>For each fraction, perform at least <strong>100</strong> random splits with <code class="docutils literal notranslate"><span class="pre">train_test_split</span></code> (set <code class="docutils literal notranslate"><span class="pre">random_state=None</span></code> inside the loop).</p></li>
+<li><p>Compute the test‑set <span class="math notranslate nohighlight">\(r^2\)</span> for every split.</p></li>
+<li><p>Visualize the resulting distributions (boxplots or histograms) side‑by‑side.</p></li>
+</ol>
+<p>Which fraction yields the <em>lowest variance</em> in <span class="math notranslate nohighlight">\(r^2\)</span>?  Explain why smaller or larger test fractions may lead to more or less stable estimates.</p>
+</section>
+</div>
 </section>
 </section>
 <section id="quantifying-error-and-uncertainty">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Quantifying Error and Uncertainty</a><a class="headerlink" href="#quantifying-error-and-uncertainty" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Quantifying Error and Uncertainty</a><a class="headerlink" href="#quantifying-error-and-uncertainty" title="Link to this heading">#</a></h2>
 <p>In addition to model accuracy, it is often useful to have an estimate of <em>uncertainty</em>: a range that brackets the predictions we expect from future data.  We will go back to Anscombe’s quartet to illustrate these ideas.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1074,10 +1099,32 @@ std  RMSE (LOO) = 3.727e-01
 <ul class="simple">
 <li><p><strong>Kernel selection</strong> — Common kernels are the same as for kernel ridge regression, and include the squared‑exponential (RBF), Matérn, and periodic forms; sums or products of kernels can model more complex structure.  Choosing an inappropriate kernel can over‑smooth the data or yield wildly uncertain predictions.</p></li>
 <li><p><strong>Hyper‑parameter optimization</strong> — Each kernel carries hyper‑parameters (e.g., length‑scale, variance).  Scikit‑learn maximizes the log‑marginal likelihood by default, but you can also tune hyper‑parameters via cross‑validation or Bayesian optimization.  Good uncertainty estimates depend critically on finding well‑calibrated values.</p></li>
-<li><p><strong>Computation</strong> — Exact GPR scales as $\mathcal{O}(N^3)$ due to matrix inversion, so large datasets may require sparse approximations or inducing‑point methods.</p></li>
+<li><p><strong>Computation</strong> — Exact GPR scales as <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> due to matrix inversion, so large datasets may require sparse approximations or inducing‑point methods.</p></li>
 </ul>
 <p>For a candid discussion of the strengths and pitfalls of Bayesian model selection, especially Gaussian processes, see the blog post <a class="reference external" href="https://kitchingroup.cheme.cmu.edu/blog/2025/06/22/Lies-damn-lies-statistics-and-Bayesian-statistics/">“Lies, damn lies, statistics, and <strong>Bayesian</strong> statistics”</a>. The post is actually written by a chemical engineer (Prof. John Kitchin), and uses an example that is relevant to chemical engineers who work with atomic-scale models.</p>
+<div class="exercise admonition" id="ex-reg-bootstrap">
+
+<p class="admonition-title"><span class="caption-number">Exercise 25 </span></p>
+<section id="exercise-content">
+<p>Use the <code class="docutils literal notranslate"><span class="pre">bootstrap_linregress</span></code> function to quantify parameter uncertainty for Dataset 2 of Anscombe’s quartet.</p>
+<ol class="arabic simple">
+<li><p>Call <code class="docutils literal notranslate"><span class="pre">bootstrap_linregress(x2,</span> <span class="pre">y2,</span> <span class="pre">N=500)</span></code> to generate 500 bootstrapped slope and intercept estimates.</p></li>
+<li><p>Plot histograms of the bootstrapped slopes and intercepts side-by-side.</p></li>
+<li><p>Compute and report the <strong>95% empirical confidence interval</strong> for both the slope and the intercept using <code class="docutils literal notranslate"><span class="pre">np.percentile</span></code> (2.5th and 97.5th percentiles).</p></li>
+<li><p>Compare the width of the confidence intervals for the slope and intercept. Which parameter is more uncertain, and why?</p></li>
+</ol>
 </section>
+</div>
+</section>
+</section>
+<section id="summary">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Accuracy metrics</strong> (<span class="math notranslate nohighlight">\(r^2\)</span>, MAE, RMSE, error percentiles) each capture different aspects of model error; always use multiple metrics together with visual diagnostics like parity plots and residual histograms.</p></li>
+<li><p><strong>Cross-validation</strong> (hold-out, k-fold, leave-one-out) estimates generalization error by withholding data during training; some form of CV is nearly always better than none.</p></li>
+<li><p><strong>Uncertainty quantification</strong> ranges from simple residual standard deviation (assumes homoskedastic Gaussian errors) to bootstrapping (distribution-free) to Gaussian process regression (fully probabilistic).</p></li>
+<li><p>All validation methods assume the collected data are representative of future deployment conditions; violating this assumption yields deceptively optimistic error estimates.</p></li>
+</ul>
 </section>
 <section id="additional-reading">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
@@ -1154,7 +1201,6 @@ std  RMSE (LOO) = 3.727e-01
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy-metrics">Accuracy Metrics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r-2-value"><span class="math notranslate nohighlight">\(r^2\)</span> value</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-absolute-error-mae">Mean absolute error (MAE)</a></li>
@@ -1181,6 +1227,7 @@ std  RMSE (LOO) = 3.727e-01
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-process-regression">Gaussian Process Regression</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
   </nav></div>

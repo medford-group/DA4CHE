@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/exercise.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -188,7 +188,8 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Non-parametric Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation.html">Model Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_Dimensional_Regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
 </ul>
 </details></li>
 </ul>
@@ -339,7 +340,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-machine-learning-perspective-on-regression">A Machine-Learning Perspective on Regression</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Parametric Models</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-vs-non-parametric-models">Parametric vs. Non-Parametric Models</a></li>
@@ -355,6 +355,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-spline-regression">Example: Spline Regression</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
             </nav>
@@ -371,11 +372,11 @@ document.write(`
 <ul class="simple">
 <li><p><a class="reference internal" href="#non-parametric-models" id="id2">Non-parametric Models</a></p>
 <ul>
-<li><p><a class="reference internal" href="#learning-objectives" id="id3">Learning Objectives</a></p></li>
-<li><p><a class="reference internal" href="#a-machine-learning-perspective-on-regression" id="id4">A Machine-Learning Perspective on Regression</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id5">Non-Parametric Models</a></p></li>
-<li><p><a class="reference internal" href="#kernel-regression" id="id6">Kernel Regression</a></p></li>
-<li><p><a class="reference internal" href="#other-non-parametric-regression-models" id="id7">Other Non-Parametric Regression Models</a></p></li>
+<li><p><a class="reference internal" href="#a-machine-learning-perspective-on-regression" id="id3">A Machine-Learning Perspective on Regression</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id4">Non-Parametric Models</a></p></li>
+<li><p><a class="reference internal" href="#kernel-regression" id="id5">Kernel Regression</a></p></li>
+<li><p><a class="reference internal" href="#other-non-parametric-regression-models" id="id6">Other Non-Parametric Regression Models</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id7">Summary</a></p></li>
 <li><p><a class="reference internal" href="#additional-reading" id="id8">Additional Reading</a></p></li>
 </ul>
 </li>
@@ -383,8 +384,8 @@ document.write(`
 </nav>
 <section class="tex2jax_ignore mathjax_ignore" id="non-parametric-models">
 <h1><a class="toc-backref" href="#id2" role="doc-backlink">Non-parametric Models</a><a class="headerlink" href="#non-parametric-models" title="Link to this heading">#</a></h1>
-<section id="learning-objectives">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Learning Objectives</a><a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
 <p>After working through this topic, you should be able to:</p>
 <ul class="simple">
 <li><p>Distinguish between parametric and non-parametric regression models</p></li>
@@ -393,9 +394,9 @@ document.write(`
 <li><p>Apply kernel regression using radial basis functions and adjust kernel width</p></li>
 <li><p>Compare spline models to other non-parametric techniques using scikit-learn</p></li>
 </ul>
-</section>
+</div>
 <section id="a-machine-learning-perspective-on-regression">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">A Machine-Learning Perspective on Regression</a><a class="headerlink" href="#a-machine-learning-perspective-on-regression" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">A Machine-Learning Perspective on Regression</a><a class="headerlink" href="#a-machine-learning-perspective-on-regression" title="Link to this heading">#</a></h2>
 <p>In this section, we introduce the terminology used throughout the rest of this unit. These concepts apply to both simple regression models and more advanced machine learning techniques that we will explore later. Our focus here is on understanding the vocabulary: what do we mean by inputs, outputs, parameters, hyperparameters, features, and models?</p>
 <p>The goal of regression is to find a function</p>
 <div class="math notranslate nohighlight">
@@ -419,8 +420,10 @@ y_i = \sum_j w_j X_{ij} + \epsilon_i
 \vec{y} = f(\vec{x}, \vec{\lambda}(\vec{\eta})) + \vec{\epsilon}
 \]</div>
 <p>Machine learning differs from regular regression in that it seeks to optimize <span class="math notranslate nohighlight">\(\vec{\lambda}\)</span> (parameter optimization), <span class="math notranslate nohighlight">\(\vec{\eta}\)</span> (complexity optimization) in order to <strong>obtain a model that generalizes to new input data</strong>. Machine learning also sometimes involves selecting <span class="math notranslate nohighlight">\(\vec{x}\)</span> (feature selection) or generating <span class="math notranslate nohighlight">\(\vec{x}\)</span> from non-vectorized data such as text or images (feature generation).</p>
-<div class="tip admonition">
-<p class="admonition-title">Exercise</p>
+<div class="exercise admonition" id="ex-reg-feat-params">
+
+<p class="admonition-title"><span class="caption-number">Exercise 18 </span></p>
+<section id="exercise-content">
 <p><strong>Identify the features, parameters, and hyperparameters in a common regression model.</strong></p>
 <p>Consider a polynomial regression model of the form:</p>
 <div class="math notranslate nohighlight">
@@ -433,10 +436,11 @@ y = w_0 + w_1 x + w_2 x^2
 <li><p>If we decide to use a cubic polynomial instead (adding a <span class="math notranslate nohighlight">\(w_3 x^3\)</span> term), what quantity has changed? Is this a parameter or a hyperparameter?</p></li>
 </ol>
 <p><em>Tip: Remember that features describe the input, parameters are learned from data, and hyperparameters are set by the user before training.</em></p>
+</section>
 </div>
 </section>
 <section id="id1">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Non-Parametric Models</a><a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Non-Parametric Models</a><a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>We covered the basic math behind parameter optimization in the numerical methods module. The basic idea is to follow two steps:</p>
 <ul class="simple">
 <li><p>Construct a loss function that quantifies how well your model fits the data</p></li>
@@ -603,6 +607,11 @@ X_{ij}=\max(0,\,x_i-x_j),
 <img alt="../_images/e7d24b87cb9fdbd985a9a04c2e7e6034296ae0da9ca3a38915e192fa15b1bd4f.png" src="../_images/e7d24b87cb9fdbd985a9a04c2e7e6034296ae0da9ca3a38915e192fa15b1bd4f.png" />
 </div>
 </div>
+<div class="note admonition">
+<p class="admonition-title">Column space and intercept</p>
+<p>What is in the column space of the design matrix? Why do we set <code class="docutils literal notranslate"><span class="pre">fit_intercept=False</span></code>?</p>
+<p>The column space, or “features” of the design matrix” are the hinge functions, with one column for each data point in the original dataset. We set <code class="docutils literal notranslate"><span class="pre">fit_intercept</span> <span class="pre">=</span> <span class="pre">False</span></code> because we have already added a column of 1’s at the end of the matrix, which acts as an intercept. Removing the last column and setting <code class="docutils literal notranslate"><span class="pre">fit_intercept=True</span></code> would yield the same results.</p>
+</div>
 <p>We can see that the model goes through every point exactly, which we should know from <span class="math notranslate nohighlight">\(r^2=1\)</span>. However, we don’t actually know what the model is doing in between the points. For this we need to predict on a new set of <span class="math notranslate nohighlight">\(x\)</span> points that has a higher resolution:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -652,8 +661,10 @@ X_{ij}=\max(0,\,x_i-x_j),
 </div>
 </div>
 <p>We see that the model successful at interpolating between the points. This is an example of a <strong>non-parametric</strong> model. The number of parameters, <span class="math notranslate nohighlight">\(\vec{w}\)</span> is equal to the number of <strong>training</strong> data points, and the number of columns in the linear design matrix. The number of rows is equal to the number of data points that the model will predict. These numbers do not need to be equal, and it is not necessary that the training points are included in the prediction.</p>
-<div class="tip admonition">
-<p class="admonition-title">Exercise</p>
+<div class="exercise admonition" id="ex-reg-lin-interp">
+
+<p class="admonition-title"><span class="caption-number">Exercise 19 </span></p>
+<section id="exercise-content">
 <p>Use every third data point of the spectra dataset to train a linear interpolation model and explore the predictions.</p>
 <ol class="arabic simple">
 <li><p>Select every third datapoint from the <code class="docutils literal notranslate"><span class="pre">(x_peak,</span> <span class="pre">y_peak)</span></code> dataset, and use this to train a linear interpolation model.</p></li>
@@ -661,11 +672,12 @@ X_{ij}=\max(0,\,x_i-x_j),
 <li><p>Create a new high-resolution prediction set with a total of 300 evenly-spaced points. Compare these predictions to those of the full dataset.</p></li>
 <li><p>Create another prediction dataset with 300 evenly-spaced points with the minimum and maximum being 10 wavenumbers above/below the original maximum. This shows how the model performs when asked to extrapolate.</p></li>
 </ol>
+</section>
 </div>
 </section>
 </section>
 <section id="kernel-regression">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Kernel Regression</a><a class="headerlink" href="#kernel-regression" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Kernel Regression</a><a class="headerlink" href="#kernel-regression" title="Link to this heading">#</a></h2>
 <p>Of course, we are not limited to using piecewise linear functions in non-parametric models. In fact, this is rarely done in practice, since there are easier ways to do linear interpolation. However, using the same mathematical machinery we can take a more general and powerful approach using the idea of a <strong>kernel</strong> function. In machine learning, a kernel is a function that describes the <strong>similarity</strong> between two input points. We use this to define a new type of regression model that places <strong>smooth, localized bumps</strong> (called <strong>basis functions</strong>) at each training point.</p>
 <p>A kernel takes the form:</p>
 <div class="math notranslate nohighlight">
@@ -797,8 +809,10 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 </div>
 </div>
 <hr class="docutils" />
-<div class="tip admonition">
-<p class="admonition-title">Exercise</p>
+<div class="exercise admonition" id="ex-reg-kern-density">
+
+<p class="admonition-title"><span class="caption-number">Exercise 20 </span></p>
+<section id="exercise-content">
 <p>Explore how the <strong>number of training points</strong> affects the model fit.</p>
 <ul class="simple">
 <li><p>Fix <span class="math notranslate nohighlight">\( \sigma = 50 \)</span></p></li>
@@ -806,11 +820,12 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 <li><p>Compare the fitted curves and comment on the impact of data density</p></li>
 </ul>
 <p>This exercise helps illustrate the <strong>tradeoff between data quantity and model complexity</strong> in non-parametric regression.</p>
+</section>
 </div>
 </section>
 </section>
 <section id="other-non-parametric-regression-models">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Other Non-Parametric Regression Models</a><a class="headerlink" href="#other-non-parametric-regression-models" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Other Non-Parametric Regression Models</a><a class="headerlink" href="#other-non-parametric-regression-models" title="Link to this heading">#</a></h2>
 <p>In previous sections, we explored two important types of non-parametric models for regression:</p>
 <ul class="simple">
 <li><p><strong>Linear interpolation</strong>, where the model constructs piecewise linear functions based directly on the data points</p></li>
@@ -866,8 +881,10 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 <hr class="docutils" />
 <p>This spline model behaves similarly to kernel regression: it interpolates smoothly between training points while controlling flexibility through the <strong>number of knots</strong> and <strong>polynomial degree</strong>. It is often more stable than interpolation, and more interpretable than kernel methods when used with fixed knot locations.</p>
 <hr class="docutils" />
-<div class="tip admonition">
-<p class="admonition-title">Exercise</p>
+<div class="exercise admonition" id="ex-reg-spline-hyper">
+
+<p class="admonition-title"><span class="caption-number">Exercise 21 </span></p>
+<section id="exercise-content">
 <p>Explore the effect of <strong>spline hyperparameters</strong> on model flexibility:</p>
 <ul class="simple">
 <li><p>Try changing the number of knots (e.g., <code class="docutils literal notranslate"><span class="pre">n_knots=5</span></code>, <code class="docutils literal notranslate"><span class="pre">n_knots=20</span></code>)</p></li>
@@ -875,8 +892,19 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 <li><p>Use a fixed training set (e.g., every third point)</p></li>
 </ul>
 <p>Plot the resulting fits and describe how the <strong>number of knots</strong> and <strong>polynomial degree</strong> affect the smoothness and flexibility of the spline model.</p>
+</section>
 </div>
 </section>
+</section>
+<section id="summary">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A <strong>parametric</strong> model has a fixed number of parameters regardless of data size; a <strong>non-parametric</strong> model has parameters that grow with the number of training points.</p></li>
+<li><p><strong>Linear interpolation</strong> uses piecewise “hinge” functions as basis features, framing interpolation as a standard linear regression with a special design matrix.</p></li>
+<li><p><strong>Kernel regression</strong> places a smooth, localized basis function (e.g., Gaussian/RBF) at every training point; the kernel width σ controls the interpolation–smoothness tradeoff.</p></li>
+<li><p><strong>Spline models</strong> join low-degree polynomials at knot points with continuity constraints; <code class="docutils literal notranslate"><span class="pre">SplineTransformer</span></code> in scikit-learn makes them easy to apply in a pipeline.</p></li>
+<li><p>Non-parametric models excel at interpolation but extrapolate poorly; parametric models generalize better outside the training domain.</p></li>
+</ul>
 </section>
 <section id="additional-reading">
 <h2><a class="toc-backref" href="#id8" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
@@ -953,7 +981,6 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-machine-learning-perspective-on-regression">A Machine-Learning Perspective on Regression</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Parametric Models</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-vs-non-parametric-models">Parametric vs. Non-Parametric Models</a></li>
@@ -969,6 +996,7 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-spline-regression">Example: Spline Regression</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
   </nav></div>

@@ -16,15 +16,17 @@ kernelspec:
 
 # Model Validation
 
-## Learning Objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 By the end of this chapter, you should be able to:
 
-1. **Compute and interpret** multiple regression accuracy metrics (e.g.\ $r^2$, MAE, RMSE) and diagnose error structure with visual tools.  
-2. **Apply** hold‑out, *k*-fold, and leave‑one‑out cross‑validation to estimate generalization error and discuss their trade‑offs.  
-3. **Quantify prediction uncertainty** using residual analysis, resampling (bootstrapping), and Gaussian‐process regression.  
-4. **Assess assumptions** such as homoskedasticity and data representativeness, and explain how violating them impacts error estimates.  
+1. **Compute and interpret** multiple regression accuracy metrics (e.g.\ $r^2$, MAE, RMSE) and diagnose error structure with visual tools.
+2. **Apply** hold‑out, *k*-fold, and leave‑one‑out cross‑validation to estimate generalization error and discuss their trade‑offs.
+3. **Quantify prediction uncertainty** using residual analysis, resampling (bootstrapping), and Gaussian‐process regression.
+4. **Assess assumptions** such as homoskedasticity and data representativeness, and explain how violating them impacts error estimates.
 5. **Select appropriate validation and uncertainty techniques** for chemical‑engineering data sets of varying size and noise characteristics.
+:::
 
 ```{code-cell} ipython3
 %matplotlib inline
@@ -177,10 +179,11 @@ plt.tight_layout();
 A *roughly Gaussian* residual histogram centered at zero indicates that errors are random and homoscedastic, supporting the use of aggregate metrics such as RMSE.  Skewed or heavy‑tailed residuals (as seen for Dataset IV) warn that single‑number metrics can hide important structure in the errors.
 
 
-```{admonition} Exercise
-:class: tip
-Compute the MAE, RMSE, and maximum error for each dataset III in Anscomb's quartet with and without the outlier, and determine which metric is most sensitive to the outlier.
-```
+:::{exercise}
+:label: ex-reg-outlier-sens
+
+Compute the MAE, RMSE, and maximum error for dataset III in Anscombe's quartet with and without the outlier, and determine which metric is most sensitive to the outlier.
+:::
 
 ## Cross Validation
 
@@ -195,7 +198,7 @@ There are many standard strategies:
 
 Different techniques balance statistical robustness and computational effort.  Hold‑out is fast but can be sensitive to unlucky splits, especially for small datasets.  k‑fold alleviates that risk at the cost of *k* model fits.  Leave‑*p*‑out becomes expensive for *p > 1*.  **Doing some form of cross‑validation is almost always better than none.**
 
-```{admonition}
+```{admonition} Key assumption: data representativeness
 :class: note
 All cross‑validation techniques rely on the critical assumption that *the collected data are representative of future data*.  An example in chemical engineering would be building a model at one set of process conditions but then applying it under very different conditions. The CV accuracy will look deceptively good in that case, and the model will perform much worse when applied to the new conditions.
 ```
@@ -349,13 +352,13 @@ print(f"mean r^2 (test) = {np.mean(r2_test):.3f} ± {np.std(r2_test):.3f}")
 
 When the end‑points land in the test fold, the model must **extrapolate** and often fails catastrophically.  k‑fold CV lowers the risk of an **overly lucky** (or unlucky) split—but at the computational cost of *k* separate model fits.
 
-```{admonition} Exercise
-:class: note
+:::{exercise}
+:label: ex-reg-kfold-shuffle
 
-In the code block above, note that we used `shuffle=True` when performing k-fold cross validation. This ensures that the data is shuffled before the folds are taken, so that each fold is effectively random rather than sequential. 
+In the code block above, note that we used `shuffle=True` when performing k-fold cross validation. This ensures that the data is shuffled before the folds are taken, so that each fold is effectively random rather than sequential.
 
 Re-make the plot with `shuffle=False` and visualize the result. Compare the MAE of each fold, and consider whether this is a meaningful way to do cross validation for this dataset.
-```
+:::
 
 ### Leave‑One‑Out Cross Validation (LOO)
 
@@ -395,9 +398,9 @@ Note that since we compute the metric on a single data point, we need to use som
 
 Because each LOO model is trained on nearly the entire dataset, the variation in the models and predictions will be low.  However, the variation of the **error estimate** can be high: a single anomalous observation can strongly influence one iteration’s score.  Computationally, LOO requires *N* model fits, which is feasible for small‑to‑medium data but prohibitive for very large datasets.
 
-```{admonition}
-:class: tip
-**Task**  
+:::{exercise}
+:label: ex-reg-split-stab
+
 Investigate how the **test‑set fraction** influences the stability of performance estimates for the RBF model at $\sigma = 10$.
 
 1. Choose three fractions: 20 %, 30 %, and 40 %.
@@ -406,7 +409,7 @@ Investigate how the **test‑set fraction** influences the stability of performa
 4. Visualize the resulting distributions (boxplots or histograms) side‑by‑side.
 
 Which fraction yields the *lowest variance* in $r^2$?  Explain why smaller or larger test fractions may lead to more or less stable estimates.
-```
+:::
 
 ## Quantifying Error and Uncertainty
 
@@ -579,14 +582,27 @@ GPR is powerful for uncertainty estimation because it treats the unknown functio
 
 - **Kernel selection** — Common kernels are the same as for kernel ridge regression, and include the squared‑exponential (RBF), Matérn, and periodic forms; sums or products of kernels can model more complex structure.  Choosing an inappropriate kernel can over‑smooth the data or yield wildly uncertain predictions.
 - **Hyper‑parameter optimization** — Each kernel carries hyper‑parameters (e.g., length‑scale, variance).  Scikit‑learn maximizes the log‑marginal likelihood by default, but you can also tune hyper‑parameters via cross‑validation or Bayesian optimization.  Good uncertainty estimates depend critically on finding well‑calibrated values.
-- **Computation** — Exact GPR scales as \$\mathcal{O}(N^3)\$ due to matrix inversion, so large datasets may require sparse approximations or inducing‑point methods.
+- **Computation** — Exact GPR scales as $\mathcal{O}(N^3)$ due to matrix inversion, so large datasets may require sparse approximations or inducing‑point methods.
 
 For a candid discussion of the strengths and pitfalls of Bayesian model selection, especially Gaussian processes, see the blog post [“Lies, damn lies, statistics, and **Bayesian** statistics”](https://kitchingroup.cheme.cmu.edu/blog/2025/06/22/Lies-damn-lies-statistics-and-Bayesian-statistics/). The post is actually written by a chemical engineer (Prof. John Kitchin), and uses an example that is relevant to chemical engineers who work with atomic-scale models.
 
-```{admonition}
-:class: tip
-Use the **bootstrap_linregress** function with **$N = 500$** re‑samples on **Dataset 2** of Anscombe’s quartet.  Plot histograms of the bootstrapped slopes and intercepts, and report the **95 % empirical confidence interval** for each.
-```
+:::{exercise}
+:label: ex-reg-bootstrap
+
+Use the `bootstrap_linregress` function to quantify parameter uncertainty for Dataset 2 of Anscombe's quartet.
+
+1. Call `bootstrap_linregress(x2, y2, N=500)` to generate 500 bootstrapped slope and intercept estimates.
+2. Plot histograms of the bootstrapped slopes and intercepts side-by-side.
+3. Compute and report the **95% empirical confidence interval** for both the slope and the intercept using `np.percentile` (2.5th and 97.5th percentiles).
+4. Compare the width of the confidence intervals for the slope and intercept. Which parameter is more uncertain, and why?
+:::
+
+## Summary
+
+- **Accuracy metrics** ($r^2$, MAE, RMSE, error percentiles) each capture different aspects of model error; always use multiple metrics together with visual diagnostics like parity plots and residual histograms.
+- **Cross-validation** (hold-out, k-fold, leave-one-out) estimates generalization error by withholding data during training; some form of CV is nearly always better than none.
+- **Uncertainty quantification** ranges from simple residual standard deviation (assumes homoskedastic Gaussian errors) to bootstrapping (distribution-free) to Gaussian process regression (fully probabilistic).
+- All validation methods assume the collected data are representative of future deployment conditions; violating this assumption yields deceptively optimistic error estimates.
 
 ## Additional Reading
 
@@ -595,5 +611,5 @@ Use the **bootstrap_linregress** function with **$N = 500$** re‑samples on **D
 - {cite}`bishop2006` – *Pattern Recognition and Machine Learning*, Sect. 3.3 covers Gaussian processes.  
 - {cite}`efron1994` – *An Introduction to the Bootstrap* for deeper insight into resampling methods.
 
-```{{bibliography}}
-```
+:::{bibliography}
+:::

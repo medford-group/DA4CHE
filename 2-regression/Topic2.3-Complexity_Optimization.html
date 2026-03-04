@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/exercise.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '2-regression/Topic2.3-Complexity_Optimization';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="High-dimensional Regression" href="Topic2.4-High_Dimensional_Regression.html" />
+    <link rel="next" title="High-dimensional Data" href="Topic2.4-High_dimensional_data.html" />
     <link rel="prev" title="Model Validation" href="Topic2.2-Model_Validation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -188,7 +188,8 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation.html">Model Validation</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Complexity Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_Dimensional_Regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
 </ul>
 </details></li>
 </ul>
@@ -339,7 +340,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overfitting-and-underfitting">Overfitting and Underfitting</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information-criteria">Information Criteria</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-notes-on-information-criteria">Additional Notes on Information Criteria</a></li>
@@ -358,6 +358,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-leakage">Data Leakage</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional reading</a></li>
 </ul>
             </nav>
@@ -374,11 +375,11 @@ document.write(`
 <ul class="simple">
 <li><p><a class="reference internal" href="#complexity-optimization" id="id2">Complexity Optimization</a></p>
 <ul>
-<li><p><a class="reference internal" href="#learning-objectives" id="id3">Learning objectives</a></p></li>
-<li><p><a class="reference internal" href="#overfitting-and-underfitting" id="id4">Overfitting and Underfitting</a></p></li>
-<li><p><a class="reference internal" href="#information-criteria" id="id5">Information Criteria</a></p></li>
-<li><p><a class="reference internal" href="#regularization" id="id6">Regularization</a></p></li>
-<li><p><a class="reference internal" href="#hyperparameter-tuning-and-data-leakage" id="id7">Hyperparameter tuning and data leakage</a></p></li>
+<li><p><a class="reference internal" href="#overfitting-and-underfitting" id="id3">Overfitting and Underfitting</a></p></li>
+<li><p><a class="reference internal" href="#information-criteria" id="id4">Information Criteria</a></p></li>
+<li><p><a class="reference internal" href="#regularization" id="id5">Regularization</a></p></li>
+<li><p><a class="reference internal" href="#hyperparameter-tuning-and-data-leakage" id="id6">Hyperparameter tuning and data leakage</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id7">Summary</a></p></li>
 <li><p><a class="reference internal" href="#additional-reading" id="id8">Additional reading</a></p></li>
 </ul>
 </li>
@@ -386,8 +387,8 @@ document.write(`
 </nav>
 <section class="tex2jax_ignore mathjax_ignore" id="complexity-optimization">
 <h1><a class="toc-backref" href="#id2" role="doc-backlink">Complexity Optimization</a><a class="headerlink" href="#complexity-optimization" title="Link to this heading">#</a></h1>
-<section id="learning-objectives">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Learning objectives</a><a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
 <p>By the end of this topic, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Compute and interpret information criteria</strong> (BIC, AIC) to select model complexity for parametric models.</p></li>
@@ -395,6 +396,7 @@ document.write(`
 <li><p><strong>Tune hyperparameters</strong> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> and design sensible grids (coarse-to-fine, avoid edge optima).</p></li>
 <li><p><strong>Detect and prevent data leakage</strong> by separating training, validation, and test sets appropriately.</p></li>
 </ul>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -404,9 +406,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
 <section id="overfitting-and-underfitting">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Overfitting and Underfitting</a><a class="headerlink" href="#overfitting-and-underfitting" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Overfitting and Underfitting</a><a class="headerlink" href="#overfitting-and-underfitting" title="Link to this heading">#</a></h2>
 <p>The key to machine learning is creating models that generalize to new examples. This means we are looking for models with enough complexity to describe the behavior, but not so much complexity that it just reproduces the data points. Let’s demonstrate this concept with a quick toy model:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -469,13 +470,16 @@ document.write(`
 <li><p>“Smoothness”: “Complexity” is related to the maximum curvature of the model</p></li>
 </ul>
 <p>We will describe these approaches and show examples of how to use them to optimize complexity below.</p>
-<div class="tip admonition">
-<p class="admonition-title">Exercise:</p>
+<div class="exercise admonition" id="ex-reg-r2-complexity">
+
+<p class="admonition-title"><span class="caption-number">Exercise 26 </span></p>
+<section id="exercise-content">
 <p>Modify the code that is used to generate the ``underfitting vs. overfitting’’ example above to calculate the <span class="math notranslate nohighlight">\(r^2\)</span> score for each example. Consider whether it is possible to determine whether a model is underfit or overfit using the <span class="math notranslate nohighlight">\(r^2\)</span> score alone.</p>
+</section>
 </div>
 </section>
 <section id="information-criteria">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Information Criteria</a><a class="headerlink" href="#information-criteria" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Information Criteria</a><a class="headerlink" href="#information-criteria" title="Link to this heading">#</a></h2>
 <p>The idea behind an <strong>information criterion</strong> is that it quantifies the trade-off between the number of parameters and the model error.  The most commonly used information criterion is the <strong>Bayesian Information Criterion</strong> (BIC).  The derivation of the BIC is beyond the scope of this course, but conceptually a lower BIC corresponds to a <em>more</em> probable model.</p>
 <p>If we assume that our error is normally distributed, the BIC can be easily computed as</p>
 <div class="math notranslate nohighlight">
@@ -653,7 +657,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal N according to BIC = 15
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x114178bb0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x116164cd0&gt;
 </pre></div>
 </div>
 <img alt="../_images/a40fd77dd062b2fce118791b84fbc901ae5f6682fa818eef4650880ed1eada7d.png" src="../_images/a40fd77dd062b2fce118791b84fbc901ae5f6682fa818eef4650880ed1eada7d.png" />
@@ -709,14 +713,17 @@ document.write(`
 <li><p><strong>Other information criteria.</strong> There are numerous other information criteria such as the <a class="reference external" href="https://doi.org/10.1093/biomet/76.2.297">“corrected AIC” (AICc)</a>, the <a class="reference external" href="https://www.jstor.org/stable/2985032">Hannan–Quinn Information Criterion (HQIC)</a>, the <a class="reference external" href="https://doi.org/10.1111/1467-9868.00353">Deviance Information Criterion (DIC)</a>, and the <a class="reference external" href="https://doi.org/10.1016/0005-1098(78)90005-5">Minimum Description Length (MDL)</a>. In general, the BIC favors the simplest models, the AIC favors models with lower errors, and the others are in between. If you’re unsure, try more than one and look for consensus.</p></li>
 <li><p><strong>Information criteria vs. cross validation.</strong> Information criteria are good options when you have small datasets or when you are comparing models with very similar forms. They tend to be very computationally inexpensive, but have more built-in statistical assumptions, and cannot easily be applied to non-parametric models. Cross validation is a more general approach, and works well when you have a lot of data or when you are comparing models with very different structures.</p></li>
 </ul>
-<div class="admonition-exercise admonition">
-<p class="admonition-title">Exercise</p>
+<div class="exercise admonition" id="ex-reg-bic-compare">
+
+<p class="admonition-title"><span class="caption-number">Exercise 27 </span></p>
+<section id="exercise-content">
 <p>Revisit the non-linear optimization examples from the numerical methods lectures and use the code to compare the BIC of non-linear optimization models with 1, 2, and 3 peaks to the BIC of the evenly-spaced Gaussians model above. Think carefully about how many fitted parameters there are in the case of non-linear regression!</p>
+</section>
 </div>
 </section>
 </section>
 <section id="regularization">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Regularization</a><a class="headerlink" href="#regularization" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Regularization</a><a class="headerlink" href="#regularization" title="Link to this heading">#</a></h2>
 <p>Another way of controlling complexity is by trying to penalize models that change very sharply. This idea is called “regularization” and involves quantifying complexity by using parameters that penalize complexity – models with large regularization parameters are expected to be less complicated. In general, regularization parameters are added to the loss function to reduce the magnitude of model weights. For example:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1002,19 +1009,22 @@ Mean coeff: 3.418e-02, Std: 3.542e-01, L2 norm: 3.559e+00
 </div>
 <p>We see that the LASSO regularization has a lot of coefficients that are equal to zero. This is equivalent to discarding these terms and finding which Gaussians should (or should not) be included.</p>
 <hr class="docutils" />
-<div class="tip admonition">
-<p class="admonition-title">Exercise: compare KRR and LASSO</p>
+<div class="exercise admonition" id="ex-reg-krr-lasso">
+
+<p class="admonition-title"><span class="caption-number">Exercise 28 </span></p>
+<section id="exercise-content">
 <p>Using the same ethanol peak dataset:</p>
 <ol class="arabic simple">
 <li><p><strong>Build Gaussian-basis features</strong> (reuse the same kernel width <span class="math notranslate nohighlight">\(\sigma\)</span>. Fit a <strong>LASSO</strong> model for a grid of <span class="math notranslate nohighlight">\(\alpha\)</span> values and record test <span class="math notranslate nohighlight">\(r^2\)</span>.</p></li>
 <li><p><strong>Fit KRR</strong> on the same train/test split and <span class="math notranslate nohighlight">\(\alpha\)</span> grid (keep <span class="math notranslate nohighlight">\(\sigma\)</span> fixed) and record test <span class="math notranslate nohighlight">\(r^2\)</span>.</p></li>
 <li><p><strong>Plot</strong> test <span class="math notranslate nohighlight">\(r^2\)</span> versus <span class="math notranslate nohighlight">\(\alpha\)</span> for both models on one figure. At each model’s optimal <span class="math notranslate nohighlight">\(\alpha\)</span>, also <strong>plot coefficient histograms</strong>: LASSO weights and KRR dual coefficients.</p></li>
 </ol>
+</section>
 </div>
 </section>
 </section>
 <section id="hyperparameter-tuning-and-data-leakage">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Hyperparameter tuning and data leakage</a><a class="headerlink" href="#hyperparameter-tuning-and-data-leakage" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Hyperparameter tuning and data leakage</a><a class="headerlink" href="#hyperparameter-tuning-and-data-leakage" title="Link to this heading">#</a></h2>
 <section id="hyperparameter-tuning">
 <h3>Hyperparameter Tuning<a class="headerlink" href="#hyperparameter-tuning" title="Link to this heading">#</a></h3>
 <p>The KRR and LASSO models above have 2 hyperparameters: <span class="math notranslate nohighlight">\(\gamma\)</span> <span class="math notranslate nohighlight">\(\left(=\frac{1}{2\sigma^2}\right)\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span>. So far, we have optimized <span class="math notranslate nohighlight">\(\alpha\)</span>, but the model performance (and optimal <span class="math notranslate nohighlight">\(\alpha\)</span>) will also depend on <span class="math notranslate nohighlight">\(\sigma\)</span>. You can probably see that optimizing these will get rather tedious.</p>
@@ -1118,10 +1128,12 @@ Validation $r^2$ = 0.9986040494036984
 <li><p>Feature scaling: This will be discussed more in subsequent lectures, but is is common practice to “rescale” model inputs to give them consistent units before putting them into a regression or classification model. If the testing or validation data is used to scale the data, then information has leaked in. Sometimes the effect is subtle, but sometimes it is very significant (especially with time series or stratified splits).</p></li>
 <li><p>Data-specific Subtleties: There are problem-specific ways that information can flow between the training and testing sets. One example is if the target data is derived from some underlying source that is used to generate both the training and testing sets. A specific example is chemical reaction energies, which are derived from the formation energies of individual species. If the formation energy of a given molecule appears in reactions that are present in both the training and the testing set, then the model can implicitly learn the energy from the training data. Sometimes, this may be okay (e.g. if your goal is only to predict reactions that all share the same molecules), but other times it may give misleading results (e.g. if your goal is to predict new reactions based on unseen molecules). For a more detailed example of how training and testing domains can be complicated in chemistry and chemical engineering, consider the various definitions of “in domain” and “out of domain” data from the <a class="reference external" href="https://pubs.acs.org/doi/10.1021/acscatal.0c04525">Open Catalyst Project dataset and models</a>.</p></li>
 </ol>
-<p>While there are some concrete things not to do (don’t use validation data in hyperparameter tuning, and don’t use testing/validation data to scale features) there is no single specific way to avoid data leakage. Instead, the following general idea is recommended: think carefully about how you want to apply your model in practice, then ensure that the <em>validation data is generated to be as close as possible to the real use case.</em> In an ideal scenario, this means that you create your validation dataset <em>after the model is trained</em>, but this is often impractical. The next best thing is to consider how the data was generated, and “hide” some of the original raw data from the entire modeling pipeline (e.g. store it in a different folder on your computer until after the model is trained). It is often very surprising how different the performance of a model can be between “testing” and “validation” sets, and a large discrepancy</p>
+<p>While there are some concrete things not to do (don’t use validation data in hyperparameter tuning, and don’t use testing/validation data to scale features) there is no single specific way to avoid data leakage. Instead, the following general idea is recommended: think carefully about how you want to apply your model in practice, then ensure that the <em>validation data is generated to be as close as possible to the real use case.</em> In an ideal scenario, this means that you create your validation dataset <em>after the model is trained</em>, but this is often impractical. The next best thing is to consider how the data was generated, and “hide” some of the original raw data from the entire modeling pipeline (e.g. store it in a different folder on your computer until after the model is trained). It is often very surprising how different the performance of a model can be between “testing” and “validation” sets, and a large discrepancy between the two is a strong signal that leakage is present.</p>
 <hr class="docutils" />
-<div class="tip admonition">
-<p class="admonition-title">Exercise: Evaluating data leakage</p>
+<div class="exercise admonition" id="ex-reg-data-leak">
+
+<p class="admonition-title"><span class="caption-number">Exercise 29 </span></p>
+<section id="exercise-content">
 <p>Using the ethanol peak dataset:</p>
 <ol class="arabic simple">
 <li><p><strong>Split</strong> the data into <strong>train (70%)</strong> and <strong>validation (30%)</strong> sets.</p></li>
@@ -1129,8 +1141,19 @@ Validation $r^2$ = 0.9986040494036984
 <li><p><strong>Compare</strong> the <strong>validation <span class="math notranslate nohighlight">\(R^2\)</span></strong> with the best <span class="math notranslate nohighlight">\(R^2\)</span> found during the <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">best_score_</span></code>).</p></li>
 <li><p><strong>Evaluate</strong> the impact of data leakage by incorrectly re-training the model on the full dataset, then re-evaluate the <span class="math notranslate nohighlight">\(R^2\)</span> score on the validation set.</p></li>
 </ol>
+</section>
 </div>
 </section>
+</section>
+<section id="summary">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Overfitting</strong> (too many parameters) memorizes training data; <strong>underfitting</strong> (too few) fails to capture the signal. The goal is the complexity that generalizes best.</p></li>
+<li><p><strong>Information criteria</strong> (BIC, AIC) balance model error against parameter count; lower BIC indicates a more probable model under Gaussian error assumptions.</p></li>
+<li><p><strong>Ridge regression</strong> (L2 penalty) shrinks all weights toward zero, promoting smooth models; <strong>LASSO</strong> (L1 penalty) also drives some weights to exactly zero, producing sparse solutions.</p></li>
+<li><p><strong>Kernel Ridge Regression (KRR)</strong> applies L2 regularization to a kernel feature matrix; <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> automates joint tuning of regularization strength α and kernel width σ.</p></li>
+<li><p><strong>Data leakage</strong> corrupts validation; fit scalers and preprocessing steps only on training data and maintain a fully held-out validation set for final evaluation.</p></li>
+</ul>
 </section>
 <section id="additional-reading">
 <h2><a class="toc-backref" href="#id8" role="doc-backlink">Additional reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
@@ -1183,11 +1206,11 @@ Validation $r^2$ = 0.9986040494036984
       </div>
     </a>
     <a class="right-next"
-       href="Topic2.4-High_Dimensional_Regression.html"
+       href="Topic2.4-High_dimensional_data.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">High-dimensional Regression</p>
+        <p class="prev-next-title">High-dimensional Data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1207,7 +1230,6 @@ Validation $r^2$ = 0.9986040494036984
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overfitting-and-underfitting">Overfitting and Underfitting</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information-criteria">Information Criteria</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-notes-on-information-criteria">Additional Notes on Information Criteria</a></li>
@@ -1226,6 +1248,7 @@ Validation $r^2$ = 0.9986040494036984
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-leakage">Data Leakage</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional reading</a></li>
 </ul>
   </nav></div>
