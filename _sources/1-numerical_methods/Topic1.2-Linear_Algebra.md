@@ -18,15 +18,17 @@ kernelspec:
 
 Linear algebra is required for all engineers, but the conceptual aspects are often not taught or have been forgotten. This section provides a refresher on key computational and conceptual tools in matrix algebra and vector spaces.
 
-## Learning Objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 By the end of this section, you should be able to:
 
-- Construct and interpret matrix-vector products using polynomial basis sets  
-- Compute vector norms and inner products; identify orthogonal relationships  
-- Solve systems of equations using matrix factorizations and interpret matrix rank  
-- Compare eigendecomposition and SVD; apply both to analyze matrix structure  
+- Construct and interpret matrix-vector products using polynomial basis sets
+- Compute vector norms and inner products; identify orthogonal relationships
+- Solve systems of equations using matrix factorizations and interpret matrix rank
+- Compare eigendecomposition and SVD; apply both to analyze matrix structure
 - Evaluate matrix conditioning using eigenvalues and singular values
+:::
 
 ## Matrix-vector multiplication
 
@@ -189,8 +191,8 @@ print(vdm)
 
 ---
 
-~~~{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-matmul-loop
 
 Write a function `matmul_loops(A, B)` that multiplies two matrices using nested `for` loops. Then compare the result with the built-in matrix multiplication using `A @ B`.
 
@@ -203,7 +205,7 @@ B = np.array([[5, 6], [7, 8]])
 
 - Verify that both results are the same (use `np.allclose`)
 - Print the result of your function and the built-in multiplication
-~~~
+:::
 
 
 ## Norms, inner products, and orthogonality
@@ -326,8 +328,8 @@ This confirms that the two orthonormal vectors are perpendicular.
 
 ---
 
-~~~{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-gram-orth
 
 Use a `for` loop to perform Gram-Schmidt orthonormalization on the first **three columns** of a Vandermonde matrix.
 
@@ -344,7 +346,7 @@ Your loop should:
 - Normalize the result at each step
 
 Use `np.dot()` and `np.linalg.norm()` as needed. Check that the resulting vectors are orthogonal by computing their pairwise dot products.
-~~~
+:::
 
 
 ## Rank, Inverses, and Linear Systems
@@ -459,8 +461,8 @@ This is the preferred approach in both practice and in this course. It only work
 
 ---
 
-~~~{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-rank-solve
 
 Given the matrix:
 
@@ -474,7 +476,7 @@ b = np.array([3, 6])
 3. Now modify `A` so that it becomes full rank. Solve the system again.
 
 This exercise will help you build intuition for how rank affects solvability.
-~~~
+:::
 
 
 ## Eigen and Singular Value Decompositions
@@ -626,8 +628,8 @@ np.linalg.inv(A)
 
 You may get an answer, but it is likely to be numerically unreliable.
 
-~~~{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-cond-num
 
 Let
 
@@ -647,8 +649,16 @@ A = np.array([[5, 5], [10, 10.00001]])
 What changes? What does this tell you about the numerical stability of solving $\bar{\bar{A}}\vec{x} = \vec{b}$?
 
 Note: For symmetric matrices, the ratio of eigenvalues approximates the condition number.
-~~~
+:::
 
+
+## Summary
+
+- Matrix-vector multiplication maps compactly to index/summation notation; the Vandermonde matrix encodes polynomial basis functions as columns.
+- The L₂ norm measures vector magnitude; two vectors are orthogonal when their inner product is zero; Gram-Schmidt converts any linearly independent set into an orthonormal basis.
+- A matrix is invertible only when square and full-rank; prefer `np.linalg.solve()` over explicit inversion for numerical stability.
+- Eigendecomposition applies to square matrices and may yield complex results for non-symmetric matrices; SVD generalises to any matrix and always yields real, non-negative singular values.
+- The condition number (ratio of largest to smallest singular value) quantifies sensitivity to small perturbations; a large condition number signals numerical instability.
 
 ## Additional Reading
 

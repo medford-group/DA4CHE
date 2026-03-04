@@ -16,7 +16,8 @@ kernelspec:
 
 # Linear Regression
 
-## Learning Objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 After completing this lecture, students should be able to:
 
@@ -25,6 +26,7 @@ After completing this lecture, students should be able to:
 - Construct basis function matrices (e.g., Vandermonde, Gaussian).
 - Fit models using both manual matrix operations and `scikit-learn`.
 - Interpret model outputs and assess fit quality visually and numerically.
+:::
 
 ```{code-cell} ipython3
 %matplotlib inline
@@ -236,11 +238,11 @@ ax.plot(x, X @ w, '--');
 
 We can see that the best-fit line actually fits the data better than the original weights! We will explore more strategies for quantifying the fit in the "regression" lecture.
 
-~~~{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-lsr-noise
 
 Modify the code so that the true slope and intercept used to generate the data can be changed. Try adjusting the slope, intercept, and noise level, and observe how this affects the quality of the fit. Can you find a situation where the regression fails to recover the original model?
-~~~
+:::
 
 ## Polynomial Regression
 
@@ -362,20 +364,20 @@ ax.plot(x_new, yhat_new, '--');
 
 We will discuss more techniques for validating the model and assessing the best order of the polynomial in future lectures.
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-poly-order
 
 Try setting `order = 1`, `order = 3`, and `order = 15` in the Vandermonde matrix. Use the same `x_new` vector to interpolate and extrapolate. Plot the predictions and observe how the fit changes inside vs. outside the training data range.
-```
+:::
 
 
 ## General Linear Regression
 
-We just saw that a model of the form: 
+We just saw that a model of the form:
 
 $\vec{y} = \bar{\bar{X}}\vec{w} + \vec{\epsilon}$
 
-can be used for simple linear regression (if $\bar{\bar{X}}$ is a first-order Vandermonde matrix) or polynomial regression (if $\bar{\bar{X}$ is a higher-order Vandermonde matrix). In fact, this form can be used for many different types of linear regression and is referred to as a **general linear model**. Note that this is different from a *generalized linear model*, where the error term is assumed to follow a distribution other than normal. This is very confusing, but not terribly relevant in practice.
+can be used for simple linear regression (if $\bar{\bar{X}}$ is a first-order Vandermonde matrix) or polynomial regression (if $\bar{\bar{X}}$ is a higher-order Vandermonde matrix). In fact, this form can be used for many different types of linear regression and is referred to as a **general linear model**. Note that this is different from a *generalized linear model*, where the error term is assumed to follow a distribution other than normal. This is very confusing, but not terribly relevant in practice.
 
 The key concept is that the columns of $\bar{\bar{X}}$ can contain any type(s) of linearly-dependent non-linear functions and the math will remain the same:
 
@@ -489,11 +491,11 @@ The number of features (`m`) and the width of the Gaussian peaks (`sigma`) both 
 This modeling approach resembles traditional spectral peak fitting but should be interpreted differently. In typical spectroscopy, positive peak heights reflect physical quantities. Here, negative weights are allowed and may appear, not because of physical meaning, but because the model optimizes a numerical error. The goal is best fit, not physical interpretability.
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-gauss-sigma
 
 Try modifying the `sigma` parameter in the `gaussian_features` function. How does increasing or decreasing the width affect the fit? Try values of 10, 25, and 50, and observe which features are emphasized or smoothed out.
-```
+:::
 
 
 ## Linear Regression in Scikit-Learn
@@ -535,13 +537,21 @@ print("Intercept:", model.intercept_)
 This is useful if you want to inspect the result or transfer the model elsewhere.
 
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-skl-feat
 
 Try increasing the number of Gaussian features `m` from 12 to 20 and observe how the fit changes. Does it improve? What happens if you reduce it to 5? Use `model.coef_` to inspect how many of the features have nonzero weight.
-```
+:::
 
 
+
+## Summary
+
+- Linear regression minimises the sum of squared errors; the closed-form solution satisfies the normal equations $\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}$.
+- Polynomial regression uses the same framework with a higher-order Vandermonde matrix — no new mathematics is required.
+- General linear regression allows any set of basis functions (e.g., Gaussians) as columns of $\bar{\bar{X}}$, as long as the model is linear in its parameters $\vec{w}$.
+- `scikit-learn`'s `LinearRegression` provides a concise interface: `.fit()` solves the normal equations and `.predict()` evaluates the model.
+- Higher-order models reduce training error but may overfit; interpolation within the training range is more reliable than extrapolation.
 
 ## Additional Reading
 

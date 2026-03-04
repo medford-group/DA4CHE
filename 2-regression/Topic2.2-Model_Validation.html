@@ -16,33 +16,31 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -69,7 +67,6 @@
     <link rel="prev" title="Non-parametric Models" href="Topic2.1-Non-parametric_Models.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -85,8 +82,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -94,6 +102,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -101,8 +110,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -118,8 +127,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -149,11 +157,15 @@
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -187,14 +199,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -291,16 +298,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -431,7 +446,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/24660c93247cd378fb1a04e9eb68dabc7e445119367ac12851cca2af9e2a7021.png" src="../_images/24660c93247cd378fb1a04e9eb68dabc7e445119367ac12851cca2af9e2a7021.png" />
+<img alt="../_images/5538b40dedaa2caa24f44a4e4e7025a2129d1773c3a03d3ae9b0fff6171d2fca.png" src="../_images/5538b40dedaa2caa24f44a4e4e7025a2129d1773c3a03d3ae9b0fff6171d2fca.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -582,7 +597,7 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1c5f9bb761b2b6953af657f994b467d79df2ece202ef804a63ae5ccaf904fb98.png" src="../_images/1c5f9bb761b2b6953af657f994b467d79df2ece202ef804a63ae5ccaf904fb98.png" />
+<img alt="../_images/06dd5a5dd823181e19be5269986c727ef4fb129aaaf0e8ecbba722c0fd2ddf83.png" src="../_images/06dd5a5dd823181e19be5269986c727ef4fb129aaaf0e8ecbba722c0fd2ddf83.png" />
 </div>
 </div>
 </section>
@@ -609,7 +624,7 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4f85d8af5141957cd19201188fb2170d213c9e76217ab7e05a3ac37af9d57f76.png" src="../_images/4f85d8af5141957cd19201188fb2170d213c9e76217ab7e05a3ac37af9d57f76.png" />
+<img alt="../_images/b48945d527c412c4df7306a137ab9e4f37c193f4f31db01d9bac5eddfd9c3296.png" src="../_images/b48945d527c412c4df7306a137ab9e4f37c193f4f31db01d9bac5eddfd9c3296.png" />
 </div>
 </div>
 <p>A <em>roughly Gaussian</em> residual histogram centered at zero indicates that errors are random and homoscedastic, supporting the use of aggregate metrics such as RMSE.  Skewed or heavy‑tailed residuals (as seen for Dataset IV) warn that single‑number metrics can hide important structure in the errors.</p>
@@ -653,7 +668,7 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/aed882a0388788de036dbe84a90abed806f95db08297f5135724761044144f38.png" src="../_images/aed882a0388788de036dbe84a90abed806f95db08297f5135724761044144f38.png" />
+<img alt="../_images/326a303679ddc6d04cd227244561ecc21abd40aac387aabbf5a9eb018d5f7d4f.png" src="../_images/326a303679ddc6d04cd227244561ecc21abd40aac387aabbf5a9eb018d5f7d4f.png" />
 </div>
 </div>
 <section id="holdout-cross-validation">
@@ -704,7 +719,7 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 r^2 all data  = 0.998
 </pre></div>
 </div>
-<img alt="../_images/4b5f786f62edd17fc2d88f317ef1870a61fda9bd03cdf37a8b7c8ad15e1d71c8.png" src="../_images/4b5f786f62edd17fc2d88f317ef1870a61fda9bd03cdf37a8b7c8ad15e1d71c8.png" />
+<img alt="../_images/cf3ec0de52fe473b2cf7d31989340b07851aacd347c1e623aec5daef2dc717e6.png" src="../_images/cf3ec0de52fe473b2cf7d31989340b07851aacd347c1e623aec5daef2dc717e6.png" />
 </div>
 </div>
 <p>This is a kind of hold‑out because the model has never seen two‑thirds of the points.  The pattern in the residuals hints that our kernel width, $\sigma$, may be sub‑optimal.</p>
@@ -749,7 +764,7 @@ r^2 testing  = 0.874
 r^2 all data  = 0.949
 </pre></div>
 </div>
-<img alt="../_images/6fe55722d80f35a1b428ed020ccf06ee977f479bae8e579df4efdb7eb2f74563.png" src="../_images/6fe55722d80f35a1b428ed020ccf06ee977f479bae8e579df4efdb7eb2f74563.png" />
+<img alt="../_images/9d1676835dbecf2aff9befd5cd7b15a97f1df49f7e8f8480d6ada0cb4e4b2a51.png" src="../_images/9d1676835dbecf2aff9befd5cd7b15a97f1df49f7e8f8480d6ada0cb4e4b2a51.png" />
 </div>
 </div>
 <p>We see that the model performs very poorly on the testing data if <code class="docutils literal notranslate"><span class="pre">sigma</span></code> is not chosen well. We can also visualize this with a parity plot:</p>
@@ -764,7 +779,7 @@ r^2 all data  = 0.949
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/02fb451a023c4199b72ecf194bad2de93691c08b3fbacbc350c0c992c211c399.png" src="../_images/02fb451a023c4199b72ecf194bad2de93691c08b3fbacbc350c0c992c211c399.png" />
+<img alt="../_images/20489bc5fba8c48d7eb3b7c9973b65751f7a38d51ae15abee54979a4574d93d6.png" src="../_images/20489bc5fba8c48d7eb3b7c9973b65751f7a38d51ae15abee54979a4574d93d6.png" />
 </div>
 </div>
 </section>
@@ -811,7 +826,7 @@ r^2 all data  = 0.949
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mean r^2 (test) = 0.996 ± 0.002
 </pre></div>
 </div>
-<img alt="../_images/21701e3a6647e215f9b4651ceebb1d6f8078e2f903016351555d19aabae8d952.png" src="../_images/21701e3a6647e215f9b4651ceebb1d6f8078e2f903016351555d19aabae8d952.png" />
+<img alt="../_images/7cfada13b21796cac6a770a1574b5e6b3e2fe8150a6d1493380a1f5a4b26a9f1.png" src="../_images/7cfada13b21796cac6a770a1574b5e6b3e2fe8150a6d1493380a1f5a4b26a9f1.png" />
 </div>
 </div>
 <p>When the end‑points land in the test fold, the model must <strong>extrapolate</strong> and often fails catastrophically.  k‑fold CV lowers the risk of an <strong>overly lucky</strong> (or unlucky) split—but at the computational cost of <em>k</em> separate model fits.</p>
@@ -892,7 +907,7 @@ std  RMSE (LOO) = 3.727e-01
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/24660c93247cd378fb1a04e9eb68dabc7e445119367ac12851cca2af9e2a7021.png" src="../_images/24660c93247cd378fb1a04e9eb68dabc7e445119367ac12851cca2af9e2a7021.png" />
+<img alt="../_images/5538b40dedaa2caa24f44a4e4e7025a2129d1773c3a03d3ae9b0fff6171d2fca.png" src="../_images/5538b40dedaa2caa24f44a4e4e7025a2129d1773c3a03d3ae9b0fff6171d2fca.png" />
 </div>
 </div>
 <section id="standard-deviation-of-error">
@@ -908,7 +923,7 @@ std  RMSE (LOO) = 3.727e-01
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.236603322726321
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2366033227263211
 </pre></div>
 </div>
 </div>
@@ -949,7 +964,7 @@ std  RMSE (LOO) = 3.727e-01
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5e84b31368d05c31f8d3b6b2d6b17dbefe5353f2775b21852f602bf52d1c6023.png" src="../_images/5e84b31368d05c31f8d3b6b2d6b17dbefe5353f2775b21852f602bf52d1c6023.png" />
+<img alt="../_images/857c8b0211b2fc4391e5dfdcca1e149d963448bf356af9aed118e223d11f74ce.png" src="../_images/857c8b0211b2fc4391e5dfdcca1e149d963448bf356af9aed118e223d11f74ce.png" />
 </div>
 </div>
 <p>These <span class="math notranslate nohighlight">\(\pm1\,\sigma\)</span> bands assume <em>homoskedastic</em>, Gaussian errors.  They clearly miss the outlier in Dataset IV, showing that identical error bars do <strong>not</strong> suit every dataset.</p>
@@ -1013,9 +1028,9 @@ std  RMSE (LOO) = 3.727e-01
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ccd8841a51acb53cf9d2a3b7db23acc64eb978b472becf121b0bae7aa298323e.png" src="../_images/ccd8841a51acb53cf9d2a3b7db23acc64eb978b472becf121b0bae7aa298323e.png" />
-<img alt="../_images/69b50da7856bc9633df1d01519fcda2c0e9945dc0cc0045428bf9ed073f48780.png" src="../_images/69b50da7856bc9633df1d01519fcda2c0e9945dc0cc0045428bf9ed073f48780.png" />
-<img alt="../_images/75e1aaca4aea6f20f544fbad7c8f23215a44c63f788c9fb577c4d01e089fb65f.png" src="../_images/75e1aaca4aea6f20f544fbad7c8f23215a44c63f788c9fb577c4d01e089fb65f.png" />
+<img alt="../_images/7719769d3b3797a43f043959822ecb945f53f2c5bf7f9a0851aefeb8174781ed.png" src="../_images/7719769d3b3797a43f043959822ecb945f53f2c5bf7f9a0851aefeb8174781ed.png" />
+<img alt="../_images/048d360d84c68fba5050a7948d8cc517f94abaa627efecc631da8b3d053e14f3.png" src="../_images/048d360d84c68fba5050a7948d8cc517f94abaa627efecc631da8b3d053e14f3.png" />
+<img alt="../_images/a2140a6072348aa5b6b15e52c6e04c1908d05ef09458b98f086e7bcdbcf1dc92.png" src="../_images/a2140a6072348aa5b6b15e52c6e04c1908d05ef09458b98f086e7bcdbcf1dc92.png" />
 </div>
 </div>
 <p>You don’t need to understand all the details of this code block, but should understand the general idea. Re-sampling is closely related to cross-validation. We hide some of the data from the model and see how the model changes. The difference is that we keep the <strong>models</strong>, rather than just analyzing the errors. Then we can use the models to give a range of estimates, or check the parameters of the models to see how much parameters change depending on the data.</p>
@@ -1052,7 +1067,7 @@ std  RMSE (LOO) = 3.727e-01
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/20438c8d714f01d3eb6dcece5908506314b7de488636fbcafe29fb9b979b3120.png" src="../_images/20438c8d714f01d3eb6dcece5908506314b7de488636fbcafe29fb9b979b3120.png" />
+<img alt="../_images/2d738798c69d22f2bd58a72848a34db42bc07e0356d68a0740212a1696a790e4.png" src="../_images/2d738798c69d22f2bd58a72848a34db42bc07e0356d68a0740212a1696a790e4.png" />
 </div>
 </div>
 <p>GPR is powerful for uncertainty estimation because it treats the unknown function as a “prior Gaussian process”. We assume any finite collection of function values follows a multivariate normal distribution whose <em>covariance</em> is governed by a “kernel”.  The kernel encodes assumptions about smoothness, periodicity, and overall variation. GPR is very similar to kernel ridge regression, and is identical in some limits, but in general the results can differ. A few things to consider when working with GPR:</p>
@@ -1130,8 +1145,7 @@ std  RMSE (LOO) = 3.727e-01
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1219,8 +1233,8 @@ By A.J. Medford
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -16,33 +16,31 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,7 +66,6 @@
     <link rel="prev" title="Complexity Optimization" href="Topic2.3-Complexity_Optimization.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -84,8 +81,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -93,6 +101,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -100,8 +109,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -117,8 +126,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -148,11 +156,15 @@
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -186,14 +198,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -290,16 +297,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -836,7 +851,7 @@
 Feature names: [&#39;x1:Primary Column Reflux Flow&#39;, &#39;x2:Primary Column Tails Flow&#39;, &#39;x3:Input to Primary Column Bed 3 Flow&#39;, &#39;x4:Input to Primary Column Bed 2 Flow&#39;, &#39;x5:Primary Column Feed Flow from Feed Column&#39;, &#39;x6:Primary Column Make Flow&#39;, &#39;x7:Primary Column Base Level&#39;, &#39;x8:Primary Column Reflux Drum Pressure&#39;, &#39;x9:Primary Column Condenser Reflux Drum Level&#39;, &#39;x10:Primary Column Bed1 DP&#39;, &#39;x11:Primary Column Bed2 DP&#39;, &#39;x12:Primary Column Bed3 DP&#39;, &#39;x13:Primary Column Bed4 DP&#39;, &#39;x14:Primary Column Base Pressure&#39;, &#39;x15:Primary Column Head Pressure&#39;, &#39;x16:Primary Column Tails Temperature&#39;, &#39;x17:Primary Column Tails Temperature 1&#39;, &#39;x18:Primary Column Bed 4 Temperature&#39;, &#39;x19:Primary Column Bed 3 Temperature&#39;, &#39;x20:Primary Column Bed 2 Temperature&#39;, &#39;x21:Primary Column Bed 1 Temperature&#39;, &#39;x22: Secondary Column Base Concentration&#39;, &#39;x23: Flow from Input to Secondary Column&#39;, &#39;x24: Secondary Column Tails Flow&#39;, &#39;x25: Secondary Column Tray DP&#39;, &#39;x26: Secondary Column Head Pressure&#39;, &#39;x27: Secondary Column Base Pressure&#39;, &#39;x28: Secondary Column Base Temperature&#39;, &#39;x29: Secondary Column Tray 3 Temperature&#39;, &#39;x30: Secondary Column Bed 1 Temperature&#39;, &#39;x31: Secondary Column Bed 2 Temperature&#39;, &#39;x32: Secondary Column Tray 2 Temperature&#39;, &#39;x33: Secondary Column Tray 1 Temperature&#39;, &#39;x34: Secondary Column Tails Temperature&#39;, &#39;x35: Secondary Column Tails Concentration&#39;, &#39;x36: Feed Column Recycle Flow&#39;, &#39;x37: Feed Column Tails Flow to Primary Column&#39;, &#39;x38: Feed Column Calculated DP&#39;, &#39;x39: Feed Column Steam Flow&#39;, &#39;x40: Feed Column Tails Flow&#39;]
 </pre></div>
 </div>
-<img alt="../_images/eab2ff19361ca4c2a6c7e1a11918d9a298d0c85bc867a6aa4e3d099aa3501db1.png" src="../_images/eab2ff19361ca4c2a6c7e1a11918d9a298d0c85bc867a6aa4e3d099aa3501db1.png" />
+<img alt="../_images/09a0950fcec735e654d2509d1b8bf38a40a3b9fd5415606f4ef69fafa45867f0.png" src="../_images/09a0950fcec735e654d2509d1b8bf38a40a3b9fd5415606f4ef69fafa45867f0.png" />
 </div>
 </div>
 <p>We can see that some features are approximately normally distributed, while others have obvious outliers or bimodal shapes.</p>
@@ -869,7 +884,7 @@ Chemical processes often operate in distinct modes. For example, equipment may b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a7c7ed433cd7abea991ab7e177d3269d5f86ca8f128703ff925a07774a031fbd.png" src="../_images/a7c7ed433cd7abea991ab7e177d3269d5f86ca8f128703ff925a07774a031fbd.png" />
+<img alt="../_images/c634763223ba55ca76afd1b0bc555f2d4270e0a7e5377bc73f37cf163a3176d0.png" src="../_images/c634763223ba55ca76afd1b0bc555f2d4270e0a7e5377bc73f37cf163a3176d0.png" />
 </div>
 </div>
 <p>It is not practical to visualize an entire 40 x 40 grid, but we can select a small subset:</p>
@@ -896,7 +911,7 @@ Chemical processes often operate in distinct modes. For example, equipment may b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c53692a6c2a6d571535a6907d5a661080d882a9ce5b43ce6f4111ac507fd9936.png" src="../_images/c53692a6c2a6d571535a6907d5a661080d882a9ce5b43ce6f4111ac507fd9936.png" />
+<img alt="../_images/27f7c0c83bc5dfe2f7a0cbccc7bd1f0cfaaa4d8a3b72469224ae3f46f97f4374.png" src="../_images/27f7c0c83bc5dfe2f7a0cbccc7bd1f0cfaaa4d8a3b72469224ae3f46f97f4374.png" />
 </div>
 </div>
 <p>At this point, nothing really jumps out in terms of correlation with the target variable, but we can still see some interesting aspects of the dataset’s structure. For example, it is even more clear from this plot that some variables (e.g. <code class="docutils literal notranslate"><span class="pre">Input</span> <span class="pre">to</span> <span class="pre">Primary</span> <span class="pre">Column</span> <span class="pre">Bed</span></code>) have some discrete values, but also vary continuously in general. This is consistent with a chemical process that has several operating “set points” where it typically runs, but it is also sometimes operated at conditions outside the typical ones.</p>
@@ -916,7 +931,7 @@ Chemical processes often operate in distinct modes. For example, equipment may b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d13ed81f811487b1280305a71ff0cc16768e098dde0fc3d8d8b85ee8707f5fe3.png" src="../_images/d13ed81f811487b1280305a71ff0cc16768e098dde0fc3d8d8b85ee8707f5fe3.png" />
+<img alt="../_images/44e28cc9bfb0f658012ac0fe9949c496c38a56e798fa8d8aba578177922a35fa.png" src="../_images/44e28cc9bfb0f658012ac0fe9949c496c38a56e798fa8d8aba578177922a35fa.png" />
 </div>
 </div>
 <p>This matrix suggests that some features are highly correlated. We can inspect specific entries:</p>
@@ -951,7 +966,7 @@ Covariance(x3:Input to Primary Column Bed 3 Flow, x4:Input to Primary Column Bed
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/dcec8ac23b4b90235e37fa7e96114a652371e67b1720449e9143778a22b08551.png" src="../_images/dcec8ac23b4b90235e37fa7e96114a652371e67b1720449e9143778a22b08551.png" />
+<img alt="../_images/4428605a7f1d0dfc96130e00f8c9d7476af7ca40e81611fce04753f5507c04a9.png" src="../_images/4428605a7f1d0dfc96130e00f8c9d7476af7ca40e81611fce04753f5507c04a9.png" />
 </div>
 </div>
 <p>We will see how these two matrices are related shortly.</p>
@@ -1034,7 +1049,7 @@ Minimum scaled: -8.12009681442378, Maximum scaled: 38.10583689480496
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8e386930b2db356110cc7e9b07a7f406892b7e3ef69d44cbf4b7c9284c90d79e.png" src="../_images/8e386930b2db356110cc7e9b07a7f406892b7e3ef69d44cbf4b7c9284c90d79e.png" />
+<img alt="../_images/14f82d86e0fb6ba88467a83a69893c02e7cca06091e5ddaafbef90302f030991.png" src="../_images/14f82d86e0fb6ba88467a83a69893c02e7cca06091e5ddaafbef90302f030991.png" />
 </div>
 </div>
 <p>The structure looks totally different! This is the “correlation matrix”, which tells us how correlated different features are on a scale of -1 to 1. A correlation of -1 means they are perfectly anti-correlated, while 1 means they are perfectly correlated. If any features are perfectly (anti)correlated (correlation = 1 or -1) then they are linearly dependent (and won’t count toward the rank).</p>
@@ -1202,7 +1217,7 @@ creates a workflow that:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5fd342d11e24bc8df90d03cc97105aa3b04fb760788492c99f9999533833f170.png" src="../_images/5fd342d11e24bc8df90d03cc97105aa3b04fb760788492c99f9999533833f170.png" />
+<img alt="../_images/38091ddc77429e36ec2b2f7663361ad5f33f58f0fc6aaf06d141d175fe3417c5.png" src="../_images/38091ddc77429e36ec2b2f7663361ad5f33f58f0fc6aaf06d141d175fe3417c5.png" />
 </div>
 </div>
 <p>This looks reasonable, although there are quite a few outliers. We should also remember that we used hold-out here, so we can check the $r^2^ on the testing set to ensure there was no overfitting:</p>
@@ -1246,7 +1261,7 @@ r^2 test  = 0.711
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/314146d04e0278838185883eb84bf19930b92963909d9e56a3bcdc4a7bb1e2a1.png" src="../_images/314146d04e0278838185883eb84bf19930b92963909d9e56a3bcdc4a7bb1e2a1.png" />
+<img alt="../_images/0d850f9857148ab6ac277d53a0734bffdfaee96774b53bbb2eef8a1287d30533.png" src="../_images/0d850f9857148ab6ac277d53a0734bffdfaee96774b53bbb2eef8a1287d30533.png" />
 </div>
 </div>
 <p>We can see that these look comparable, which confirms that we have not over-fit the model. It is always a good idea to check the parity plot to see if any patterns stand out!</p>
@@ -1378,7 +1393,7 @@ This implementation performs <strong>univariate ranking</strong> (pick best sing
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Minimum k achieving r^2 ≥ 0.6: 17 (r^2 = 0.622)
 </pre></div>
 </div>
-<img alt="../_images/c13cb6ae3ffb9cfb3cab5fb55e20f3d78d0ac078f9d45d4addb315df65222ed1.png" src="../_images/c13cb6ae3ffb9cfb3cab5fb55e20f3d78d0ac078f9d45d4addb315df65222ed1.png" />
+<img alt="../_images/7381b9dbc616b19250aed7cd3d04c1b0aa876c4bc5dd00de4254e3ff26ef618f.png" src="../_images/7381b9dbc616b19250aed7cd3d04c1b0aa876c4bc5dd00de4254e3ff26ef618f.png" />
 </div>
 </div>
 <p>Be careful, since just because features are not <em>linearly</em> correlated does not mean that they are not <em>non-linearly</em> correlated (in other words, we might reject a feature that is actually very descriptive, if that description is highly non-linear) . There is also no guarantee that we are not finding correlated features, since if one feature has a high correlation with the output, and is also correlated with another feature, then that feature will also be correlated with the output. More advanced forward selection strategies can be used to reduce this, as shown with a standard implementation below:</p>
@@ -1412,7 +1427,7 @@ This implementation performs <strong>univariate ranking</strong> (pick best sing
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected feature indices: [ 8  9 15 16 23 24 28 32 34 36]
 Selected feature names: [&#39;x9:Primary Column Condenser Reflux Drum Level&#39;, &#39;x10:Primary Column Bed1 DP&#39;, &#39;x16:Primary Column Tails Temperature&#39;, &#39;x17:Primary Column Tails Temperature 1&#39;, &#39;x24: Secondary Column Tails Flow&#39;, &#39;x25: Secondary Column Tray DP&#39;, &#39;x29: Secondary Column Tray 3 Temperature&#39;, &#39;x33: Secondary Column Tray 1 Temperature&#39;, &#39;x35: Secondary Column Tails Concentration&#39;, &#39;x37: Feed Column Tails Flow to Primary Column&#39;]
-r^2 on full data using selected subset: 0.6055868410819696
+r^2 on full data using selected subset: 0.6055868410819657
 </pre></div>
 </div>
 </div>
@@ -1448,8 +1463,8 @@ r^2 on full data using selected subset: 0.6055868410819696
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dot(PC1, PC1) = 1.0000000000000004
-dot(PC1, PC2) = 4.163336342344337e-17
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dot(PC1, PC1) = 0.9999999999999992
+dot(PC1, PC2) = 2.0827687919277988e-16
 </pre></div>
 </div>
 </div>
@@ -1494,12 +1509,12 @@ Think of the usual x–y axes as a fixed Cartesian frame. PCA rotates this frame
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total variance (trace of covariance): 40.00388500388503
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total variance (trace of covariance): 40.00388500388501
 First 5 explained variance ratios: [0.5851 0.1046 0.0583 0.0441 0.0341]
 Components needed for ≥90% variance: 8
 </pre></div>
 </div>
-<img alt="../_images/cd3b11d00988feda8e8aa4925d032476ccff550f310bf4f206c0f43183e286fc.png" src="../_images/cd3b11d00988feda8e8aa4925d032476ccff550f310bf4f206c0f43183e286fc.png" />
+<img alt="../_images/b3c3c634de85e5ee583dfc4bad18465fe21110d3891b19cd3635eeb8ef7713a4.png" src="../_images/b3c3c634de85e5ee583dfc4bad18465fe21110d3891b19cd3635eeb8ef7713a4.png" />
 </div>
 </div>
 <p>We can use this to say how many principal components are needed to capture a specified fraction of the variance (e.g., 90%).</p>
@@ -1521,7 +1536,7 @@ Components needed for ≥90% variance: 8
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Projection shape: (10297, 40)
 </pre></div>
 </div>
-<img alt="../_images/3936556b454e7502e145129e8f19343e700921f637e07070abcc1fc708c225f1.png" src="../_images/3936556b454e7502e145129e8f19343e700921f637e07070abcc1fc708c225f1.png" />
+<img alt="../_images/b272453c8fd83c7589d33b4382710a27e3f5af019217e983fc3d8057a8aa5af3.png" src="../_images/b272453c8fd83c7589d33b4382710a27e3f5af019217e983fc3d8057a8aa5af3.png" />
 </div>
 </div>
 <p>After projection, we still have 40 features but they are now orthogonal - there is no covariance! This means that each one contains unique information.</p>
@@ -1777,8 +1792,7 @@ It is possible to use cross-validation to select <code class="docutils literal n
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1858,8 +1872,8 @@ By A.J. Medford
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
