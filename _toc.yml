@@ -13,4 +13,8 @@ chapters:
       - file: 2-regression/Topic2.1-Non-parametric_Models
       - file: 2-regression/Topic2.2-Model_Validation
       - file: 2-regression/Topic2.3-Complexity_Optimization
-      - file: 2-regression/Topic2.4-High_Dimensional_Regression
+      - file: 2-regression/Topic2.4-High_dimensional_data
+      - file: 2-regression/Topic2.5-High_dimensional_regression
+  - file: 3-classification/intro
+    sections:
+      - file: 3-classification/Topic3.1-Classification_Basics
