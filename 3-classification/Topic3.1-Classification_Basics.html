@@ -475,13 +475,6 @@ document.write(`
 <h3>Types of Classification Datasets<a class="headerlink" href="#types-of-classification-datasets" title="Link to this heading">#</a></h3>
 <p>There are three key properties to consider when examining a classification dataset.</p>
 <p><strong>Linearly separable vs. non-linearly separable vs. inseparable:</strong> A problem is <em>linearly separable</em> if the classes can be exactly divided by a straight line (or hyperplane). If separation is only possible with a curved boundary, it is <em>non-linearly separable</em>. If no boundary cleanly separates the classes, it is <em>inseparable</em>.</p>
-<figure class="align-default" id="fig-cls-lin-sep">
-<a class="reference internal image-reference" href="../_images/linearly_separable.png"><img alt="../_images/linearly_separable.png" src="../_images/linearly_separable.png" style="width: 80%;" />
-</a>
-<figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Examples of linearly separable, non-linearly separable, and inseparable datasets.</span><a class="headerlink" href="#fig-cls-lin-sep" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
@@ -514,20 +507,20 @@ document.write(`
 <li><p><strong>One-vs-rest (OvR):</strong> decompose into a series of binary classifiers, each distinguishing one class from all others.</p></li>
 </ol>
 <figure class="align-default" id="fig-cls-ova">
-<a class="reference internal image-reference" href="../_images/OvA.png"><img alt="../_images/OvA.png" src="../_images/OvA.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/OvA.png"><img alt="../_images/OvA.png" src="../_images/OvA.png" style="width: 90%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">One-vs-rest strategy for multi-class classification.</span><a class="headerlink" href="#fig-cls-ova" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text"><strong>One-vs-rest (OvR) strategy.</strong> Each of the three binary sub-problems is solved independently (panels 1–3): the target class is shown in colour and all others are collapsed to grey, with a logistic-regression boundary for that sub-problem. The rightmost panel shows the combined OvR decision regions, with dashed lines indicating where each binary boundary lies.</span><a class="headerlink" href="#fig-cls-ova" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="2">
 <li><p><strong>Native multi-class objective:</strong> modify the loss function or algorithm to handle all classes simultaneously (e.g., k-NN, multi-class logistic regression).</p></li>
 </ol>
 <figure class="align-default" id="fig-cls-mc-cost">
-<a class="reference internal image-reference" href="../_images/multiclass_cost.png"><img alt="../_images/multiclass_cost.png" src="../_images/multiclass_cost.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/multiclass_cost.png"><img alt="../_images/multiclass_cost.png" src="../_images/multiclass_cost.png" style="width: 90%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Multi-class cost function approach.</span><a class="headerlink" href="#fig-cls-mc-cost" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text"><strong>Native multi-class objective (softmax regression).</strong> All three class boundaries are learned simultaneously in a single optimisation. Left: the raw training data. Centre: the three pairwise boundaries meeting at a single point — a hallmark of jointly-trained linear classifiers. Right: the resulting decision regions.</span><a class="headerlink" href="#fig-cls-mc-cost" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The practical differences between these approaches are often small, though OvR is more amenable to parallel training and multi-class objectives are more efficient in serial.</p>
@@ -551,7 +544,7 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/discriminative_vs_generative.png"><img alt="../_images/discriminative_vs_generative.png" src="../_images/discriminative_vs_generative.png" style="width: 90%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Comparison of discriminative and generative classification approaches.</span><a class="headerlink" href="#fig-cls-disc-gen" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text"><strong>Discriminative vs. generative models.</strong> Left: a discriminative model learns a decision boundary directly; a test point (red star) is classified by which side of the boundary it falls on. Right: a generative model fits class-conditional distributions <span class="math notranslate nohighlight">\(P(\mathbf{x}\,|\,y)\)</span> (shown as 1-σ and 2-σ confidence ellipses); the test point — outside both ellipses — has low probability under either class, something a discriminative model cannot detect.</span><a class="headerlink" href="#fig-cls-disc-gen" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -585,10 +578,10 @@ document.write(`
 \[\text{F1} = \frac{2 \cdot \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}\]</div>
 <p>The F1 score is the harmonic mean of precision and recall. It ranges from 0 (worst) to 1 (perfect) and is particularly useful when classes are imbalanced because it penalizes models that sacrifice either precision or recall.</p>
 <figure class="align-default" id="fig-cls-prec-rec">
-<a class="reference internal image-reference" href="../_images/precision_recall.png"><img alt="../_images/precision_recall.png" src="../_images/precision_recall.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/precision_recall.png"><img alt="../_images/precision_recall.png" src="../_images/precision_recall.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Visual summary of precision and recall in terms of true/false positives and negatives.</span><a class="headerlink" href="#fig-cls-prec-rec" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text"><strong>Precision and recall.</strong> The left band contains all actual positives; the right band contains all actual negatives. The dashed ellipse marks the set of predicted positives. Dots are coloured by outcome: navy (TP), gold (FN), red (FP), grey (TN). Precision measures how many predicted positives are correct; recall measures how many actual positives are found.</span><a class="headerlink" href="#fig-cls-prec-rec" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="cell docutils container">
@@ -695,7 +688,7 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/ROC_curve.png"><img alt="../_images/ROC_curve.png" src="../_images/ROC_curve.png" style="width: 60%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">ROC curves for three model quality levels. A worthless classifier (AUC = 0.50) traces the diagonal — it performs no better than random guessing. A good classifier (AUC ≈ 0.86) bows toward the upper-left corner, and an excellent classifier (AUC ≈ 0.97) hugs it tightly. The shaded area illustrates what AUC measures.</span><a class="headerlink" href="#fig-cls-roc" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">ROC curves for three model quality levels. A worthless classifier (AUC = 0.50) traces the diagonal — it performs no better than random guessing. A good classifier (AUC ≈ 0.86) bows toward the upper-left corner, and an excellent classifier (AUC ≈ 0.97) hugs it tightly. The shaded area illustrates what AUC measures.</span><a class="headerlink" href="#fig-cls-roc" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>A model that performs no better than random chance traces the diagonal; a perfect model reaches the upper-left corner. The <strong>area under the ROC curve (AUC)</strong> is a single-number summary: higher is better.</p>
@@ -739,7 +732,7 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/confusion_matrix.png"><img alt="../_images/confusion_matrix.png" src="../_images/confusion_matrix.png" style="width: 60%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">A confusion matrix for a multi-class classifier. Diagonal elements are true positives/negatives; off-diagonal elements reveal which classes are being confused with each other.</span><a class="headerlink" href="#fig-cls-confmat" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">A confusion matrix for a multi-class classifier. Diagonal elements are true positives/negatives; off-diagonal elements reveal which classes are being confused with each other.</span><a class="headerlink" href="#fig-cls-confmat" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Confusion matrices are especially useful for diagnosing <em>which</em> classes are problematic. For example, if class A is frequently misclassified as class B but rarely confused with class C, the confusion matrix reveals this structure immediately.</p>
@@ -757,7 +750,7 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/undersampling.png"><img alt="../_images/undersampling.png" src="../_images/undersampling.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text"><strong>Undersampling.</strong> Left: with a 15:1 class imbalance, LDA’s empirical-prior boundary (red) is pulled almost onto the minority cluster, misclassifying roughly half of minority examples. The dashed line shows the theoretical ideal at the class midpoint. Right: after randomly discarding 140 majority examples the boundary moves close to the ideal — but 140 real data points (grey) are thrown away.</span><a class="headerlink" href="#fig-cls-undersamp" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text"><strong>Undersampling.</strong> Left: with a 15:1 class imbalance, LDA’s empirical-prior boundary (red) is pulled almost onto the minority cluster, misclassifying roughly half of minority examples. The dashed line shows the theoretical ideal at the class midpoint. Right: after randomly discarding 140 majority examples the boundary moves close to the ideal — but 140 real data points (grey) are thrown away.</span><a class="headerlink" href="#fig-cls-undersamp" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="3">
@@ -767,7 +760,7 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/oversampling.png"><img alt="../_images/oversampling.png" src="../_images/oversampling.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text"><strong>Oversampling.</strong> After duplicating the 10 minority examples 15× to restore balance, an RBF-kernel SVM learns a non-linear boundary that wraps tightly around the repeated training positions — including an isolated “island” around a single outlier point in majority territory. This is a hallmark of overfitting to duplicated samples.</span><a class="headerlink" href="#fig-cls-oversamp" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text"><strong>Oversampling.</strong> After duplicating the 10 minority examples 15× to restore balance, an RBF-kernel SVM learns a non-linear boundary that wraps tightly around the repeated training positions — including an isolated “island” around a single outlier point in majority territory. This is a hallmark of overfitting to duplicated samples.</span><a class="headerlink" href="#fig-cls-oversamp" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="4">
@@ -777,7 +770,7 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/smote.png"><img alt="../_images/smote.png" src="../_images/smote.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text"><strong>SMOTE.</strong> Synthetic minority examples (hollow circles) are created by interpolating between existing minority points. The RBF-SVM boundary is now smooth and contiguous — no isolated islands — and sits closer to the theoretical ideal than the naive oversampling boundary.</span><a class="headerlink" href="#fig-cls-smote" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text"><strong>SMOTE.</strong> Synthetic minority examples (hollow circles) are created by interpolating between existing minority points. The RBF-SVM boundary is now smooth and contiguous — no isolated islands — and sits closer to the theoretical ideal than the naive oversampling boundary.</span><a class="headerlink" href="#fig-cls-smote" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="exercise admonition" id="ex-cls-stratified-cv">

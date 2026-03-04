@@ -93,13 +93,6 @@ There are three key properties to consider when examining a classification datas
 
 **Linearly separable vs. non-linearly separable vs. inseparable:** A problem is *linearly separable* if the classes can be exactly divided by a straight line (or hyperplane). If separation is only possible with a curved boundary, it is *non-linearly separable*. If no boundary cleanly separates the classes, it is *inseparable*.
 
-:::{figure} images/linearly_separable.png
-:name: fig-cls-lin-sep
-:width: 80%
-
-Examples of linearly separable, non-linearly separable, and inseparable datasets.
-:::
-
 ```{code-cell} ipython3
 np.random.seed(9)
 X_lin, y_lin = make_blobs(n_samples=200, centers=2, cluster_std=2*noisiness, n_features=2)
@@ -127,18 +120,18 @@ plt.show()
 
 :::{figure} images/OvA.png
 :name: fig-cls-ova
-:width: 60%
+:width: 90%
 
-One-vs-rest strategy for multi-class classification.
+**One-vs-rest (OvR) strategy.** Each of the three binary sub-problems is solved independently (panels 1–3): the target class is shown in colour and all others are collapsed to grey, with a logistic-regression boundary for that sub-problem. The rightmost panel shows the combined OvR decision regions, with dashed lines indicating where each binary boundary lies.
 :::
 
 2. **Native multi-class objective:** modify the loss function or algorithm to handle all classes simultaneously (e.g., k-NN, multi-class logistic regression).
 
 :::{figure} images/multiclass_cost.png
 :name: fig-cls-mc-cost
-:width: 60%
+:width: 90%
 
-Multi-class cost function approach.
+**Native multi-class objective (softmax regression).** All three class boundaries are learned simultaneously in a single optimisation. Left: the raw training data. Centre: the three pairwise boundaries meeting at a single point — a hallmark of jointly-trained linear classifiers. Right: the resulting decision regions.
 :::
 
 The practical differences between these approaches are often small, though OvR is more amenable to parallel training and multi-class objectives are more efficient in serial.
@@ -169,7 +162,7 @@ where $P(y_i)$ is estimated from class frequencies in the data and $P(\vec{x})$ 
 :name: fig-cls-disc-gen
 :width: 90%
 
-Comparison of discriminative and generative classification approaches.
+**Discriminative vs. generative models.** Left: a discriminative model learns a decision boundary directly; a test point (red star) is classified by which side of the boundary it falls on. Right: a generative model fits class-conditional distributions $P(\mathbf{x}\,|\,y)$ (shown as 1-σ and 2-σ confidence ellipses); the test point — outside both ellipses — has low probability under either class, something a discriminative model cannot detect.
 :::
 
 ## Accuracy Metrics and Model Validation
@@ -205,9 +198,9 @@ The F1 score is the harmonic mean of precision and recall. It ranges from 0 (wor
 
 :::{figure} images/precision_recall.png
 :name: fig-cls-prec-rec
-:width: 60%
+:width: 80%
 
-Visual summary of precision and recall in terms of true/false positives and negatives.
+**Precision and recall.** The left band contains all actual positives; the right band contains all actual negatives. The dashed ellipse marks the set of predicted positives. Dots are coloured by outcome: navy (TP), gold (FN), red (FP), grey (TN). Precision measures how many predicted positives are correct; recall measures how many actual positives are found.
 :::
 
 ```{code-cell} ipython3

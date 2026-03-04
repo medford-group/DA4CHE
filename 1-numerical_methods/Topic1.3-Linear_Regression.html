@@ -473,7 +473,7 @@ y_i = \sum_{j=0}^1 w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/901d2b30d2e5cc24cf556d25ab66a30f268b9d3845797e7965a4bc566cc23bfb.png" src="../_images/901d2b30d2e5cc24cf556d25ab66a30f268b9d3845797e7965a4bc566cc23bfb.png" />
+<img alt="../_images/52399dfe93c535b02f862dfd8232f74b3d65bfc84a89b92e65d7a724e6d9592d.png" src="../_images/52399dfe93c535b02f862dfd8232f74b3d65bfc84a89b92e65d7a724e6d9592d.png" />
 </div>
 </div>
 <p>The goal of linear regression is to use the data, <span class="math notranslate nohighlight">\(y_i\)</span>, to recover the best-fit line. In this case, we know the answer since we generated the data. However, we can also try to recover the line based only on the noisy data.</p>
@@ -578,7 +578,7 @@ g(\vec{w})
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.49084696 -2.50645643]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.45542449 -2.50882835]
 Original weights to generate data: [1.4, -2.5]
 </pre></div>
 </div>
@@ -597,7 +597,7 @@ Original weights to generate data: [1.4, -2.5]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0bf4e1feab9f11151c5501c34bf747e59fe3dab897685f061a13d8ddf398532f.png" src="../_images/0bf4e1feab9f11151c5501c34bf747e59fe3dab897685f061a13d8ddf398532f.png" />
+<img alt="../_images/f878628f8f4e0bdbf1ac0cdc00e176aa47c74fdf97fab39149da920d96bcf242.png" src="../_images/f878628f8f4e0bdbf1ac0cdc00e176aa47c74fdf97fab39149da920d96bcf242.png" />
 </div>
 </div>
 <p>We can see that the best-fit line actually fits the data better than the original weights! We will explore more strategies for quantifying the fit in the “regression” lecture.</p>
@@ -649,7 +649,7 @@ y_i = \sum_{j=0}^m w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e5297f2c4898e4d315cc2b21a1b18439a81b1054c64a9f4e834da0acd234ccf0.png" src="../_images/e5297f2c4898e4d315cc2b21a1b18439a81b1054c64a9f4e834da0acd234ccf0.png" />
+<img alt="../_images/03cef263b73d1570408718e8732e1c76154834d3ce10932cd0d45e4aedad39a3.png" src="../_images/03cef263b73d1570408718e8732e1c76154834d3ce10932cd0d45e4aedad39a3.png" />
 </div>
 </div>
 <p>Now we can try to recover the weights, <span class="math notranslate nohighlight">\(w\)</span> using the same math as before:</p>
@@ -664,7 +664,7 @@ y_i = \sum_{j=0}^m w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.40162942  0.91494635 -0.33522055  0.02271649]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.51591739  0.64134399 -0.26053414  0.01767168]
 Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </pre></div>
 </div>
@@ -682,7 +682,7 @@ Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/64eb32337fd0e1b5989af2d0751629e4f7ab93806dca0b77df5e51125aeb4d11.png" src="../_images/64eb32337fd0e1b5989af2d0751629e4f7ab93806dca0b77df5e51125aeb4d11.png" />
+<img alt="../_images/df1e811a075c29d10cb82d92fc669bb83be6425c564480a6d284a61e315ec095.png" src="../_images/df1e811a075c29d10cb82d92fc669bb83be6425c564480a6d284a61e315ec095.png" />
 </div>
 </div>
 <p>In this case we cheated a bit, since we knew that the data was generated from a third-order polynomial. We can also find fits based on lower (or higher) orders of polynomials by modifying the order of the Vandermonde matrix used in the least-squares equation. First, we can make a function that creates a Vandermonde matrix of any order:</p>
@@ -737,13 +737,13 @@ Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights: [ 1.54781919e+00 -2.13346873e+00  5.59941705e+00 -4.58072925e+00
-  1.77945905e+00 -3.74082507e-01  4.35028044e-02 -2.63085763e-03
-  6.45987492e-05]
-Sum of Squared Errors (g): 0.050944695730364746
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights: [ 1.36159319e+00 -2.67473749e+00  7.91703731e+00 -6.52150357e+00
+  2.47948018e+00 -5.06460595e-01  5.73375725e-02 -3.39162695e-03
+  8.18471304e-05]
+Sum of Squared Errors (g): 0.12884454700580808
 </pre></div>
 </div>
-<img alt="../_images/d41a041bbcda5b2dca12f6a1bdc5db113fd6de3673201ab2a068804f8e105dfc.png" src="../_images/d41a041bbcda5b2dca12f6a1bdc5db113fd6de3673201ab2a068804f8e105dfc.png" />
+<img alt="../_images/d64111ffd176cb3daaa612db22344157a348a2f073ca64b29dff46b370387b1b.png" src="../_images/d64111ffd176cb3daaa612db22344157a348a2f073ca64b29dff46b370387b1b.png" />
 </div>
 </div>
 <p>We see that as the order of the polynomial increases, the sum of squared errors decreases. However, we are only checking the behavior of our model at the points we use to train it. We can also use the model to interpolate between points or extrapolate to new points by creating a new Vandermonde matrix with more rows. Increasing the resolution adds rows within the original range, and results in interpolation, while increasing the range will result in extrapolation. Let’s try both:</p>
@@ -786,7 +786,7 @@ Sum of Squared Errors (g): 0.050944695730364746
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f98ae84022288593563411e65cd5f04b4676fe447a485dccc8bc4569458ed006.png" src="../_images/f98ae84022288593563411e65cd5f04b4676fe447a485dccc8bc4569458ed006.png" />
+<img alt="../_images/e69fa05a5ff0a44460d254168b49c2fb8abfb963b250bff7533e380b74776b98.png" src="../_images/e69fa05a5ff0a44460d254168b49c2fb8abfb963b250bff7533e380b74776b98.png" />
 </div>
 </div>
 <p>We will discuss more techniques for validating the model and assessing the best order of the polynomial in future lectures.</p>
