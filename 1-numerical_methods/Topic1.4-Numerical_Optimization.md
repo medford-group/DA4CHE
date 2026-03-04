@@ -16,7 +16,8 @@ kernelspec:
 
 # Numerical Optimization
 
-## Learning Objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 By the end of this lecture, you should be able to:
 
@@ -25,6 +26,7 @@ By the end of this lecture, you should be able to:
 - Implement gradient descent with different stopping criteria and interpret convergence behavior.
 - Apply numerical optimization tools (e.g., `scipy.optimize.minimize`) to fit models to data.
 - Understand soft vs. hard constraints and when to use them in optimization problems.
+:::
 
 In this lecture we will continue to work with the ethanol peaks dataset and look at numerical optimization from the perspective of non-linear regression.
 
@@ -129,11 +131,11 @@ test_loss
 ```
 
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-loss-3peak
 
 Try changing the number of peaks (`m=2`) in the `gaussian_loss` function to `m=3`, and create synthetic data with 3 Gaussians. Can your loss function still recover the correct loss value with the right parameters?
-```
+:::
 
 
 ## Automatic Differentiation
@@ -196,8 +198,8 @@ print(diff_g(vanish_guess))
 Also note that to enable automatic differentiation, all the inputs need to be "floats", not "integers". Try removing the decimal from 100 and 200 above and see what happens.
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-van-grad
 
 Modify the `g` function so that it only includes **one** Gaussian (`m=1`). Generate synthetic data with a single peak centered at `μ = 0.3`, with `σ = 0.05`.
 
@@ -205,10 +207,10 @@ Now define two guesses for `lamda`:
 - A **good guess** with parameters near the true values.
 - A **bad guess** where the Gaussian is centered far from the data (e.g. `μ = 2.0`).
 
-Compute and compare the values of `g(lamda)` and `diff_g(lamda)` for both. 
+Compute and compare the values of `g(lamda)` and `diff_g(lamda)` for both.
 
 **What do you observe?** This illustrates the **vanishing gradient problem**: when the Gaussian is too far from the data, the loss function becomes very flat and the gradient approaches zero, even if the model is very poor.
-```
+:::
 
 
 ## Gradient Descent
@@ -304,11 +306,11 @@ The behavior of gradient descent is highly sensitive to:
 For most real problems, it’s best to use a tested optimization library rather than tuning these manually.
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-grad-step
 
 Try changing the step size `h` in the gradient descent loop to different values like `0.01`, `0.5`, and `1.0`. How does this affect convergence? Also try initializing `guess` with very bad values. What happens to the final loss?
-```
+:::
 
 
 ## Optimization with Scipy
@@ -418,7 +420,7 @@ result
 
 We can see that the fit quality is similar, but now the peak widths are nearly identical. However, they are not exactly the same, since the loss function constraint is "soft" -- the peak widths will deviate if it makes the fit much better.
 
-~~~{note}
+```{note}
 Sometimes we want to enforce that all parameters meet physical constraints — for example, that all weights $w_i$ are positive.
 
 One common approach is to modify the loss function to penalize violations of the constraint. For instance, you could add a differentiable penalty term like:
@@ -430,14 +432,23 @@ penalty = np.sqrt(np.sum([max(0, -w)**2 for w in lamda[:m]]))
 to the loss function. This discourages negative weights but does not absolutely prevent them. These are known as **soft constraints**.
 
 Alternatively, many optimizers (including `scipy.minimize`) support **bounds** or **constraints** that can enforce this behavior exactly. These are called **hard constraints**.
-~~~
-
-```{admonition} Exercise
-:class: tip
-
-Modify the Gaussian loss function to include a soft constraint that penalizes negative weights using a root-mean-square penalty. What happens to the fit when the initial guess includes a negative weight? Try different values of the penalty term’s weight to control the strength of the constraint.
 ```
 
+:::{exercise}
+:label: ex-nm-soft-pen
+
+Modify the Gaussian loss function to include a soft constraint that penalizes negative weights using a root-mean-square penalty. What happens to the fit when the initial guess includes a negative weight? Try different values of the penalty term’s weight to control the strength of the constraint.
+:::
+
+
+## Summary
+
+- Non-linear regression arises when model parameters appear nonlinearly (e.g., Gaussian peak positions and widths); the least-squares loss function still applies but cannot be solved in closed form.
+- Automatic differentiation (`autograd`) computes exact numerical gradients without manual derivation; all inputs must be floats, not integers.
+- Gradient descent iteratively updates parameters by stepping opposite the gradient; step size and stopping criteria (fixed iterations, parameter tolerance, or loss tolerance) strongly affect convergence.
+- `scipy.optimize.minimize` with BFGS is a reliable default for smooth, unconstrained problems and handles gradient estimation internally.
+- Soft constraints are added as penalty terms in the loss function; hard constraints (parameter bounds) are supported via `scipy.minimize`'s `bounds` argument.
+- Vanishing gradients occur when Gaussians are far from the data, making a reasonable initial guess essential.
 
 ## Additional Reading
 

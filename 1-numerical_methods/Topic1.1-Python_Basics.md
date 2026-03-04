@@ -18,7 +18,8 @@ kernelspec:
 
 This lecture introduces the core features of Python that will be used throughout the course. While not all students may have prior experience with Python, the materials are designed to be approachable and practical, emphasizing key workflows for data analytics in chemical engineering.
 
-## Learning Objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 By the end of this section, you should be able to:
 
@@ -28,6 +29,7 @@ By the end of this section, you should be able to:
 - Read and visualize data using pandas and matplotlib
 - Set up and manage coding environments using tools like conda, Jupyter, and Git
 - Identify and resolve common Python pitfalls and type-related bugs
+:::
 
 ## Python Overview
 
@@ -182,8 +184,8 @@ There is a helpful [MATLAB-to-Numpy cheat sheet](https://docs.scipy.org/doc/nump
 While Python’s package system provides **enormous flexibility**, it can also lead to compatibility issues. Different packages may depend on different versions of Python or each other, which can result in version conflicts and installation bugs. Tools like `conda`, `venv`, or `pipenv` are often used to isolate environments and manage dependencies. `conda` is the recommended environment manager for this course, but it is not required.
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-numpy-ops
 
 Try the following:
 
@@ -192,7 +194,7 @@ Try the following:
 3. Multiply the matrix by itself using both `*` and `@` — observe the difference.
 
 What do these results tell you about NumPy's default behavior?
-```
+:::
 
 ## For loops and Functions
 
@@ -281,8 +283,8 @@ In general, if you want a function to produce a result that can be stored or pas
 You will not have to write many functions from scratch in this course, but you will often need to **modify existing code**. Understanding function structure will save time and improve clarity in your work.
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-arrhenius
 
 Write a function called `arrhenius` that computes the rate constant \( k \) using the Arrhenius equation:
 
@@ -302,7 +304,7 @@ Use \( R = 8.314 \, \text{J/mol·K} \) in your function.
 Test your function at multiple temperatures (e.g., 300 K, 500 K, 700 K) and print the corresponding rate constants.
 
 No plotting is required.
-```
+:::
 
 ## Classes, attributes, and methods
 
@@ -388,8 +390,8 @@ This computes the row-wise average of matrix `A`.
 
 ---
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-arr-methods
 
 Inspect and use object attributes and methods:
 
@@ -400,7 +402,7 @@ Inspect and use object attributes and methods:
 5. Call `B.sum(axis=0)` and `B.sum(axis=1)` to compute column-wise and row-wise totals.
 
 Try comparing this to equivalent operations in MATLAB or by using plain Python lists.
-```
+:::
 
 ## Reading and Visualizing Data
 
@@ -503,8 +505,8 @@ ax.set_xlim(2800, 3200)
 ax.set_ylim(0, 1.0);
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-ir-plot
 
 Visualize a subset of the ethanol data:
 
@@ -514,7 +516,7 @@ Visualize a subset of the ethanol data:
 4. Adjust the axis limits to zoom in on the peak region.
 
 What changes do you notice in the shape or features of the spectrum?
-```
+:::
 
 ## Developer Tools
 
@@ -614,8 +616,8 @@ AI tools were heavily used in revising these lecture notes! The original Jupyter
 Like many issues in modern society, the use of AI is ethically complicated. Creation of these models involved many unethical practices, such as the use of [underpaid workers to process traumatic training data](https://time.com/6247678/openai-chatgpt-kenya-workers/) and likely [violations of intellectual property rights](https://hbr.org/2023/04/generative-ai-has-an-intellectual-property-problem), and the use of AI tools consumes [massive amounts of energy at scale](https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/). However, these models exist now, and have the potential to improve society by advancing technology. The formal ethics and regulations on AI use are evolving, and to my knowledge there is no current consensus. My personal view is that the tools should be used judiciously on tasks that have the potential to improve society (e.g. education and technology development). Use for frivolous tasks should be minimized, and users should always be aware of the ethical gray areas involved in the creation and use of AI models. 
 ```
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-dev-tools
 
 Try working in a different environment:
 
@@ -625,7 +627,7 @@ Try working in a different environment:
 4. (Optional) Create a conda environment using the provided `environment.yml` and try running your code there.
 
 What differences do you notice compared to working in Vocareum?
-```
+:::
 
 ## Python Pitfalls and Advanced Features
 
@@ -800,8 +802,8 @@ This is cleaner than writing long `if` statements and is common in unit tests an
 
 ---
 
-~~~{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-nm-arr-copy
 
 The function below is meant to return a new array that contains just the first row of matrix `A`, which can be modified without affecting the original.
 
@@ -820,8 +822,16 @@ print(A)
 ```
 
 What happens? Modify the function so that `A` is not affected when `B` is changed.
-~~~
+:::
 
+
+## Summary
+
+- Python is a free, general-purpose language with a large ecosystem of scientific packages (`numpy`, `pandas`, `matplotlib`); it is the standard choice for data analytics in engineering.
+- Functions use positional and keyword arguments; use `return` to pass results back to the caller.
+- Python objects carry attributes (accessed without parentheses) and methods (called with parentheses); use `dir()` and `help()` to explore them.
+- Use `conda` to manage environments and avoid version conflicts; Git and Google Colab support collaboration and reproducibility.
+- Common pitfalls include NumPy views vs. copies, integer type truncation, mixing tabs and spaces, and floating-point equality comparisons — use `.copy()` and `np.isclose()` to avoid surprises.
 
 ## Recommended Reading
 

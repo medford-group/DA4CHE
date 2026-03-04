@@ -8,7 +8,8 @@ dependencies:
   - pip
   - jupyter
   - jupyterlab
-  - jupyter-book
+  - jupyter-book<2  # pin to Sphinx-based 1.x; 2.x uses myst-cli and is incompatible with _config.yml/_toc.yml
+  - sphinx-exercise  # provides the :::{exercise} directive
   - jupytext
   - myst-parser
   - ipykernel
