@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Numerical Methods &#8212; Data Analytics for Chemical Engineers</title>
+    <title>Classification &#8212; Data Analytics for Chemical Engineers</title>
   
   
   
@@ -60,11 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '1-numerical_methods/intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '3-classification/intro';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Python Basics" href="Topic1.1-Python_Basics.html" />
-    <link rel="prev" title="Introduction" href="../intro.html" />
+    <link rel="next" title="Classification Basics" href="Topic3.1-Classification_Basics.html" />
+    <link rel="prev" title="High-dimensional Regression" href="../2-regression/Topic2.5-High_dimensional_regression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -177,11 +177,11 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Numerical Methods</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics.html">Python Basics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression.html">Linear Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -192,8 +192,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Classification</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Topic3.1-Classification_Basics.html">Classification Basics</a></li>
 </ul>
 </details></li>
 </ul>
@@ -250,7 +250,7 @@
       
       
       
-      <li><a href="../_sources/1-numerical_methods/intro.md" target="_blank"
+      <li><a href="../_sources/3-classification/intro.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -332,7 +332,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Numerical Methods</h1>
+    <h1>Classification</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -348,12 +348,12 @@ document.write(`
                   
   <nav class="contents local" id="contents" role="doc-toc">
 <ul class="simple">
-<li><p><a class="reference internal" href="#numerical-methods" id="id1">Numerical Methods</a></p></li>
+<li><p><a class="reference internal" href="#classification" id="id1">Classification</a></p></li>
 </ul>
 </nav>
-<section class="tex2jax_ignore mathjax_ignore" id="numerical-methods">
-<h1><a class="toc-backref" href="#id1" role="doc-backlink">Numerical Methods</a><a class="headerlink" href="#numerical-methods" title="Link to this heading">#</a></h1>
-<p>This module covers basics of Python and key numerical methods, including an introduction to basic regression.</p>
+<section class="tex2jax_ignore mathjax_ignore" id="classification">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Classification</a><a class="headerlink" href="#classification" title="Link to this heading">#</a></h1>
+<p>This module introduces classification — the task of predicting discrete class labels from continuous or discrete inputs. We cover the fundamental problem setup and evaluation metrics, generalized linear models for classification, alternative classification methods, and techniques for high-dimensional classification problems.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -371,7 +371,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./1-numerical_methods"
+            path: "./3-classification"
         },
         predefinedOutput: true
     }
@@ -389,20 +389,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../intro.html"
+       href="../2-regression/Topic2.5-High_dimensional_regression.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Introduction</p>
+        <p class="prev-next-title">High-dimensional Regression</p>
       </div>
     </a>
     <a class="right-next"
-       href="Topic1.1-Python_Basics.html"
+       href="Topic3.1-Classification_Basics.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Python Basics</p>
+        <p class="prev-next-title">Classification Basics</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
