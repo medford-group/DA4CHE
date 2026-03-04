@@ -71,10 +71,10 @@ def fill_halfplane(ax, x_boundary_fn, y_range, x_lim, color_left, color_right, a
     xx_bnd = x_boundary_fn(yy)
     xx_bnd = np.clip(xx_bnd, x_lim[0], x_lim[1])
 
-    left_poly_x  = np.concatenate([[x_lim[0]], xx_bnd, [x_lim[0]]])
-    left_poly_y  = np.concatenate([[y_range[0]], yy, [y_range[1]]])
-    right_poly_x = np.concatenate([[x_lim[1]], xx_bnd[::-1], [x_lim[1]]])
-    right_poly_y = np.concatenate([[y_range[0]], yy[::-1], [y_range[1]]])
+    left_poly_x  = np.concatenate([[x_lim[0]], xx_bnd,        [x_lim[0]]])
+    left_poly_y  = np.concatenate([[y_range[0]], yy,           [y_range[1]]])
+    right_poly_x = np.concatenate([[x_lim[1]], xx_bnd,        [x_lim[1]]])
+    right_poly_y = np.concatenate([[y_range[0]], yy,           [y_range[1]]])
 
     ax.fill(left_poly_x,  left_poly_y,  color=color_left,  alpha=alpha, zorder=0)
     ax.fill(right_poly_x, right_poly_y, color=color_right, alpha=alpha, zorder=0)
