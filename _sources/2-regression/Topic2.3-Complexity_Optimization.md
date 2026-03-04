@@ -679,7 +679,7 @@ While there are some concrete things not to do (don't use validation data in hyp
 Using the ethanol peak dataset:
 
 1. **Split** the data into **train (70%)** and **validation (30%)** sets.
-2. **Tune hyperparameters** with `GridSearchCV` **using only the training set** (e.g., KRR over $\\alpha$ and $\\gamma$). Record the **best CV score** and the **validation $R^2$** when evaluating the refit model on the validation set.
+2. **Tune hyperparameters** with `GridSearchCV` **using only the training set** (e.g., KRR over $\alpha$ and $\gamma$). Record the **best CV score** and the **validation $R^2$** when evaluating the refit model on the validation set.
 3. **Compare** the **validation $R^2$** with the best $R^2$ found during the `GridSearchCV` (e.g. `best_score_`). 
 4. **Evaluate** the impact of data leakage by incorrectly re-training the model on the full dataset, then re-evaluate the $R^2$ score on the validation set.
 :::
@@ -694,7 +694,7 @@ Using the ethanol peak dataset:
 
 ## Additional reading
 
-- {cite}`hastie09` — *The Elements of Statistical Learning*, Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection).
-- {cite}`tibshirani1996lasso` — The original LASSO paper.
-- {cite}`hoerl1970ridge` — Ridge regression (L2) introduction.
+- Hastie, Tibshirani, & Friedman (2009). *The Elements of Statistical Learning*, 2nd ed., Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection). [Available online](https://hastie.su.domains/ElemStatLearn/)
+- Tibshirani, R. (1996). Regression shrinkage and selection via the lasso. *Journal of the Royal Statistical Society: Series B*, 58(1), 267–288.
+- Hoerl, A. E. & Kennard, R. W. (1970). Ridge regression: Biased estimation for nonorthogonal problems. *Technometrics*, 12(1), 55–67.
 - [Kaggle blog post on data leakage](https://www.kaggle.com/code/dansbecker/data-leakage/notebook)

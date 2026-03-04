@@ -335,3 +335,9 @@ We will discuss the covariance/correlation matrix much more later, but when deal
 
 - High-dimensional datasets should be explored through histograms, bivariate scatter plots, and correlation matrices before any modeling.
 - **Standard scaling** normalizes features to zero mean and unit variance; always fit the scaler on training data only to prevent leakage.
+
+## Additional Reading
+
+- Hastie, Tibshirani, & Friedman (2009). *The Elements of Statistical Learning*, 2nd ed., Ch. 18 (High-Dimensional Problems). [Available online](https://hastie.su.domains/ElemStatLearn/)
+- [scikit-learn: Preprocessing Documentation](https://scikit-learn.org/stable/modules/preprocessing.html) — Official guide to feature scaling and normalization.
+- [Seaborn Statistical Data Visualization](https://seaborn.pydata.org/tutorial.html) — Practical guide to pairplots, heatmaps, and distribution plots for exploratory analysis.

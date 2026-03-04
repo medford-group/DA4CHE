@@ -657,7 +657,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal N according to BIC = 15
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x116164cd0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14a784ca0&gt;
 </pre></div>
 </div>
 <img alt="../_images/a40fd77dd062b2fce118791b84fbc901ae5f6682fa818eef4650880ed1eada7d.png" src="../_images/a40fd77dd062b2fce118791b84fbc901ae5f6682fa818eef4650880ed1eada7d.png" />
@@ -1137,7 +1137,7 @@ Validation $r^2$ = 0.9986040494036984
 <p>Using the ethanol peak dataset:</p>
 <ol class="arabic simple">
 <li><p><strong>Split</strong> the data into <strong>train (70%)</strong> and <strong>validation (30%)</strong> sets.</p></li>
-<li><p><strong>Tune hyperparameters</strong> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> <strong>using only the training set</strong> (e.g., KRR over <span class="math notranslate nohighlight">\(\\alpha\)</span> and <span class="math notranslate nohighlight">\(\\gamma\)</span>). Record the <strong>best CV score</strong> and the <strong>validation <span class="math notranslate nohighlight">\(R^2\)</span></strong> when evaluating the refit model on the validation set.</p></li>
+<li><p><strong>Tune hyperparameters</strong> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> <strong>using only the training set</strong> (e.g., KRR over <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span>). Record the <strong>best CV score</strong> and the <strong>validation <span class="math notranslate nohighlight">\(R^2\)</span></strong> when evaluating the refit model on the validation set.</p></li>
 <li><p><strong>Compare</strong> the <strong>validation <span class="math notranslate nohighlight">\(R^2\)</span></strong> with the best <span class="math notranslate nohighlight">\(R^2\)</span> found during the <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">best_score_</span></code>).</p></li>
 <li><p><strong>Evaluate</strong> the impact of data leakage by incorrectly re-training the model on the full dataset, then re-evaluate the <span class="math notranslate nohighlight">\(R^2\)</span> score on the validation set.</p></li>
 </ol>
@@ -1158,9 +1158,9 @@ Validation $r^2$ = 0.9986040494036984
 <section id="additional-reading">
 <h2><a class="toc-backref" href="#id8" role="doc-backlink">Additional reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p> — <em>The Elements of Statistical Learning</em>, Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection).</p></li>
-<li><p> — The original LASSO paper.</p></li>
-<li><p> — Ridge regression (L2) introduction.</p></li>
+<li><p>Hastie, Tibshirani, &amp; Friedman (2009). <em>The Elements of Statistical Learning</em>, 2nd ed., Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection). <a class="reference external" href="https://hastie.su.domains/ElemStatLearn/">Available online</a></p></li>
+<li><p>Tibshirani, R. (1996). Regression shrinkage and selection via the lasso. <em>Journal of the Royal Statistical Society: Series B</em>, 58(1), 267–288.</p></li>
+<li><p>Hoerl, A. E. &amp; Kennard, R. W. (1970). Ridge regression: Biased estimation for nonorthogonal problems. <em>Technometrics</em>, 12(1), 55–67.</p></li>
 <li><p><a class="reference external" href="https://www.kaggle.com/code/dansbecker/data-leakage/notebook">Kaggle blog post on data leakage</a></p></li>
 </ul>
 </section>

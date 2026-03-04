@@ -606,10 +606,7 @@ Use the `bootstrap_linregress` function to quantify parameter uncertainty for Da
 
 ## Additional Reading
 
-- {cite}`hastie2009` – **The Elements of Statistical Learning**, *Ch. 3* introduces model assessment and selection.  
-- {cite}`goodfellow2016` – *Deep Learning*, Chap. 7 discusses regularization and validation.  
-- {cite}`bishop2006` – *Pattern Recognition and Machine Learning*, Sect. 3.3 covers Gaussian processes.  
-- {cite}`efron1994` – *An Introduction to the Bootstrap* for deeper insight into resampling methods.
-
-:::{bibliography}
-:::
+- Hastie, Tibshirani, & Friedman (2009). **The Elements of Statistical Learning**, Ch. 3 (model assessment and selection). [Available online](https://hastie.su.domains/ElemStatLearn/)
+- Goodfellow, Bengio, & Courville (2016). *Deep Learning*, Ch. 7 (regularization and validation). [Available online](https://www.deeplearningbook.org/)
+- Bishop, C. M. (2006). *Pattern Recognition and Machine Learning*, Sect. 3.3 (Gaussian processes). Springer.
+- Efron, B. & Tibshirani, R. J. (1994). *An Introduction to the Bootstrap*. Chapman & Hall.

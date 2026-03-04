@@ -538,7 +538,7 @@ Here you will use pipelines to compare some of the models above:
 
 ## Summary
 
-- **Multi-linear regression** with scikit-learn pipelines provides a reproducible, leakage-safe baseline ($r^2 \\approx 0.71$ on the Dow dataset).
+- **Multi-linear regression** with scikit-learn pipelines provides a reproducible, leakage-safe baseline ($r^2 \approx 0.71$ on the Dow dataset).
 - **Forward selection** ranks features by univariate correlation; `SequentialFeatureSelector` performs true forward stepwise selection with cross-validation.
 - **PCA** rotates data into orthogonal directions of maximum variance in **X**; **PCR** uses these components as regression features.
 - **PLS** is supervised—it maximizes covariance between **X** and **y**—and typically achieves higher predictive accuracy than PCR with the same number of components.
