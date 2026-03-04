@@ -290,11 +290,11 @@ Using the `acc_prec_recall` function above, compute the accuracy, precision, rec
 
 Many classifiers produce a continuous-valued score before applying a threshold to produce a binary prediction. The **ROC curve** shows how the true positive rate (recall) and false positive rate trade off as that threshold is varied.
 
-:::{figure} images/ROC_curve.jpg
+:::{figure} images/ROC_curve.png
 :name: fig-cls-roc
-:width: 40%
+:width: 60%
 
-A typical ROC curve. The area under the curve (AUC) summarizes overall classifier performance — 1.0 is perfect, 0.5 is random guessing.
+ROC curves for three model quality levels. A worthless classifier (AUC = 0.50) traces the diagonal — it performs no better than random guessing. A good classifier (AUC ≈ 0.86) bows toward the upper-left corner, and an excellent classifier (AUC ≈ 0.97) hugs it tightly. The shaded area illustrates what AUC measures.
 :::
 
 A model that performs no better than random chance traces the diagonal; a perfect model reaches the upper-left corner. The **area under the ROC curve (AUC)** is a single-number summary: higher is better.
@@ -350,29 +350,29 @@ When the imbalance is severe, simply stratifying the split may not be enough. Fo
 
 2. **Undersampling:** discard examples from the over-represented class. Simple but wastes data.
 
-:::{figure} images/class_imbalance.png
+:::{figure} images/undersampling.png
 :name: fig-cls-undersamp
-:width: 60%
+:width: 80%
 
-Undersampling discards majority-class examples to restore balance.
+**Undersampling.** Left: with a 15:1 class imbalance, LDA's empirical-prior boundary (red) is pulled almost onto the minority cluster, misclassifying roughly half of minority examples. The dashed line shows the theoretical ideal at the class midpoint. Right: after randomly discarding 140 majority examples the boundary moves close to the ideal — but 140 real data points (grey) are thrown away.
 :::
 
 3. **Oversampling:** repeat minority-class examples. Can lead to overfitting because the decision boundary is optimized on duplicates.
 
 :::{figure} images/oversampling.png
 :name: fig-cls-oversamp
-:width: 60%
+:width: 80%
 
-Oversampling repeats minority-class examples, potentially causing the classifier to overfit to them.
+**Oversampling.** After duplicating the 10 minority examples 15× to restore balance, an RBF-kernel SVM learns a non-linear boundary that wraps tightly around the repeated training positions — including an isolated "island" around a single outlier point in majority territory. This is a hallmark of overfitting to duplicated samples.
 :::
 
 4. **SMOTE (Synthetic Minority Oversampling Technique):** generate *new* synthetic minority-class examples by interpolating between existing ones. More robust than naive oversampling because it introduces controlled variation.
 
 :::{figure} images/smote.png
 :name: fig-cls-smote
-:width: 60%
+:width: 80%
 
-SMOTE generates new synthetic examples near existing minority-class points.
+**SMOTE.** Synthetic minority examples (hollow circles) are created by interpolating between existing minority points. The RBF-SVM boundary is now smooth and contiguous — no isolated islands — and sits closer to the theoretical ideal than the naive oversampling boundary.
 :::
 
 :::{exercise}

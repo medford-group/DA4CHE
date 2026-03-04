@@ -692,10 +692,10 @@ document.write(`
 <h3>Receiver Operating Characteristic (ROC) Curves<a class="headerlink" href="#receiver-operating-characteristic-roc-curves" title="Link to this heading">#</a></h3>
 <p>Many classifiers produce a continuous-valued score before applying a threshold to produce a binary prediction. The <strong>ROC curve</strong> shows how the true positive rate (recall) and false positive rate trade off as that threshold is varied.</p>
 <figure class="align-default" id="fig-cls-roc">
-<a class="reference internal image-reference" href="../_images/ROC_curve.jpg"><img alt="../_images/ROC_curve.jpg" src="../_images/ROC_curve.jpg" style="width: 40%;" />
+<a class="reference internal image-reference" href="../_images/ROC_curve.png"><img alt="../_images/ROC_curve.png" src="../_images/ROC_curve.png" style="width: 60%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">A typical ROC curve. The area under the curve (AUC) summarizes overall classifier performance — 1.0 is perfect, 0.5 is random guessing.</span><a class="headerlink" href="#fig-cls-roc" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">ROC curves for three model quality levels. A worthless classifier (AUC = 0.50) traces the diagonal — it performs no better than random guessing. A good classifier (AUC ≈ 0.86) bows toward the upper-left corner, and an excellent classifier (AUC ≈ 0.97) hugs it tightly. The shaded area illustrates what AUC measures.</span><a class="headerlink" href="#fig-cls-roc" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>A model that performs no better than random chance traces the diagonal; a perfect model reaches the upper-left corner. The <strong>area under the ROC curve (AUC)</strong> is a single-number summary: higher is better.</p>
@@ -754,30 +754,30 @@ document.write(`
 <li><p><strong>Undersampling:</strong> discard examples from the over-represented class. Simple but wastes data.</p></li>
 </ol>
 <figure class="align-default" id="fig-cls-undersamp">
-<a class="reference internal image-reference" href="../_images/class_imbalance.png"><img alt="../_images/class_imbalance.png" src="../_images/class_imbalance.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/undersampling.png"><img alt="../_images/undersampling.png" src="../_images/undersampling.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Undersampling discards majority-class examples to restore balance.</span><a class="headerlink" href="#fig-cls-undersamp" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text"><strong>Undersampling.</strong> Left: with a 15:1 class imbalance, LDA’s empirical-prior boundary (red) is pulled almost onto the minority cluster, misclassifying roughly half of minority examples. The dashed line shows the theoretical ideal at the class midpoint. Right: after randomly discarding 140 majority examples the boundary moves close to the ideal — but 140 real data points (grey) are thrown away.</span><a class="headerlink" href="#fig-cls-undersamp" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="3">
 <li><p><strong>Oversampling:</strong> repeat minority-class examples. Can lead to overfitting because the decision boundary is optimized on duplicates.</p></li>
 </ol>
 <figure class="align-default" id="fig-cls-oversamp">
-<a class="reference internal image-reference" href="../_images/oversampling.png"><img alt="../_images/oversampling.png" src="../_images/oversampling.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/oversampling.png"><img alt="../_images/oversampling.png" src="../_images/oversampling.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Oversampling repeats minority-class examples, potentially causing the classifier to overfit to them.</span><a class="headerlink" href="#fig-cls-oversamp" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text"><strong>Oversampling.</strong> After duplicating the 10 minority examples 15× to restore balance, an RBF-kernel SVM learns a non-linear boundary that wraps tightly around the repeated training positions — including an isolated “island” around a single outlier point in majority territory. This is a hallmark of overfitting to duplicated samples.</span><a class="headerlink" href="#fig-cls-oversamp" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="4">
 <li><p><strong>SMOTE (Synthetic Minority Oversampling Technique):</strong> generate <em>new</em> synthetic minority-class examples by interpolating between existing ones. More robust than naive oversampling because it introduces controlled variation.</p></li>
 </ol>
 <figure class="align-default" id="fig-cls-smote">
-<a class="reference internal image-reference" href="../_images/smote.png"><img alt="../_images/smote.png" src="../_images/smote.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/smote.png"><img alt="../_images/smote.png" src="../_images/smote.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text">SMOTE generates new synthetic examples near existing minority-class points.</span><a class="headerlink" href="#fig-cls-smote" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text"><strong>SMOTE.</strong> Synthetic minority examples (hollow circles) are created by interpolating between existing minority points. The RBF-SVM boundary is now smooth and contiguous — no isolated islands — and sits closer to the theoretical ideal than the naive oversampling boundary.</span><a class="headerlink" href="#fig-cls-smote" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="exercise admonition" id="ex-cls-stratified-cv">
