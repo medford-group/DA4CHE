@@ -833,10 +833,11 @@ What happens? Modify the function so that `A` is not affected when `B` is change
 - Use `conda` to manage environments and avoid version conflicts; Git and Google Colab support collaboration and reproducibility.
 - Common pitfalls include NumPy views vs. copies, integer type truncation, mixing tabs and spaces, and floating-point equality comparisons — use `.copy()` and `np.isclose()` to avoid surprises.
 
-## Recommended Reading
+## Additional Reading
 
-- [Official Python Tutorial](https://docs.python.org/3/tutorial/)
-- [NumPy User Guide](https://numpy.org/doc/stable/user/)
-- [Pandas Getting Started Guide](https://pandas.pydata.org/docs/getting_started/index.html)
-- [Matplotlib Gallery](https://matplotlib.org/stable/gallery/index.html)
-- [GitHub Hello World Guide](https://docs.github.com/en/get-started/quickstart/hello-world)
+- [Official Python Tutorial](https://docs.python.org/3/tutorial/) — The authoritative introduction to the Python language.
+- [NumPy User Guide](https://numpy.org/doc/stable/user/) — Official reference for array operations and mathematical functions.
+- [Pandas Getting Started Guide](https://pandas.pydata.org/docs/getting_started/index.html) — Introduction to tabular data manipulation with pandas.
+- [Matplotlib Gallery](https://matplotlib.org/stable/gallery/index.html) — Examples for scientific plotting and visualization.
+- VanderPlas, J. (2016). *Python Data Science Handbook*. O’Reilly. [Available online](https://jakevdp.github.io/PythonDataScienceHandbook/) — Covers NumPy, pandas, Matplotlib, and scikit-learn in depth.
+- Kitchin, J. R. *Python Computations in Science and Engineering* (pycse). [Available online](https://kitchingroup.cheme.cmu.edu/pycse/intro.html) — A practical guide to scientific computing with Python, written for engineers.

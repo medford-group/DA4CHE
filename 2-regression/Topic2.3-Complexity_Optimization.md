@@ -16,7 +16,8 @@ kernelspec:
 
 # Complexity Optimization
 
-## Learning objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 By the end of this topic, you will be able to:
 
@@ -24,6 +25,7 @@ By the end of this topic, you will be able to:
 - **Apply regularization** (ridge/L2 and LASSO/L1) to control model smoothness and promote sparsity.
 - **Tune hyperparameters** with `GridSearchCV` and design sensible grids (coarse-to-fine, avoid edge optima).
 - **Detect and prevent data leakage** by separating training, validation, and test sets appropriately.
+:::
 
 ```{code-cell} ipython3
 %matplotlib inline
@@ -97,12 +99,12 @@ In general there are a few strategies:
 
 We will describe these approaches and show examples of how to use them to optimize complexity below.
 
-```{admonition} Exercise:
-:class: tip
+:::{exercise}
+:label: ex-reg-r2-complexity
 
 Modify the code that is used to generate the ``underfitting vs. overfitting'' example above to calculate the $r^2$ score for each example. Consider whether it is possible to determine whether a model is underfit or overfit using the $r^2$ score alone.
 
-```
+:::
 
 ## Information Criteria
 
@@ -302,9 +304,11 @@ Using evenly-spaced Gaussians is not a very clever way to fit spectra, and would
 * **Other information criteria.** There are numerous other information criteria such as the ["corrected AIC" (AICc)](https://doi.org/10.1093/biomet/76.2.297), the [Hannan–Quinn Information Criterion (HQIC)](https://www.jstor.org/stable/2985032), the [Deviance Information Criterion (DIC)](https://doi.org/10.1111/1467-9868.00353), and the [Minimum Description Length (MDL)](https://doi.org/10.1016/0005-1098(78)90005-5). In general, the BIC favors the simplest models, the AIC favors models with lower errors, and the others are in between. If you're unsure, try more than one and look for consensus. 
 * **Information criteria vs. cross validation.** Information criteria are good options when you have small datasets or when you are comparing models with very similar forms. They tend to be very computationally inexpensive, but have more built-in statistical assumptions, and cannot easily be applied to non-parametric models. Cross validation is a more general approach, and works well when you have a lot of data or when you are comparing models with very different structures.
 
-```{admonition} Exercise
+:::{exercise}
+:label: ex-reg-bic-compare
+
 Revisit the non-linear optimization examples from the numerical methods lectures and use the code to compare the BIC of non-linear optimization models with 1, 2, and 3 peaks to the BIC of the evenly-spaced Gaussians model above. Think carefully about how many fitted parameters there are in the case of non-linear regression!
-```
+:::
 
 ## Regularization
 
@@ -564,14 +568,15 @@ We see that the LASSO regularization has a lot of coefficients that are equal to
 
 ---
 
-```{admonition} Exercise: compare KRR and LASSO
-:class: tip
+:::{exercise}
+:label: ex-reg-krr-lasso
+
 Using the same ethanol peak dataset:
 
 1. **Build Gaussian-basis features** (reuse the same kernel width $\sigma$. Fit a **LASSO** model for a grid of $\alpha$ values and record test $r^2$.
 2. **Fit KRR** on the same train/test split and $\alpha$ grid (keep $\sigma$ fixed) and record test $r^2$.
 3. **Plot** test $r^2$ versus $\alpha$ for both models on one figure. At each model’s optimal $\alpha$, also **plot coefficient histograms**: LASSO weights and KRR dual coefficients.
-```
+:::
 
 ## Hyperparameter tuning and data leakage
 
@@ -664,23 +669,32 @@ When performing cross validation, it is important to be aware of "data leakage",
 
 3. Data-specific Subtleties: There are problem-specific ways that information can flow between the training and testing sets. One example is if the target data is derived from some underlying source that is used to generate both the training and testing sets. A specific example is chemical reaction energies, which are derived from the formation energies of individual species. If the formation energy of a given molecule appears in reactions that are present in both the training and the testing set, then the model can implicitly learn the energy from the training data. Sometimes, this may be okay (e.g. if your goal is only to predict reactions that all share the same molecules), but other times it may give misleading results (e.g. if your goal is to predict new reactions based on unseen molecules). For a more detailed example of how training and testing domains can be complicated in chemistry and chemical engineering, consider the various definitions of "in domain" and "out of domain" data from the [Open Catalyst Project dataset and models](https://pubs.acs.org/doi/10.1021/acscatal.0c04525).
 
-While there are some concrete things not to do (don't use validation data in hyperparameter tuning, and don't use testing/validation data to scale features) there is no single specific way to avoid data leakage. Instead, the following general idea is recommended: think carefully about how you want to apply your model in practice, then ensure that the *validation data is generated to be as close as possible to the real use case.* In an ideal scenario, this means that you create your validation dataset *after the model is trained*, but this is often impractical. The next best thing is to consider how the data was generated, and "hide" some of the original raw data from the entire modeling pipeline (e.g. store it in a different folder on your computer until after the model is trained). It is often very surprising how different the performance of a model can be between "testing" and "validation" sets, and a large discrepancy
+While there are some concrete things not to do (don't use validation data in hyperparameter tuning, and don't use testing/validation data to scale features) there is no single specific way to avoid data leakage. Instead, the following general idea is recommended: think carefully about how you want to apply your model in practice, then ensure that the *validation data is generated to be as close as possible to the real use case.* In an ideal scenario, this means that you create your validation dataset *after the model is trained*, but this is often impractical. The next best thing is to consider how the data was generated, and "hide" some of the original raw data from the entire modeling pipeline (e.g. store it in a different folder on your computer until after the model is trained). It is often very surprising how different the performance of a model can be between "testing" and "validation" sets, and a large discrepancy between the two is a strong signal that leakage is present.
 
 ---
 
-```{admonition} Exercise: Evaluating data leakage
-:class: tip
+:::{exercise}
+:label: ex-reg-data-leak
+
 Using the ethanol peak dataset:
 
 1. **Split** the data into **train (70%)** and **validation (30%)** sets.
-2. **Tune hyperparameters** with `GridSearchCV` **using only the training set** (e.g., KRR over $\\alpha$ and $\\gamma$). Record the **best CV score** and the **validation $R^2$** when evaluating the refit model on the validation set.
+2. **Tune hyperparameters** with `GridSearchCV` **using only the training set** (e.g., KRR over $\alpha$ and $\gamma$). Record the **best CV score** and the **validation $R^2$** when evaluating the refit model on the validation set.
 3. **Compare** the **validation $R^2$** with the best $R^2$ found during the `GridSearchCV` (e.g. `best_score_`). 
 4. **Evaluate** the impact of data leakage by incorrectly re-training the model on the full dataset, then re-evaluate the $R^2$ score on the validation set.
-```
+:::
+
+## Summary
+
+- **Overfitting** (too many parameters) memorizes training data; **underfitting** (too few) fails to capture the signal. The goal is the complexity that generalizes best.
+- **Information criteria** (BIC, AIC) balance model error against parameter count; lower BIC indicates a more probable model under Gaussian error assumptions.
+- **Ridge regression** (L2 penalty) shrinks all weights toward zero, promoting smooth models; **LASSO** (L1 penalty) also drives some weights to exactly zero, producing sparse solutions.
+- **Kernel Ridge Regression (KRR)** applies L2 regularization to a kernel feature matrix; `GridSearchCV` automates joint tuning of regularization strength α and kernel width σ.
+- **Data leakage** corrupts validation; fit scalers and preprocessing steps only on training data and maintain a fully held-out validation set for final evaluation.
 
 ## Additional reading
 
-- {cite}`hastie09` — *The Elements of Statistical Learning*, Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection).
-- {cite}`tibshirani1996lasso` — The original LASSO paper.
-- {cite}`hoerl1970ridge` — Ridge regression (L2) introduction.
+- Hastie, Tibshirani, & Friedman (2009). *The Elements of Statistical Learning*, 2nd ed., Ch. 3 (linear methods, regularization) and Ch. 7 (model assessment and selection). [Available online](https://hastie.su.domains/ElemStatLearn/)
+- Tibshirani, R. (1996). Regression shrinkage and selection via the lasso. *Journal of the Royal Statistical Society: Series B*, 58(1), 267–288.
+- Hoerl, A. E. & Kennard, R. W. (1970). Ridge regression: Biased estimation for nonorthogonal problems. *Technometrics*, 12(1), 55–67.
 - [Kaggle blog post on data leakage](https://www.kaggle.com/code/dansbecker/data-leakage/notebook)

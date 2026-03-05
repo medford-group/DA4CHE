@@ -16,7 +16,8 @@ kernelspec:
 
 # Non-parametric Models
 
-## Learning Objectives
+:::{admonition} Learning Objectives
+:class: tip
 
 After working through this topic, you should be able to:
 
@@ -25,6 +26,7 @@ After working through this topic, you should be able to:
 - Implement piecewise linear interpolation as a non-parametric regression model
 - Apply kernel regression using radial basis functions and adjust kernel width
 - Compare spline models to other non-parametric techniques using scikit-learn
+:::
 
 ## A Machine-Learning Perspective on Regression
 
@@ -58,8 +60,8 @@ $$
 
 Machine learning differs from regular regression in that it seeks to optimize $\vec{\lambda}$ (parameter optimization), $\vec{\eta}$ (complexity optimization) in order to **obtain a model that generalizes to new input data**. Machine learning also sometimes involves selecting $\vec{x}$ (feature selection) or generating $\vec{x}$ from non-vectorized data such as text or images (feature generation).
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-reg-feat-params
 
 **Identify the features, parameters, and hyperparameters in a common regression model.**
 
@@ -74,7 +76,7 @@ $$
 3. If we decide to use a cubic polynomial instead (adding a $w_3 x^3$ term), what quantity has changed? Is this a parameter or a hyperparameter?
 
 _Tip: Remember that features describe the input, parameters are learned from data, and hyperparameters are set by the user before training._
-```
+:::
 
 ## Non-Parametric Models
 
@@ -210,7 +212,7 @@ print('r^2 = {}'.format(r2))
 ```
 
 
-```{admonition}
+```{admonition} Column space and intercept
 :class: note
 
 What is in the column space of the design matrix? Why do we set `fit_intercept=False`?
@@ -258,16 +260,16 @@ print('r^2 = {}'.format(r2))
 
 We see that the model successful at interpolating between the points. This is an example of a **non-parametric** model. The number of parameters, $\vec{w}$ is equal to the number of **training** data points, and the number of columns in the linear design matrix. The number of rows is equal to the number of data points that the model will predict. These numbers do not need to be equal, and it is not necessary that the training points are included in the prediction.
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-reg-lin-interp
 
 Use every third data point of the spectra dataset to train a linear interpolation model and explore the predictions.
 
-1. Select every third datapoint from the `(x_peak, y_peak)` dataset, and use this to train a linear interpolation model. 
+1. Select every third datapoint from the `(x_peak, y_peak)` dataset, and use this to train a linear interpolation model.
 2. Predict the full dataset using the model and compare the predictions to the original data.
 3. Create a new high-resolution prediction set with a total of 300 evenly-spaced points. Compare these predictions to those of the full dataset.
 4. Create another prediction dataset with 300 evenly-spaced points with the minimum and maximum being 10 wavenumbers above/below the original maximum. This shows how the model performs when asked to extrapolate.
-```
+:::
 
 
 ## Kernel Regression
@@ -394,8 +396,8 @@ ax.legend();
 
 ---
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-reg-kern-density
 
 Explore how the **number of training points** affects the model fit.
 
@@ -404,7 +406,7 @@ Explore how the **number of training points** affects the model fit.
 - Compare the fitted curves and comment on the impact of data density
 
 This exercise helps illustrate the **tradeoff between data quantity and model complexity** in non-parametric regression.
-```
+:::
 
 ## Other Non-Parametric Regression Models
 
@@ -464,8 +466,8 @@ This spline model behaves similarly to kernel regression: it interpolates smooth
 
 ---
 
-```{admonition} Exercise
-:class: tip
+:::{exercise}
+:label: ex-reg-spline-hyper
 
 Explore the effect of **spline hyperparameters** on model flexibility:
 
@@ -474,7 +476,15 @@ Explore the effect of **spline hyperparameters** on model flexibility:
 - Use a fixed training set (e.g., every third point)
 
 Plot the resulting fits and describe how the **number of knots** and **polynomial degree** affect the smoothness and flexibility of the spline model.
-```
+:::
+
+## Summary
+
+- A **parametric** model has a fixed number of parameters regardless of data size; a **non-parametric** model has parameters that grow with the number of training points.
+- **Linear interpolation** uses piecewise "hinge" functions as basis features, framing interpolation as a standard linear regression with a special design matrix.
+- **Kernel regression** places a smooth, localized basis function (e.g., Gaussian/RBF) at every training point; the kernel width σ controls the interpolation–smoothness tradeoff.
+- **Spline models** join low-degree polynomials at knot points with continuity constraints; `SplineTransformer` in scikit-learn makes them easy to apply in a pipeline.
+- Non-parametric models excel at interpolation but extrapolate poorly; parametric models generalize better outside the training domain.
 
 ## Additional Reading
 

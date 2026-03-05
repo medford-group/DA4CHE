@@ -12,7 +12,6 @@ build/
 _trash/
 build.log
 lecture_refining_notes.txt
-generate_toc.py
 _config-fast.yml
 
 # OS cruft
