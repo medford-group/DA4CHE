@@ -82,15 +82,16 @@ ax_left.set_title('Original space\n(not linearly separable)', fontsize=11)
 ax_left.legend(fontsize=8, loc='upper right')
 ax_left.set_aspect('equal')
 
-# ── Middle column: φ(x) arrow + label ────────────────────────────────────────
+# ── Middle column: φ(x) arrow + label — positioned in the upper half to clear
+#    the y-axis label of the right panel (which occupies the lower-centre area)
 ax_mid.set_xlim(0, 1)
 ax_mid.set_ylim(0, 1)
 ax_mid.annotate('',
-    xy=(0.92, 0.5), xytext=(0.08, 0.5),
+    xy=(0.92, 0.72), xytext=(0.08, 0.72),
     xycoords='axes fraction', textcoords='axes fraction',
     arrowprops=dict(arrowstyle='->', color=TEAL, lw=2.5,
                     mutation_scale=20))
-ax_mid.text(0.5, 0.62, r'$\phi(\mathbf{x})$',
+ax_mid.text(0.5, 0.80, r'$\phi(\mathbf{x})$',
             ha='center', va='bottom', fontsize=14,
             color=TEAL, fontweight='bold',
             transform=ax_mid.transAxes)

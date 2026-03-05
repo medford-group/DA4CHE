@@ -1,4 +1,4 @@
-axes.prop_cycle : cycler('color', ['003057', 'eaaa00', '4b8b9b', 'b3a369', '377117', '1879db', '002233', '8e8b76', 'f5d580'])
+axes.prop_cycle : cycler('color', ['003057', 'EAAA00', '4B8B9B', 'B3A369', '377117', '1879DB', '8E8B76', 'F5D580', '002233'])
 axes.titlesize : 15
 axes.titleweight : ultralight
 axes.labelsize : 12

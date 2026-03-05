@@ -95,34 +95,33 @@ ax.scatter(sv[:, 0], sv[:, 1], s=220, facecolors='none',
            edgecolors='k', linewidths=1.8, zorder=5, label='Support vectors')
 
 # ── Margin width annotation ────────────────────────────────────────────────
-# Pick a point on the decision boundary and draw a perpendicular arrow
-# spanning from -1 margin to +1 margin.
-w_norm = w_hard / np.linalg.norm(w_hard)
-perp   = np.array([w_norm[1], -w_norm[0]])   # perpendicular direction
+# The normal to the boundary w·x + b = 0 is w_hat = w / ||w||.
+# Moving from a boundary point by ±(1/||w||) along w_hat reaches the two
+# margin lines.  set_aspect('equal') ensures the arrow looks perpendicular.
+w_hat  = w_hard / np.linalg.norm(w_hard)
+half_w = 1.0 / np.linalg.norm(w_hard)
 
-# Annotation anchor: centre of the plot domain
 x_ann  = X[:, 0].mean() + 1.0
 y_ann  = -(w_hard[0] * x_ann + model_hard.intercept_[0]) / w_hard[1]
-half_w = 1.0 / np.linalg.norm(w_hard)        # half-margin in data units
+pt_lo  = np.array([x_ann, y_ann]) - half_w * w_hat
+pt_hi  = np.array([x_ann, y_ann]) + half_w * w_hat
 
-pt_lo  = np.array([x_ann, y_ann]) - half_w * perp[::-1] * np.array([1, 1])
-pt_hi  = np.array([x_ann, y_ann]) + half_w * perp[::-1] * np.array([1, 1])
-
-# Clamp to visible region
 ax.annotate('', xy=(pt_hi[0], pt_hi[1]), xytext=(pt_lo[0], pt_lo[1]),
             arrowprops=dict(arrowstyle='<->', color=TEAL, lw=2.0,
                             mutation_scale=14))
 
 margin_width = 2.0 / np.linalg.norm(w_hard)
-ax.text(x_ann + 0.25, y_ann,
-        f'margin\n= {margin_width:.2f}',
-        ha='left', va='center', fontsize=9, color=TEAL, fontweight='bold')
+offset = np.array([-w_hat[1], w_hat[0]]) * 0.25   # shift label along boundary
+ax.text(x_ann + offset[0], y_ann + offset[1],
+        f'margin = {margin_width:.2f}',
+        ha='center', va='center', fontsize=9, color=TEAL, fontweight='bold')
 
 ax.set_xlabel('$x_0$')
 ax.set_ylabel('$x_1$')
 ax.legend(fontsize=8, loc='upper left')
 ax.set_title('Margin Loss: buffer zone around the decision boundary')
 ax.set_xlim(x_lo, x_hi)
+ax.set_aspect('equal')
 
 plt.tight_layout()
 for out in (IMGS / 'margin_cost.png', HERE / 'margin_cost.png'):
@@ -180,24 +179,25 @@ for ax, (w_i, b_i, title) in zip(axes, configs):
         ax.scatter(sv[:, 0], sv[:, 1], s=200, facecolors='none',
                    edgecolors='k', linewidths=1.8, zorder=5)
 
-    # Margin annotation
-    norm_i = w_i / np.linalg.norm(w_i)
-    perp_i = np.array([norm_i[1], -norm_i[0]])
-    x_ann  = X[:, 0].mean() + 0.8
-    y_ann  = -(w_i[0] * x_ann + b_i) / w_i[1]
-    hw     = 1.0 / np.linalg.norm(w_i)
-    pt_lo  = np.array([x_ann, y_ann]) - hw * perp_i[::-1]
-    pt_hi  = np.array([x_ann, y_ann]) + hw * perp_i[::-1]
+    # Margin annotation — normal to boundary IS w_hat; set_aspect ensures it looks right
+    w_hat_i = w_i / np.linalg.norm(w_i)
+    hw      = 1.0 / np.linalg.norm(w_i)
+    x_ann   = X[:, 0].mean() + 0.8
+    y_ann   = -(w_i[0] * x_ann + b_i) / w_i[1]
+    pt_lo   = np.array([x_ann, y_ann]) - hw * w_hat_i
+    pt_hi   = np.array([x_ann, y_ann]) + hw * w_hat_i
     ax.annotate('', xy=(pt_hi[0], pt_hi[1]), xytext=(pt_lo[0], pt_lo[1]),
                 arrowprops=dict(arrowstyle='<->', color=TEAL, lw=2.0,
                                 mutation_scale=12))
-    ax.text(x_ann + 0.2, y_ann,
+    tang = np.array([-w_hat_i[1], w_hat_i[0]]) * 0.25
+    ax.text(x_ann + tang[0], y_ann + tang[1],
             f'$2/\\|\\tilde{{\\mathbf{{w}}}}\\|$ = {margin_i:.2f}',
-            ha='left', va='center', fontsize=9, color=TEAL, fontweight='bold')
+            ha='center', va='center', fontsize=9, color=TEAL, fontweight='bold')
 
     ax.set_xlabel('$x_0$')
     ax.set_title(title, fontsize=11)
     ax.set_xlim(x_lo, x_hi)
+    ax.set_aspect('equal')
 
 axes[0].set_ylabel('$x_1$')
 fig.suptitle(
