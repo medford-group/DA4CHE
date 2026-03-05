@@ -1,0 +1,1320 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Generalized Linear Models &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '3-classification/Topic3.2-Generalized_Linear_Models';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Classification Basics" href="Topic3.1-Classification_Basics.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Classification</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Generalized Linear Models</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/3-classification/Topic3.2-Generalized_Linear_Models.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Generalized Linear Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptron-loss-function">Perceptron Loss Function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-perceptron-as-a-neural-network">The Perceptron as a Neural Network</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-perceptron-vs-logistic-regression-on-the-moons-dataset">Demonstration: Perceptron vs. Logistic Regression on the Moons Dataset</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#margin-loss-function">Margin Loss Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#support-vector-machines">Support Vector Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-margins-to-support-vectors">From Margins to Support Vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-effect-of-regularization-strength-alpha">Demonstration: Effect of Regularization Strength <span class="math notranslate nohighlight">\(\alpha\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-linearity-and-kernels">Non-linearity and Kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-transformation">Feature Transformation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-kernel-trick">The Kernel Trick</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernels-in-scikit-learn">Kernels in Scikit-learn</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="generalized-linear-models">
+<h1>Generalized Linear Models<a class="headerlink" href="#generalized-linear-models" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
+<p>By the end of this chapter, you will be able to:</p>
+<ul class="simple">
+<li><p>Explain how generalized linear models extend the linear model through non-linear link functions</p></li>
+<li><p>Derive and implement the perceptron, logistic regression, and margin-based loss functions</p></li>
+<li><p>Minimize classification loss functions numerically using <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code></p></li>
+<li><p>Explain the support vector machine as a regularized margin classifier</p></li>
+<li><p>Apply kernel methods to non-linearly separable datasets using scikit-learn’s <code class="docutils literal notranslate"><span class="pre">SVC</span></code></p></li>
+</ul>
+</div>
+<p>In this chapter we explore a family of discriminative classification models called <strong>generalized linear models</strong> (GLMs). The name is easy to confuse with the <em>general</em> linear model used in regression, but the two are distinct—though there are important similarities.</p>
+<p>Recall the general linear model for regression:</p>
+<div class="math notranslate nohighlight">
+\[y_i = \sum_j w_j X_{ij} + \epsilon_i \quad \Leftrightarrow \quad \vec{y} = \bar{\bar{X}}\vec{w} + \vec{\epsilon}\]</div>
+<p>In the general linear model we assume the error <span class="math notranslate nohighlight">\(\vec{\epsilon}\)</span> is normally distributed. A <strong>generalized</strong> linear model relaxes this assumption by applying a non-linear <em>link function</em> <span class="math notranslate nohighlight">\(\sigma\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\vec{y}_{\text{GLM}} = \sigma\!\left(\bar{\bar{X}}\vec{w}\right) + \sigma(\vec{\epsilon})\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> maps the normal distribution to the distribution of interest. Rather than deriving these link functions from probability theory, we will arrive at them naturally by examining different loss functions for classification.</p>
+<p>We begin by generating four toy datasets that will be used throughout the chapter to compare models:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span><span class="p">,</span> <span class="n">make_moons</span><span class="p">,</span> <span class="n">make_circles</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">clrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#003057&#39;</span><span class="p">,</span> <span class="s1">&#39;#EAAA00&#39;</span><span class="p">,</span> <span class="s1">&#39;#4B8B9B&#39;</span><span class="p">,</span> <span class="s1">&#39;#B3A369&#39;</span><span class="p">,</span> <span class="s1">&#39;#377117&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;#1879DB&#39;</span><span class="p">,</span> <span class="s1">&#39;#8E8B76&#39;</span><span class="p">,</span> <span class="s1">&#39;#F5D580&#39;</span><span class="p">,</span> <span class="s1">&#39;#002233&#39;</span><span class="p">])</span>
+
+<span class="n">noisiness</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">X_blob</span><span class="p">,</span>    <span class="n">y_blob</span>    <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_mc</span><span class="p">,</span>      <span class="n">y_mc</span>      <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_circles</span><span class="p">,</span> <span class="n">y_circles</span> <span class="o">=</span> <span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
+<span class="n">X_moons</span><span class="p">,</span>   <span class="n">y_moons</span>   <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="p">[(</span><span class="n">X_blob</span><span class="p">,</span> <span class="n">y_blob</span><span class="p">),</span> <span class="p">(</span><span class="n">X_mc</span><span class="p">,</span> <span class="n">y_mc</span><span class="p">),</span> <span class="p">(</span><span class="n">X_circles</span><span class="p">,</span> <span class="n">y_circles</span><span class="p">),</span> <span class="p">(</span><span class="n">X_moons</span><span class="p">,</span> <span class="n">y_moons</span><span class="p">)]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2-class blobs&#39;</span><span class="p">,</span> <span class="s1">&#39;3-class blobs&#39;</span><span class="p">,</span> <span class="s1">&#39;circles&#39;</span><span class="p">,</span> <span class="s1">&#39;moons&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xi</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Xi</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">yi</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_0$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/3774162225.py:29: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<section id="perceptron-loss-function">
+<h2>Perceptron Loss Function<a class="headerlink" href="#perceptron-loss-function" title="Link to this heading">#</a></h2>
+<p>Recall from the previous chapter the derivation of the <strong>perceptron</strong> loss function. We start with a linear model that discriminates between two classes:</p>
+<div class="math notranslate nohighlight">
+\[\bar{\bar{X}}\vec{w} &gt; 0 \quad \text{if } y_i = +1 \quad (\text{class 1})\]</div>
+<div class="math notranslate nohighlight">
+\[\bar{\bar{X}}\vec{w} &lt; 0 \quad \text{if } y_i = -1 \quad (\text{class 2})\]</div>
+<p>Multiplying through by <span class="math notranslate nohighlight">\(y_i\)</span> collapses these two inequalities into one:</p>
+<div class="math notranslate nohighlight">
+\[-y_i\,\bar{\bar{X}}\vec{w} &lt; 0\]</div>
+<p>Taking the maximum with zero turns this into an equality that is zero for correctly classified points and positive for misclassified ones:</p>
+<div class="math notranslate nohighlight">
+\[\max\!\left(0,\;-y_i\,\bar{\bar{X}}\vec{w}\right) = 0\]</div>
+<p>Summing over all data points gives the <strong>perceptron loss</strong>:</p>
+<div class="math notranslate nohighlight">
+\[g_{\text{perceptron}}(\vec{w}) = \sum_i \max\!\left(0,\;-y_i\,\bar{\bar{X}}\vec{w}\right)\]</div>
+<p>We implement the linear classifier and the loss function below. Note that scikit-learn labels classes as 0 and 1, but our derivation assumed −1 and +1, so we rescale before fitting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepend a column of ones to X for the bias term.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">linear_classifier</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a boolean array: True where the model predicts class 1.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rescale blob labels from {0, 1} to {-1, +1}</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X_blob</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y_blob</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">y_blob</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original class labels (0 / 1)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Rescaled class labels (</span><span class="se">\u2212</span><span class="s1">1 / +1)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/1311589041.py:11: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">max_cost</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Xb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span> <span class="o">*</span> <span class="n">Xb</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now minimize the loss with <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> to find optimal weights:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="n">w_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">])</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">max_cost</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">w_perceptron</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  message: Optimization terminated successfully.
+  success: True
+   status: 0
+      fun: 0.0
+        x: [-1.069e+01 -2.422e+00 -9.679e+00]
+      nit: 1
+      jac: [ 0.000e+00  0.000e+00  0.000e+00]
+ hess_inv: [[1 0 0]
+            [0 1 0]
+            [0 0 1]]
+     nfev: 16
+     njev: 4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_perceptron</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_blob</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">prediction</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_perceptron</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_perceptron</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_perceptron</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_perceptron</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Perceptron Prediction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/1907135310.py:14: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Problems with the max-cost loss function</p>
+<p>The perceptron loss has two notable failure modes:</p>
+<ol class="arabic simple">
+<li><p><strong>Non-differentiability.</strong> The <span class="math notranslate nohighlight">\(\max(0, \cdot)\)</span> function has a kink at zero, so gradient-based optimizers can struggle. Derivative-free methods work around this, but convergence is slower and less reliable.</p></li>
+<li><p><strong>Trivial solution.</strong> When <span class="math notranslate nohighlight">\(\vec{w} = \vec{0}\)</span>, every term <span class="math notranslate nohighlight">\(-y_i\bar{\bar{X}}\vec{0} = 0\)</span>, so the loss is exactly zero. An optimizer can stop immediately at <span class="math notranslate nohighlight">\(\vec{w} = \vec{0}\)</span> without learning anything useful. Initializing at the zero vector is therefore never safe for the perceptron.</p></li>
+</ol>
+</div>
+<section id="the-perceptron-as-a-neural-network">
+<h3>The Perceptron as a Neural Network<a class="headerlink" href="#the-perceptron-as-a-neural-network" title="Link to this heading">#</a></h3>
+<p>The perceptron, invented by Frank Rosenblatt in 1958, was the original artificial neural network. Its structure mimics a biological neuron that “fires” when the weighted sum of its inputs exceeds a threshold:</p>
+<figure class="align-default" id="fig-cls-perceptron-nn">
+<a class="reference internal image-reference" href="../_images/perceptron_NN.png"><img alt="../_images/perceptron_NN.png" src="../_images/perceptron_NN.png" style="width: 60%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">The perceptron as a single-layer neural network. Each input <span class="math notranslate nohighlight">\(x_j\)</span> is multiplied by a weight <span class="math notranslate nohighlight">\(w_j\)</span>, the products are summed, and a step activation function converts the result to a class label.</span><a class="headerlink" href="#fig-cls-perceptron-nn" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>All the generalized linear models for classification—logistic regression, SVMs, and others—share this same single-layer architecture. What distinguishes them is the choice of <strong>activation function</strong> (equivalently, the <strong>loss function</strong> used during training).</p>
+<div class="exercise admonition" id="ex-cls-perceptron-circles">
+
+<p class="admonition-title"><span class="caption-number">Exercise 41 </span></p>
+<section id="exercise-content">
+<p>Apply the perceptron to the circles dataset. Rescale <code class="docutils literal notranslate"><span class="pre">y_circles</span></code> to ±1, minimize <code class="docutils literal notranslate"><span class="pre">max_cost</span></code> starting from <code class="docutils literal notranslate"><span class="pre">w_init</span></code>, and plot the resulting decision boundary. Explain in one sentence why the boundary looks the way it does.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="logistic-regression">
+<h2>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Link to this heading">#</a></h2>
+<p>The max-cost loss has two problems: the trivial solution at <span class="math notranslate nohighlight">\(\vec{w} = \vec{0}\)</span> and non-differentiability. Both can be addressed by replacing <span class="math notranslate nohighlight">\(\max\)</span> with a smooth approximation called the <strong>softmax</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\max(x, y) \approx \text{soft}(x, y) = \log\!\left(e^x + e^y\right)\]</div>
+<p>Applying this substitution to the perceptron loss gives:</p>
+<div class="math notranslate nohighlight">
+\[\max\!\left(0,\; -y_i\bar{\bar{X}}\vec{w}\right) \approx \log\!\left(1 + e^{-y_i\bar{\bar{X}}\vec{w}}\right)\]</div>
+<p>and the <strong>softmax cost</strong>:</p>
+<div class="math notranslate nohighlight">
+\[g_{\text{softmax}}(\vec{w}) = \sum_i \log\!\left(1 + e^{-y_i\bar{\bar{X}}\vec{w}}\right)\]</div>
+<p>The figure below compares the exact <span class="math notranslate nohighlight">\(\max\)</span> with its softmax approximation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Max&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Softmax&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Max vs. Softmax&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/2928853410.py:11: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<p>The softmax is smooth (differentiable everywhere) and strictly positive at <span class="math notranslate nohighlight">\(\vec{w} = \vec{0}\)</span>, so both problems are resolved at once.</p>
+<p>Minimizing <span class="math notranslate nohighlight">\(g_{\text{softmax}}\)</span> with respect to <span class="math notranslate nohighlight">\(\vec{w}\)</span> is called <strong>logistic regression</strong>. The resulting normal equations are non-linear and must be solved iteratively (e.g., via Newton’s method). We solve it numerically here:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">softmax_cost</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Xb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y</span> <span class="o">*</span> <span class="n">Xb</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">softmax_cost</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">w_logit</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_logit</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_blob</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">prediction</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_logit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_logit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_logit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_logit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Logistic Regression Prediction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/7953944.py:17: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<section id="demonstration-perceptron-vs-logistic-regression-on-the-moons-dataset">
+<h3>Demonstration: Perceptron vs. Logistic Regression on the Moons Dataset<a class="headerlink" href="#demonstration-perceptron-vs-logistic-regression-on-the-moons-dataset" title="Link to this heading">#</a></h3>
+<p>To compare the two approaches on a harder dataset, we apply both to the moons data. Importantly, neither model can perfectly separate the moons because they are not linearly separable—but the loss values reveal a key behavioral difference:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_moons_scaled</span> <span class="o">=</span> <span class="n">y_moons</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">w_init_moons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+
+<span class="n">result_p</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">max_cost</span><span class="p">,</span>     <span class="n">w_init_moons</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X_moons</span><span class="p">,</span> <span class="n">y_moons_scaled</span><span class="p">))</span>
+<span class="n">result_l</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">softmax_cost</span><span class="p">,</span> <span class="n">w_init_moons</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X_moons</span><span class="p">,</span> <span class="n">y_moons_scaled</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Perceptron loss   (optimized): </span><span class="si">{</span><span class="n">max_cost</span><span class="p">(</span><span class="n">result_p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w">     </span><span class="n">X_moons</span><span class="p">,</span><span class="w"> </span><span class="n">y_moons_scaled</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logistic loss     (optimized): </span><span class="si">{</span><span class="n">softmax_cost</span><span class="p">(</span><span class="n">result_l</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">X_moons</span><span class="p">,</span><span class="w"> </span><span class="n">y_moons_scaled</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">w_opt</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span>
+                             <span class="p">[</span><span class="n">result_p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result_l</span><span class="o">.</span><span class="n">x</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;Perceptron&#39;</span><span class="p">,</span> <span class="s1">&#39;Logistic Regression&#39;</span><span class="p">]):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X_moons</span><span class="p">,</span> <span class="n">w_opt</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_moons</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_moons</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_opt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_opt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_opt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_moons</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X_moons</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Perceptron loss   (optimized): 0.0000
+Logistic loss     (optimized): 53.9395
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/3205203345.py:22: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<p>The perceptron loss reaches near zero because it only penalizes points on the wrong side of the boundary and ignores <em>how far</em> wrong they are. The logistic loss is higher because the softmax assigns a small but non-zero penalty even to correctly classified points far from the boundary—this is a feature, not a bug, since it keeps pushing the boundary away from the data and prevents overconfident solutions.</p>
+<div class="exercise admonition" id="ex-cls-logit-init-sens">
+
+<p class="admonition-title"><span class="caption-number">Exercise 42 </span></p>
+<section id="exercise-content">
+<p>Run <code class="docutils literal notranslate"><span class="pre">minimize(softmax_cost,</span> <span class="pre">w0,</span> <span class="pre">args=(X,</span> <span class="pre">y))</span></code> for the blobs dataset using three different initial guesses: <code class="docutils literal notranslate"><span class="pre">w0</span> <span class="pre">=</span> <span class="pre">[-10,</span> <span class="pre">-4,</span> <span class="pre">-10]</span></code>, <code class="docutils literal notranslate"><span class="pre">w0</span> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>, and <code class="docutils literal notranslate"><span class="pre">w0</span> <span class="pre">=</span> <span class="pre">[10,</span> <span class="pre">4,</span> <span class="pre">10]</span></code>. Plot the three resulting decision boundaries on the same scatter plot. What does the result tell you about the convexity of the softmax cost?</p>
+</section>
+</div>
+</section>
+</section>
+<section id="margin-loss-function">
+<h2>Margin Loss Function<a class="headerlink" href="#margin-loss-function" title="Link to this heading">#</a></h2>
+<p>The trivial-solution problem with the perceptron can be fixed directly—without smoothing <span class="math notranslate nohighlight">\(\max\)</span>—by requiring a <strong>margin</strong> around the boundary. Instead of asking the model to be merely correct (<span class="math notranslate nohighlight">\(\bar{\bar{X}}\vec{w} \gtrless 0\)</span>), we require it to be correct by at least one unit:</p>
+<div class="math notranslate nohighlight">
+\[\bar{\bar{X}}\vec{w} \geq +1 \quad \text{if } y_i = +1\]</div>
+<div class="math notranslate nohighlight">
+\[\bar{\bar{X}}\vec{w} \leq -1 \quad \text{if } y_i = -1\]</div>
+<p>The buffer region <span class="math notranslate nohighlight">\([-1, +1]\)</span> is the <em>margin</em>:</p>
+<figure class="align-default" id="fig-cls-margin-concept">
+<a class="reference internal image-reference" href="../_images/margin_cost.png"><img alt="../_images/margin_cost.png" src="../_images/margin_cost.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">The margin introduces a buffer zone around the decision boundary. Points inside the margin are penalized even when correctly classified.</span><a class="headerlink" href="#fig-cls-margin-concept" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Applying the multiply-by-<span class="math notranslate nohighlight">\(y_i\)</span> and maximum trick gives the <strong>hinge (margin) loss</strong>:</p>
+<div class="math notranslate nohighlight">
+\[g_{\text{margin}}(\vec{w}) = \sum_i \max\!\left(0,\; 1 - y_i\,\bar{\bar{X}}\vec{w}\right)\]</div>
+<p>At <span class="math notranslate nohighlight">\(\vec{w} = \vec{0}\)</span> every term equals 1, giving a total loss of <span class="math notranslate nohighlight">\(N\)</span>—the trivial solution is gone.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">margin_cost</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Xb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">y</span> <span class="o">*</span> <span class="n">Xb</span><span class="p">))</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">margin_cost</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">w_margin</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Margin loss at optimum: </span><span class="si">{</span><span class="n">margin_cost</span><span class="p">(</span><span class="n">w_margin</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Margin loss at optimum: 0.0000
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also apply the same smoothing strategies from logistic regression—replacing <span class="math notranslate nohighlight">\(\max\)</span> with either a squared penalty or the softmax:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">margin_cost_squared</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Xb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">y</span> <span class="o">*</span> <span class="n">Xb</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">margin_cost_softmax</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Xb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span> <span class="o">*</span> <span class="n">Xb</span><span class="p">)))</span>
+
+<span class="n">result_sq</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">margin_cost_squared</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">result_sm</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">margin_cost_softmax</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="n">w_opt_margin2</span>   <span class="o">=</span> <span class="n">result_sq</span><span class="o">.</span><span class="n">x</span>
+<span class="n">w_opt_softmax_m</span> <span class="o">=</span> <span class="n">result_sm</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>All five models produce plausible boundaries for the linearly separable blobs dataset:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_blob</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_blob</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;perceptron&#39;</span><span class="p">,</span> <span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="s1">&#39;max margin&#39;</span><span class="p">,</span> <span class="s1">&#39;squared margin&#39;</span><span class="p">,</span> <span class="s1">&#39;softmax margin&#39;</span><span class="p">]</span>
+<span class="n">w_set</span>  <span class="o">=</span> <span class="p">[</span><span class="n">w_perceptron</span><span class="p">,</span> <span class="n">w_logit</span><span class="p">,</span> <span class="n">w_margin</span><span class="p">,</span> <span class="n">w_opt_margin2</span><span class="p">,</span> <span class="n">w_opt_softmax_m</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">w_i</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w_set</span><span class="p">,</span> <span class="n">clrs</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_i</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_i</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Decision Boundaries — All Models&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/3229945641.py:17: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Which loss function is best?</p>
+<p>For linearly separable data there is no single “best” boundary—infinitely many lines correctly separate the classes, and the specific solution found depends on the loss function, initialization, and optimizer. The softmax margin is a reasonable default: it is smooth, has no trivial solution, and tends to find centrally-placed boundaries. Adding regularization, as in the SVM below, is the principled approach to making the solution unique.</p>
+</div>
+<div class="exercise admonition" id="ex-cls-margin-moons">
+
+<p class="admonition-title"><span class="caption-number">Exercise 43 </span></p>
+<section id="exercise-content">
+<p>Apply both <code class="docutils literal notranslate"><span class="pre">margin_cost</span></code> and <code class="docutils literal notranslate"><span class="pre">margin_cost_squared</span></code> to the moons dataset. Rescale <code class="docutils literal notranslate"><span class="pre">y_moons</span></code> to ±1 and minimize both starting from <code class="docutils literal notranslate"><span class="pre">w_init_moons</span></code>. Plot the two resulting decision boundaries on the same scatter plot and print the optimized loss values. Which variant converges to a lower loss?</p>
+</section>
+</div>
+</section>
+<section id="support-vector-machines">
+<h2>Support Vector Machines<a class="headerlink" href="#support-vector-machines" title="Link to this heading">#</a></h2>
+<section id="from-margins-to-support-vectors">
+<h3>From Margins to Support Vectors<a class="headerlink" href="#from-margins-to-support-vectors" title="Link to this heading">#</a></h3>
+<p>The margin loss has a remaining problem: for linearly separable data there are still infinitely many valid solutions. We can obtain a unique solution by adding a <strong>regularization</strong> penalty that encourages the widest possible margin.</p>
+<p>It can be shown geometrically that the margin width is inversely proportional to the Euclidean norm of the weight vector (excluding the intercept):</p>
+<figure class="align-default" id="fig-cls-margin-size">
+<a class="reference internal image-reference" href="../_images/margin_size.png"><img alt="../_images/margin_size.png" src="../_images/margin_size.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">The margin width is <span class="math notranslate nohighlight">\(2 / \|\vec{\tilde{w}}\|_2\)</span>. Minimizing <span class="math notranslate nohighlight">\(\|\vec{\tilde{w}}\|_2\)</span> therefore maximizes the margin width.</span><a class="headerlink" href="#fig-cls-margin-size" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Combining the hinge loss with <span class="math notranslate nohighlight">\(L_2\)</span> regularization gives the <strong>support vector machine</strong> objective:</p>
+<div class="math notranslate nohighlight">
+\[g_{\text{SVM}}(\vec{w}) = \sum_i \max\!\left(0,\; 1 - y_i\,\bar{\bar{X}}\vec{w}\right) + \alpha\,\|\vec{\tilde{w}}\|_2\]</div>
+<p>where <span class="math notranslate nohighlight">\(\vec{\tilde{w}}\)</span> is <span class="math notranslate nohighlight">\(\vec{w}\)</span> with the intercept term omitted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">regularized_cost</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">Xb</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">y</span> <span class="o">*</span> <span class="n">Xb</span><span class="p">))</span>
+    <span class="n">cost</span> <span class="o">+=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># exclude intercept from regularization</span>
+    <span class="k">return</span> <span class="n">cost</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">regularized_cost</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">w_svm</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_svm</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_blob</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">prediction</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_svm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_svm</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_svm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_svm</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;SVM Prediction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/168353317.py:17: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="demonstration-effect-of-regularization-strength-alpha">
+<h3>Demonstration: Effect of Regularization Strength <span class="math notranslate nohighlight">\(\alpha\)</span><a class="headerlink" href="#demonstration-effect-of-regularization-strength-alpha" title="Link to this heading">#</a></h3>
+<p>Increasing <span class="math notranslate nohighlight">\(\alpha\)</span> penalizes large weights more heavily, widening the margin at the cost of more misclassifications. Decreasing <span class="math notranslate nohighlight">\(\alpha\)</span> allows the boundary to fit the training data more tightly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alphas</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">alphas</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">regularized_cost</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+    <span class="n">w_a</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_a</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">m</span> <span class="o">*</span> <span class="n">x_range</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\u03b1</span><span class="s1"> = </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_0$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/1574587235.py:18: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<p>At <span class="math notranslate nohighlight">\(\alpha = 0\)</span> there is no regularization and the solution is one of the infinitely many valid boundaries. As <span class="math notranslate nohighlight">\(\alpha\)</span> grows, the penalty overwhelms the loss and the model stops fitting the data. Intermediate values of <span class="math notranslate nohighlight">\(\alpha\)</span> select the maximum-margin boundary, which is what the SVM is designed to find.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SVMs and Ridge Regression</p>
+<p>Support vector machines are closely related to ridge regression:</p>
+<ul class="simple">
+<li><p><strong>Ridge regression</strong>: squared-error loss + <span class="math notranslate nohighlight">\(L_2\)</span> penalty on <span class="math notranslate nohighlight">\(\vec{w}\)</span></p></li>
+<li><p><strong>SVM</strong>: hinge loss + <span class="math notranslate nohighlight">\(L_2\)</span> penalty on <span class="math notranslate nohighlight">\(\vec{\tilde{w}}\)</span> (intercept excluded)</p></li>
+</ul>
+<p>The two key differences are (1) the loss function (squared error vs. hinge) and (2) SVMs must be solved iteratively because the hinge loss is non-linear. If you already understand ridge regression, you understand the core idea of SVMs.</p>
+</div>
+<div class="exercise admonition" id="ex-cls-linearsvc-compare">
+
+<p class="admonition-title"><span class="caption-number">Exercise 44 </span></p>
+<section id="exercise-content">
+<p>Fit <code class="docutils literal notranslate"><span class="pre">sklearn.svm.LinearSVC</span></code> to the blobs dataset using <code class="docutils literal notranslate"><span class="pre">y_blob</span></code> directly—scikit-learn handles the ±1 rescaling internally. Extract the learned weights from <code class="docutils literal notranslate"><span class="pre">model.coef_</span></code> and <code class="docutils literal notranslate"><span class="pre">model.intercept_</span></code> and plot the <code class="docutils literal notranslate"><span class="pre">LinearSVC</span></code> decision boundary alongside <code class="docutils literal notranslate"><span class="pre">w_svm</span></code> from the Demonstration above. How similar are the two boundaries?</p>
+</section>
+</div>
+</section>
+</section>
+<section id="non-linearity-and-kernels">
+<h2>Non-linearity and Kernels<a class="headerlink" href="#non-linearity-and-kernels" title="Link to this heading">#</a></h2>
+<p>The linear models above all find a straight decision boundary, which fails for non-linearly separable datasets like circles and moons:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">X_circles</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y_circles</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">regularized_cost</span><span class="p">,</span> <span class="n">w_init</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">w_lin</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_lin</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_circles</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">prediction</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_lin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_lin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_lin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_lin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Linear SVM </span><span class="se">\u2014</span><span class="s1"> Poor Fit&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/3434672447.py:19: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<section id="feature-transformation">
+<h3>Feature Transformation<a class="headerlink" href="#feature-transformation" title="Link to this heading">#</a></h3>
+<p>As with kernel ridge regression, we can endow the model with non-linear behavior by transforming the input features before fitting. Data that is not separable in the original space may become separable in a higher-dimensional transformed space.</p>
+<p>A radial basis function (Gaussian) transform maps each point to its distance from the origin:</p>
+<div class="math notranslate nohighlight">
+\[x_{\text{new}} = \exp\!\left(-(x_0^2 + x_1^2)\right)\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">X_nonlinear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X_new</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_circles</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_0$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original feature space&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_circles</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_0$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$ (Gaussian transform)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Transformed feature space&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/523982415.py:15: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<p>The two classes are now linearly separable in the <span class="math notranslate nohighlight">\((x_0,\, x_2)\)</span> plane. Fitting an SVM on this augmented feature matrix yields a correct classification:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w_guess_nl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">])</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">regularized_cost</span><span class="p">,</span> <span class="n">w_guess_nl</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X_nonlinear</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">w_svm_nl</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X_nonlinear</span><span class="p">,</span> <span class="n">w_svm_nl</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_circles</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_nonlinear</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">prediction</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_svm_nl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_svm_nl</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">w_svm_nl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_svm_nl</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_0$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_0$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/3337701261.py:20: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-kernel-trick">
+<h3>The Kernel Trick<a class="headerlink" href="#the-kernel-trick" title="Link to this heading">#</a></h3>
+<p>Choosing a good feature transformation requires domain knowledge and does not scale to high dimensions. The <strong>kernel trick</strong> avoids this by replacing the feature matrix with a <strong>kernel matrix</strong> <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>, whose entry <span class="math notranslate nohighlight">\(K_{ij}\)</span> measures the similarity between points <span class="math notranslate nohighlight">\(\vec{x}_i\)</span> and <span class="math notranslate nohighlight">\(\vec{x}_j\)</span>.</p>
+<p>For the radial basis function (RBF) kernel:</p>
+<div class="math notranslate nohighlight">
+\[K_{ij} = \exp\!\left(-\gamma\,\|\vec{x}_i - \vec{x}_j\|^2\right)\]</div>
+<p>This is equivalent to computing inner products in an <em>infinite-dimensional</em> feature space—without ever constructing that space explicitly.</p>
+<figure class="align-default" id="fig-cls-kernel-schematic">
+<a class="reference internal image-reference" href="../_images/kernel_schematic.png"><img alt="../_images/kernel_schematic.png" src="../_images/kernel_schematic.png" style="width: 60%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">The kernel trick implicitly maps data into a higher-dimensional feature space where a linear boundary in that space corresponds to a non-linear boundary in the original space.</span><a class="headerlink" href="#fig-cls-kernel-schematic" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics.pairwise</span><span class="w"> </span><span class="kn">import</span> <span class="n">rbf_kernel</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">X_moons</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y_moons</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="n">X_kernel</span> <span class="o">=</span> <span class="n">rbf_kernel</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kernel matrix shape: </span><span class="si">{</span><span class="n">X_kernel</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">w_guess_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">regularized_cost</span><span class="p">,</span> <span class="n">w_guess_k</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X_kernel</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">w_svm_k</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_classifier</span><span class="p">(</span><span class="n">X_kernel</span><span class="p">,</span> <span class="n">w_svm_k</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y_moons</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">prediction</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Kernel SVM Prediction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kernel matrix shape: (200, 200)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/95101669.py:21: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Parametric vs. Non-parametric Models</p>
+<p>The hand-coded kernel SVM above is <strong>non-parametric</strong>: the number of parameters grows with the training set size (one weight per row of the kernel matrix). Using all <span class="math notranslate nohighlight">\(N\)</span> training points as the kernel basis gives the model <span class="math notranslate nohighlight">\(N\)</span> parameters, making it highly flexible but prone to overfitting—we have effectively memorized the training data. Regularization and cross-validation are essential for generalization.</p>
+</div>
+</section>
+<section id="kernels-in-scikit-learn">
+<h3>Kernels in Scikit-learn<a class="headerlink" href="#kernels-in-scikit-learn" title="Link to this heading">#</a></h3>
+<p>scikit-learn’s <code class="docutils literal notranslate"><span class="pre">SVC</span></code> implements the kernel SVM with built-in regularization. The hyperparameter <code class="docutils literal notranslate"><span class="pre">C</span></code> is <em>inversely</em> proportional to the regularization strength:</p>
+<div class="math notranslate nohighlight">
+\[g_{\text{SVM}}(\vec{w}) = \sum_i \max\!\left(0,\; 1 - y_i\,\bar{\bar{X}}\vec{w}\right) + \frac{1}{C}\,\|\vec{\tilde{w}}\|_2\]</div>
+<p>A large <code class="docutils literal notranslate"><span class="pre">C</span></code> allows a complex boundary (little regularization); a small <code class="docutils literal notranslate"><span class="pre">C</span></code> enforces a wide margin (strong regularization). The parameter <code class="docutils literal notranslate"><span class="pre">gamma</span></code> (<span class="math notranslate nohighlight">\(\gamma\)</span>) controls the RBF kernel width: large <span class="math notranslate nohighlight">\(\gamma\)</span> makes each point’s influence very local, producing bumpy boundaries; small <span class="math notranslate nohighlight">\(\gamma\)</span> spreads influence broadly, producing smoother boundaries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_svc_decision_function</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_support</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot the decision boundary and margins for a fitted 2D SVC.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ylim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+
+    <span class="n">xg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">yg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">YG</span><span class="p">,</span> <span class="n">XG</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">yg</span><span class="p">,</span> <span class="n">xg</span><span class="p">)</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">XG</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">YG</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">XG</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">XG</span><span class="p">,</span> <span class="n">YG</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+               <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+               <span class="n">linestyles</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">plot_support</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                   <span class="n">model</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                   <span class="n">s</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">Cs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">C_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">Cs</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_val</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[((</span><span class="n">y_pred</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">plot_svc_decision_function</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;C = </span><span class="si">{</span><span class="n">C_val</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_30488/519339533.py:13: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Effect of <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">gamma</span></code> on the Decision Boundary</p>
+<ul class="simple">
+<li><p><strong>Large C</strong> → weak regularization → tight, complex boundary; few support vectors (points in the margin).</p></li>
+<li><p><strong>Small C</strong> → strong regularization → wide margin; many support vectors; more misclassifications accepted.</p></li>
+<li><p><strong>Large gamma</strong> → narrow kernel → each training point influences only a small neighborhood → bumpy, potentially overfitted boundary.</p></li>
+<li><p><strong>Small gamma</strong> → broad kernel → each training point influences a wide region → smoother boundary that may underfit.</p></li>
+</ul>
+<p>In practice, <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">gamma</span></code> are tuned together via cross-validation (see the Model Validation chapter).</p>
+</div>
+<div class="exercise admonition" id="ex-cls-svc-gamma">
+
+<p class="admonition-title"><span class="caption-number">Exercise 45 </span></p>
+<section id="exercise-content">
+<p>Fit <code class="docutils literal notranslate"><span class="pre">SVC(kernel='rbf',</span> <span class="pre">C=10)</span></code> to the moons dataset (use <code class="docutils literal notranslate"><span class="pre">y_moons</span></code> directly) for <code class="docutils literal notranslate"><span class="pre">gamma</span></code> values <code class="docutils literal notranslate"><span class="pre">[0.1,</span> <span class="pre">1,</span> <span class="pre">10,</span> <span class="pre">100]</span></code>. Plot the decision boundary for each using <code class="docutils literal notranslate"><span class="pre">plot_svc_decision_function</span></code>. Which value of <code class="docutils literal notranslate"><span class="pre">gamma</span></code> gives the best visual generalization to unseen data?</p>
+</section>
+</div>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Generalized linear models</strong> apply a non-linear link function <span class="math notranslate nohighlight">\(\sigma\)</span> to a linear combination of features, producing non-linear class boundaries while retaining interpretable weights.</p></li>
+<li><p>The <strong>perceptron loss</strong> (<span class="math notranslate nohighlight">\(\max(0, -y\hat{y})\)</span>) is the simplest classification loss but has two failure modes: a trivial solution at <span class="math notranslate nohighlight">\(\vec{w} = \vec{0}\)</span> and non-differentiability.</p></li>
+<li><p><strong>Logistic regression</strong> replaces <span class="math notranslate nohighlight">\(\max\)</span> with the smooth softmax approximation, eliminating both problems and enabling gradient-based optimization.</p></li>
+<li><p>The <strong>hinge (margin) loss</strong> adds a buffer zone around the boundary; combining it with <span class="math notranslate nohighlight">\(L_2\)</span> regularization gives the <strong>support vector machine</strong>, which uniquely selects the maximum-margin boundary.</p></li>
+<li><p><strong>Kernel methods</strong> implicitly map data into higher-dimensional spaces where non-linearly separable datasets may become separable. scikit-learn’s <code class="docutils literal notranslate"><span class="pre">SVC</span></code> implements this efficiently.</p></li>
+<li><p>The SVM hyperparameters <code class="docutils literal notranslate"><span class="pre">C</span></code> (inverse regularization strength) and <code class="docutils literal notranslate"><span class="pre">gamma</span></code> (kernel width) strongly affect model complexity and must be tuned, typically via cross-validation.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2>Additional Reading<a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Hastie, Tibshirani &amp; Friedman, <em>The Elements of Statistical Learning</em> (2nd ed.), Ch. 4 (logistic regression) and Ch. 12 (support vector machines).</p></li>
+<li><p>Watt, Borhani &amp; Katsaggelos, <em>Machine Learning Refined</em> (2nd ed.), Ch. 4 (logistic regression derivation) and Ch. 8 (SVMs and kernels).</p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/svm.html">scikit-learn SVM User Guide</a> — practical guidance on <code class="docutils literal notranslate"><span class="pre">SVC</span></code>, kernel selection, and hyperparameter tuning.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./3-classification"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic3.1-Classification_Basics.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Classification Basics</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptron-loss-function">Perceptron Loss Function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-perceptron-as-a-neural-network">The Perceptron as a Neural Network</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-perceptron-vs-logistic-regression-on-the-moons-dataset">Demonstration: Perceptron vs. Logistic Regression on the Moons Dataset</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#margin-loss-function">Margin Loss Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#support-vector-machines">Support Vector Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-margins-to-support-vectors">From Margins to Support Vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-effect-of-regularization-strength-alpha">Demonstration: Effect of Regularization Strength <span class="math notranslate nohighlight">\(\alpha\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-linearity-and-kernels">Non-linearity and Kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-transformation">Feature Transformation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-kernel-trick">The Kernel Trick</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernels-in-scikit-learn">Kernels in Scikit-learn</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
