@@ -49,7 +49,7 @@ input_ys = [5.0, 3.5, 2.0]            # x0, x1, x2
 inp_labs = ['$x_0$', '$x_1$', '$x_2$']
 wt_labs  = ['$w_0$', '$w_1$', '$w_2$']
 
-bias_y = 0.6   # bias node below the inputs
+bias_y = 0.2   # bias node below the inputs
 
 # ─── Summation neuron ──────────────────────────────────────────────────────────
 sum_x, sum_y = 5.5, 3.2
@@ -70,7 +70,7 @@ for y, lab in zip(input_ys, inp_labs):
             fontsize=12, fontweight='bold', zorder=5)
 
 # Ellipsis for "more inputs"
-ax.text(input_x, 0.9, r'$\vdots$', ha='center', va='center',
+ax.text(input_x, 1.2, r'$\vdots$', ha='center', va='center',
         fontsize=17, color=NAVY, zorder=5)
 
 # Bias node

@@ -97,7 +97,7 @@ ax.scatter(sv[:, 0], sv[:, 1], s=220, facecolors='none',
 # ── Margin width annotation ────────────────────────────────────────────────
 # The normal to the boundary w·x + b = 0 is w_hat = w / ||w||.
 # Moving from a boundary point by ±(1/||w||) along w_hat reaches the two
-# margin lines.  set_aspect('equal') ensures the arrow looks perpendicular.
+# margin lines.
 w_hat  = w_hard / np.linalg.norm(w_hard)
 half_w = 1.0 / np.linalg.norm(w_hard)
 
@@ -121,7 +121,6 @@ ax.set_ylabel('$x_1$')
 ax.legend(fontsize=8, loc='upper left')
 ax.set_title('Margin Loss: buffer zone around the decision boundary')
 ax.set_xlim(x_lo, x_hi)
-ax.set_aspect('equal')
 
 plt.tight_layout()
 for out in (IMGS / 'margin_cost.png', HERE / 'margin_cost.png'):
@@ -179,7 +178,7 @@ for ax, (w_i, b_i, title) in zip(axes, configs):
         ax.scatter(sv[:, 0], sv[:, 1], s=200, facecolors='none',
                    edgecolors='k', linewidths=1.8, zorder=5)
 
-    # Margin annotation — normal to boundary IS w_hat; set_aspect ensures it looks right
+    # Margin annotation — normal to boundary IS w_hat = w / ||w||
     w_hat_i = w_i / np.linalg.norm(w_i)
     hw      = 1.0 / np.linalg.norm(w_i)
     x_ann   = X[:, 0].mean() + 0.8
@@ -197,7 +196,6 @@ for ax, (w_i, b_i, title) in zip(axes, configs):
     ax.set_xlabel('$x_0$')
     ax.set_title(title, fontsize=11)
     ax.set_xlim(x_lo, x_hi)
-    ax.set_aspect('equal')
 
 axes[0].set_ylabel('$x_1$')
 fig.suptitle(
