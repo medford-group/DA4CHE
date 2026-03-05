@@ -37,6 +37,9 @@ where $\sigma$ maps the normal distribution to the distribution of interest. Rat
 We begin by generating four toy datasets that will be used throughout the chapter to compare models:
 
 ```{code-cell} ipython3
+import warnings
+warnings.filterwarnings('ignore', 'FigureCanvasAgg is non-interactive')
+
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('../settings/plot_style.mplstyle')
@@ -163,9 +166,9 @@ The perceptron, invented by Frank Rosenblatt in 1958, was the original artificia
 
 :::{figure} images/perceptron_NN.png
 :name: fig-cls-perceptron-nn
-:width: 60%
+:width: 80%
 
-The perceptron as a single-layer neural network. Each input $x_j$ is multiplied by a weight $w_j$, the products are summed, and a step activation function converts the result to a class label.
+The perceptron as a single-layer neural network. Inputs $x_0, x_1, x_2, \ldots$ are each multiplied by a learned weight and fed into a summation neuron ($\Sigma$) together with a bias $b$. The linear combination $\mathbf{x}^\top\mathbf{w} + b$ is then passed through a step activation function, producing a binary class label $\hat{y} \in \{-1, +1\}$.
 :::
 
 All the generalized linear models for classification—logistic regression, SVMs, and others—share this same single-layer architecture. What distinguishes them is the choice of **activation function** (equivalently, the **loss function** used during training).
@@ -173,7 +176,7 @@ All the generalized linear models for classification—logistic regression, SVMs
 :::{exercise}
 :label: ex-cls-perceptron-circles
 
-Apply the perceptron to the circles dataset. Rescale `y_circles` to ±1, minimize `max_cost` starting from `w_init`, and plot the resulting decision boundary. Explain in one sentence why the boundary looks the way it does.
+Apply the perceptron to the circles dataset. Rescale `y_circles` to ±1, minimize `max_cost` starting from `w_init`, and plot the resulting decision boundary. Think about whether a straight line can ever perfectly separate this dataset, and what the optimizer is forced to do instead.
 :::
 
 ## Logistic Regression
@@ -270,7 +273,7 @@ The perceptron loss reaches near zero because it only penalizes points on the wr
 :::{exercise}
 :label: ex-cls-logit-init-sens
 
-Run `minimize(softmax_cost, w0, args=(X, y))` for the blobs dataset using three different initial guesses: `w0 = [-10, -4, -10]`, `w0 = [0, 1, 1]`, and `w0 = [10, 4, 10]`. Plot the three resulting decision boundaries on the same scatter plot. What does the result tell you about the convexity of the softmax cost?
+Run `minimize(softmax_cost, w0, args=(X, y))` for the blobs dataset using three different initial guesses: `w0 = [-10, -4, -10]`, `w0 = [0, 1, 1]`, and `w0 = [10, 4, 10]`. Plot the three resulting decision boundaries on the same scatter plot. Think about whether the boundaries converge to the same solution, and what that implies for the choice of initial guess in practice.
 :::
 
 ## Margin Loss Function
@@ -284,9 +287,9 @@ The buffer region $[-1, +1]$ is the *margin*:
 
 :::{figure} images/margin_cost.png
 :name: fig-cls-margin-concept
-:width: 70%
+:width: 80%
 
-The margin introduces a buffer zone around the decision boundary. Points inside the margin are penalized even when correctly classified.
+The margin loss introduces a buffer zone of width $2/\|\vec{\tilde{w}}\|$ around the decision boundary (shaded). Circled points are the support vectors—the training points that define the margin edges. Any point inside the shaded region incurs a positive loss even if it is on the correct side of the boundary.
 :::
 
 Applying the multiply-by-$y_i$ and maximum trick gives the **hinge (margin) loss**:
@@ -353,7 +356,7 @@ For linearly separable data there is no single "best" boundary—infinitely many
 :::{exercise}
 :label: ex-cls-margin-moons
 
-Apply both `margin_cost` and `margin_cost_squared` to the moons dataset. Rescale `y_moons` to ±1 and minimize both starting from `w_init_moons`. Plot the two resulting decision boundaries on the same scatter plot and print the optimized loss values. Which variant converges to a lower loss?
+Apply both `margin_cost` and `margin_cost_squared` to the moons dataset. Rescale `y_moons` to ±1 and minimize both starting from `w_init_moons`. Plot the two resulting decision boundaries on the same scatter plot and print the optimized loss values. Think about which cost function has a smoother gradient near the boundary and how that affects the optimizer's convergence.
 :::
 
 ## Support Vector Machines
@@ -366,9 +369,9 @@ It can be shown geometrically that the margin width is inversely proportional to
 
 :::{figure} images/margin_size.png
 :name: fig-cls-margin-size
-:width: 70%
+:width: 90%
 
-The margin width is $2 / \|\vec{\tilde{w}}\|_2$. Minimizing $\|\vec{\tilde{w}}\|_2$ therefore maximizes the margin width.
+The same dataset with two different weight vectors. Left: the maximum-margin solution (small $\|\vec{\tilde{w}}\|$) yields a wide margin. Right: a weight vector with four times the norm yields a margin four times narrower. The annotated width $2/\|\vec{\tilde{w}}\|$ confirms the inverse relationship.
 :::
 
 Combining the hinge loss with $L_2$ regularization gives the **support vector machine** objective:
@@ -445,7 +448,7 @@ The two key differences are (1) the loss function (squared error vs. hinge) and 
 :::{exercise}
 :label: ex-cls-linearsvc-compare
 
-Fit `sklearn.svm.LinearSVC` to the blobs dataset using `y_blob` directly—scikit-learn handles the ±1 rescaling internally. Extract the learned weights from `model.coef_` and `model.intercept_` and plot the `LinearSVC` decision boundary alongside `w_svm` from the Demonstration above. How similar are the two boundaries?
+Fit `sklearn.svm.LinearSVC` to the blobs dataset using `y_blob` directly—scikit-learn handles the ±1 rescaling internally. Extract the learned weights from `model.coef_` and `model.intercept_` and plot the `LinearSVC` decision boundary alongside `w_svm` from the Demonstration above. Think about what might cause any visible differences between the two boundaries.
 :::
 
 ## Non-linearity and Kernels
@@ -537,9 +540,9 @@ This is equivalent to computing inner products in an *infinite-dimensional* feat
 
 :::{figure} images/kernel_schematic.png
 :name: fig-cls-kernel-schematic
-:width: 60%
+:width: 90%
 
-The kernel trick implicitly maps data into a higher-dimensional feature space where a linear boundary in that space corresponds to a non-linear boundary in the original space.
+Left: the circles dataset in the original $(x_0, x_1)$ space—no straight line can separate the two classes (dashed circle shows the ideal boundary). Right: after the Gaussian feature map $\phi(\mathbf{x})$ adds the coordinate $x_2 = e^{-(x_0^2 + x_1^2)}$, the classes separate cleanly along $x_2$ and a horizontal decision boundary suffices.
 :::
 
 ```{code-cell} ipython3
@@ -635,7 +638,7 @@ In practice, `C` and `gamma` are tuned together via cross-validation (see the Mo
 :::{exercise}
 :label: ex-cls-svc-gamma
 
-Fit `SVC(kernel='rbf', C=10)` to the moons dataset (use `y_moons` directly) for `gamma` values `[0.1, 1, 10, 100]`. Plot the decision boundary for each using `plot_svc_decision_function`. Which value of `gamma` gives the best visual generalization to unseen data?
+Fit `SVC(kernel='rbf', C=10)` to the moons dataset (use `y_moons` directly) for `gamma` values `[0.1, 1, 10, 100]`. Plot the decision boundary for each using `plot_svc_decision_function`. Think about what happens to the number of support vectors as `gamma` increases, and which value is likely to generalize best to new data.
 :::
 
 ## Summary
