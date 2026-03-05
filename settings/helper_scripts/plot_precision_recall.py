@@ -172,36 +172,39 @@ def main():
     ax.text(8.2, 2.6, f"TN\n({N_TN})", color=C_TN,   **label_kw)
 
     # ── Formula callouts at the bottom ────────────────────────────────────────
-    y_form = 0.72
-    # Precision box
-    ax.text(2.5, y_form,
+    # y_prec and y_rec must both sit above Y_MIN=0 so the fraction bars render.
+    y_prec = 1.5
+    y_rec  = 0.55
+
+    # Precision
+    ax.text(2.5, y_prec,
             "Precision  =",
             ha="right", va="center", fontsize=11, color="#333333")
-    ax.text(2.6, y_form + 0.22,
+    ax.text(2.6, y_prec + 0.22,
             f"  TP  ({N_TP})",
             ha="left", va="center", fontsize=10, color=C_TP, fontweight="bold")
-    ax.plot([2.6, 5.0], [y_form, y_form], color="#333333", lw=1.2)
-    ax.text(2.6, y_form - 0.22,
+    ax.plot([2.6, 5.0], [y_prec, y_prec], color="#333333", lw=1.4)
+    ax.text(2.6, y_prec - 0.22,
             f"TP + FP  ({N_TP + N_FP})",
             ha="left", va="center", fontsize=10, color="#333333")
     prec = N_TP / (N_TP + N_FP)
-    ax.text(5.15, y_form,
+    ax.text(5.15, y_prec,
             f"= {prec:.2f}",
             ha="left", va="center", fontsize=11, color="#333333")
 
-    # Recall box
-    ax.text(2.5, y_form - 1.1,
+    # Recall
+    ax.text(2.5, y_rec,
             "Recall  =",
             ha="right", va="center", fontsize=11, color="#333333")
-    ax.text(2.6, y_form - 1.1 + 0.22,
+    ax.text(2.6, y_rec + 0.22,
             f"  TP  ({N_TP})",
             ha="left", va="center", fontsize=10, color=C_TP, fontweight="bold")
-    ax.plot([2.6, 5.0], [y_form - 1.1, y_form - 1.1], color="#333333", lw=1.2)
-    ax.text(2.6, y_form - 1.1 - 0.22,
+    ax.plot([2.6, 5.0], [y_rec, y_rec], color="#333333", lw=1.4)
+    ax.text(2.6, y_rec - 0.22,
             f"TP + FN  ({N_TP + N_FN})",
             ha="left", va="center", fontsize=10, color="#333333")
     rec = N_TP / (N_TP + N_FN)
-    ax.text(5.15, y_form - 1.1,
+    ax.text(5.15, y_rec,
             f"= {rec:.2f}",
             ha="left", va="center", fontsize=11, color="#333333")
 
