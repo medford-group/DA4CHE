@@ -47,8 +47,8 @@ from sklearn.datasets import make_blobs, make_moons, make_circles
 
 np.random.seed(1)
 
-clrs = np.array(['#003057', '#EAAA00', '#4B8B9B', '#B3A369', '#377117',
-                 '#1879DB', '#8E8B76', '#F5D580', '#002233'])
+# GT color palette — derived from the prop_cycle in plot_style.mplstyle
+clrs = np.array(plt.rcParams['axes.prop_cycle'].by_key()['color'])
 
 noisiness = 1
 
