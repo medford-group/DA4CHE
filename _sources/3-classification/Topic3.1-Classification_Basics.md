@@ -122,7 +122,7 @@ plt.show()
 :name: fig-cls-ova
 :width: 90%
 
-**One-vs-rest (OvR) strategy.** Each of the three binary sub-problems is solved independently (panels 1–3): the target class is shown in colour and all others are collapsed to grey, with a logistic-regression boundary for that sub-problem. The rightmost panel shows the combined OvR decision regions, with dashed lines indicating where each binary boundary lies.
+**One-vs-rest (OvR) strategy.** Each of the three binary sub-problems is solved independently (panels 1–3): the target class is shown in color and all others are collapsed to grey, with a logistic-regression boundary for that sub-problem. The rightmost panel shows the combined OvR decision regions, with dashed lines indicating where each binary boundary lies.
 :::
 
 2. **Native multi-class objective:** modify the loss function or algorithm to handle all classes simultaneously (e.g., k-NN, multi-class logistic regression).
@@ -131,7 +131,7 @@ plt.show()
 :name: fig-cls-mc-cost
 :width: 90%
 
-**Native multi-class objective (softmax regression).** All three class boundaries are learned simultaneously in a single optimisation. Left: the raw training data. Centre: the three pairwise boundaries meeting at a single point — a hallmark of jointly-trained linear classifiers. Right: the resulting decision regions.
+**Native multi-class objective (softmax regression).** All three class boundaries are learned simultaneously in a single optimization. Left: the raw training data. Center: the three pairwise boundaries meeting at a single point — a hallmark of jointly-trained linear classifiers. Right: the resulting decision regions.
 :::
 
 The practical differences between these approaches are often small, though OvR is more amenable to parallel training and multi-class objectives are more efficient in serial.
@@ -200,7 +200,7 @@ The F1 score is the harmonic mean of precision and recall. It ranges from 0 (wor
 :name: fig-cls-prec-rec
 :width: 80%
 
-**Precision and recall.** The left band contains all actual positives; the right band contains all actual negatives. The dashed ellipse marks the set of predicted positives. Dots are coloured by outcome: navy (TP), gold (FN), red (FP), grey (TN). Precision measures how many predicted positives are correct; recall measures how many actual positives are found.
+**Precision and recall.** The left band contains all actual positives; the right band contains all actual negatives. The dashed ellipse marks the set of predicted positives. Dots are colored by outcome: navy (TP), gold (FN), red (FP), grey (TN). Precision measures how many predicted positives are correct; recall measures how many actual positives are found.
 :::
 
 ```{code-cell} ipython3
