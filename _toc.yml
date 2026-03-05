@@ -19,3 +19,4 @@ chapters:
     sections:
       - file: 3-classification/Topic3.1-Classification_Basics
       - file: 3-classification/Topic3.2-Generalized_Linear_Models
+      - file: 3-classification/Topic3.3-Alternate_Classification_Models
