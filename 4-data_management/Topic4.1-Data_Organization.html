@@ -350,6 +350,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tidy-data-principles">Tidy Data Principles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-indexing-and-filtering">Pandas Indexing and Filtering</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-with-boolean-masks">Filtering with Boolean Masks</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#renaming-columns">Renaming Columns</a></li>
@@ -373,6 +374,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-file-format-matters">Why File Format Matters</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hdf5-files">HDF5 Files</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timing-comparison">Timing Comparison</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modern-alternatives-parquet">Modern Alternatives: Parquet</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
@@ -394,10 +396,11 @@ document.write(`
 <p class="admonition-title">Learning Objectives</p>
 <p>By the end of this chapter, you will be able to:</p>
 <ul class="simple">
+<li><p>Explain the tidy data principles and recognize tidy vs. untidy data structures</p></li>
 <li><p>Index and filter a pandas DataFrame by column name, row label, and datetime range</p></li>
 <li><p>Detect and handle missing values using dropping, imputation, and correlation analysis</p></li>
 <li><p>Identify outliers with the z-score method and remove them systematically</p></li>
-<li><p>Store and retrieve large datasets efficiently using HDF5 files via <code class="docutils literal notranslate"><span class="pre">h5py</span></code></p></li>
+<li><p>Store and retrieve large datasets efficiently using HDF5 and Parquet formats</p></li>
 <li><p>Explain the trade-offs between different missing-value strategies and storage formats</p></li>
 </ul>
 </div>
@@ -407,17 +410,67 @@ of their time cleaning and preparing data rather than fitting models. Poor data
 management leads to silent errors that are hard to trace — wrong predictions built
 on corrupted inputs. Good data management, by contrast, creates a reproducible
 pipeline where every transformation is explicit and documented.</p>
-<p>A useful organizing principle is <strong>tidy data</strong> (Wickham, 2014): each variable
-forms a column, each observation forms a row, and each type of observational unit
-forms a separate table. Data that violates this structure (e.g., variables encoded
-in column headers, multiple observations per row) is much harder to analyze
-consistently. Most pandas operations assume tidy data implicitly, so organizing
-your dataset into this form at the outset avoids many downstream headaches.</p>
 <p>This chapter uses the <strong>Dow Chemical distillation column dataset</strong>: a real
 industrial time-series with 12 sensor measurements (reflux flow, feed flow,
 temperature, etc.) recorded at irregular intervals, along with a target variable
 <code class="docutils literal notranslate"><span class="pre">y:Impurity</span></code>. The dataset contains the kinds of problems that appear routinely in
 practice: inconsistent null representations, missing entries, and outliers.</p>
+<hr class="docutils" />
+<section id="tidy-data-principles">
+<h2>Tidy Data Principles<a class="headerlink" href="#tidy-data-principles" title="Link to this heading">#</a></h2>
+<p>Before writing any code, it is worth establishing a mental framework for what
+well-organized data looks like. Wickham (2014) formalized the concept of
+<strong>tidy data</strong>, which defines a standard structure for analytical datasets:</p>
+<ol class="arabic simple">
+<li><p><strong>Each variable forms a column.</strong> A variable is any quantity you measure or
+record — temperature, flow rate, class label, timestamp.</p></li>
+<li><p><strong>Each observation forms a row.</strong> One row = one measurement event (e.g., one
+timestamp in a time-series, one material in a materials dataset).</p></li>
+<li><p><strong>Each type of observational unit forms a separate table.</strong> Don’t mix
+patient demographics with lab measurements in the same table; keep them
+separate and join on a key when needed.</p></li>
+</ol>
+<p>Data that violates these rules is called <strong>untidy</strong> (or “messy”). Common untidy
+patterns include:</p>
+<ul class="simple">
+<li><p>Column headers that are values, not variable names (e.g., months as column
+headers instead of a <code class="docutils literal notranslate"><span class="pre">month</span></code> column)</p></li>
+<li><p>Multiple variables stored in one column (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;glucose/insulin&quot;</span></code>)</p></li>
+<li><p>Multiple observational units in one table (sensor metadata mixed with readings)</p></li>
+<li><p>Variables stored in both rows and columns (wide vs. long confusion)</p></li>
+</ul>
+<p>The Dow dataset is already tidy: each row is one timestamped reading, each
+column is one sensor or the target variable. Most pandas operations — filtering,
+groupby, merge, pivot — assume tidy data implicitly, so arriving in tidy form
+avoids many downstream headaches.</p>
+<p>When data arrives in untidy form, <code class="docutils literal notranslate"><span class="pre">pd.melt()</span></code> (wide → long) and <code class="docutils literal notranslate"><span class="pre">pd.pivot()</span></code>
+(long → wide) are the primary reshape tools. For example, if temperature readings
+for three sensors arrived as three separate columns (<code class="docutils literal notranslate"><span class="pre">T_sensor1</span></code>, <code class="docutils literal notranslate"><span class="pre">T_sensor2</span></code>,
+<code class="docutils literal notranslate"><span class="pre">T_sensor3</span></code>), melting would convert them to a long format with a <code class="docutils literal notranslate"><span class="pre">sensor_id</span></code>
+column and a single <code class="docutils literal notranslate"><span class="pre">temperature</span></code> column — enabling a single groupby operation
+instead of three separate code paths.</p>
+<div class="exercise admonition" id="ex-dm-tidy-check">
+
+<p class="admonition-title"><span class="caption-number">Exercise 52 </span></p>
+<section id="exercise-content">
+<p>After loading <code class="docutils literal notranslate"><span class="pre">df</span></code>, print <code class="docutils literal notranslate"><span class="pre">df.dtypes</span></code> and <code class="docutils literal notranslate"><span class="pre">df.isnull().sum()</span></code> to perform a basic
+data validation check. Then answer: does the Dow DataFrame satisfy all three tidy
+data rules? Identify one potential violation (hint: think about what each column
+represents and whether the <code class="docutils literal notranslate"><span class="pre">Date</span></code> column is a variable or an index).</p>
+</section>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Data validation</strong> is a closely related concern. After loading data, it is
+good practice to programmatically assert that the data meets your expectations:
+column types are correct, values fall within physically plausible ranges, and
+no unexpected null values exist. Checking <code class="docutils literal notranslate"><span class="pre">df.dtypes</span></code>, <code class="docutils literal notranslate"><span class="pre">df.describe()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">df.isnull().sum()</span></code> immediately after loading is a minimal validation step.
+For production pipelines, libraries like <strong>pandera</strong> (schema-based validation
+for DataFrames) and <strong>great_expectations</strong> (expectation suites for large data)
+provide systematic validation frameworks, though they are beyond the scope of
+this course.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -577,6 +630,7 @@ Date range: 2015-12-01 00:00:00 → 2017-02-18 23:00:00
 </div>
 </div>
 </div>
+</section>
 <hr class="docutils" />
 <section id="pandas-indexing-and-filtering">
 <h2>Pandas Indexing and Filtering<a class="headerlink" href="#pandas-indexing-and-filtering" title="Link to this heading">#</a></h2>
@@ -1432,14 +1486,14 @@ keeping only the 12 sensor features (x1–x12):</p>
 </div>
 <div class="exercise admonition" id="ex-dm-dow-filter">
 
-<p class="admonition-title"><span class="caption-number">Exercise 52 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 53 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">df_shortnames</span></code>, create a filtered DataFrame that satisfies <strong>all three</strong>
 conditions simultaneously:</p>
 <ol class="arabic simple">
 <li><p>Date between <code class="docutils literal notranslate"><span class="pre">2015-12-10</span></code> and <code class="docutils literal notranslate"><span class="pre">2015-12-20</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">x1</span></code> (Reflux Flow) greater than 300</p></li>
-<li><p>Only keep columns <code class="docutils literal notranslate"><span class="pre">x1</span></code> through <code class="docutils literal notranslate"><span class="pre">x6</span></code> and <code class="docutils literal notranslate"><span class="pre">y:Impurity</span></code></p></li>
+<li><p>Only keep columns <code class="docutils literal notranslate"><span class="pre">x1</span></code> through <code class="docutils literal notranslate"><span class="pre">x6</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code></p></li>
 </ol>
 <p>Print the shape of the result and display the first five rows.</p>
 </section>
@@ -1640,6 +1694,9 @@ strategy. The <code class="docutils literal notranslate"><span class="pre">numer
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>After dropping bad rows: (10297, 46)  (lost 406 rows)
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -1741,13 +1798,26 @@ only on training data.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-mean-impute">
 
-<p class="admonition-title"><span class="caption-number">Exercise 53 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 54 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">df_dropped</span></code>, create a copy of the DataFrame where any <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or non-numeric
 value (after converting to float with <code class="docutils literal notranslate"><span class="pre">pd.to_numeric(...,</span> <span class="pre">errors='coerce')</span></code>) is
 replaced with the <strong>column mean</strong>. Use <code class="docutils literal notranslate"><span class="pre">DataFrame.fillna()</span></code>. Print the count of
 remaining null values to confirm the result is complete.</p>
 </section>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Connecting cleaning to the modeling pipeline.</strong> Every cleaning step applied to
+training data must be identically applied to any new data at inference time —
+otherwise the model sees data in a different form than it was trained on. A common
+mistake is to compute, say, the column mean for imputation on the full dataset
+(including test rows) and then use that mean to fill training rows. This leaks
+future information. <code class="docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code> solves this cleanly: wrap each
+cleaning step as a <code class="docutils literal notranslate"><span class="pre">Transformer</span></code> (with <code class="docutils literal notranslate"><span class="pre">fit</span></code> on training data only and <code class="docutils literal notranslate"><span class="pre">transform</span></code>
+applied to both), and the pipeline ensures correct train/test separation
+automatically. This pattern is not explored further here but is worth adopting in
+any real project.</p>
 </div>
 </section>
 </section>
@@ -1850,18 +1920,23 @@ After:  8042 rows  (2255 removed)
 <li><p><strong>It assumes Gaussianity.</strong> Skewed or multimodal distributions will cause both
 false positives (valid points flagged as outliers) and false negatives (genuine
 outliers near the distribution center).</p></li>
-<li><p><strong>It is univariate.</strong> A point can look normal on every individual feature while
-being a genuine multivariate outlier — sitting in a region of feature space that
-never occurs in real data. Multivariate methods like the Mahalanobis distance or
-isolation forests are better suited for high-dimensional outlier detection.</p></li>
+<li><p><strong>It is univariate.</strong> A point can look perfectly normal on every individual
+feature while being a genuine multivariate outlier — sitting in a region of
+feature space that never occurs in real data. For example, a very high reflux
+flow combined with a very low feed flow might be individually plausible but
+operationally impossible together. The <strong>Mahalanobis distance</strong> extends z-score
+to multiple dimensions by accounting for feature correlations; <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>’s
+<code class="docutils literal notranslate"><span class="pre">EllipticEnvelope</span></code> fits this model. <strong>Isolation Forest</strong>
+(<code class="docutils literal notranslate"><span class="pre">sklearn.ensemble.IsolationForest</span></code>) is a non-parametric alternative that
+works well in high dimensions without requiring a distributional assumption.</p></li>
 </ol>
-<p>For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux flow)
-are well suited for z-score outlier removal, while variables with discrete or
-heavily skewed distributions may require a different approach.</p>
+<p>For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux
+flow) are well suited for z-score outlier removal, while variables with discrete
+or heavily skewed distributions may require an IQR-based or multivariate approach.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-iqr-outlier">
 
-<p class="admonition-title"><span class="caption-number">Exercise 54 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 55 </span></p>
 <section id="exercise-content">
 <p>Implement an <strong>IQR-based</strong> outlier filter as an alternative to z-score.
 For a single column <code class="docutils literal notranslate"><span class="pre">x1:Primary</span> <span class="pre">Column</span> <span class="pre">Reflux</span> <span class="pre">Flow</span></code>:</p>
@@ -1900,7 +1975,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.69 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.68 s
 </pre></div>
 </div>
 </div>
@@ -2004,9 +2079,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0006 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0005 s
 HDF5 one column:  0.0003 s
-In-memory slice:  0.000168 s
+In-memory slice:  0.000154 s
 </pre></div>
 </div>
 </div>
@@ -2016,25 +2091,94 @@ In-memory slice:  0.000168 s
 <p>HDF5’s selective-read advantage becomes significant only for datasets that are too
 large to fit in RAM. For the datasets in this course (thousands to tens of thousands
 of rows), the speed difference is small. However, building good HDF5 habits now
-pays dividends when you encounter GB- or TB-scale industrial process data in practice.</p>
-<p>Modern alternatives worth knowing:</p>
-<ul class="simple">
-<li><p><strong>Parquet</strong> (<code class="docutils literal notranslate"><span class="pre">df.to_parquet()</span></code>) — columnar format, excellent for pandas DataFrames,
-supports string columns and schema metadata natively.</p></li>
-<li><p><strong>Feather</strong> (<code class="docutils literal notranslate"><span class="pre">df.to_feather()</span></code>) — ultra-fast read/write for in-process data exchange.</p></li>
-<li><p><strong>Zarr</strong> — like HDF5 but cloud-native and supports concurrent writes.</p></li>
-</ul>
-<p>For pure tabular data, Parquet is often the best default choice today.</p>
+pays dividends when you encounter GB- or TB-scale industrial process data in practice.
+HDF5 is also deeply embedded in scientific computing workflows — NetCDF (climate/ocean
+data), PyTables, and many HPC file systems build on the HDF5 specification.</p>
+</div>
+</section>
+<section id="modern-alternatives-parquet">
+<h3>Modern Alternatives: Parquet<a class="headerlink" href="#modern-alternatives-parquet" title="Link to this heading">#</a></h3>
+<p><strong>Parquet</strong> is a columnar binary format developed by Apache that has become the
+de facto standard for analytical data pipelines outside of scientific computing.
+Unlike HDF5, Parquet stores schema information (column names and types) natively,
+handles mixed dtypes (including strings and timestamps) without manual conversion,
+and integrates directly with cloud data warehouses (BigQuery, Snowflake, Databricks).
+It is natively supported by <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">polars</span></code>, <code class="docutils literal notranslate"><span class="pre">Spark</span></code>, and <code class="docutils literal notranslate"><span class="pre">DuckDB</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Write a clean DataFrame to Parquet</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_no_outliers</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1"># Ensure numeric cols are float (Parquet does not accept object dtype numerics)</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="n">df_clean</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">df_clean</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;data/impurity_clean.parquet&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Parquet write: </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">df_reloaded</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;data/impurity_clean.parquet&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Parquet read:  </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Shape preserved: </span><span class="si">{</span><span class="n">df_reloaded</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Dtypes after round-trip:</span><span class="se">\n</span><span class="si">{</span><span class="n">df_reloaded</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0345 s
+Parquet read:  0.0395 s
+
+Shape preserved: (8042, 46)
+Dtypes after round-trip:
+float64           45
+datetime64[ns]     1
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Other modern formats worth knowing:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Best for</p></th>
+<th class="head"><p>Key advantage</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Parquet</strong></p></td>
+<td><p>Tabular DataFrames</p></td>
+<td><p>Schema metadata, columnar reads, cloud-native</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Feather / Arrow</strong></p></td>
+<td><p>In-process exchange</p></td>
+<td><p>Near-zero serialization overhead</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Zarr</strong></p></td>
+<td><p>Multi-dimensional arrays</p></td>
+<td><p>Cloud-native, concurrent writes, chunked storage</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>LMDB</strong></p></td>
+<td><p>Key-value lookups</p></td>
+<td><p>Memory-mapped, extremely fast random reads; widely used in machine learning data loaders (PyTorch, TensorFlow)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>HDF5</strong></p></td>
+<td><p>Scientific numerical arrays</p></td>
+<td><p>Hierarchical, mature ecosystem, partial reads</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="exercise admonition" id="ex-dm-parquet">
 
-<p class="admonition-title"><span class="caption-number">Exercise 55 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
 <section id="exercise-content">
-<p>Save <code class="docutils literal notranslate"><span class="pre">df_no_outliers</span></code> (with all columns including Date) to a Parquet file using
-<code class="docutils literal notranslate"><span class="pre">df_no_outliers.to_parquet('data/impurity_clean.parquet')</span></code>. Then reload it with
-<code class="docutils literal notranslate"><span class="pre">pd.read_parquet()</span></code>. Verify the round-trip preserved all dtypes by printing
-<code class="docutils literal notranslate"><span class="pre">.dtypes</span></code> before and after. Time both the write and the read, and compare the
-read time to the Excel load time measured above.</p>
+<p>Compare the file sizes of <code class="docutils literal notranslate"><span class="pre">impurity_data.hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">impurity_clean.parquet</span></code>
+using <code class="docutils literal notranslate"><span class="pre">Path('data/...').stat().st_size</span></code>. Then use <code class="docutils literal notranslate"><span class="pre">pd.read_parquet()</span></code> to load
+only two numeric feature columns and the target <code class="docutils literal notranslate"><span class="pre">y</span></code> (Parquet supports column
+selection natively via the <code class="docutils literal notranslate"><span class="pre">columns=</span></code> argument). Print the shape and compare
+the read time to the full-file HDF5 read above.</p>
 </section>
 </div>
 </section>
@@ -2043,21 +2187,29 @@ read time to the Excel load time measured above.</p>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
+<li><p><strong>Tidy data</strong> (Wickham, 2014): each variable is a column, each observation is
+a row, each observational unit is a table. Most pandas operations assume this
+structure; arriving in tidy form avoids many downstream headaches.
+<code class="docutils literal notranslate"><span class="pre">pd.melt()</span></code> and <code class="docutils literal notranslate"><span class="pre">pd.pivot()</span></code> are the primary reshape tools when data is untidy.</p></li>
+<li><p><strong>Data validation</strong> — checking dtypes, value ranges, and null counts immediately
+after loading — catches silent data quality issues before they corrupt downstream
+analysis. Libraries like pandera and great_expectations automate this in production.</p></li>
 <li><p><strong>Pandas</strong> provides flexible tools for indexing (<code class="docutils literal notranslate"><span class="pre">.loc</span></code>, <code class="docutils literal notranslate"><span class="pre">.iloc</span></code>, boolean masks),
 renaming, and datetime-based slicing. Setting a datetime column as the index
 enables natural time-range queries.</p></li>
 <li><p><strong>Missing values</strong> in industrial data rarely appear as simple <code class="docutils literal notranslate"><span class="pre">NaN</span></code> — custom
 detection functions are often needed. Strategies include dropping problematic
-rows or columns and regression imputation. The right choice depends on the
-proportion of missing data and the downstream model.</p></li>
+rows or columns, and regression imputation. All cleaning must be fit on training
+data only; <code class="docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code> enforces this automatically.</p></li>
 <li><p><strong>Correlation analysis</strong> identifies redundant features that can be removed without
 information loss, reducing model complexity and preventing numerical issues.</p></li>
-<li><p><strong>Outlier detection</strong> with z-scores is simple and interpretable but assumes
-Gaussian, independent variables. For high-dimensional or non-Gaussian data,
-consider IQR bounds, Mahalanobis distance, or isolation forests.</p></li>
-<li><p><strong>HDF5</strong> enables fast partial reads of large numerical arrays and supports
-hierarchical grouping and metadata attributes. For tabular data with mixed types,
-Parquet is often a more convenient modern alternative.</p></li>
+<li><p><strong>Outlier detection</strong> with z-scores is simple but assumes Gaussian, independent
+variables. For high-dimensional or non-Gaussian data, consider IQR bounds,
+Mahalanobis distance (<code class="docutils literal notranslate"><span class="pre">EllipticEnvelope</span></code>), or Isolation Forest.</p></li>
+<li><p><strong>HDF5</strong> excels for large numerical arrays: hierarchical structure, metadata
+attributes, and fast partial reads. <strong>Parquet</strong> is the modern default for tabular
+DataFrames: schema metadata, native mixed-dtype support, and cloud integration.
+<strong>LMDB</strong> is a strong choice for key-value data in machine learning pipelines.</p></li>
 </ul>
 </section>
 <section id="additional-reading">
@@ -2066,8 +2218,9 @@ Parquet is often a more convenient modern alternative.</p></li>
 <li><p>McKinney, W., <em>Python for Data Analysis</em> (3rd ed.) — the definitive pandas
 reference, covering indexing, missing data, and I/O in depth</p></li>
 <li><p>Wickham, H. (2014), “Tidy Data,” <em>Journal of Statistical Software</em> 59(10) —
-foundational principles for organizing tabular data</p></li>
+foundational principles for organizing tabular data; <a class="reference external" href="https://doi.org/10.18637/jss.v059.i10">free PDF</a></p></li>
 <li><p>The HDF Group, <a class="reference external" href="https://docs.hdfgroup.org/hdf5/develop/index.html">HDF5 User’s Guide</a></p></li>
+<li><p>Apache Parquet, <a class="reference external" href="https://parquet.apache.org/docs/">Parquet Format Specification</a></p></li>
 <li><p>pandas documentation:
 <a class="reference external" href="https://pandas.pydata.org/docs/user_guide/indexing.html">Indexing</a>,
 <a class="reference external" href="https://pandas.pydata.org/docs/user_guide/missing_data.html">Missing data</a>,
@@ -2131,6 +2284,7 @@ foundational principles for organizing tabular data</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tidy-data-principles">Tidy Data Principles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-indexing-and-filtering">Pandas Indexing and Filtering</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-with-boolean-masks">Filtering with Boolean Masks</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#renaming-columns">Renaming Columns</a></li>
@@ -2154,6 +2308,7 @@ foundational principles for organizing tabular data</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-file-format-matters">Why File Format Matters</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hdf5-files">HDF5 Files</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timing-comparison">Timing Comparison</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modern-alternatives-parquet">Modern Alternatives: Parquet</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>

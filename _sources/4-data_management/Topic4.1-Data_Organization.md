@@ -15,10 +15,11 @@ kernelspec:
 :class: tip
 
 By the end of this chapter, you will be able to:
+- Explain the tidy data principles and recognize tidy vs. untidy data structures
 - Index and filter a pandas DataFrame by column name, row label, and datetime range
 - Detect and handle missing values using dropping, imputation, and correlation analysis
 - Identify outliers with the z-score method and remove them systematically
-- Store and retrieve large datasets efficiently using HDF5 files via `h5py`
+- Store and retrieve large datasets efficiently using HDF5 and Parquet formats
 - Explain the trade-offs between different missing-value strategies and storage formats
 :::
 
@@ -29,18 +30,69 @@ management leads to silent errors that are hard to trace — wrong predictions b
 on corrupted inputs. Good data management, by contrast, creates a reproducible
 pipeline where every transformation is explicit and documented.
 
-A useful organizing principle is **tidy data** (Wickham, 2014): each variable
-forms a column, each observation forms a row, and each type of observational unit
-forms a separate table. Data that violates this structure (e.g., variables encoded
-in column headers, multiple observations per row) is much harder to analyze
-consistently. Most pandas operations assume tidy data implicitly, so organizing
-your dataset into this form at the outset avoids many downstream headaches.
-
 This chapter uses the **Dow Chemical distillation column dataset**: a real
 industrial time-series with 12 sensor measurements (reflux flow, feed flow,
 temperature, etc.) recorded at irregular intervals, along with a target variable
 `y:Impurity`. The dataset contains the kinds of problems that appear routinely in
 practice: inconsistent null representations, missing entries, and outliers.
+
+---
+
+## Tidy Data Principles
+
+Before writing any code, it is worth establishing a mental framework for what
+well-organized data looks like. Wickham (2014) formalized the concept of
+**tidy data**, which defines a standard structure for analytical datasets:
+
+1. **Each variable forms a column.** A variable is any quantity you measure or
+   record — temperature, flow rate, class label, timestamp.
+2. **Each observation forms a row.** One row = one measurement event (e.g., one
+   timestamp in a time-series, one material in a materials dataset).
+3. **Each type of observational unit forms a separate table.** Don't mix
+   patient demographics with lab measurements in the same table; keep them
+   separate and join on a key when needed.
+
+Data that violates these rules is called **untidy** (or "messy"). Common untidy
+patterns include:
+
+- Column headers that are values, not variable names (e.g., months as column
+  headers instead of a `month` column)
+- Multiple variables stored in one column (e.g., `"glucose/insulin"`)
+- Multiple observational units in one table (sensor metadata mixed with readings)
+- Variables stored in both rows and columns (wide vs. long confusion)
+
+The Dow dataset is already tidy: each row is one timestamped reading, each
+column is one sensor or the target variable. Most pandas operations — filtering,
+groupby, merge, pivot — assume tidy data implicitly, so arriving in tidy form
+avoids many downstream headaches.
+
+When data arrives in untidy form, `pd.melt()` (wide → long) and `pd.pivot()`
+(long → wide) are the primary reshape tools. For example, if temperature readings
+for three sensors arrived as three separate columns (`T_sensor1`, `T_sensor2`,
+`T_sensor3`), melting would convert them to a long format with a `sensor_id`
+column and a single `temperature` column — enabling a single groupby operation
+instead of three separate code paths.
+
+:::{exercise}
+:label: ex-dm-tidy-check
+
+After loading `df`, print `df.dtypes` and `df.isnull().sum()` to perform a basic
+data validation check. Then answer: does the Dow DataFrame satisfy all three tidy
+data rules? Identify one potential violation (hint: think about what each column
+represents and whether the `Date` column is a variable or an index).
+:::
+
+:::{note}
+**Data validation** is a closely related concern. After loading data, it is
+good practice to programmatically assert that the data meets your expectations:
+column types are correct, values fall within physically plausible ranges, and
+no unexpected null values exist. Checking `df.dtypes`, `df.describe()`, and
+`df.isnull().sum()` immediately after loading is a minimal validation step.
+For production pipelines, libraries like **pandera** (schema-based validation
+for DataFrames) and **great_expectations** (expectation suites for large data)
+provide systematic validation frameworks, though they are beyond the scope of
+this course.
+:::
 
 ```{code-cell} ipython3
 %matplotlib inline
@@ -174,7 +226,7 @@ Using `df_shortnames`, create a filtered DataFrame that satisfies **all three**
 conditions simultaneously:
 1. Date between `2015-12-10` and `2015-12-20`
 2. `x1` (Reflux Flow) greater than 300
-3. Only keep columns `x1` through `x6` and `y:Impurity`
+3. Only keep columns `x1` through `x6` and `y`
 
 Print the shape of the result and display the first five rows.
 :::
@@ -305,6 +357,19 @@ replaced with the **column mean**. Use `DataFrame.fillna()`. Print the count of
 remaining null values to confirm the result is complete.
 :::
 
+:::{note}
+**Connecting cleaning to the modeling pipeline.** Every cleaning step applied to
+training data must be identically applied to any new data at inference time —
+otherwise the model sees data in a different form than it was trained on. A common
+mistake is to compute, say, the column mean for imputation on the full dataset
+(including test rows) and then use that mean to fill training rows. This leaks
+future information. `sklearn.pipeline.Pipeline` solves this cleanly: wrap each
+cleaning step as a `Transformer` (with `fit` on training data only and `transform`
+applied to both), and the pipeline ensures correct train/test separation
+automatically. This pattern is not explored further here but is worth adopting in
+any real project.
+:::
+
 ---
 
 ## Outlier Detection
@@ -380,14 +445,19 @@ The z-score approach has two important limitations:
    false positives (valid points flagged as outliers) and false negatives (genuine
    outliers near the distribution center).
 
-2. **It is univariate.** A point can look normal on every individual feature while
-   being a genuine multivariate outlier — sitting in a region of feature space that
-   never occurs in real data. Multivariate methods like the Mahalanobis distance or
-   isolation forests are better suited for high-dimensional outlier detection.
+2. **It is univariate.** A point can look perfectly normal on every individual
+   feature while being a genuine multivariate outlier — sitting in a region of
+   feature space that never occurs in real data. For example, a very high reflux
+   flow combined with a very low feed flow might be individually plausible but
+   operationally impossible together. The **Mahalanobis distance** extends z-score
+   to multiple dimensions by accounting for feature correlations; `sklearn`'s
+   `EllipticEnvelope` fits this model. **Isolation Forest**
+   (`sklearn.ensemble.IsolationForest`) is a non-parametric alternative that
+   works well in high dimensions without requiring a distributional assumption.
 
-For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux flow)
-are well suited for z-score outlier removal, while variables with discrete or
-heavily skewed distributions may require a different approach.
+For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux
+flow) are well suited for z-score outlier removal, while variables with discrete
+or heavily skewed distributions may require an IQR-based or multivariate approach.
 :::
 
 :::{exercise}
@@ -503,29 +573,70 @@ HDF5's selective-read advantage becomes significant only for datasets that are t
 large to fit in RAM. For the datasets in this course (thousands to tens of thousands
 of rows), the speed difference is small. However, building good HDF5 habits now
 pays dividends when you encounter GB- or TB-scale industrial process data in practice.
-
-Modern alternatives worth knowing:
-- **Parquet** (`df.to_parquet()`) — columnar format, excellent for pandas DataFrames,
-  supports string columns and schema metadata natively.
-- **Feather** (`df.to_feather()`) — ultra-fast read/write for in-process data exchange.
-- **Zarr** — like HDF5 but cloud-native and supports concurrent writes.
-
-For pure tabular data, Parquet is often the best default choice today.
+HDF5 is also deeply embedded in scientific computing workflows — NetCDF (climate/ocean
+data), PyTables, and many HPC file systems build on the HDF5 specification.
 :::
+
+### Modern Alternatives: Parquet
+
+**Parquet** is a columnar binary format developed by Apache that has become the
+de facto standard for analytical data pipelines outside of scientific computing.
+Unlike HDF5, Parquet stores schema information (column names and types) natively,
+handles mixed dtypes (including strings and timestamps) without manual conversion,
+and integrates directly with cloud data warehouses (BigQuery, Snowflake, Databricks).
+It is natively supported by `pandas`, `polars`, `Spark`, and `DuckDB`.
+
+```{code-cell} ipython3
+# Write a clean DataFrame to Parquet
+df_clean = df_no_outliers.copy()
+# Ensure numeric cols are float (Parquet does not accept object dtype numerics)
+for col in df_clean.columns[1:]:
+    df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce')
+
+start = time.time()
+df_clean.to_parquet('data/impurity_clean.parquet', index=False)
+print(f'Parquet write: {time.time()-start:.4f} s')
+
+start = time.time()
+df_reloaded = pd.read_parquet('data/impurity_clean.parquet')
+print(f'Parquet read:  {time.time()-start:.4f} s')
+
+print(f'\nShape preserved: {df_reloaded.shape}')
+print(f'Dtypes after round-trip:\n{df_reloaded.dtypes.value_counts()}')
+```
+
+Other modern formats worth knowing:
+
+| Format | Best for | Key advantage |
+|---|---|---|
+| **Parquet** | Tabular DataFrames | Schema metadata, columnar reads, cloud-native |
+| **Feather / Arrow** | In-process exchange | Near-zero serialization overhead |
+| **Zarr** | Multi-dimensional arrays | Cloud-native, concurrent writes, chunked storage |
+| **LMDB** | Key-value lookups | Memory-mapped, extremely fast random reads; widely used in machine learning data loaders (PyTorch, TensorFlow) |
+| **HDF5** | Scientific numerical arrays | Hierarchical, mature ecosystem, partial reads |
 
 :::{exercise}
 :label: ex-dm-parquet
 
-Save `df_no_outliers` (with all columns including Date) to a Parquet file using
-`df_no_outliers.to_parquet('data/impurity_clean.parquet')`. Then reload it with
-`pd.read_parquet()`. Verify the round-trip preserved all dtypes by printing
-`.dtypes` before and after. Time both the write and the read, and compare the
-read time to the Excel load time measured above.
+Compare the file sizes of `impurity_data.hdf5` and `impurity_clean.parquet`
+using `Path('data/...').stat().st_size`. Then use `pd.read_parquet()` to load
+only two numeric feature columns and the target `y` (Parquet supports column
+selection natively via the `columns=` argument). Print the shape and compare
+the read time to the full-file HDF5 read above.
 :::
 
 ---
 
 ## Summary
+
+- **Tidy data** (Wickham, 2014): each variable is a column, each observation is
+  a row, each observational unit is a table. Most pandas operations assume this
+  structure; arriving in tidy form avoids many downstream headaches.
+  `pd.melt()` and `pd.pivot()` are the primary reshape tools when data is untidy.
+
+- **Data validation** — checking dtypes, value ranges, and null counts immediately
+  after loading — catches silent data quality issues before they corrupt downstream
+  analysis. Libraries like pandera and great_expectations automate this in production.
 
 - **Pandas** provides flexible tools for indexing (`.loc`, `.iloc`, boolean masks),
   renaming, and datetime-based slicing. Setting a datetime column as the index
@@ -533,27 +644,29 @@ read time to the Excel load time measured above.
 
 - **Missing values** in industrial data rarely appear as simple `NaN` — custom
   detection functions are often needed. Strategies include dropping problematic
-  rows or columns and regression imputation. The right choice depends on the
-  proportion of missing data and the downstream model.
+  rows or columns, and regression imputation. All cleaning must be fit on training
+  data only; `sklearn.pipeline.Pipeline` enforces this automatically.
 
 - **Correlation analysis** identifies redundant features that can be removed without
   information loss, reducing model complexity and preventing numerical issues.
 
-- **Outlier detection** with z-scores is simple and interpretable but assumes
-  Gaussian, independent variables. For high-dimensional or non-Gaussian data,
-  consider IQR bounds, Mahalanobis distance, or isolation forests.
+- **Outlier detection** with z-scores is simple but assumes Gaussian, independent
+  variables. For high-dimensional or non-Gaussian data, consider IQR bounds,
+  Mahalanobis distance (`EllipticEnvelope`), or Isolation Forest.
 
-- **HDF5** enables fast partial reads of large numerical arrays and supports
-  hierarchical grouping and metadata attributes. For tabular data with mixed types,
-  Parquet is often a more convenient modern alternative.
+- **HDF5** excels for large numerical arrays: hierarchical structure, metadata
+  attributes, and fast partial reads. **Parquet** is the modern default for tabular
+  DataFrames: schema metadata, native mixed-dtype support, and cloud integration.
+  **LMDB** is a strong choice for key-value data in machine learning pipelines.
 
 ## Additional Reading
 
 - McKinney, W., *Python for Data Analysis* (3rd ed.) — the definitive pandas
   reference, covering indexing, missing data, and I/O in depth
 - Wickham, H. (2014), "Tidy Data," *Journal of Statistical Software* 59(10) —
-  foundational principles for organizing tabular data
+  foundational principles for organizing tabular data; [free PDF](https://doi.org/10.18637/jss.v059.i10)
 - The HDF Group, [HDF5 User's Guide](https://docs.hdfgroup.org/hdf5/develop/index.html)
+- Apache Parquet, [Parquet Format Specification](https://parquet.apache.org/docs/)
 - pandas documentation:
   [Indexing](https://pandas.pydata.org/docs/user_guide/indexing.html),
   [Missing data](https://pandas.pydata.org/docs/user_guide/missing_data.html),
