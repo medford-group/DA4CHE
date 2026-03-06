@@ -444,30 +444,9 @@ print(f'After:  {df_no_outliers.shape[0]} rows  '
       f'({df_dropped.shape[0]-df_no_outliers.shape[0]} removed)')
 ```
 
-The z-score method has two important limitations worth understanding.
-
-**Assumption of Gaussianity.** Skewed or multimodal distributions will produce
-false positives (valid points flagged as outliers) and false negatives (genuine
-outliers near the distribution center). For variables with discrete or heavily
-skewed distributions, IQR-based filtering is more robust.
-
-**Univariate scope.** A point can look perfectly normal on every individual
-feature while being a genuine **multivariate outlier** — sitting in a region of
-feature space that never occurs in real data. For example, a very high reflux
-flow combined with a very low feed flow might be individually plausible but
-operationally impossible together. Two sklearn tools address this:
-
-- **`EllipticEnvelope`** (`sklearn.covariance.EllipticEnvelope`) fits a Gaussian
-  model to the joint distribution using the Mahalanobis distance, which accounts
-  for feature correlations. It works well when the data are approximately elliptically
-  distributed.
-- **`IsolationForest`** (`sklearn.ensemble.IsolationForest`) is a non-parametric
-  alternative that isolates anomalies via random feature splits. It scales well to
-  high-dimensional data without requiring a distributional assumption.
-
-For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux
-flow) are well suited for z-score outlier removal, while skewed or correlated
-variables benefit from IQR-based or multivariate approaches.
+The z-score method assumes that the data are approximately Gaussian and evaluates
+each feature independently. For variables with discrete or heavily skewed
+distributions, IQR-based filtering is more robust.
 
 :::{exercise}
 :label: ex-dm-iqr-outlier
@@ -478,6 +457,87 @@ For a single column `x1:Primary Column Reflux Flow`:
 2. Flag points outside $[\text{Q1} - 1.5 \cdot \text{IQR},\ \text{Q3} + 1.5 \cdot \text{IQR}]$.
 3. Plot histograms before and after removal.
 4. Compare the number of outliers flagged by IQR vs. z-score (cutoff = 3) for this column.
+:::
+
+### Multivariate Outlier Detection
+
+Z-score and IQR methods examine each feature in isolation. A point can look
+perfectly normal on every individual feature while being a genuine **multivariate
+outlier** — sitting in a region of joint feature space that never occurs in real
+data. For example, a very high reflux flow combined with a very low feed flow
+might be individually plausible but operationally impossible together.
+
+Two scikit-learn tools detect multivariate outliers:
+
+- **`EllipticEnvelope`** (`sklearn.covariance.EllipticEnvelope`) fits a Gaussian
+  model to the joint distribution. It uses the **Mahalanobis distance**, which
+  accounts for feature correlations — so two features that are individually
+  normal but jointly impossible are correctly flagged. It works best when the
+  data are approximately elliptically distributed.
+- **`IsolationForest`** (`sklearn.ensemble.IsolationForest`) is a non-parametric
+  alternative that isolates anomalies by recursively partitioning the feature
+  space with random splits. Points that are easy to isolate (requiring few splits)
+  are anomalous. It scales well to high dimensions without distributional
+  assumptions.
+
+### Demonstration: Multivariate Outlier Detection
+
+```{code-cell} ipython3
+from sklearn.covariance import EllipticEnvelope
+from sklearn.ensemble import IsolationForest
+import numpy as np
+
+# Use the two reflux/feed columns as a 2D example
+cols_2d = ['x1:Primary Column Reflux Flow', 'x3:Input to Primary Column Bed 3 Flow']
+X2 = df_no_outliers[cols_2d].apply(pd.to_numeric, errors='coerce').dropna()
+
+# EllipticEnvelope: fits a robust Gaussian and flags points outside the
+# contamination fraction (5%) as outliers
+ee = EllipticEnvelope(contamination=0.05, random_state=0)
+ee_labels = ee.fit_predict(X2)   # +1 = inlier, -1 = outlier
+
+# IsolationForest: tree-based anomaly score, no distributional assumption
+iso = IsolationForest(contamination=0.05, random_state=0)
+iso_labels = iso.fit_predict(X2)  # +1 = inlier, -1 = outlier
+
+print(f'EllipticEnvelope: {(ee_labels == -1).sum()} outliers flagged')
+print(f'IsolationForest:  {(iso_labels == -1).sum()} outliers flagged')
+print(f'Agreement (both flag as outlier): {((ee_labels == -1) & (iso_labels == -1)).sum()}')
+```
+
+```{code-cell} ipython3
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+for ax, labels, title in zip(
+    axes,
+    [ee_labels, iso_labels],
+    ['EllipticEnvelope', 'IsolationForest'],
+):
+    inliers  = X2[labels ==  1]
+    outliers = X2[labels == -1]
+    ax.scatter(inliers.iloc[:, 0],  inliers.iloc[:, 1],
+               c=clrs[0], s=10, alpha=0.4, label='Inlier')
+    ax.scatter(outliers.iloc[:, 0], outliers.iloc[:, 1],
+               c=clrs[1], s=40, marker='x', label='Outlier')
+    ax.set_xlabel(cols_2d[0].split(':')[1])
+    ax.set_ylabel(cols_2d[1].split(':')[1])
+    ax.set_title(title)
+    ax.legend()
+
+plt.tight_layout()
+plt.show()
+```
+
+:::{exercise}
+:label: ex-dm-multivar-outlier
+
+Apply `IsolationForest` to the **full numeric feature matrix** of `df_no_outliers`
+(all columns except `Date`) with `contamination=0.05`.
+
+1. How many rows are flagged as outliers across all features?
+2. Inspect the flagged rows — think about whether these rows look unusual compared
+   to the bulk of the data.
+3. How does the count compare to applying z-score (cutoff = 3) column-by-column?
 :::
 
 ---
