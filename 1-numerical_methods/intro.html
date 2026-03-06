@@ -196,6 +196,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
 </ul>
 </details></li>
 </ul>
@@ -323,7 +328,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -339,6 +346,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -348,14 +363,33 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <nav class="contents local" id="contents" role="doc-toc">
+  <section class="tex2jax_ignore mathjax_ignore" id="numerical-methods">
+<h1>Numerical Methods<a class="headerlink" href="#numerical-methods" title="Link to this heading">#</a></h1>
+<p>Data analytics starts with numerical foundations. Before fitting models or
+interpreting results, you need fluency with the computational tools and
+mathematical structures that underlie every machine learning algorithm.</p>
+<p>This module builds those foundations using Python. We begin with the core
+scientific Python stack — NumPy, SciPy, Matplotlib — and work up through
+linear algebra, least-squares regression, and numerical optimization. Chemical
+engineering examples (Arrhenius kinetics, spectroscopic data, reaction rate
+fitting) illustrate each concept throughout.</p>
+<section id="topics">
+<h2>Topics<a class="headerlink" href="#topics" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="#numerical-methods" id="id1">Numerical Methods</a></p></li>
+<li><p><strong>Topic 1.1 — Python Basics</strong>: NumPy arrays, vectorized operations, and the
+scientific Python ecosystem. Covers array creation, slicing, broadcasting,
+and common pitfalls (copy vs. view semantics).</p></li>
+<li><p><strong>Topic 1.2 — Linear Algebra</strong>: Matrix operations, solving linear systems,
+orthogonalization (Gram–Schmidt), rank, and condition numbers. Foundational
+for understanding regression and dimensionality reduction.</p></li>
+<li><p><strong>Topic 1.3 — Linear Regression</strong>: Least-squares fitting as a linear algebra
+problem. Normal equations, polynomial features, residual analysis, and
+scikit-learn’s <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> interface.</p></li>
+<li><p><strong>Topic 1.4 — Numerical Optimization</strong>: Gradient descent, quasi-Newton
+methods (L-BFGS-B), and constrained optimization via <code class="docutils literal notranslate"><span class="pre">scipy.optimize</span></code>.
+Explores loss surfaces, convergence behavior, and regularization penalties.</p></li>
 </ul>
-</nav>
-<section class="tex2jax_ignore mathjax_ignore" id="numerical-methods">
-<h1><a class="toc-backref" href="#id1" role="doc-backlink">Numerical Methods</a><a class="headerlink" href="#numerical-methods" title="Link to this heading">#</a></h1>
-<p>This module covers basics of Python and key numerical methods, including an introduction to basic regression.</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -414,6 +448,21 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '4-data_management/Topic4.1-Data_Organization';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Module 4: Data Management" href="intro.html" />
+    <link rel="prev" title="Data Management" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -198,7 +198,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Module 4: Data Management</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Data Management</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Data Organization</a></li>
 </ul>
 </details></li>
@@ -1694,9 +1694,6 @@ strategy. The <code class="docutils literal notranslate"><span class="pre">numer
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>After dropping bad rows: (10297, 46)  (lost 406 rows)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
 </div>
 </div>
 </section>
@@ -1824,6 +1821,11 @@ any real project.</p>
 <hr class="docutils" />
 <section id="outlier-detection">
 <h2>Outlier Detection<a class="headerlink" href="#outlier-detection" title="Link to this heading">#</a></h2>
+<p>The general definition of an outlier is a datapoint that was not created by the
+same underlying process. However, in practice this definition is not always
+helpful, since it requires knowledge of the mechanism that generated the data.
+We will not delve into advanced outlier detection methods here, but show a few
+simple examples that are commonly used in practice.</p>
 <section id="the-z-score-method">
 <h3>The Z-score Method<a class="headerlink" href="#the-z-score-method" title="Link to this heading">#</a></h3>
 <p>An outlier is an observation that deviates unusually far from the bulk of the data.
@@ -1913,27 +1915,28 @@ After:  8042 rows  (2255 removed)
 </div>
 </div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The z-score approach has two important limitations:</p>
-<ol class="arabic simple">
-<li><p><strong>It assumes Gaussianity.</strong> Skewed or multimodal distributions will cause both
+<p>The z-score method has two important limitations worth understanding.</p>
+<p><strong>Assumption of Gaussianity.</strong> Skewed or multimodal distributions will produce
 false positives (valid points flagged as outliers) and false negatives (genuine
-outliers near the distribution center).</p></li>
-<li><p><strong>It is univariate.</strong> A point can look perfectly normal on every individual
-feature while being a genuine multivariate outlier — sitting in a region of
+outliers near the distribution center). For variables with discrete or heavily
+skewed distributions, IQR-based filtering is more robust.</p>
+<p><strong>Univariate scope.</strong> A point can look perfectly normal on every individual
+feature while being a genuine <strong>multivariate outlier</strong> — sitting in a region of
 feature space that never occurs in real data. For example, a very high reflux
 flow combined with a very low feed flow might be individually plausible but
-operationally impossible together. The <strong>Mahalanobis distance</strong> extends z-score
-to multiple dimensions by accounting for feature correlations; <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>’s
-<code class="docutils literal notranslate"><span class="pre">EllipticEnvelope</span></code> fits this model. <strong>Isolation Forest</strong>
-(<code class="docutils literal notranslate"><span class="pre">sklearn.ensemble.IsolationForest</span></code>) is a non-parametric alternative that
-works well in high dimensions without requiring a distributional assumption.</p></li>
-</ol>
+operationally impossible together. Two sklearn tools address this:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EllipticEnvelope</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">sklearn.covariance.EllipticEnvelope</span></code>) fits a Gaussian
+model to the joint distribution using the Mahalanobis distance, which accounts
+for feature correlations. It works well when the data are approximately elliptically
+distributed.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IsolationForest</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">sklearn.ensemble.IsolationForest</span></code>) is a non-parametric
+alternative that isolates anomalies via random feature splits. It scales well to
+high-dimensional data without requiring a distributional assumption.</p></li>
+</ul>
 <p>For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux
-flow) are well suited for z-score outlier removal, while variables with discrete
-or heavily skewed distributions may require an IQR-based or multivariate approach.</p>
-</div>
+flow) are well suited for z-score outlier removal, while skewed or correlated
+variables benefit from IQR-based or multivariate approaches.</p>
 <div class="exercise admonition" id="ex-dm-iqr-outlier">
 
 <p class="admonition-title"><span class="caption-number">Exercise 55 </span></p>
@@ -1975,7 +1978,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.68 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.61 s
 </pre></div>
 </div>
 </div>
@@ -2079,9 +2082,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0005 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0008 s
 HDF5 one column:  0.0003 s
-In-memory slice:  0.000154 s
+In-memory slice:  0.000172 s
 </pre></div>
 </div>
 </div>
@@ -2126,8 +2129,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0345 s
-Parquet read:  0.0395 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0609 s
+Parquet read:  0.0605 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
@@ -2265,7 +2268,7 @@ foundational principles for organizing tabular data; <a class="reference externa
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Module 4: Data Management</p>
+        <p class="prev-next-title">Data Management</p>
       </div>
     </a>
 </div>

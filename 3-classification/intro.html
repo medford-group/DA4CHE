@@ -199,6 +199,10 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -324,7 +328,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -340,6 +346,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -349,14 +363,34 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <nav class="contents local" id="contents" role="doc-toc">
+  <section class="tex2jax_ignore mathjax_ignore" id="classification">
+<h1>Classification<a class="headerlink" href="#classification" title="Link to this heading">#</a></h1>
+<p>Many chemical engineering decisions are inherently discrete: a material is
+stable or unstable, a sensor reading indicates normal operation or a fault, a
+candidate molecule is active or inactive. Classification algorithms learn
+decision boundaries that map continuous inputs to discrete class labels.</p>
+<p>This module develops classification from first principles, moving from simple
+geometric boundaries to flexible non-parametric models and finally to methods
+that scale to high-dimensional feature spaces. The <strong>perovskite stability
+dataset</strong> — a real materials-science problem — is used throughout to ground
+the methods in a chemical engineering context.</p>
+<section id="topics">
+<h2>Topics<a class="headerlink" href="#topics" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="#classification" id="id1">Classification</a></p></li>
+<li><p><strong>Topic 3.1 — Classification Basics</strong>: Problem setup, decision boundaries,
+evaluation metrics (accuracy, precision, recall, F1, ROC/AUC), and practical
+considerations for class imbalance.</p></li>
+<li><p><strong>Topic 3.2 — Generalized Linear Models</strong>: Logistic regression, the perceptron,
+support vector machines, and kernel methods. Covers loss functions, margin
+maximization, and the role of regularization.</p></li>
+<li><p><strong>Topic 3.3 — Alternate Classification Models</strong>: k-nearest neighbors, Naive
+Bayes, decision trees, and random forests. Introduces ensemble methods and the
+bias–variance tradeoff in the classification setting.</p></li>
+<li><p><strong>Topic 3.4 — High-dimensional Classification</strong>: Applying SVM and tree-based
+methods to the perovskite dataset. Covers GridSearchCV for hyperparameter
+tuning, feature importances, and the curse of dimensionality.</p></li>
 </ul>
-</nav>
-<section class="tex2jax_ignore mathjax_ignore" id="classification">
-<h1><a class="toc-backref" href="#id1" role="doc-backlink">Classification</a><a class="headerlink" href="#classification" title="Link to this heading">#</a></h1>
-<p>This module introduces classification — the task of predicting discrete class labels from continuous or discrete inputs. We cover the fundamental problem setup and evaluation metrics, generalized linear models for classification, alternative classification methods, and techniques for high-dimensional classification problems.</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -415,6 +449,21 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
