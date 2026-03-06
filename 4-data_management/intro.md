@@ -1,4 +1,4 @@
-# Module 4: Data Management
+# Data Management
 
 Real-world data science is rarely limited by the choice of model — it is almost
 always limited by data quality. Before any regression or classification algorithm

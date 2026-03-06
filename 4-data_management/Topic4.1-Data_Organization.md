@@ -374,6 +374,12 @@ any real project.
 
 ## Outlier Detection
 
+The general definition of an outlier is a datapoint that was not created by the
+same underlying process. However, in practice this definition is not always
+helpful, since it requires knowledge of the mechanism that generated the data.
+We will not delve into advanced outlier detection methods here, but show a few
+simple examples that are commonly used in practice.
+
 ### The Z-score Method
 
 An outlier is an observation that deviates unusually far from the bulk of the data.
@@ -438,27 +444,30 @@ print(f'After:  {df_no_outliers.shape[0]} rows  '
       f'({df_dropped.shape[0]-df_no_outliers.shape[0]} removed)')
 ```
 
-:::{note}
-The z-score approach has two important limitations:
+The z-score method has two important limitations worth understanding.
 
-1. **It assumes Gaussianity.** Skewed or multimodal distributions will cause both
-   false positives (valid points flagged as outliers) and false negatives (genuine
-   outliers near the distribution center).
+**Assumption of Gaussianity.** Skewed or multimodal distributions will produce
+false positives (valid points flagged as outliers) and false negatives (genuine
+outliers near the distribution center). For variables with discrete or heavily
+skewed distributions, IQR-based filtering is more robust.
 
-2. **It is univariate.** A point can look perfectly normal on every individual
-   feature while being a genuine multivariate outlier — sitting in a region of
-   feature space that never occurs in real data. For example, a very high reflux
-   flow combined with a very low feed flow might be individually plausible but
-   operationally impossible together. The **Mahalanobis distance** extends z-score
-   to multiple dimensions by accounting for feature correlations; `sklearn`'s
-   `EllipticEnvelope` fits this model. **Isolation Forest**
-   (`sklearn.ensemble.IsolationForest`) is a non-parametric alternative that
-   works well in high dimensions without requiring a distributional assumption.
+**Univariate scope.** A point can look perfectly normal on every individual
+feature while being a genuine **multivariate outlier** — sitting in a region of
+feature space that never occurs in real data. For example, a very high reflux
+flow combined with a very low feed flow might be individually plausible but
+operationally impossible together. Two sklearn tools address this:
+
+- **`EllipticEnvelope`** (`sklearn.covariance.EllipticEnvelope`) fits a Gaussian
+  model to the joint distribution using the Mahalanobis distance, which accounts
+  for feature correlations. It works well when the data are approximately elliptically
+  distributed.
+- **`IsolationForest`** (`sklearn.ensemble.IsolationForest`) is a non-parametric
+  alternative that isolates anomalies via random feature splits. It scales well to
+  high-dimensional data without requiring a distributional assumption.
 
 For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux
-flow) are well suited for z-score outlier removal, while variables with discrete
-or heavily skewed distributions may require an IQR-based or multivariate approach.
-:::
+flow) are well suited for z-score outlier removal, while skewed or correlated
+variables benefit from IQR-based or multivariate approaches.
 
 :::{exercise}
 :label: ex-dm-iqr-outlier
