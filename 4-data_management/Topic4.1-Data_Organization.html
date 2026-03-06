@@ -368,6 +368,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outlier-detection">Outlier Detection</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-z-score-method">The Z-score Method</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-applying-z-score-to-all-columns">Demonstration: Applying Z-score to All Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-outlier-detection">Multivariate Outlier Detection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-multivariate-outlier-detection">Demonstration: Multivariate Outlier Detection</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#efficient-data-storage">Efficient Data Storage</a><ul class="nav section-nav flex-column">
@@ -1915,28 +1917,9 @@ After:  8042 rows  (2255 removed)
 </div>
 </div>
 </div>
-<p>The z-score method has two important limitations worth understanding.</p>
-<p><strong>Assumption of Gaussianity.</strong> Skewed or multimodal distributions will produce
-false positives (valid points flagged as outliers) and false negatives (genuine
-outliers near the distribution center). For variables with discrete or heavily
-skewed distributions, IQR-based filtering is more robust.</p>
-<p><strong>Univariate scope.</strong> A point can look perfectly normal on every individual
-feature while being a genuine <strong>multivariate outlier</strong> — sitting in a region of
-feature space that never occurs in real data. For example, a very high reflux
-flow combined with a very low feed flow might be individually plausible but
-operationally impossible together. Two sklearn tools address this:</p>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">EllipticEnvelope</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">sklearn.covariance.EllipticEnvelope</span></code>) fits a Gaussian
-model to the joint distribution using the Mahalanobis distance, which accounts
-for feature correlations. It works well when the data are approximately elliptically
-distributed.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">IsolationForest</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">sklearn.ensemble.IsolationForest</span></code>) is a non-parametric
-alternative that isolates anomalies via random feature splits. It scales well to
-high-dimensional data without requiring a distributional assumption.</p></li>
-</ul>
-<p>For the Dow dataset, variables with nearly Gaussian distributions (e.g., reflux
-flow) are well suited for z-score outlier removal, while skewed or correlated
-variables benefit from IQR-based or multivariate approaches.</p>
+<p>The z-score method assumes that the data are approximately Gaussian and evaluates
+each feature independently. For variables with discrete or heavily skewed
+distributions, IQR-based filtering is more robust.</p>
 <div class="exercise admonition" id="ex-dm-iqr-outlier">
 
 <p class="admonition-title"><span class="caption-number">Exercise 55 </span></p>
@@ -1948,6 +1931,106 @@ For a single column <code class="docutils literal notranslate"><span class="pre"
 <li><p>Flag points outside <span class="math notranslate nohighlight">\([\text{Q1} - 1.5 \cdot \text{IQR},\ \text{Q3} + 1.5 \cdot \text{IQR}]\)</span>.</p></li>
 <li><p>Plot histograms before and after removal.</p></li>
 <li><p>Compare the number of outliers flagged by IQR vs. z-score (cutoff = 3) for this column.</p></li>
+</ol>
+</section>
+</div>
+</section>
+<section id="multivariate-outlier-detection">
+<h3>Multivariate Outlier Detection<a class="headerlink" href="#multivariate-outlier-detection" title="Link to this heading">#</a></h3>
+<p>Z-score and IQR methods examine each feature in isolation. A point can look
+perfectly normal on every individual feature while being a genuine <strong>multivariate
+outlier</strong> — sitting in a region of joint feature space that never occurs in real
+data. For example, a very high reflux flow combined with a very low feed flow
+might be individually plausible but operationally impossible together.</p>
+<p>Two scikit-learn tools detect multivariate outliers:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EllipticEnvelope</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">sklearn.covariance.EllipticEnvelope</span></code>) fits a Gaussian
+model to the joint distribution. It uses the <strong>Mahalanobis distance</strong>, which
+accounts for feature correlations — so two features that are individually
+normal but jointly impossible are correctly flagged. It works best when the
+data are approximately elliptically distributed.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IsolationForest</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">sklearn.ensemble.IsolationForest</span></code>) is a non-parametric
+alternative that isolates anomalies by recursively partitioning the feature
+space with random splits. Points that are easy to isolate (requiring few splits)
+are anomalous. It scales well to high dimensions without distributional
+assumptions.</p></li>
+</ul>
+</section>
+<section id="demonstration-multivariate-outlier-detection">
+<h3>Demonstration: Multivariate Outlier Detection<a class="headerlink" href="#demonstration-multivariate-outlier-detection" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.covariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">EllipticEnvelope</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsolationForest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Use the two reflux/feed columns as a 2D example</span>
+<span class="n">cols_2d</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x1:Primary Column Reflux Flow&#39;</span><span class="p">,</span> <span class="s1">&#39;x3:Input to Primary Column Bed 3 Flow&#39;</span><span class="p">]</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">df_no_outliers</span><span class="p">[</span><span class="n">cols_2d</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># EllipticEnvelope: fits a robust Gaussian and flags points outside the</span>
+<span class="c1"># contamination fraction (5%) as outliers</span>
+<span class="n">ee</span> <span class="o">=</span> <span class="n">EllipticEnvelope</span><span class="p">(</span><span class="n">contamination</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ee_labels</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>   <span class="c1"># +1 = inlier, -1 = outlier</span>
+
+<span class="c1"># IsolationForest: tree-based anomaly score, no distributional assumption</span>
+<span class="n">iso</span> <span class="o">=</span> <span class="n">IsolationForest</span><span class="p">(</span><span class="n">contamination</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">iso_labels</span> <span class="o">=</span> <span class="n">iso</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>  <span class="c1"># +1 = inlier, -1 = outlier</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;EllipticEnvelope: </span><span class="si">{</span><span class="p">(</span><span class="n">ee_labels</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1"> outliers flagged&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IsolationForest:  </span><span class="si">{</span><span class="p">(</span><span class="n">iso_labels</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1"> outliers flagged&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Agreement (both flag as outlier): </span><span class="si">{</span><span class="p">((</span><span class="n">ee_labels</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">iso_labels</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>EllipticEnvelope: 403 outliers flagged
+IsolationForest:  403 outliers flagged
+Agreement (both flag as outlier): 245
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">axes</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">ee_labels</span><span class="p">,</span> <span class="n">iso_labels</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;EllipticEnvelope&#39;</span><span class="p">,</span> <span class="s1">&#39;IsolationForest&#39;</span><span class="p">],</span>
+<span class="p">):</span>
+    <span class="n">inliers</span>  <span class="o">=</span> <span class="n">X2</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span>  <span class="mi">1</span><span class="p">]</span>
+    <span class="n">outliers</span> <span class="o">=</span> <span class="n">X2</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">inliers</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>  <span class="n">inliers</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+               <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Inlier&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">outliers</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">outliers</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+               <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Outlier&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">cols_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">cols_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7cc66465afd626f014114a641dabaaac977e0f3fce5afd7bc2d01affae5e3000.png" src="../_images/7cc66465afd626f014114a641dabaaac977e0f3fce5afd7bc2d01affae5e3000.png" />
+</div>
+</div>
+<div class="exercise admonition" id="ex-dm-multivar-outlier">
+
+<p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
+<section id="exercise-content">
+<p>Apply <code class="docutils literal notranslate"><span class="pre">IsolationForest</span></code> to the <strong>full numeric feature matrix</strong> of <code class="docutils literal notranslate"><span class="pre">df_no_outliers</span></code>
+(all columns except <code class="docutils literal notranslate"><span class="pre">Date</span></code>) with <code class="docutils literal notranslate"><span class="pre">contamination=0.05</span></code>.</p>
+<ol class="arabic simple">
+<li><p>How many rows are flagged as outliers across all features?</p></li>
+<li><p>Inspect the flagged rows — think about whether these rows look unusual compared
+to the bulk of the data.</p></li>
+<li><p>How does the count compare to applying z-score (cutoff = 3) column-by-column?</p></li>
 </ol>
 </section>
 </div>
@@ -1978,7 +2061,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.61 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.73 s
 </pre></div>
 </div>
 </div>
@@ -2083,8 +2166,8 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0008 s
-HDF5 one column:  0.0003 s
-In-memory slice:  0.000172 s
+HDF5 one column:  0.0012 s
+In-memory slice:  0.000398 s
 </pre></div>
 </div>
 </div>
@@ -2129,8 +2212,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0609 s
-Parquet read:  0.0605 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0604 s
+Parquet read:  0.0489 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
@@ -2175,7 +2258,7 @@ Name: count, dtype: int64
 </div>
 <div class="exercise admonition" id="ex-dm-parquet">
 
-<p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 57 </span></p>
 <section id="exercise-content">
 <p>Compare the file sizes of <code class="docutils literal notranslate"><span class="pre">impurity_data.hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">impurity_clean.parquet</span></code>
 using <code class="docutils literal notranslate"><span class="pre">Path('data/...').stat().st_size</span></code>. Then use <code class="docutils literal notranslate"><span class="pre">pd.read_parquet()</span></code> to load
@@ -2305,6 +2388,8 @@ foundational principles for organizing tabular data; <a class="reference externa
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outlier-detection">Outlier Detection</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-z-score-method">The Z-score Method</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-applying-z-score-to-all-columns">Demonstration: Applying Z-score to All Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-outlier-detection">Multivariate Outlier Detection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-multivariate-outlier-detection">Demonstration: Multivariate Outlier Detection</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#efficient-data-storage">Efficient Data Storage</a><ul class="nav section-nav flex-column">
