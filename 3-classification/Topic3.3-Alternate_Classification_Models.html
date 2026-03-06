@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '3-classification/Topic3.3-Alternate_Classification_Models';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="High-dimensional Classification" href="Topic3.4-High-dimensional_Classification.html" />
     <link rel="prev" title="Generalized Linear Models" href="Topic3.2-Generalized_Linear_Models.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -195,6 +196,7 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic3.1-Classification_Basics.html">Classification Basics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
 </ul>
 </details></li>
 </ul>
@@ -646,7 +648,7 @@ dimensionality reduction or a different classifier is often preferable.</p>
 <p>Using <code class="docutils literal notranslate"><span class="pre">KNeighborsClassifier</span></code> from scikit-learn and the moons dataset with a 70/30
 train/test split (fix <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>), compute the test accuracy for
 <span class="math notranslate nohighlight">\(k \in \{1, 5, 10, 20, 50, 100\}\)</span>. Plot accuracy vs. <span class="math notranslate nohighlight">\(k\)</span>.
-Identify the value of <span class="math notranslate nohighlight">\(k\)</span> that gives the best test accuracy and explain in a comment
+Identify the value of <span class="math notranslate nohighlight">\(k\)</span> that gives the best test accuracy and think about
 why very small <span class="math notranslate nohighlight">\(k\)</span> and very large <span class="math notranslate nohighlight">\(k\)</span> both give poor results.</p>
 </section>
 </div>
@@ -780,7 +782,7 @@ circles where the class-conditional Gaussians overlap badly.</p>
 <section id="exercise-content">
 <p>Apply <code class="docutils literal notranslate"><span class="pre">GaussianNB</span></code> to the <strong>circles</strong> dataset (<code class="docutils literal notranslate"><span class="pre">X_circles</span></code>, <code class="docutils literal notranslate"><span class="pre">y_circles</span></code>) using a
 70/30 train/test split. Plot the decision regions. Compute and print the test
-accuracy. Explain in a comment why you expect Naive Bayes to perform poorly here,
+accuracy. Think about why you expect Naive Bayes to perform poorly here,
 referencing the Gaussian independence assumption.</p>
 </section>
 </div>
@@ -1019,6 +1021,15 @@ paper for random forest ensembles</p></li>
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Generalized Linear Models</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="Topic3.4-High-dimensional_Classification.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">High-dimensional Classification</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

@@ -233,7 +233,7 @@ dimensionality reduction or a different classifier is often preferable.
 Using `KNeighborsClassifier` from scikit-learn and the moons dataset with a 70/30
 train/test split (fix `random_state=0`), compute the test accuracy for
 $k \in \{1, 5, 10, 20, 50, 100\}$. Plot accuracy vs. $k$.
-Identify the value of $k$ that gives the best test accuracy and explain in a comment
+Identify the value of $k$ that gives the best test accuracy and think about
 why very small $k$ and very large $k$ both give poor results.
 :::
 
@@ -348,7 +348,7 @@ circles where the class-conditional Gaussians overlap badly.
 
 Apply `GaussianNB` to the **circles** dataset (`X_circles`, `y_circles`) using a
 70/30 train/test split. Plot the decision regions. Compute and print the test
-accuracy. Explain in a comment why you expect Naive Bayes to perform poorly here,
+accuracy. Think about why you expect Naive Bayes to perform poorly here,
 referencing the Gaussian independence assumption.
 :::
 
