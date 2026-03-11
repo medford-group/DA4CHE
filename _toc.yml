@@ -24,3 +24,4 @@ chapters:
   - file: 4-data_management/intro
     sections:
       - file: 4-data_management/Topic4.1-Data_Organization
+      - file: 4-data_management/Topic4.2-Online_Data_Access
