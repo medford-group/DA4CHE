@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Numerical Methods &#8212; Data Analytics for Chemical Engineers</title>
+    <title>Exploratory Data Analysis &#8212; Data Analytics for Chemical Engineers</title>
   
   
   
@@ -60,11 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '1-numerical_methods/intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '5-exploratory_data_analysis/intro';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Python Basics" href="Topic1.1-Python_Basics.html" />
-    <link rel="prev" title="Introduction" href="../intro.html" />
+    <link rel="next" title="High-Dimensional Data" href="Topic5.1-High_Dimensional_Data.html" />
+    <link rel="prev" title="Online Data Access and APIs" href="../4-data_management/Topic4.2-Online_Data_Access.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -177,11 +177,11 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Numerical Methods</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics.html">Python Basics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression.html">Linear Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -204,8 +204,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Exploratory Data Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
 </ul>
 </details></li>
 </ul>
@@ -262,7 +262,7 @@
       
       
       
-      <li><a href="../_sources/1-numerical_methods/intro.md" target="_blank"
+      <li><a href="../_sources/5-exploratory_data_analysis/intro.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -346,7 +346,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Numerical Methods</h1>
+    <h1>Exploratory Data Analysis</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -357,6 +357,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a></li>
 </ul>
             </nav>
         </div>
@@ -368,32 +369,43 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="numerical-methods">
-<h1>Numerical Methods<a class="headerlink" href="#numerical-methods" title="Link to this heading">#</a></h1>
-<p>Data analytics starts with numerical foundations. Before fitting models or
-interpreting results, you need fluency with the computational tools and
-mathematical structures that underlie every machine learning algorithm.</p>
-<p>This module builds those foundations using Python. We begin with the core
-scientific Python stack — NumPy, SciPy, Matplotlib — and work up through
-linear algebra, least-squares regression, and numerical optimization. Chemical
-engineering examples (Arrhenius kinetics, spectroscopic data, reaction rate
-fitting) illustrate each concept throughout.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis">
+<h1>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Link to this heading">#</a></h1>
+<p>Before applying any machine learning model, it is essential to understand the
+structure and properties of the data you are working with. Exploratory Data
+Analysis (EDA) is the practice of summarizing, visualizing, and probing datasets
+to uncover patterns, anomalies, and relationships that inform both feature
+engineering and model selection.</p>
+<p>This module focuses on the unique challenges that arise when the number of
+features is large — a regime commonly encountered in chemical engineering applications
+such as process data, spectroscopy, and materials science. We use two contrasting
+datasets throughout: the <strong>Dow Chemical distillation column dataset</strong> (40 continuous
+process variables) and the <strong>MNIST handwritten digits dataset</strong> (64 pixel-intensity
+features), which together illustrate EDA strategies across a range of feature types
+and scales.</p>
 <section id="topics">
 <h2>Topics<a class="headerlink" href="#topics" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Topic 1.1 — Python Basics</strong>: NumPy arrays, vectorized operations, and the
-scientific Python ecosystem. Covers array creation, slicing, broadcasting,
-and common pitfalls (copy vs. view semantics).</p></li>
-<li><p><strong>Topic 1.2 — Linear Algebra</strong>: Matrix operations, solving linear systems,
-orthogonalization (Gram–Schmidt), rank, and condition numbers. Foundational
-for understanding regression and dimensionality reduction.</p></li>
-<li><p><strong>Topic 1.3 — Linear Regression</strong>: Least-squares fitting as a linear algebra
-problem. Normal equations, polynomial features, residual analysis, and
-scikit-learn’s <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> interface.</p></li>
-<li><p><strong>Topic 1.4 — Numerical Optimization</strong>: Gradient descent, quasi-Newton
-methods (L-BFGS-B), and constrained optimization via <code class="docutils literal notranslate"><span class="pre">scipy.optimize</span></code>.
-Explores loss surfaces, convergence behavior, and regularization penalties.</p></li>
+<li><p><strong>Topic 5.1 — High-Dimensional Data</strong>: The curse and blessing of dimensionality,
+summary statistics, histogram grids, scatter plot matrices, and correlation heatmaps.</p></li>
+<li><p><strong>Topic 5.2 — Dimensionality Reduction</strong>: Principal component analysis, t-SNE,
+and other techniques for projecting high-dimensional data to interpretable
+low-dimensional representations.</p></li>
+<li><p><strong>Topic 5.3 — Clustering</strong>: k-means, hierarchical clustering, DBSCAN, and
+evaluation metrics for unsupervised grouping of data.</p></li>
+<li><p><strong>Topic 5.4 — Generative Models</strong>: Gaussian mixture models and autoencoders
+for density estimation and latent-space representation.</p></li>
 </ul>
+</section>
+<section id="datasets">
+<h2>Datasets<a class="headerlink" href="#datasets" title="Link to this heading">#</a></h2>
+<p>The <strong>Dow impurity dataset</strong> (<code class="docutils literal notranslate"><span class="pre">impurity_dataset-training.xlsx</span></code>) contains time-stamped
+sensor readings from a primary distillation column with 40 process variable inputs and
+a product impurity target. The same dataset was introduced in Module 4; here the focus
+shifts from data cleaning to exploratory analysis of the feature structure.</p>
+<p>The <strong>MNIST digits dataset</strong> is a classic benchmark in machine learning, consisting
+of 8×8 pixel images of hand-written digits 0–9. It is built into scikit-learn and
+requires no download.</p>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -412,7 +424,7 @@ Explores loss surfaces, convergence behavior, and regularization penalties.</p><
         },
         kernelOptions: {
             name: "python3",
-            path: "./1-numerical_methods"
+            path: "./5-exploratory_data_analysis"
         },
         predefinedOutput: true
     }
@@ -430,20 +442,20 @@ Explores loss surfaces, convergence behavior, and regularization penalties.</p><
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../intro.html"
+       href="../4-data_management/Topic4.2-Online_Data_Access.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Introduction</p>
+        <p class="prev-next-title">Online Data Access and APIs</p>
       </div>
     </a>
     <a class="right-next"
-       href="Topic1.1-Python_Basics.html"
+       href="Topic5.1-High_Dimensional_Data.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Python Basics</p>
+        <p class="prev-next-title">High-Dimensional Data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -464,6 +476,7 @@ Explores loss surfaces, convergence behavior, and regularization penalties.</p><
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a></li>
 </ul>
   </nav></div>
 
