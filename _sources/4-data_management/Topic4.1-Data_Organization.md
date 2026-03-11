@@ -482,6 +482,10 @@ Two scikit-learn tools detect multivariate outliers:
 
 ### Demonstration: Multivariate Outlier Detection
 
+:::{note}
+Both `EllipticEnvelope` and `IsolationForest` require a `contamination` parameter, which specifies the **expected fraction of outliers in the dataset** (a number between 0 and 0.5). This value is set by the analyst based on domain knowledge or prior inspection of the data. A value of `0.05` tells the model to treat the 5% of points with the most anomalous scores as outliers and the remaining 95% as inliers. Choosing `contamination` too high flags clean data as anomalous; too low misses real outliers. In exploratory analysis, it is common to try a few values (e.g. 0.01, 0.05, 0.10) and inspect the flagged points for reasonableness.
+:::
+
 ```{code-cell} ipython3
 from sklearn.covariance import EllipticEnvelope
 from sklearn.ensemble import IsolationForest
