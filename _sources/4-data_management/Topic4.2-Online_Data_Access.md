@@ -16,8 +16,11 @@ kernelspec:
 
 By the end of this chapter, you will be able to:
 - Use the `requests` library to retrieve data from web URLs
+- Read remote CSV files and HTML tables directly into pandas DataFrames
 - Parse and navigate nested JSON data structures to extract chemical properties
 - Construct RESTful API queries using URL parameters
+- Pass authentication credentials to APIs that require a key or token
+- Write robust batch query loops with rate limiting and error handling
 - Use the PubChemPy Python library to access chemical data programmatically
 - Select the appropriate data access strategy for a given online source
 :::
@@ -137,6 +140,29 @@ The set-based check `{6, 1}` handles both bond orientations (C→H and H→C) wi
 Using `ethanol_simple.json`, write a function `get_formula(compound_json)` that returns the molecular formula string (e.g. `'C2H6O'`) by searching the `props` list by its `'Molecular Formula'` label rather than using a hardcoded index. Test it on the loaded ethanol data.
 :::
 
+### pandas for Tabular Web Data
+
+Many data sources publish data as plain CSV files or HTML tables accessible via a URL. The `pandas` library can read these formats directly — no JSON parsing or manual HTTP request handling required.
+
+`pd.read_csv(url)` accepts a URL in place of a local file path and downloads the CSV on the fly:
+
+```{code-cell} ipython3
+import pandas as pd
+
+# PubChem's REST API can return CSV output directly — use the /CSV output format
+url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV'
+df = pd.read_csv(url)
+print(df)
+```
+
+`pd.read_html(url)` scrapes all HTML `<table>` elements from a page and returns them as a list of DataFrames. This is useful for data published in formatted web tables (e.g. Wikipedia property tables, NIST tabular outputs) but inherits the same fragility as other HTML-based approaches: the scraper will break if the page layout changes.
+
+:::{exercise}
+:label: ex-dm-pandas-csv
+
+Extend the multi-compound CSV query above to retrieve `XLogP`, `HBondDonorCount`, and `HBondAcceptorCount` for the ten amino acids: alanine, glycine, valine, leucine, isoleucine, proline, phenylalanine, tryptophan, methionine, and cysteine. Store the result as a DataFrame sorted by `XLogP` in descending order.
+:::
+
 ## Application Programming Interfaces (APIs)
 
 An **Application Programming Interface (API)** is a defined contract that lets one piece of software request services or data from another. APIs are not limited to online data — NumPy and scikit-learn expose APIs — but they are especially prevalent in data science because they make accessing remote databases far more convenient than manual downloading or HTML scraping.
@@ -226,6 +252,96 @@ This is substantially more convenient and robust than navigating the full-page J
 Write a function `get_properties(identifier, labels)` that takes a compound name or CAS number and a list of property label strings (e.g. `['Molecular Weight', 'Molecular Formula']`) and returns a dictionary mapping each label to its extracted value. Use `get_compound_json` and `get_prop` as building blocks. Test your function on aspirin (CAS 50-78-4).
 :::
 
+**Demonstration: Batch queries with rate limiting and error handling**
+
+When querying many compounds in a loop, two problems arise: exceeding the server's rate limit, and one failed lookup aborting the entire job. The pattern below handles both:
+
+```{code-cell} ipython3
+import time
+
+def batch_smiles(identifiers, delay=0.21):
+    """
+    Fetch SMILES for a list of compound names or CAS numbers.
+    Returns a dict mapping each identifier to its SMILES string (or None on failure).
+    delay: seconds to sleep between requests (PubChem limit: ~5 req/s).
+    """
+    results = {}
+    for ident in identifiers:
+        try:
+            r = requests.get(
+                f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{ident}/property/CanonicalSMILES/JSON'
+            )
+            r.raise_for_status()
+            data = json.loads(r.text)
+            results[ident] = data['PropertyTable']['Properties'][0]['CanonicalSMILES']
+        except Exception as e:
+            results[ident] = None
+            print(f'Warning: {ident} — {e}')
+        time.sleep(delay)
+    return results
+
+compounds = ['ethanol', 'acetone', 'benzene', 'not-a-real-compound']
+smiles = batch_smiles(compounds)
+for name, s in smiles.items():
+    print(f'{name:25s} {s}')
+```
+
+The `try/except Exception` block catches network timeouts, HTTP errors raised by `raise_for_status()`, and unexpected JSON structure, recording `None` for that compound rather than crashing. The `time.sleep(delay)` call inserts a 210 ms gap between requests — just under PubChem's 5 req/s limit — preventing the server from returning HTTP 429 (Too Many Requests) errors.
+
+When the API supports multi-compound queries, prefer a single request over a loop entirely. PubChem supports comma-separated CIDs in the URL path — first resolve names to CIDs, then fetch all properties at once:
+
+```{code-cell} ipython3
+import io
+
+# Step 1: resolve names to CIDs (three separate fast requests)
+names = ['ethanol', 'acetone', 'benzene']
+cids = []
+for name in names:
+    r = requests.get(f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{name}/cids/TXT')
+    r.raise_for_status()
+    cids.append(r.text.strip())
+    time.sleep(0.21)
+
+# Step 2: fetch all properties in one request using the CID list
+cids_str = ','.join(cids)
+r = requests.get(
+    f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cids_str}/property/CanonicalSMILES,MolecularFormula/CSV'
+)
+r.raise_for_status()
+df_batch = pd.read_csv(io.StringIO(r.text))
+print(df_batch)
+```
+
+### Authenticated APIs
+
+Most production APIs require a **key** or **token** to identify the caller, enforce per-user rate limits, and in some cases gate access to premium data. Keys are typically passed in one of two ways: as a URL query parameter, or as an HTTP header.
+
+```{code-cell} ipython3
+# Pattern 1: key as a query parameter (appended to the URL)
+# r = requests.get('https://api.example.com/data',
+#                  params={'api_key': api_key, 'name': 'ethanol'})
+
+# Pattern 2: key as an Authorization header (more secure — key not in URL)
+# r = requests.get('https://api.example.com/data',
+#                  headers={'Authorization': f'Bearer {api_key}'},
+#                  params={'name': 'ethanol'})
+
+# Always load keys from environment variables — never hard-code them in notebooks
+import os
+api_key = os.environ.get('MY_API_KEY', 'not-set')
+print(f'Key loaded from environment: {api_key != "not-set"}')
+```
+
+:::{warning}
+Never commit API keys to version-controlled code. Store keys in environment variables (e.g. `export MY_API_KEY=...` in your shell profile) or in a separate configuration file added to `.gitignore`. Any key accidentally committed to a public repository should be revoked immediately.
+:::
+
+:::{exercise}
+:label: ex-dm-auth-pattern
+
+Write a function `authenticated_get(url, api_key, auth_method='header')` that wraps `requests.get` and injects the key either as an `Authorization: Bearer` header (when `auth_method='header'`) or as an `api_key` query parameter (when `auth_method='query'`). Call the function with `url='https://httpbin.org/get'` and `api_key='test-key'` for both methods, and use `r.json()` to verify that the key appears in the response in the expected location (`headers` or `args` respectively).
+:::
+
 ### Python APIs: PubChemPy
 
 RESTful APIs are powerful but still require URL construction, response parsing, and manual JSON navigation. For widely-used databases, the community typically builds a **Python wrapper library** that handles all of this internally and exposes an intuitive, Pythonic interface.
@@ -299,16 +415,34 @@ Write a function `batch_properties(names)` that accepts a list of compound names
 ## Summary
 
 - The `requests` library retrieves raw HTTP content from any URL, but parsing HTML is fragile and should be a last resort; modern JavaScript-heavy sites may require browser automation tools instead.
+- `pd.read_csv(url)` and `pd.read_html(url)` can ingest remote tabular data directly into DataFrames without manual HTTP handling; APIs that support CSV output are often the most ergonomic option.
 - JSON is a machine-readable format that maps directly to Python dicts and lists; interactive viewers (JSON Crack, VS Code) help navigate complex nested structures.
 - Hardcoded index-based JSON extraction is brittle — prefer label-based searches, as demonstrated by the `get_prop` helper, for code that must work across multiple compounds.
 - RESTful APIs encode queries in the URL and return structured data; the PubChem PUG REST API requires no authentication, accepts names and CAS numbers as identifiers, and enforces a rate limit of ~5 requests per second.
-- Always call `r.raise_for_status()` after an HTTP request, and read the API documentation before writing query code.
+- Always call `r.raise_for_status()` after an HTTP request, use `try/except` in batch loops to handle failures gracefully, and add `time.sleep()` between requests to respect rate limits.
+- Authenticated APIs accept keys as query parameters or `Authorization` headers — always load keys from environment variables rather than hard-coding them.
 - Python wrapper libraries such as PubChemPy are the most convenient option when available: they expose Pythonic attribute access, handle all URL construction and JSON parsing internally, and reduce the chance of fragile hardcoded paths.
 
 ## Additional Reading
 
+**PubChem and general API tooling:**
 - [PubChem PUG REST Tutorial](https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest-tutorial)
 - [PubChemPy documentation](https://pubchempy.readthedocs.io/)
 - [Beautiful Soup documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 - [JSON Crack — interactive JSON visualizer](https://jsoncrack.com/)
 - [Real Python: API Integration in Python](https://realpython.com/api-integration-in-python/)
+
+**Other scientific databases with REST or Python APIs relevant to chemical engineering:**
+
+| Database | Scope | Interface |
+|---|---|---|
+| [Materials Project](https://materialsproject.org/) | Computational materials: crystal structures, electronic properties, phase diagrams | REST API + [`mp-api`](https://api.materialsproject.org/) Python client; free key required |
+| [EPA CompTox Dashboard](https://comptox.epa.gov/dashboard/) | Chemical safety, environmental fate, toxicity data | [REST API](https://api-ccte.epa.gov/docs/); free key required |
+| [AFLOW](http://aflowlib.org/) | High-throughput computational materials (alloys, intermetallics) | [REST API](http://aflowlib.org/aflowwiki/); no authentication required |
+| [ChemSpider](https://www.chemspider.com/) | Comprehensive chemical structures (~100 million compounds, Royal Society of Chemistry) | REST API; free key required |
+| [Crystallography Open Database](http://www.crystallography.net/cod/) | Crystal structures of organic, inorganic, and metal-organic compounds | REST API; no authentication required |
+| [NOMAD](https://nomad-lab.eu/) | Computational materials science calculations and workflows | REST API; no authentication required for public data |
+
+**Thermophysical property libraries** (Python APIs wrapping NIST REFPROP, DIPPR, and similar sources, without requiring HTTP requests):
+- [`CoolProp`](http://www.coolprop.org/) — thermodynamic and transport properties for pure fluids and mixtures
+- [`thermo`](https://thermo.readthedocs.io/) — comprehensive pure-component and mixture property estimation

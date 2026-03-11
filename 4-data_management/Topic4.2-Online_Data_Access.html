@@ -352,10 +352,12 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website-data">Website Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-requests-package">The <code class="docutils literal notranslate"><span class="pre">requests</span></code> Package</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#json-files">JSON Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-for-tabular-web-data">pandas for Tabular Web Data</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-programming-interfaces-apis">Application Programming Interfaces (APIs)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restful-apis">RESTful APIs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authenticated-apis">Authenticated APIs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-apis-pubchempy">Python APIs: PubChemPy</a></li>
 </ul>
 </li>
@@ -379,8 +381,11 @@ document.write(`
 <p>By the end of this chapter, you will be able to:</p>
 <ul class="simple">
 <li><p>Use the <code class="docutils literal notranslate"><span class="pre">requests</span></code> library to retrieve data from web URLs</p></li>
+<li><p>Read remote CSV files and HTML tables directly into pandas DataFrames</p></li>
 <li><p>Parse and navigate nested JSON data structures to extract chemical properties</p></li>
 <li><p>Construct RESTful API queries using URL parameters</p></li>
+<li><p>Pass authentication credentials to APIs that require a key or token</p></li>
+<li><p>Write robust batch query loops with rate limiting and error handling</p></li>
 <li><p>Use the PubChemPy Python library to access chemical data programmatically</p></li>
 <li><p>Select the appropriate data access strategy for a given online source</p></li>
 </ul>
@@ -568,6 +573,37 @@ Molecular Weight: 46.07
 </section>
 </div>
 </section>
+<section id="pandas-for-tabular-web-data">
+<h3>pandas for Tabular Web Data<a class="headerlink" href="#pandas-for-tabular-web-data" title="Link to this heading">#</a></h3>
+<p>Many data sources publish data as plain CSV files or HTML tables accessible via a URL. The <code class="docutils literal notranslate"><span class="pre">pandas</span></code> library can read these formats directly — no JSON parsing or manual HTTP request handling required.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pd.read_csv(url)</span></code> accepts a URL in place of a local file path and downloads the CSV on the fly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># PubChem&#39;s REST API can return CSV output directly — use the /CSV output format</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV&#39;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   CID  MolecularWeight MolecularFormula ConnectivitySMILES
+0  702            46.07            C2H6O                CCO
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pd.read_html(url)</span></code> scrapes all HTML <code class="docutils literal notranslate"><span class="pre">&lt;table&gt;</span></code> elements from a page and returns them as a list of DataFrames. This is useful for data published in formatted web tables (e.g. Wikipedia property tables, NIST tabular outputs) but inherits the same fragility as other HTML-based approaches: the scraper will break if the page layout changes.</p>
+<div class="exercise admonition" id="ex-dm-pandas-csv">
+
+<p class="admonition-title"><span class="caption-number">Exercise 59 </span></p>
+<section id="exercise-content">
+<p>Extend the multi-compound CSV query above to retrieve <code class="docutils literal notranslate"><span class="pre">XLogP</span></code>, <code class="docutils literal notranslate"><span class="pre">HBondDonorCount</span></code>, and <code class="docutils literal notranslate"><span class="pre">HBondAcceptorCount</span></code> for the ten amino acids: alanine, glycine, valine, leucine, isoleucine, proline, phenylalanine, tryptophan, methionine, and cysteine. Store the result as a DataFrame sorted by <code class="docutils literal notranslate"><span class="pre">XLogP</span></code> in descending order.</p>
+</section>
+</div>
+</section>
 </section>
 <section id="application-programming-interfaces-apis">
 <h2>Application Programming Interfaces (APIs)<a class="headerlink" href="#application-programming-interfaces-apis" title="Link to this heading">#</a></h2>
@@ -694,7 +730,9 @@ Detail: No CID found that matches the given name
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCO
-CC(=O)C
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CC(=O)C
 </pre></div>
 </div>
 </div>
@@ -706,9 +744,138 @@ CC(=O)C
 </div>
 <div class="exercise admonition" id="ex-dm-rest-multi-prop">
 
-<p class="admonition-title"><span class="caption-number">Exercise 59 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 60 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">get_properties(identifier,</span> <span class="pre">labels)</span></code> that takes a compound name or CAS number and a list of property label strings (e.g. <code class="docutils literal notranslate"><span class="pre">['Molecular</span> <span class="pre">Weight',</span> <span class="pre">'Molecular</span> <span class="pre">Formula']</span></code>) and returns a dictionary mapping each label to its extracted value. Use <code class="docutils literal notranslate"><span class="pre">get_compound_json</span></code> and <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> as building blocks. Test your function on aspirin (CAS 50-78-4).</p>
+</section>
+</div>
+<p><strong>Demonstration: Batch queries with rate limiting and error handling</strong></p>
+<p>When querying many compounds in a loop, two problems arise: exceeding the server’s rate limit, and one failed lookup aborting the entire job. The pattern below handles both:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">batch_smiles</span><span class="p">(</span><span class="n">identifiers</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.21</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetch SMILES for a list of compound names or CAS numbers.</span>
+<span class="sd">    Returns a dict mapping each identifier to its SMILES string (or None on failure).</span>
+<span class="sd">    delay: seconds to sleep between requests (PubChem limit: ~5 req/s).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ident</span> <span class="ow">in</span> <span class="n">identifiers</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">ident</span><span class="si">}</span><span class="s1">/property/CanonicalSMILES/JSON&#39;</span>
+            <span class="p">)</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">ident</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;PropertyTable&#39;</span><span class="p">][</span><span class="s1">&#39;Properties&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;CanonicalSMILES&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">ident</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: </span><span class="si">{</span><span class="n">ident</span><span class="si">}</span><span class="s1"> — </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="n">compounds</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;acetone&#39;</span><span class="p">,</span> <span class="s1">&#39;benzene&#39;</span><span class="p">,</span> <span class="s1">&#39;not-a-real-compound&#39;</span><span class="p">]</span>
+<span class="n">smiles</span> <span class="o">=</span> <span class="n">batch_smiles</span><span class="p">(</span><span class="n">compounds</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">smiles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s1">25s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: ethanol — &#39;CanonicalSMILES&#39;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: acetone — &#39;CanonicalSMILES&#39;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: benzene — &#39;CanonicalSMILES&#39;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning: not-a-real-compound — 404 Client Error: PUGREST.NotFound for url: https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/not-a-real-compound/property/CanonicalSMILES/JSON
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ethanol                   None
+acetone                   None
+benzene                   None
+not-a-real-compound       None
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">try/except</span> <span class="pre">Exception</span></code> block catches network timeouts, HTTP errors raised by <code class="docutils literal notranslate"><span class="pre">raise_for_status()</span></code>, and unexpected JSON structure, recording <code class="docutils literal notranslate"><span class="pre">None</span></code> for that compound rather than crashing. The <code class="docutils literal notranslate"><span class="pre">time.sleep(delay)</span></code> call inserts a 210 ms gap between requests — just under PubChem’s 5 req/s limit — preventing the server from returning HTTP 429 (Too Many Requests) errors.</p>
+<p>When the API supports multi-compound queries, prefer a single request over a loop entirely. PubChem supports comma-separated CIDs in the URL path — first resolve names to CIDs, then fetch all properties at once:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="c1"># Step 1: resolve names to CIDs (three separate fast requests)</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;acetone&#39;</span><span class="p">,</span> <span class="s1">&#39;benzene&#39;</span><span class="p">]</span>
+<span class="n">cids</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">/cids/TXT&#39;</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">cids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.21</span><span class="p">)</span>
+
+<span class="c1"># Step 2: fetch all properties in one request using the CID list</span>
+<span class="n">cids_str</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cids</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/</span><span class="si">{</span><span class="n">cids_str</span><span class="si">}</span><span class="s1">/property/CanonicalSMILES,MolecularFormula/CSV&#39;</span>
+<span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="n">df_batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_batch</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   CID ConnectivitySMILES MolecularFormula
+0  702                CCO            C2H6O
+1  180            CC(=O)C            C3H6O
+2  241        C1=CC=CC=C1             C6H6
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="authenticated-apis">
+<h3>Authenticated APIs<a class="headerlink" href="#authenticated-apis" title="Link to this heading">#</a></h3>
+<p>Most production APIs require a <strong>key</strong> or <strong>token</strong> to identify the caller, enforce per-user rate limits, and in some cases gate access to premium data. Keys are typically passed in one of two ways: as a URL query parameter, or as an HTTP header.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pattern 1: key as a query parameter (appended to the URL)</span>
+<span class="c1"># r = requests.get(&#39;https://api.example.com/data&#39;,</span>
+<span class="c1">#                  params={&#39;api_key&#39;: api_key, &#39;name&#39;: &#39;ethanol&#39;})</span>
+
+<span class="c1"># Pattern 2: key as an Authorization header (more secure — key not in URL)</span>
+<span class="c1"># r = requests.get(&#39;https://api.example.com/data&#39;,</span>
+<span class="c1">#                  headers={&#39;Authorization&#39;: f&#39;Bearer {api_key}&#39;},</span>
+<span class="c1">#                  params={&#39;name&#39;: &#39;ethanol&#39;})</span>
+
+<span class="c1"># Always load keys from environment variables — never hard-code them in notebooks</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MY_API_KEY&#39;</span><span class="p">,</span> <span class="s1">&#39;not-set&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Key loaded from environment: </span><span class="si">{</span><span class="n">api_key</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s2">&quot;not-set&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key loaded from environment: False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Never commit API keys to version-controlled code. Store keys in environment variables (e.g. <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MY_API_KEY=...</span></code> in your shell profile) or in a separate configuration file added to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>. Any key accidentally committed to a public repository should be revoked immediately.</p>
+</div>
+<div class="exercise admonition" id="ex-dm-auth-pattern">
+
+<p class="admonition-title"><span class="caption-number">Exercise 61 </span></p>
+<section id="exercise-content">
+<p>Write a function <code class="docutils literal notranslate"><span class="pre">authenticated_get(url,</span> <span class="pre">api_key,</span> <span class="pre">auth_method='header')</span></code> that wraps <code class="docutils literal notranslate"><span class="pre">requests.get</span></code> and injects the key either as an <code class="docutils literal notranslate"><span class="pre">Authorization:</span> <span class="pre">Bearer</span></code> header (when <code class="docutils literal notranslate"><span class="pre">auth_method='header'</span></code>) or as an <code class="docutils literal notranslate"><span class="pre">api_key</span></code> query parameter (when <code class="docutils literal notranslate"><span class="pre">auth_method='query'</span></code>). Call the function with <code class="docutils literal notranslate"><span class="pre">url='https://httpbin.org/get'</span></code> and <code class="docutils literal notranslate"><span class="pre">api_key='test-key'</span></code> for both methods, and use <code class="docutils literal notranslate"><span class="pre">r.json()</span></code> to verify that the key appears in the response in the expected location (<code class="docutils literal notranslate"><span class="pre">headers</span></code> or <code class="docutils literal notranslate"><span class="pre">args</span></code> respectively).</p>
 </section>
 </div>
 </section>
@@ -745,7 +912,7 @@ Formula:  C2H6O
 IUPAC:    ethanol
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_40601/1066236847.py:4: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_41288/1066236847.py:4: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
   print(f&#39;SMILES:   {etoh.canonical_smiles}&#39;)
 </pre></div>
 </div>
@@ -811,7 +978,7 @@ IUPAC:    ethanol
 </ul>
 <div class="exercise admonition" id="ex-dm-pcpy-batch-props">
 
-<p class="admonition-title"><span class="caption-number">Exercise 60 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 62 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">batch_properties(names)</span></code> that accepts a list of compound names and returns a <code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame with columns <code class="docutils literal notranslate"><span class="pre">Name</span></code>, <code class="docutils literal notranslate"><span class="pre">MolecularFormula</span></code>, <code class="docutils literal notranslate"><span class="pre">MolecularWeight</span></code>, and <code class="docutils literal notranslate"><span class="pre">CanonicalSMILES</span></code>. Use <code class="docutils literal notranslate"><span class="pre">pcp.get_properties</span></code> to minimize the number of API calls. Test it on ethanol, acetone, and benzene.</p>
 </section>
@@ -822,21 +989,65 @@ IUPAC:    ethanol
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">requests</span></code> library retrieves raw HTTP content from any URL, but parsing HTML is fragile and should be a last resort; modern JavaScript-heavy sites may require browser automation tools instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pd.read_csv(url)</span></code> and <code class="docutils literal notranslate"><span class="pre">pd.read_html(url)</span></code> can ingest remote tabular data directly into DataFrames without manual HTTP handling; APIs that support CSV output are often the most ergonomic option.</p></li>
 <li><p>JSON is a machine-readable format that maps directly to Python dicts and lists; interactive viewers (JSON Crack, VS Code) help navigate complex nested structures.</p></li>
 <li><p>Hardcoded index-based JSON extraction is brittle — prefer label-based searches, as demonstrated by the <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> helper, for code that must work across multiple compounds.</p></li>
 <li><p>RESTful APIs encode queries in the URL and return structured data; the PubChem PUG REST API requires no authentication, accepts names and CAS numbers as identifiers, and enforces a rate limit of ~5 requests per second.</p></li>
-<li><p>Always call <code class="docutils literal notranslate"><span class="pre">r.raise_for_status()</span></code> after an HTTP request, and read the API documentation before writing query code.</p></li>
+<li><p>Always call <code class="docutils literal notranslate"><span class="pre">r.raise_for_status()</span></code> after an HTTP request, use <code class="docutils literal notranslate"><span class="pre">try/except</span></code> in batch loops to handle failures gracefully, and add <code class="docutils literal notranslate"><span class="pre">time.sleep()</span></code> between requests to respect rate limits.</p></li>
+<li><p>Authenticated APIs accept keys as query parameters or <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> headers — always load keys from environment variables rather than hard-coding them.</p></li>
 <li><p>Python wrapper libraries such as PubChemPy are the most convenient option when available: they expose Pythonic attribute access, handle all URL construction and JSON parsing internally, and reduce the chance of fragile hardcoded paths.</p></li>
 </ul>
 </section>
 <section id="additional-reading">
 <h2>Additional Reading<a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<p><strong>PubChem and general API tooling:</strong></p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest-tutorial">PubChem PUG REST Tutorial</a></p></li>
 <li><p><a class="reference external" href="https://pubchempy.readthedocs.io/">PubChemPy documentation</a></p></li>
 <li><p><a class="reference external" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup documentation</a></p></li>
 <li><p><a class="reference external" href="https://jsoncrack.com/">JSON Crack — interactive JSON visualizer</a></p></li>
 <li><p><a class="reference external" href="https://realpython.com/api-integration-in-python/">Real Python: API Integration in Python</a></p></li>
+</ul>
+<p><strong>Other scientific databases with REST or Python APIs relevant to chemical engineering:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Database</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Interface</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://materialsproject.org/">Materials Project</a></p></td>
+<td><p>Computational materials: crystal structures, electronic properties, phase diagrams</p></td>
+<td><p>REST API + <a class="reference external" href="https://api.materialsproject.org/"><code class="docutils literal notranslate"><span class="pre">mp-api</span></code></a> Python client; free key required</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://comptox.epa.gov/dashboard/">EPA CompTox Dashboard</a></p></td>
+<td><p>Chemical safety, environmental fate, toxicity data</p></td>
+<td><p><a class="reference external" href="https://api-ccte.epa.gov/docs/">REST API</a>; free key required</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://aflowlib.org/">AFLOW</a></p></td>
+<td><p>High-throughput computational materials (alloys, intermetallics)</p></td>
+<td><p><a class="reference external" href="http://aflowlib.org/aflowwiki/">REST API</a>; no authentication required</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.chemspider.com/">ChemSpider</a></p></td>
+<td><p>Comprehensive chemical structures (~100 million compounds, Royal Society of Chemistry)</p></td>
+<td><p>REST API; free key required</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.crystallography.net/cod/">Crystallography Open Database</a></p></td>
+<td><p>Crystal structures of organic, inorganic, and metal-organic compounds</p></td>
+<td><p>REST API; no authentication required</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://nomad-lab.eu/">NOMAD</a></p></td>
+<td><p>Computational materials science calculations and workflows</p></td>
+<td><p>REST API; no authentication required for public data</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Thermophysical property libraries</strong> (Python APIs wrapping NIST REFPROP, DIPPR, and similar sources, without requiring HTTP requests):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.coolprop.org/"><code class="docutils literal notranslate"><span class="pre">CoolProp</span></code></a> — thermodynamic and transport properties for pure fluids and mixtures</p></li>
+<li><p><a class="reference external" href="https://thermo.readthedocs.io/"><code class="docutils literal notranslate"><span class="pre">thermo</span></code></a> — comprehensive pure-component and mixture property estimation</p></li>
 </ul>
 </section>
 </section>
@@ -899,10 +1110,12 @@ IUPAC:    ethanol
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website-data">Website Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-requests-package">The <code class="docutils literal notranslate"><span class="pre">requests</span></code> Package</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#json-files">JSON Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-for-tabular-web-data">pandas for Tabular Web Data</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-programming-interfaces-apis">Application Programming Interfaces (APIs)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restful-apis">RESTful APIs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authenticated-apis">Authenticated APIs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-apis-pubchempy">Python APIs: PubChemPy</a></li>
 </ul>
 </li>

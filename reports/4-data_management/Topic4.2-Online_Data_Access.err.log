@@ -17,18 +17,31 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# conda install -c conda-forge pubchempy
-# or: pip install pubchempy
-import pubchempy as pcp
+import io
+
+url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol,acetone,benzene/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV'
+r = requests.get(url)
+r.raise_for_status()
+df = pd.read_csv(io.StringIO(r.text))
+print(df)
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Cell [0;32mIn[12], line 3[0m
-[1;32m      1[0m [38;5;66;03m# conda install -c conda-forge pubchempy[39;00m
-[1;32m      2[0m [38;5;66;03m# or: pip install pubchempy[39;00m
-[0;32m----> 3[0m [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mpubchempy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[38;5;21;01mpcp[39;00m
+[0;31mHTTPError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[9], line 5[0m
+[1;32m      3[0m url [38;5;241m=[39m [38;5;124m'[39m[38;5;124mhttps://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol,acetone,benzene/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV[39m[38;5;124m'[39m
+[1;32m      4[0m r [38;5;241m=[39m requests[38;5;241m.[39mget(url)
+[0;32m----> 5[0m [43mr[49m[38;5;241;43m.[39;49m[43mraise_for_status[49m[43m([49m[43m)[49m
+[1;32m      6[0m df [38;5;241m=[39m pd[38;5;241m.[39mread_csv(io[38;5;241m.[39mStringIO(r[38;5;241m.[39mtext))
+[1;32m      7[0m [38;5;28mprint[39m(df)
 
-[0;31mModuleNotFoundError[0m: No module named 'pubchempy'
-ModuleNotFoundError: No module named 'pubchempy'
+File [0;32m/opt/homebrew/Caskroom/miniforge/base/envs/DA4CHE/lib/python3.10/site-packages/requests/models.py:1026[0m, in [0;36mResponse.raise_for_status[0;34m(self)[0m
+[1;32m   1021[0m     http_error_msg [38;5;241m=[39m (
+[1;32m   1022[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;132;01m{[39;00m[38;5;28mself[39m[38;5;241m.[39mstatus_code[38;5;132;01m}[39;00m[38;5;124m Server Error: [39m[38;5;132;01m{[39;00mreason[38;5;132;01m}[39;00m[38;5;124m for url: [39m[38;5;132;01m{[39;00m[38;5;28mself[39m[38;5;241m.[39murl[38;5;132;01m}[39;00m[38;5;124m"[39m
+[1;32m   1023[0m     )
+[1;32m   1025[0m [38;5;28;01mif[39;00m http_error_msg:
+[0;32m-> 1026[0m     [38;5;28;01mraise[39;00m HTTPError(http_error_msg, response[38;5;241m=[39m[38;5;28mself[39m)
+
+[0;31mHTTPError[0m: 404 Client Error: PUGREST.NotFound for url: https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol,acetone,benzene/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV
+HTTPError: 404 Client Error: PUGREST.NotFound for url: https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol,acetone,benzene/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV
 
