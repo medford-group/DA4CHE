@@ -94,7 +94,6 @@ for i, ax in enumerate(axes.ravel()):
     show_image(X_mnist, i, ax=ax, title=f'Digit: {y_mnist[i]}')
 plt.suptitle('Sample MNIST digits', y=1.02)
 plt.tight_layout()
-plt.show()
 ```
 
 Each row of `X_mnist` is a 64-element vector. The `show_image` helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — a point we will return to in the Feature Engineering module.
@@ -144,7 +143,6 @@ ax3d.set_ylabel('Feature 1')
 ax3d.set_zlabel('Feature 2')
 ax3d.set_title('3-D view (classes separate)')
 plt.tight_layout()
-plt.show()
 ```
 
 Adding the third feature separates the two classes that overlapped in 2D — a concrete illustration of the blessing. However, if Feature 3 were pure noise, the added dimension would only degrade model performance.
@@ -174,7 +172,6 @@ for ax, stat, title in zip(axes,
                             ['Mean', 'Std Dev', 'Max']):
     show_image(stat, 0, ax=ax, title=title)
 plt.tight_layout()
-plt.show()
 ```
 
 The mean image shows that pixel intensities are highest near the center of the 8×8 grid — all digits are roughly centered. The standard deviation image highlights pixels that vary a lot across digits; these are the most *informative* pixels. The maximum image reveals that several corner pixels are essentially always zero: their maximum value is near zero, meaning they carry no information regardless of which digit is shown. These zero-variance features are candidates for removal before modeling.
@@ -219,7 +216,6 @@ for i, ax in enumerate(axes.ravel()):
     ax.set_yticks([])
 plt.suptitle('MNIST: per-pixel histograms', y=1.01)
 plt.tight_layout()
-plt.show()
 ```
 
 :::{note}
@@ -253,7 +249,6 @@ for i, fi in enumerate(features):
         if i == n - 1:
             ax.set_xlabel(f'px {fj}', fontsize=8)
 plt.tight_layout()
-plt.show()
 ```
 
 The `seaborn` library provides `pairplot` as a convenient one-liner that produces the same layout with sensible defaults:
@@ -261,7 +256,6 @@ The `seaborn` library provides `pairplot` as a convenient one-liner that produce
 ```{code-cell} ipython3
 mnist_df = pd.DataFrame(X_mnist, columns=[f'px{i}' for i in range(X_mnist.shape[1])])
 sns.pairplot(mnist_df[[f'px{i}' for i in features]], plot_kws={'s': 2, 'alpha': 0.3})
-plt.show()
 ```
 
 :::{note}
@@ -274,7 +268,6 @@ For the Dow dataset with continuous process variables, the pairplot shows smooth
 include_cols = list(df_dow_clean.columns[1:5])
 sns.pairplot(df_dow_clean[include_cols].apply(pd.to_numeric, errors='coerce').dropna(),
              plot_kws={'s': 2, 'alpha': 0.2})
-plt.show()
 ```
 
 ### Joint Plots
@@ -291,7 +284,6 @@ jp = sns.jointplot(
     kind='reg',
     scatter_kws={'s': 2, 'alpha': 0.2},
 )
-plt.show()
 ```
 
 The `kind='reg'` option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.
@@ -310,7 +302,6 @@ sns.heatmap(corr_mnist, annot=True, fmt='.2f',
             annot_kws={'fontsize': 8}, ax=ax)
 ax.set_title('MNIST pixel correlations (features 2–10)')
 plt.tight_layout()
-plt.show()
 ```
 
 For the Dow dataset, feature labels make the heatmap directly interpretable:
@@ -322,7 +313,6 @@ fig, ax = plt.subplots(figsize=(6, 5))
 sns.heatmap(corr_dow, annot=True, fmt='.2f', ax=ax)
 ax.set_title('Dow dataset: first 4 feature correlations')
 plt.tight_layout()
-plt.show()
 ```
 
 **Demonstration: Correlation as a regression slope**
