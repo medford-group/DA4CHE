@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '4-data_management/Topic4.1-Data_Organization';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Online Data Access and APIs" href="Topic4.2-Online_Data_Access.html" />
     <link rel="prev" title="Data Management" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -200,6 +201,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Data Management</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
 </ul>
 </details></li>
 </ul>
@@ -2061,7 +2063,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.73 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.63 s
 </pre></div>
 </div>
 </div>
@@ -2165,9 +2167,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0008 s
-HDF5 one column:  0.0012 s
-In-memory slice:  0.000398 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0005 s
+HDF5 one column:  0.0004 s
+In-memory slice:  0.000152 s
 </pre></div>
 </div>
 </div>
@@ -2212,8 +2214,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0604 s
-Parquet read:  0.0489 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0350 s
+Parquet read:  0.0376 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
@@ -2353,6 +2355,15 @@ foundational principles for organizing tabular data; <a class="reference externa
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Data Management</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="Topic4.2-Online_Data_Access.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Online Data Access and APIs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

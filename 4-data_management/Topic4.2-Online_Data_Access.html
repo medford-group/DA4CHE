@@ -1,0 +1,968 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Online Data Access and APIs &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '4-data_management/Topic4.2-Online_Data_Access';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Data Organization" href="Topic4.1-Data_Organization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Data Management</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Online Data Access and APIs</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/4-data_management/Topic4.2-Online_Data_Access.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Online Data Access and APIs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website-data">Website Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-requests-package">The <code class="docutils literal notranslate"><span class="pre">requests</span></code> Package</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#json-files">JSON Files</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-programming-interfaces-apis">Application Programming Interfaces (APIs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restful-apis">RESTful APIs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-apis-pubchempy">Python APIs: PubChemPy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="online-data-access-and-apis">
+<h1>Online Data Access and APIs<a class="headerlink" href="#online-data-access-and-apis" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
+<p>By the end of this chapter, you will be able to:</p>
+<ul class="simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">requests</span></code> library to retrieve data from web URLs</p></li>
+<li><p>Parse and navigate nested JSON data structures to extract chemical properties</p></li>
+<li><p>Construct RESTful API queries using URL parameters</p></li>
+<li><p>Use the PubChemPy Python library to access chemical data programmatically</p></li>
+<li><p>Select the appropriate data access strategy for a given online source</p></li>
+</ul>
+</div>
+<p>A large amount of scientific data is only available through the internet. In this chapter we explore three progressively more convenient strategies for accessing online data: raw HTTP requests, RESTful APIs, and Python library APIs. Throughout the chapter we use the <a class="reference external" href="https://pubchem.ncbi.nlm.nih.gov/">PubChem</a> database — a freely available repository of chemical and biological data maintained by the NCBI — as a running example.</p>
+<section id="website-data">
+<h2>Website Data<a class="headerlink" href="#website-data" title="Link to this heading">#</a></h2>
+<section id="the-requests-package">
+<h3>The <code class="docutils literal notranslate"><span class="pre">requests</span></code> Package<a class="headerlink" href="#the-requests-package" title="Link to this heading">#</a></h3>
+<p>The primary Python package for making HTTP requests is <code class="docutils literal notranslate"><span class="pre">requests</span></code>. It sends the same kind of request your browser makes when you load a page, and returns whatever the server responds with. For the PubChem page for ethanol, that response is HTML:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">page</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/compound/Ethanol&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>      <span class="c1"># 200 means success</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">500</span><span class="p">])</span>       <span class="c1"># first 500 characters of the HTML</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>200
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;robots&quot; content=&quot;index,follow,noarchive&quot;&gt;
+    &lt;title&gt;Ethanol | CH3CH2OH | CID 702 - PubChem&lt;/title&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+      window.ncbi_startTime = new Date ()
+      
+    &lt;/script&gt;
+    &lt;script type=&quot;application/ld+json&quot;&gt;
+      {
+          &quot;@context&quot;: &quot;https://schema.org&quot;,
+          &quot;@type&quot;: &quot;Organization&quot;,
+          &quot;name&quot;: &quot;PubChem&quot;,
+          &quot;url&quot;: &quot;https://pubchem.ncbi.nlm.nih.gov&quot;,
+       
+</pre></div>
+</div>
+</div>
+</div>
+<p>The full response is thousands of lines of HTML markup — mostly navigation elements, styling, and JavaScript. Extracting specific values from raw HTML is possible using packages like <a class="reference external" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a>, but it is time-consuming and fragile: if the website updates its layout, your code breaks silently.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Modern web applications frequently render content with JavaScript <em>after</em> the initial page load. A plain <code class="docutils literal notranslate"><span class="pre">requests.get()</span></code> call returns only the initial server response, which may be empty or incomplete for JavaScript-heavy sites — even when the URL works fine in your browser. In those cases, browser automation tools such as <a class="reference external" href="https://playwright.dev/python/">Playwright</a> or <a class="reference external" href="https://selenium-python.readthedocs.io/">Selenium</a> are needed to run the JavaScript before extracting data. For structured scientific databases, using an API (covered below) avoids this problem entirely.</p>
+</div>
+</section>
+<section id="json-files">
+<h3>JSON Files<a class="headerlink" href="#json-files" title="Link to this heading">#</a></h3>
+<p>A more structured approach is to download data in a machine-readable format. PubChem offers a “Download” button that returns the page data as a JSON file. JSON (JavaScript Object Notation) is a widely used text format for structured data; it maps directly onto Python dictionaries and lists.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data/ethanol.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">etoh</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="c1"># Inspect the top-level structure</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">etoh</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of top-level sections: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">etoh</span><span class="p">[</span><span class="s2">&quot;Record&quot;</span><span class="p">][</span><span class="s2">&quot;Section&quot;</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Record&#39;]
+Number of top-level sections: 20
+</pre></div>
+</div>
+</div>
+</div>
+<p>JSON files can be deeply nested. Before writing extraction code, it helps to explore the structure with an interactive viewer such as <a class="reference external" href="https://jsoncrack.com/">JSON Crack</a> or the built-in JSON viewer in VS Code. After navigating the PubChem compound-page JSON, we can extract the SMILES string and molecular weight:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SMILES</span> <span class="o">=</span> <span class="n">etoh</span><span class="p">[</span><span class="s1">&#39;Record&#39;</span><span class="p">][</span><span class="s1">&#39;Section&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="s1">&#39;Section&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;Section&#39;</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s1">&#39;Information&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Value&#39;</span><span class="p">][</span><span class="s1">&#39;StringWithMarkup&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;String&#39;</span><span class="p">]</span>
+<span class="n">MW</span> <span class="o">=</span> <span class="n">etoh</span><span class="p">[</span><span class="s1">&#39;Record&#39;</span><span class="p">][</span><span class="s1">&#39;Section&#39;</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s1">&#39;Section&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Section&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Information&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Value&#39;</span><span class="p">][</span><span class="s1">&#39;Number&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SMILES: </span><span class="si">{</span><span class="n">SMILES</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Molecular Weight: </span><span class="si">{</span><span class="n">MW</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SMILES: CCO
+Molecular Weight: 46.07
+</pre></div>
+</div>
+</div>
+</div>
+<p>The path lengths here reveal why this approach does not scale well: every index was found by manual inspection, and those indices differ between compounds with different amounts of registered data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What goes wrong with a new compound?</strong> The extraction paths above rely on the <em>position</em> of each section in the PubChem full-page JSON. PubChem organizes sections differently depending on how much data exists for a compound — a molecule with fewer synonyms or missing experimental measurements will have different section indices, causing a hardcoded path to either raise a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> or silently return the wrong property. The API approaches introduced later in this chapter eliminate this fragility.</p>
+</div>
+<p>PubChem also exposes a much simpler JSON format that stores all compound properties in a flat list. We will see how to obtain this via the REST API; for now, a pre-downloaded copy is provided:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data/ethanol_simple.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">etoh_simple</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">etoh_simple</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;PC_Compounds&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each entry in the <code class="docutils literal notranslate"><span class="pre">props</span></code> list is a dictionary with a <code class="docutils literal notranslate"><span class="pre">urn</span></code> (identifying the property by label and name) and a <code class="docutils literal notranslate"><span class="pre">value</span></code>. Extraction by hardcoded index still works, but remains fragile:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Index-based access — works for ethanol, but may break for other compounds</span>
+<span class="n">SMILES</span> <span class="o">=</span> <span class="n">etoh_simple</span><span class="p">[</span><span class="s1">&#39;PC_Compounds&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;props&#39;</span><span class="p">][</span><span class="mi">18</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;sval&#39;</span><span class="p">]</span>
+<span class="n">MW</span> <span class="o">=</span> <span class="n">etoh_simple</span><span class="p">[</span><span class="s1">&#39;PC_Compounds&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;props&#39;</span><span class="p">][</span><span class="mi">17</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;fval&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SMILES: </span><span class="si">{</span><span class="n">SMILES</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Molecular Weight: </span><span class="si">{</span><span class="n">MW</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SMILES: CCO
+Molecular Weight: 46.07
+</pre></div>
+</div>
+</div>
+</div>
+<p>A more robust approach searches by label rather than relying on a fixed position:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_prop</span><span class="p">(</span><span class="n">compound_json</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the value dict for a property identified by its URN label (and optional name).&quot;&quot;&quot;</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="n">compound_json</span><span class="p">[</span><span class="s1">&#39;PC_Compounds&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;props&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">props</span><span class="p">:</span>
+        <span class="n">urn</span> <span class="o">=</span> <span class="n">prop</span><span class="p">[</span><span class="s1">&#39;urn&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">urn</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">urn</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">prop</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">get_prop</span><span class="p">(</span><span class="n">etoh_simple</span><span class="p">,</span> <span class="s1">&#39;SMILES&#39;</span><span class="p">,</span> <span class="s1">&#39;Canonical&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_prop</span><span class="p">(</span><span class="n">etoh_simple</span><span class="p">,</span> <span class="s1">&#39;Molecular Weight&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;sval&#39;: &#39;CCO&#39;}
+{&#39;fval&#39;: 46.07}
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Demonstration: Counting C–H bonds from JSON data</strong></p>
+<p>The simple JSON format includes atom and bond arrays that make structural calculations straightforward. Each atom entry carries an atomic number (C = 6, H = 1, O = 8), and each bond entry lists two atom IDs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bonds</span> <span class="o">=</span> <span class="n">etoh_simple</span><span class="p">[</span><span class="s1">&#39;PC_Compounds&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;bonds&#39;</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">etoh_simple</span><span class="p">[</span><span class="s1">&#39;PC_Compounds&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;atoms&#39;</span><span class="p">]</span>
+
+<span class="c1"># Build a mapping from atom ID to atomic number</span>
+<span class="n">atom_element</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">atoms</span><span class="p">[</span><span class="s1">&#39;aid&#39;</span><span class="p">],</span> <span class="n">atoms</span><span class="p">[</span><span class="s1">&#39;element&#39;</span><span class="p">]))</span>
+
+<span class="n">ch_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bonds</span><span class="p">[</span><span class="s1">&#39;aid1&#39;</span><span class="p">],</span> <span class="n">bonds</span><span class="p">[</span><span class="s1">&#39;aid2&#39;</span><span class="p">]):</span>
+    <span class="n">elements</span> <span class="o">=</span> <span class="p">{</span><span class="n">atom_element</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">atom_element</span><span class="p">[</span><span class="n">a2</span><span class="p">]}</span>
+    <span class="k">if</span> <span class="n">elements</span> <span class="o">==</span> <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">}:</span>    <span class="c1"># carbon (6) bonded to hydrogen (1)</span>
+        <span class="n">ch_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of C–H bonds in ethanol: </span><span class="si">{</span><span class="n">ch_count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># expected: 5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of C–H bonds in ethanol: 5
+</pre></div>
+</div>
+</div>
+</div>
+<p>The set-based check <code class="docutils literal notranslate"><span class="pre">{6,</span> <span class="pre">1}</span></code> handles both bond orientations (C→H and H→C) without a separate conditional branch. Ethanol has two carbons bearing a total of five hydrogens (CH₃–CH₂–), so the expected count is 5.</p>
+<div class="exercise admonition" id="ex-dm-json-molform">
+
+<p class="admonition-title"><span class="caption-number">Exercise 58 </span></p>
+<section id="exercise-content">
+<p>Using <code class="docutils literal notranslate"><span class="pre">ethanol_simple.json</span></code>, write a function <code class="docutils literal notranslate"><span class="pre">get_formula(compound_json)</span></code> that returns the molecular formula string (e.g. <code class="docutils literal notranslate"><span class="pre">'C2H6O'</span></code>) by searching the <code class="docutils literal notranslate"><span class="pre">props</span></code> list by its <code class="docutils literal notranslate"><span class="pre">'Molecular</span> <span class="pre">Formula'</span></code> label rather than using a hardcoded index. Test it on the loaded ethanol data.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="application-programming-interfaces-apis">
+<h2>Application Programming Interfaces (APIs)<a class="headerlink" href="#application-programming-interfaces-apis" title="Link to this heading">#</a></h2>
+<p>An <strong>Application Programming Interface (API)</strong> is a defined contract that lets one piece of software request services or data from another. APIs are not limited to online data — NumPy and scikit-learn expose APIs — but they are especially prevalent in data science because they make accessing remote databases far more convenient than manual downloading or HTML scraping.</p>
+<section id="restful-apis">
+<h3>RESTful APIs<a class="headerlink" href="#restful-apis" title="Link to this heading">#</a></h3>
+<p><strong>REST</strong> (Representational State Transfer) is a widely adopted protocol for web APIs. In a RESTful system, a request is encoded entirely within a URL: the resource you want and the format you want it in are specified as path segments. Because the entire query is a URL, RESTful APIs can be called with a plain <code class="docutils literal notranslate"><span class="pre">requests.get()</span></code> — no special client is required.</p>
+<figure class="align-default" id="fig-dm-restful">
+<a class="reference internal image-reference" href="../_images/RESTful.png"><img alt="../_images/RESTful.png" src="../_images/RESTful.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Structure of a RESTful API query. The URL is composed of a base endpoint (prolog), a resource specifier (input), an operation, and the desired output format.</span><a class="headerlink" href="#fig-dm-restful" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The <a class="reference external" href="https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest">PubChem PUG REST API</a> follows this pattern precisely:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Example</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Prolog</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">https://pubchem.ncbi.nlm.nih.gov/rest/pug</span></code></p></td>
+<td><p>Base endpoint</p></td>
+</tr>
+<tr class="row-odd"><td><p>Input</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/compound/name/ethanol</span></code></p></td>
+<td><p>Look up by common name</p></td>
+</tr>
+<tr class="row-even"><td><p>Operation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/cids</span></code></p></td>
+<td><p>Return compound IDs</p></td>
+</tr>
+<tr class="row-odd"><td><p>Output</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/TXT</span></code></p></td>
+<td><p>Format as plain text</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/cids/TXT&#39;</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>702
+</pre></div>
+</div>
+</div>
+</div>
+<p>The name field is flexible enough to accept CAS numbers directly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># CAS number for ethanol is 64-17-5</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/64-17-5/cids/TXT&#39;</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>702
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the compound is not found, PubChem returns a structured error response rather than silently returning empty content:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/whiskey/cids/TXT&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Status: 404
+Code: PUGREST.NotFound
+Message: No CID found
+Detail: No CID found that matches the given name
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A few practical notes about RESTful APIs in general:</p>
+<ul class="simple">
+<li><p><strong>Authentication</strong>: Many APIs require an API key or token. PubChem does not require one for basic access, but higher-volume or commercial use cases often do.</p></li>
+<li><p><strong>Rate limits</strong>: PubChem enforces a limit of approximately 5 requests per second. For batch queries over many compounds, insert a short delay: <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">time;</span> <span class="pre">time.sleep(0.2)</span></code>.</p></li>
+<li><p><strong>Error handling</strong>: Always call <code class="docutils literal notranslate"><span class="pre">r.raise_for_status()</span></code> before parsing the response, or check <code class="docutils literal notranslate"><span class="pre">r.status_code</span> <span class="pre">==</span> <span class="pre">200</span></code> explicitly.</p></li>
+<li><p><strong>Documentation</strong>: Always read the API documentation before writing query code. For PubChem, see the <a class="reference external" href="https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest-tutorial">PUG REST tutorial</a>.</p></li>
+</ul>
+</div>
+<p><strong>Demonstration: Fetching compound records via the REST API</strong></p>
+<p>The REST API can return the full compound JSON record for any compound by name or CAS number — the same structure as <code class="docutils literal notranslate"><span class="pre">ethanol_simple.json</span></code> — without any manual downloading. Combining this with the <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> helper from the previous section gives a fully general property lookup:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_compound_json</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch the PubChem compound JSON record for a name or CAS number.&quot;&quot;&quot;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s1">/record/json&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_smiles</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the first SMILES string for a compound by name or CAS number.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_compound_json</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_prop</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;SMILES&#39;</span><span class="p">)[</span><span class="s1">&#39;sval&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">get_smiles</span><span class="p">(</span><span class="s1">&#39;ethanol&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_smiles</span><span class="p">(</span><span class="s1">&#39;64-17-5&#39;</span><span class="p">))</span>    <span class="c1"># same compound via CAS number</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_smiles</span><span class="p">(</span><span class="s1">&#39;acetone&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCO
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCO
+CC(=O)C
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is substantially more convenient and robust than navigating the full-page JSON: one function call returns the compound record, and <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> extracts any property by its human-readable label.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>API versioning in practice.</strong> The local <code class="docutils literal notranslate"><span class="pre">ethanol_simple.json</span></code> file (downloaded in 2019) stores SMILES under the property name <code class="docutils literal notranslate"><span class="pre">'Canonical'</span></code>. The current PubChem API returns the same label (<code class="docutils literal notranslate"><span class="pre">'SMILES'</span></code>) but uses updated names <code class="docutils literal notranslate"><span class="pre">'Absolute'</span></code> and <code class="docutils literal notranslate"><span class="pre">'Connectivity'</span></code> instead. This is a real example of API drift: the underlying data did not change, but the metadata describing it did. Querying only by <code class="docutils literal notranslate"><span class="pre">label</span></code> (and ignoring <code class="docutils literal notranslate"><span class="pre">name</span></code>) is more resilient to this kind of versioning change.</p>
+</div>
+<div class="exercise admonition" id="ex-dm-rest-multi-prop">
+
+<p class="admonition-title"><span class="caption-number">Exercise 59 </span></p>
+<section id="exercise-content">
+<p>Write a function <code class="docutils literal notranslate"><span class="pre">get_properties(identifier,</span> <span class="pre">labels)</span></code> that takes a compound name or CAS number and a list of property label strings (e.g. <code class="docutils literal notranslate"><span class="pre">['Molecular</span> <span class="pre">Weight',</span> <span class="pre">'Molecular</span> <span class="pre">Formula']</span></code>) and returns a dictionary mapping each label to its extracted value. Use <code class="docutils literal notranslate"><span class="pre">get_compound_json</span></code> and <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> as building blocks. Test your function on aspirin (CAS 50-78-4).</p>
+</section>
+</div>
+</section>
+<section id="python-apis-pubchempy">
+<h3>Python APIs: PubChemPy<a class="headerlink" href="#python-apis-pubchempy" title="Link to this heading">#</a></h3>
+<p>RESTful APIs are powerful but still require URL construction, response parsing, and manual JSON navigation. For widely-used databases, the community typically builds a <strong>Python wrapper library</strong> that handles all of this internally and exposes an intuitive, Pythonic interface.</p>
+<p><a class="reference external" href="https://pubchempy.readthedocs.io/">PubChemPy</a> is the official Python wrapper for the PubChem REST API. Install it via conda-forge (preferred in this course environment) or pip:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># conda install -c conda-forge pubchempy</span>
+<span class="c1"># or: pip install pubchempy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pubchempy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pcp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>PubChemPy returns <code class="docutils literal notranslate"><span class="pre">Compound</span></code> objects whose attributes map directly to PubChem properties, with no URL construction or JSON parsing required:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compounds</span> <span class="o">=</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_compounds</span><span class="p">(</span><span class="s1">&#39;Ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<span class="n">etoh</span> <span class="o">=</span> <span class="n">compounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SMILES:   </span><span class="si">{</span><span class="n">etoh</span><span class="o">.</span><span class="n">canonical_smiles</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MW:       </span><span class="si">{</span><span class="n">etoh</span><span class="o">.</span><span class="n">molecular_weight</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Formula:  </span><span class="si">{</span><span class="n">etoh</span><span class="o">.</span><span class="n">molecular_formula</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IUPAC:    </span><span class="si">{</span><span class="n">etoh</span><span class="o">.</span><span class="n">iupac_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SMILES:   CCO
+MW:       46.07
+Formula:  C2H6O
+IUPAC:    ethanol
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_40601/1066236847.py:4: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
+  print(f&#39;SMILES:   {etoh.canonical_smiles}&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>For targeted queries that return only specific properties — minimizing data transfer — <code class="docutils literal notranslate"><span class="pre">get_properties</span></code> accepts a list of attribute names:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">props</span> <span class="o">=</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;CanonicalSMILES&#39;</span><span class="p">,</span> <span class="s1">&#39;MolecularWeight&#39;</span><span class="p">,</span> <span class="s1">&#39;MolecularFormula&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;ethanol&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;CID&#39;: 702, &#39;MolecularFormula&#39;: &#39;C2H6O&#39;, &#39;MolecularWeight&#39;: &#39;46.07&#39;, &#39;ConnectivitySMILES&#39;: &#39;CCO&#39;}]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Demonstration: Counting C–H bonds with PubChemPy</strong></p>
+<p>Using PubChemPy, the C–H bond counting task from the JSON section becomes considerably more readable. The <code class="docutils literal notranslate"><span class="pre">Compound</span></code> object exposes <code class="docutils literal notranslate"><span class="pre">atoms</span></code> and <code class="docutils literal notranslate"><span class="pre">bonds</span></code> attributes that mirror the JSON structure but with named Python attributes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">count_ch_bonds</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of C–H bonds in a compound given its name or CAS number.&quot;&quot;&quot;</span>
+    <span class="n">compound</span> <span class="o">=</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_compounds</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="mi">1</span> <span class="k">for</span> <span class="n">bond</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">bonds</span>
+        <span class="k">if</span> <span class="p">{</span><span class="n">compound</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">bond</span><span class="o">.</span><span class="n">aid1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">element</span><span class="p">,</span>
+            <span class="n">compound</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">bond</span><span class="o">.</span><span class="n">aid2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">element</span><span class="p">}</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">count</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ethanol:  </span><span class="si">{</span><span class="n">count_ch_bonds</span><span class="p">(</span><span class="s1">&#39;ethanol&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;methane:  </span><span class="si">{</span><span class="n">count_ch_bonds</span><span class="p">(</span><span class="s1">&#39;methane&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 4</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;benzene:  </span><span class="si">{</span><span class="n">count_ch_bonds</span><span class="p">(</span><span class="s1">&#39;benzene&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 6</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ethanol:  5
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>methane:  4
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>benzene:  6
+</pre></div>
+</div>
+</div>
+</div>
+<p>The set-based check <code class="docutils literal notranslate"><span class="pre">{'C',</span> <span class="pre">'H'}</span></code> handles both bond orientations without separate branches, and testing on three compounds with known answers verifies the function is correct.</p>
+<p>A few general notes on working with data APIs:</p>
+<ul class="simple">
+<li><p>Every data source has a different structure and standards — always read the documentation.</p></li>
+<li><p>APIs can become outdated if unmaintained; check for a “last updated” date or activity on the repository.</p></li>
+<li><p>Python wrappers are the most convenient option when available, but may lag behind the underlying REST API.</p></li>
+<li><p>Some APIs require authentication keys, and most enforce rate limits that must be respected.</p></li>
+</ul>
+<div class="exercise admonition" id="ex-dm-pcpy-batch-props">
+
+<p class="admonition-title"><span class="caption-number">Exercise 60 </span></p>
+<section id="exercise-content">
+<p>Write a function <code class="docutils literal notranslate"><span class="pre">batch_properties(names)</span></code> that accepts a list of compound names and returns a <code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame with columns <code class="docutils literal notranslate"><span class="pre">Name</span></code>, <code class="docutils literal notranslate"><span class="pre">MolecularFormula</span></code>, <code class="docutils literal notranslate"><span class="pre">MolecularWeight</span></code>, and <code class="docutils literal notranslate"><span class="pre">CanonicalSMILES</span></code>. Use <code class="docutils literal notranslate"><span class="pre">pcp.get_properties</span></code> to minimize the number of API calls. Test it on ethanol, acetone, and benzene.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">requests</span></code> library retrieves raw HTTP content from any URL, but parsing HTML is fragile and should be a last resort; modern JavaScript-heavy sites may require browser automation tools instead.</p></li>
+<li><p>JSON is a machine-readable format that maps directly to Python dicts and lists; interactive viewers (JSON Crack, VS Code) help navigate complex nested structures.</p></li>
+<li><p>Hardcoded index-based JSON extraction is brittle — prefer label-based searches, as demonstrated by the <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> helper, for code that must work across multiple compounds.</p></li>
+<li><p>RESTful APIs encode queries in the URL and return structured data; the PubChem PUG REST API requires no authentication, accepts names and CAS numbers as identifiers, and enforces a rate limit of ~5 requests per second.</p></li>
+<li><p>Always call <code class="docutils literal notranslate"><span class="pre">r.raise_for_status()</span></code> after an HTTP request, and read the API documentation before writing query code.</p></li>
+<li><p>Python wrapper libraries such as PubChemPy are the most convenient option when available: they expose Pythonic attribute access, handle all URL construction and JSON parsing internally, and reduce the chance of fragile hardcoded paths.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2>Additional Reading<a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest-tutorial">PubChem PUG REST Tutorial</a></p></li>
+<li><p><a class="reference external" href="https://pubchempy.readthedocs.io/">PubChemPy documentation</a></p></li>
+<li><p><a class="reference external" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup documentation</a></p></li>
+<li><p><a class="reference external" href="https://jsoncrack.com/">JSON Crack — interactive JSON visualizer</a></p></li>
+<li><p><a class="reference external" href="https://realpython.com/api-integration-in-python/">Real Python: API Integration in Python</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./4-data_management"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic4.1-Data_Organization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Organization</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website-data">Website Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-requests-package">The <code class="docutils literal notranslate"><span class="pre">requests</span></code> Package</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#json-files">JSON Files</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-programming-interfaces-apis">Application Programming Interfaces (APIs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restful-apis">RESTful APIs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-apis-pubchempy">Python APIs: PubChemPy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
