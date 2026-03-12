@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Clustering" href="Topic5.3-Clustering.html" />
     <link rel="prev" title="High-Dimensional Data" href="Topic5.1-High_Dimensional_Data.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -206,6 +207,7 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Exploratory Data Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering.html">Clustering</a></li>
 </ul>
 </details></li>
 </ul>
@@ -644,7 +646,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12eed04c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14af37940&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -796,7 +798,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x145f74c40&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14e790c40&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -855,7 +857,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x107e8bdc0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14e741270&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -973,11 +975,11 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3446
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3575
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/5d5080aa4d0fafb6ea5bb181cb7efc9d5d81f77adfa669aa254aa079e32a4f38.png" src="../_images/5d5080aa4d0fafb6ea5bb181cb7efc9d5d81f77adfa669aa254aa079e32a4f38.png" />
+<img alt="../_images/565e713f719f9b6480780f750266585635a1744b88d6a6679d1b64083ab2e1cd.png" src="../_images/565e713f719f9b6480780f750266585635a1744b88d6a6679d1b64083ab2e1cd.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1007,10 +1009,10 @@ Stress PCA: 0.5405
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7824
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7666
 </pre></div>
 </div>
-<img alt="../_images/5415956f967a02f8f412a513134368b6a0a56021b01ca432267a2a4b5f48411d.png" src="../_images/5415956f967a02f8f412a513134368b6a0a56021b01ca432267a2a4b5f48411d.png" />
+<img alt="../_images/104814f1be85c39e960904ff1f1699cffcb3e95fa409596479ca903a641ed151.png" src="../_images/104814f1be85c39e960904ff1f1699cffcb3e95fa409596479ca903a641ed151.png" />
 </div>
 </div>
 <p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
@@ -1318,9 +1320,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07379
-Epoch  20  loss = 0.07037
-Epoch  30  loss = 0.06085
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07347
+Epoch  20  loss = 0.07182
+Epoch  30  loss = 0.06250
 </pre></div>
 </div>
 </div>
@@ -1344,7 +1346,7 @@ Epoch  30  loss = 0.06085
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/6d99bc8b44a01d4ffc7ab562108c9c2816b66cdcecdb6eaec1773472405f2269.png" src="../_images/6d99bc8b44a01d4ffc7ab562108c9c2816b66cdcecdb6eaec1773472405f2269.png" />
+<img alt="../_images/454107a440b3c0f3e67df01839f2dd6ad035d8409722f046cdef5d4ca17717b2.png" src="../_images/454107a440b3c0f3e67df01839f2dd6ad035d8409722f046cdef5d4ca17717b2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1372,7 +1374,7 @@ Epoch  30  loss = 0.06085
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/89c1a7d0968e47c82f91be0a12cc911058f94f61404c6508d42f630f0d2d22b2.png" src="../_images/89c1a7d0968e47c82f91be0a12cc911058f94f61404c6508d42f630f0d2d22b2.png" />
+<img alt="../_images/e2f94b1ff5ac9952ca18eb721d445f5ac8bf00c1f331b5b2de7b0004b1d5b6a8.png" src="../_images/e2f94b1ff5ac9952ca18eb721d445f5ac8bf00c1f331b5b2de7b0004b1d5b6a8.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -1460,6 +1462,15 @@ Epoch  30  loss = 0.06085
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">High-Dimensional Data</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="Topic5.3-Clustering.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Clustering</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
