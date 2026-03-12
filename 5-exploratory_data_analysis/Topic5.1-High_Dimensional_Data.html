@@ -401,14 +401,14 @@ document.write(`
 <p>Throughout this chapter we use two contrasting datasets. The <strong>Dow dataset</strong> has 40 continuous process variables from a chemical distillation column — a typical scale for industrial sensor data. The <strong>MNIST dataset</strong> encodes each hand-written digit image as a 64-dimensional pixel vector — a simple example of structured high-dimensional data where every feature has an identical type and scale. Comparing strategies across both datasets builds transferable intuition.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
-<span class="n">clrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#003057&#39;</span><span class="p">,</span> <span class="s1">&#39;#EAAA00&#39;</span><span class="p">,</span> <span class="s1">&#39;#4B8B9B&#39;</span><span class="p">,</span> <span class="s1">&#39;#B3A369&#39;</span><span class="p">,</span> <span class="s1">&#39;#377117&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;#1879DB&#39;</span><span class="p">,</span> <span class="s1">&#39;#8E8B76&#39;</span><span class="p">,</span> <span class="s1">&#39;#F5D580&#39;</span><span class="p">,</span> <span class="s1">&#39;#002233&#39;</span><span class="p">])</span>
+<span class="n">clrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -488,6 +488,9 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/c752cba2d31f53e45dac7a8b172ddb703d3d9d8259980187ee80c5039c2f7b17.png" src="../_images/c752cba2d31f53e45dac7a8b172ddb703d3d9d8259980187ee80c5039c2f7b17.png" />
+</div>
 </div>
 <p>Each row of <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> is a 64-element vector. The <code class="docutils literal notranslate"><span class="pre">show_image</span></code> helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — a point we will return to in the Feature Engineering module.</p>
 <div class="exercise admonition" id="ex-eda-dataset-shapes">
@@ -537,6 +540,9 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/c528cde5c02a5f7f6c81fa94da0db9c92042421cef4218f6707985e4ca1e6617.png" src="../_images/c528cde5c02a5f7f6c81fa94da0db9c92042421cef4218f6707985e4ca1e6617.png" />
+</div>
 </div>
 <p>Adding the third feature separates the two classes that overlapped in 2D — a concrete illustration of the blessing. However, if Feature 3 were pure noise, the added dimension would only degrade model performance.</p>
 <div class="exercise admonition" id="ex-eda-volume-growth">
@@ -567,6 +573,9 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f8a2350f90ec724d1299dc1145c08a9237f3e4267c460ad0b7773a75b3dcb30a.png" src="../_images/f8a2350f90ec724d1299dc1145c08a9237f3e4267c460ad0b7773a75b3dcb30a.png" />
 </div>
 </div>
 <p>The mean image shows that pixel intensities are highest near the center of the 8×8 grid — all digits are roughly centered. The standard deviation image highlights pixels that vary a lot across digits; these are the most <em>informative</em> pixels. The maximum image reveals that several corner pixels are essentially always zero: their maximum value is near zero, meaning they carry no information regardless of which digit is shown. These zero-variance features are candidates for removal before modeling.</p>
@@ -926,6 +935,9 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/a260f8abe44a6212b6cc84a2fe882a9e92bd0e3683c651765041f41fa91c6816.png" src="../_images/a260f8abe44a6212b6cc84a2fe882a9e92bd0e3683c651765041f41fa91c6816.png" />
+</div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -962,19 +974,20 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/56410c0cb2182e240d65b8b278309c940100571c8293d947b7d3f409450bf9dc.png" src="../_images/56410c0cb2182e240d65b8b278309c940100571c8293d947b7d3f409450bf9dc.png" />
+</div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> library provides <code class="docutils literal notranslate"><span class="pre">pairplot</span></code> as a convenient one-liner that produces the same layout with sensible defaults:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mnist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;px</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_mnist</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">mnist_df</span><span class="p">[[</span><span class="sa">f</span><span class="s1">&#39;px</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]],</span> <span class="n">plot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">mnist_df</span><span class="p">[[</span><span class="sa">f</span><span class="s1">&#39;px</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]],</span> <span class="n">plot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">});</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.PairGrid at 0x11f32c940&gt;
-</pre></div>
-</div>
+<img alt="../_images/03a95508c9f987304dce4876d94b97c07ccc10ddd2bcce398a5340b379339465.png" src="../_images/03a95508c9f987304dce4876d94b97c07ccc10ddd2bcce398a5340b379339465.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -986,14 +999,12 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">include_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_dow_clean</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">df_dow_clean</span><span class="p">[</span><span class="n">include_cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span>
-             <span class="n">plot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">})</span>
+             <span class="n">plot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">});</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.PairGrid at 0x12f0fa5c0&gt;
-</pre></div>
-</div>
+<img alt="../_images/5c69fa77b1565837971a8c7b11a8363bd8258101d84080d27501c6ebf523abcf.png" src="../_images/5c69fa77b1565837971a8c7b11a8363bd8258101d84080d27501c6ebf523abcf.png" />
 </div>
 </div>
 <section id="joint-plots">
@@ -1004,14 +1015,17 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_col</span> <span class="o">=</span> <span class="n">df_dow_clean</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>   <span class="c1"># x3: Input to Primary Column Bed 3 Flow</span>
 <span class="n">y_col</span> <span class="o">=</span> <span class="n">df_dow_clean</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>   <span class="c1"># x4: Input to Primary Column Bed 2 Flow</span>
 
-<span class="n">jp</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">x_col</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_col</span><span class="p">,</span>
     <span class="n">data</span><span class="o">=</span><span class="n">df_dow_clean</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span>
     <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;reg&#39;</span><span class="p">,</span>
     <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
-<span class="p">)</span>
+<span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fc99a174798483abca8982e67853d6863042ba7ee150064c471d6e6034b07951.png" src="../_images/fc99a174798483abca8982e67853d6863042ba7ee150064c471d6e6034b07951.png" />
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">kind='reg'</span></code> option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.</p>
@@ -1033,6 +1047,9 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/4e7cc253a46bd402a6d4a92051386e41f9c1b1140914dd7091738611244370e4.png" src="../_images/4e7cc253a46bd402a6d4a92051386e41f9c1b1140914dd7091738611244370e4.png" />
+</div>
 </div>
 <p>For the Dow dataset, feature labels make the heatmap directly interpretable:</p>
 <div class="cell docutils container">
@@ -1045,6 +1062,9 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/461fc0e7754bb3b2c8c136850bd0e4c5388650818ce2acfbb39e396c5725b465.png" src="../_images/461fc0e7754bb3b2c8c136850bd0e4c5388650818ce2acfbb39e396c5725b465.png" />
 </div>
 </div>
 <p><strong>Demonstration: Correlation as a regression slope</strong></p>
