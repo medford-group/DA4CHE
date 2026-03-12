@@ -1,0 +1,511 @@
+---
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+kernelspec:
+  display_name: Python 3
+  language: python
+  name: python3
+---
+
+# Dimensionality Reduction
+
+:::{admonition} Learning Objectives
+:class: tip
+
+By the end of this chapter, you will be able to:
+- Explain the goals and trade-offs of dimensionality reduction and select an appropriate assessment metric
+- Derive and apply Principal Component Analysis (PCA) from the covariance matrix eigendecomposition
+- Use the scree plot and stress curve to choose the number of components
+- Reconstruct and generate data points from a PCA low-dimensional representation
+- Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter
+- Describe the principles of manifold learning (MDS, t-SNE) and compare them to PCA
+- Recognize the autoencoder as a neural-network approach to dimensionality reduction
+:::
+
+Working with high-dimensional data is challenging, and one common strategy is to reduce the number of dimensions while retaining as much useful structure as possible. This is called **dimensionality reduction**.
+
+```{code-cell} ipython3
+%matplotlib inline
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+
+plt.style.use('../settings/plot_style.mplstyle')
+clrs = np.array([p['color'] for p in plt.rcParams['axes.prop_cycle']])
+
+digits = load_digits()
+X_mnist = np.array(digits.data)
+y_mnist = np.array(digits.target)
+
+def show_image(digit_data, n, ax=None, title=None):
+    """Display the n-th row of data as an 8×8 grayscale image."""
+    if ax is None:
+        fig, ax = plt.subplots()
+    img = digit_data[n].reshape(8, 8)
+    cm = ax.imshow(img, cmap='binary', vmin=0, vmax=16)
+    ax.get_figure().colorbar(cm, ax=ax)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    if title:
+        ax.set_title(title)
+```
+
+## Overview of Dimensionality Reduction
+
+### Practical Uses
+
+Dimensionality reduction algorithms serve several practical purposes:
+
+- **Compression** — storing fewer numbers to represent each observation
+- **Denoising** — reconstructing a cleaner signal from a noisy input
+- **Interpretation** — projecting to 2D or 3D for visualization
+- **Model efficiency** — training faster and more robust models on fewer features
+
+We focus primarily on interpretation and model efficiency, but the algorithms are the same regardless of the downstream use.
+
+### Considerations
+
+When choosing a dimensionality reduction method, the following properties matter:
+
+- **Matrix rank** — how many truly independent dimensions does the data occupy?
+- **Linearity** — are the relevant patterns linear or nonlinear in the original feature space?
+- **Projectability** — can a new high-dimensional point be mapped into the low-dimensional space?
+- **Invertibility** — can a low-dimensional point be mapped back into the original space?
+- **Supervision** — are training labels used when learning the reduced representation?
+
+No single method satisfies all of these simultaneously; the choice depends on the problem.
+
+### Assessing Performance
+
+#### Retained Variance
+
+One natural metric is the fraction of the original variance that is preserved in the low-dimensional representation. This is most natural for PCA, where the variance along each principal component direction is explicitly computed.
+
+#### Stress
+
+The **stress** function compares pairwise distances in the low-dimensional space to pairwise distances in the full-dimensional space:
+
+$$S = \left(\frac{\sum_{i}\sum_{j > i}(d_{ij} - \|\mathbf{x}_i - \mathbf{x}_j\|)^2}{\sum_{i}\sum_{j > i} d_{ij}^2}\right)^{1/2}$$
+
+where $d_{ij}$ is the distance between points $i$ and $j$ in the high-dimensional space and $\mathbf{x}_i$ is the corresponding low-dimensional vector. A stress of 0 means distances are perfectly preserved; larger values indicate more distortion.
+
+```{code-cell} ipython3
+from scipy.spatial.distance import pdist
+
+def stress(X_reduced, X):
+    D_red = pdist(X_reduced)
+    D_tot = pdist(X)
+    numerator = np.sum((D_tot - D_red)**2)
+    denom = np.sum(D_tot**2)
+    return np.sqrt(numerator / denom)
+```
+
+#### Visualization and Model Performance
+
+Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.
+
+## Principal Component Analysis (PCA)
+
+PCA finds an orthonormal set of directions — the **principal components** — along which the variance of the data is maximized. The principal components are the eigenvectors of the sample covariance matrix, sorted by decreasing eigenvalue (variance).
+
+### The Covariance Matrix
+
+```{code-cell} ipython3
+C = np.cov(X_mnist.T)
+
+fig, ax = plt.subplots()
+c = ax.imshow(C)
+fig.colorbar(c, ax=ax)
+ax.set_title('MNIST covariance matrix')
+```
+
+:::{note}
+**Covariance matrix vs. correlation matrix:** The correlation matrix (from Topic 5.1) normalizes each entry by the standard deviations of the two features so that all values fall in $[-1, 1]$. The covariance matrix does not normalize, so its entries reflect both the correlation strength and the magnitude of the feature variances. For MNIST all pixels share the same unit (intensity 0–16), so the covariance is directly comparable across features. The visible 8×8 block structure reflects the spatial layout of the image: neighboring pixels within the same digit region tend to covary strongly, producing blocks of size 8 along both axes of the 64×64 matrix.
+:::
+
+### Eigendecomposition
+
+The principal components are the eigenvectors of $C$, sorted by decreasing eigenvalue. Each eigenvalue equals the variance of the data projected onto the corresponding eigenvector.
+
+```{code-cell} ipython3
+eig_vals, eig_vecs = np.linalg.eig(C)
+eig_vecs = eig_vecs.T   # eigenvectors are columns by default; transpose for row indexing
+
+# Sort from largest to smallest eigenvalue
+sorted_idxs = list(np.argsort(eig_vals))
+sorted_idxs.reverse()
+eig_vals = eig_vals[sorted_idxs]
+eig_vecs = eig_vecs[sorted_idxs, :]
+```
+
+The eigenvectors can be visualized as 8×8 images. The first principal component is the direction of maximum variance in the 64-dimensional pixel space:
+
+```{code-cell} ipython3
+show_image(eig_vecs, 0, title='First principal component')
+```
+
+The pattern is clearly not random — it reflects the global structure shared across digit images.
+
+**Demonstration: Rank of the covariance matrix**
+
+The rank of a matrix equals the number of non-zero eigenvalues. For MNIST, the data has 1,797 samples and 64 features, so the covariance matrix can have rank at most $\min(1797-1, 64) = 63$.
+
+```{code-cell} ipython3
+print(f'Rank of covariance matrix: {np.linalg.matrix_rank(C)}')
+non_zero = np.sum(np.abs(eig_vals) > 1e-10)
+print(f'Eigenvalues above 1e-10:   {non_zero}')
+print(f'Smallest eigenvalue:       {eig_vals[-1]:.4f}')
+```
+
+The rank equals the number of non-zero (or numerically non-negligible) eigenvalues. A rank less than 64 confirms that the 64 pixel features do not span a fully independent 64-dimensional space — the data lives on a lower-dimensional subspace.
+
+### Dimensionality Reduction as Low-Rank Approximation
+
+PCA finds the best rank-$k$ approximation of the data matrix $\mathbf{X}$ in the Frobenius norm sense:
+
+$$\min_{\mathbf{A}}\; \|\mathbf{X} - \mathbf{A}\|_F \quad \text{subject to } \operatorname{rank}(\mathbf{A}) \leq k$$
+
+where $\|\mathbf{M}\|_F = \sqrt{\sum_{i,j} M_{ij}^2}$. The solution is to project $\mathbf{X}$ onto the top $k$ eigenvectors of the covariance matrix. Reducing $k$ compresses the data; the fraction of variance retained is $\sum_{i=1}^k \lambda_i / \sum_{i=1}^n \lambda_i$.
+
+```{code-cell} ipython3
+k = 20
+projector = eig_vecs[:k, :].T   # shape (64, k)
+X_k = np.dot(X_mnist, projector)   # shape (n_samples, k)
+
+retained = sum(eig_vals[:k]) / sum(eig_vals)
+print(f'Retained variance with k={k}: {retained:.3f}')
+```
+
+### Scree Plot
+
+A **scree plot** shows cumulative retained variance as a function of the number of components. It is the standard tool for choosing $k$.
+
+```{code-cell} ipython3
+fig, ax = plt.subplots()
+N = len(eig_vals)
+ax.plot(range(N), np.cumsum(eig_vals) / sum(eig_vals), color=clrs[0])
+ax.axhline(0.90, color=clrs[1], linestyle='--', label='90% threshold')
+ax.axhline(0.95, color=clrs[2], linestyle='--', label='95% threshold')
+ax.set_xlabel('Number of Principal Components')
+ax.set_ylabel('Cumulative Retained Variance')
+ax.set_title('Scree Plot — MNIST')
+ax.legend()
+```
+
+:::{exercise}
+:label: ex-eda-pca-scree
+
+Using the scree plot data above, determine the minimum number of principal components needed to retain at least **90%** of the total variance in the MNIST dataset. Then load the Dow dataset (`data/impurity_dataset-training.xlsx`) and apply PCA to report the number of components required for 90% retained variance. Which dataset is more compressible, and why?
+:::
+
+### Stress vs. Number of Components
+
+Retained variance measures global compression quality. The stress metric measures how well pairwise distances are preserved — a complementary view:
+
+```{code-cell} ipython3
+stresses = []
+for k in range(1, N):
+    proj = eig_vecs[:k, :].T
+    X_k_tmp = np.dot(X_mnist, proj)
+    stresses.append(stress(X_mnist, X_k_tmp))
+
+fig, ax = plt.subplots()
+ax.plot(range(1, N), stresses, color=clrs[0])
+ax.set_xlabel('Number of Principal Components')
+ax.set_ylabel('Stress')
+ax.set_title('PCA Stress vs. Components — MNIST')
+```
+
+Stress decreases monotonically as more components are included. It drops quickly at first and then levels off — the same "elbow" pattern as the scree plot, suggesting that roughly 20–30 components capture most of the geometric structure.
+
+### 2D Projection and Visualization
+
+Projecting onto the first two principal components allows direct visualization:
+
+```{code-cell} ipython3
+k = 2
+projector = eig_vecs[:k, :].T
+X_k = np.dot(X_mnist, projector)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(X_k[:, 0], X_k[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+fig.colorbar(sc, ax=ax, label='Digit')
+ax.set_xlabel('PC 1')
+ax.set_ylabel('PC 2')
+ax.set_title('MNIST projected onto first two PCs')
+```
+
+Each color represents a different digit. PCA is *unsupervised* — the labels were not used to find these directions — yet many digits already form visible clusters. The overlap between certain digits (3, 5, 8) reflects their visual similarity in two dimensions.
+
+### Reconstruction
+
+Because PCA is **invertible**, we can project a low-dimensional point back to pixel space. This is useful for compression, denoising, and generating new examples.
+
+```{code-cell} ipython3
+k = 10
+projector = eig_vecs[:k, :].T
+X_k = np.dot(X_mnist, projector)
+X_reconstructed = np.dot(projector, X_k.T).T
+
+index = 6
+fig, axes = plt.subplots(1, 2, figsize=(8, 4))
+show_image(X_mnist, index, ax=axes[0], title='Original')
+show_image(X_reconstructed, index, ax=axes[1], title=f'Reconstructed (k={k})')
+plt.tight_layout()
+```
+
+The reconstruction captures the essential shape of the digit while discarding fine detail — analogous to image compression. Noise components, which tend to be random and spread across many principal components, are also suppressed in the reconstruction.
+
+**Demonstration: Generating an "average" digit**
+
+Because PCA is invertible, we can generate synthetic examples by averaging the low-dimensional representations of a class and projecting back to pixel space:
+
+```{code-cell} ipython3
+for target_digit in [0, 8]:
+    mask = y_mnist == target_digit
+    X_lowD_mean = X_k[mask].mean(axis=0)
+    X_avg = np.dot(projector, X_lowD_mean).reshape(1, -1)
+    fig, ax = plt.subplots(figsize=(3, 3))
+    show_image(X_avg, 0, ax=ax, title=f'Average "{target_digit}"')
+```
+
+The average digit is a smooth template that captures the typical stroke pattern for that class, stripped of the idiosyncratic variation present in any individual example.
+
+### scikit-learn PCA
+
+In practice, use `sklearn.decomposition.PCA`, which is numerically stable (uses SVD internally rather than eigendecomposition of the covariance matrix) and provides convenient outputs:
+
+```{code-cell} ipython3
+from sklearn.decomposition import PCA
+
+k = 20
+pca = PCA(n_components=k)
+pca.fit(X_mnist)
+X_k = pca.transform(X_mnist)
+X_reconstructed = pca.inverse_transform(X_k)
+
+index = 4
+fig, axes = plt.subplots(1, 2, figsize=(8, 4))
+show_image(X_mnist, index, ax=axes[0], title='Original')
+show_image(X_reconstructed, index, ax=axes[1], title=f'Reconstructed (k={k})')
+plt.tight_layout()
+```
+
+```{code-cell} ipython3
+evr = pca.explained_variance_ratio_
+
+fig, ax = plt.subplots()
+ax.plot(range(len(evr)), evr, label='Per-component', color=clrs[0])
+ax.plot(range(len(evr)), np.cumsum(evr), label='Cumulative', color=clrs[1])
+ax.set_xlabel('Number of Principal Components')
+ax.set_ylabel('Explained Variance Ratio')
+ax.set_title('sklearn PCA — MNIST')
+ax.legend()
+```
+
+Full documentation for `sklearn.decomposition.PCA` is available [here](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html).
+
+:::{note}
+PCA is one of the most widely used dimensionality reduction techniques because it is unsupervised, projectable (new points can be mapped in), and invertible (low-dimensional points can be mapped back). Its main limitation is linearity: it cannot capture curved or otherwise nonlinear structure in the data.
+:::
+
+## Kernel PCA
+
+Kernel PCA extends PCA to nonlinear settings using the kernel trick. Instead of the covariance matrix, it works with a **kernel matrix**:
+
+$$K_{ij} = \kappa(\mathbf{x}_i, \mathbf{x}_j)$$
+
+where $\kappa$ is a kernel function. For the radial basis function (RBF) kernel:
+
+$$\kappa_\text{rbf}(\mathbf{x}_i, \mathbf{x}_j) = \exp\!\left(-\gamma \|\mathbf{x}_i - \mathbf{x}_j\|^2\right)$$
+
+The hyperparameter $\gamma$ controls how quickly similarity decays with distance: large $\gamma$ means only very close points are considered similar. Eigendecomposition of $K$ gives principal components in the (implicit) high-dimensional feature space induced by $\kappa$, capturing nonlinear structure that linear PCA misses.
+
+```{code-cell} ipython3
+from sklearn.datasets import make_moons
+from sklearn.decomposition import KernelPCA
+
+X_m, y_m = make_moons(n_samples=100, random_state=0, noise=0.04)
+
+k = 2
+gamma = 10
+pca_lin = PCA(n_components=k)
+pca_ker = KernelPCA(n_components=k, kernel='rbf', gamma=gamma, fit_inverse_transform=True)
+
+X_pca  = pca_lin.fit_transform(X_m)
+X_kpca = pca_ker.fit_transform(X_m)
+
+fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+for ax, X_plot, title in zip(axes,
+                              [X_m, X_pca, X_kpca],
+                              ['Original moons', 'Linear PCA', f'Kernel PCA (γ={gamma})']):
+    ax.scatter(X_plot[:, 0], X_plot[:, 1], c=clrs[y_m])
+    ax.set_title(title)
+axes[1].set_xlabel('PC 1'); axes[1].set_ylabel('PC 2')
+axes[2].set_xlabel('PC 1'); axes[2].set_ylabel('PC 2')
+plt.tight_layout()
+```
+
+Linear PCA cannot separate the two moon-shaped classes because the decision boundary is not linear. Kernel PCA with the RBF kernel maps the data to a higher-dimensional space where the classes become linearly separable, then projects back to 2D.
+
+Kernel PCA is also invertible (when `fit_inverse_transform=True`):
+
+```{code-cell} ipython3
+X_pca_recon  = pca_lin.inverse_transform(X_pca)
+X_kpca_recon = pca_ker.inverse_transform(X_kpca)
+
+fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+for ax, X_plot, title in zip(axes,
+                              [X_m, X_pca_recon, X_kpca_recon],
+                              ['Original', 'PCA reconstruction', 'Kernel PCA reconstruction']):
+    ax.scatter(X_plot[:, 0], X_plot[:, 1], c=clrs[y_m])
+    ax.set_title(title)
+plt.tight_layout()
+```
+
+:::{exercise}
+:label: ex-eda-kpca-gamma
+
+Using the moons dataset, fit `KernelPCA` with `kernel='rbf'` for five values of `gamma` spanning a wide range (e.g. 0.1, 1, 10, 100, 1000). For each, plot the 2D transformed data colored by class. Describe what happens to the separation as `gamma` increases. At what value does the transformation appear to overfit to individual points?
+:::
+
+### Other PCA Variants
+
+PCA has many variants worth knowing:
+
+- **Robust PCA** — handles sparse data and large outliers by decomposing the data matrix into a low-rank component plus a sparse noise component
+- **Partial Least Squares (PLS)** — supervised variant that maximizes the covariance between the projected inputs and the target variable, rather than maximizing variance in the inputs alone
+- **Linear Discriminant Analysis (LDA)** — supervised variant that maximizes the ratio of between-class to within-class variance, making it directly useful for classification
+
+We will revisit PLS and LDA in later modules.
+
+## Manifold Learning
+
+Manifold learning approaches use pairwise **distance metrics** rather than variance to define structure. The goal is to find a low-dimensional embedding that preserves distances as faithfully as possible. This makes them well-suited for nonlinear data where the true structure lies on a curved surface (manifold) embedded in the high-dimensional space.
+
+### Multi-Dimensional Scaling (MDS)
+
+MDS directly minimizes the stress function. Given pairwise distances $d_{ij}$ in the original space, it finds a low-dimensional configuration $\{\mathbf{x}_i\}$ that minimizes the stress $S$ defined above. Unlike PCA, MDS is iterative — it does not have a closed-form solution.
+
+Note that `fit_transform` is used directly (there is no separate `transform` method), meaning MDS cannot project new points — it is **not projectable**.
+
+```{code-cell} ipython3
+from sklearn.manifold import MDS
+
+mds = MDS(n_components=2, n_init=1, max_iter=100)
+X_mds = mds.fit_transform(X_mnist)
+
+pca2 = PCA(n_components=2)
+X_pca2 = pca2.fit_transform(X_mnist)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for ax, X_plot, title in zip(axes, [X_mds, X_pca2], ['MDS', 'PCA']):
+    sc = ax.scatter(X_plot[:, 0], X_plot[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+    fig.colorbar(sc, ax=ax, label='Digit')
+    ax.set_title(title)
+plt.tight_layout()
+
+print(f'Stress MDS: {stress(X_mds, X_mnist):.4f}')
+print(f'Stress PCA: {stress(X_pca2, X_mnist):.4f}')
+```
+
+MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.
+
+### t-SNE
+
+t-distributed Stochastic Neighbor Embedding (**t-SNE**) uses a probabilistic similarity measure based on the t-distribution. Points that are nearby in the original space are given high probability of being neighbors in the low-dimensional space, while distant points are pushed apart. This makes t-SNE particularly effective at revealing local cluster structure.
+
+```{code-cell} ipython3
+from sklearn.manifold import TSNE
+
+tsne = TSNE(n_components=2, perplexity=30.0,
+            early_exaggeration=12.0,
+            learning_rate=200.0,
+            max_iter=1000,
+            init='random',
+            method='exact')
+
+X_tsne = tsne.fit_transform(X_mnist)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+fig.colorbar(sc, ax=ax, label='Digit')
+ax.set_title('t-SNE — MNIST')
+print(f'Stress: {stress(X_tsne, X_mnist):.4f}')
+```
+
+t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.
+
+:::{note}
+**t-SNE hyperparameters:** `perplexity` (roughly, the number of effective nearest neighbors; typically 5–50) is the most important parameter to tune. `learning_rate` and `max_iter` also affect results. t-SNE is sensitive to initialization and is not deterministic unless `random_state` is set. It is best used for visualization only — global distances between clusters are not meaningful.
+:::
+
+:::{exercise}
+:label: ex-eda-tsne-perp
+
+Run t-SNE on the MNIST dataset with `perplexity` values of 5, 30, and 100 (keep all other parameters fixed, and set `random_state=42`). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?
+:::
+
+### Comparison: Manifold Learning vs. PCA
+
+| Property | PCA | Kernel PCA | MDS | t-SNE |
+|---|---|---|---|---|
+| Linear? | Yes | No | No | No |
+| Projectable? | Yes | Yes | No | No |
+| Invertible? | Yes | Yes (approx.) | No | No |
+| Speed | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) |
+| Best for | Linear structure, compression | Nonlinear, small datasets | Distance preservation | Visualization only |
+
+Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. They are best used for exploratory visualization.
+
+## Autoencoding
+
+:::{figure} images/autoencoder.png
+:name: fig-autoencoder
+:width: 70%
+
+Schematic of an autoencoder. The encoder network maps the input to a low-dimensional bottleneck representation (latent space); the decoder network reconstructs the original input from the bottleneck. Training minimizes the reconstruction error.
+:::
+
+An **autoencoder** is a neural network trained to reproduce its own input. The architecture has a narrow hidden layer (the *bottleneck* or *latent space*) with fewer units than the input, forcing the network to learn a compressed representation.
+
+The network has two parts:
+- **Encoder** — maps the high-dimensional input $\mathbf{x}$ to a low-dimensional latent vector $\mathbf{z}$
+- **Decoder** — maps $\mathbf{z}$ back to a reconstruction $\hat{\mathbf{x}}$
+
+Training minimizes the reconstruction error $\|\mathbf{x} - \hat{\mathbf{x}}\|^2$ over the training set. Because the bottleneck forces information compression, the latent space learns the most important structure without any labels.
+
+**Advantages over PCA:**
+- Projectable and invertible by construction
+- Captures nonlinear structure
+- Scales efficiently on large datasets via stochastic gradient descent
+
+**Disadvantages:**
+- Requires large training datasets
+- Architecture and hyperparameters must be tuned
+- No interpretable relationship between latent dimensions and original features
+
+Autoencoders are an active research area. Specialized variants — variational autoencoders (VAEs) and denoising autoencoders — are used in generative modeling, anomaly detection, and representation learning. We revisit this topic in the Generative Models chapter.
+
+## Summary
+
+- Dimensionality reduction compresses high-dimensional data into a lower-dimensional representation for visualization, denoising, or model efficiency.
+- **Retained variance** and **stress** are complementary quality metrics: variance measures global compression fidelity; stress measures pairwise distance preservation.
+- **PCA** finds orthonormal directions of maximum variance via eigendecomposition of the covariance matrix. It is linear, projectable, invertible, and fast — the default first choice.
+- A **scree plot** of cumulative explained variance guides the choice of the number of components $k$.
+- **Kernel PCA** extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter $\gamma$ controls the locality of the similarity measure.
+- **Manifold learning** methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as $O(N^2)$.
+- **t-SNE** is the standard tool for 2D visualization of high-dimensional labeled data; interpret cluster separation, not inter-cluster distances or axis values.
+- **Autoencoders** use neural networks to learn nonlinear, projectable, and invertible representations, at the cost of requiring large datasets and hyperparameter tuning.
+
+## Additional Reading
+
+- [scikit-learn: PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html)
+- [scikit-learn: KernelPCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.KernelPCA.html)
+- [scikit-learn: MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
+- [scikit-learn: TSNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
+- [Distill.pub: How to Use t-SNE Effectively](https://distill.pub/2016/misread-tsne/)
+- [Hastie, Tibshirani & Friedman: The Elements of Statistical Learning, Ch. 14](https://hastie.su.domains/ElemStatLearn/)
