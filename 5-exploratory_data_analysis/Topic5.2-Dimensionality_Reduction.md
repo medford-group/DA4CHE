@@ -20,8 +20,10 @@ By the end of this chapter, you will be able to:
 - Use the scree plot and stress curve to choose the number of components
 - Reconstruct and generate data points from a PCA low-dimensional representation
 - Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter
-- Describe the principles of manifold learning (MDS, t-SNE, UMAP) and compare them to PCA
+- Describe the principles of manifold learning (MDS, t-SNE, UMAP, PHATE) and compare them to PCA
 - Apply UMAP for fast, projectable nonlinear dimensionality reduction
+- Apply Incremental PCA for memory-efficient processing of large datasets
+- Recognize when PHATE is preferred for trajectory-structured data
 - Recognize the autoencoder as a neural-network approach to dimensionality reduction
 :::
 
@@ -111,6 +113,12 @@ def stress(X_reduced, X):
 #### Visualization and Model Performance
 
 Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.
+
+:::{exercise}
+:label: ex-eda-dim-metrics
+
+Using the MNIST dataset and the `stress` function defined above, compute the stress for a random 2D projection (generate a random 64×2 matrix with `np.random.default_rng(0).normal(size=(64, 2))` and project `X_mnist` onto it). Compare this to the stress of the PCA 2D projection computed later in this chapter. What does the difference tell you about why PCA is preferred over a random projection?
+:::
 
 ## Principal Component Analysis (PCA)
 
@@ -318,6 +326,45 @@ Full documentation for `sklearn.decomposition.PCA` is available [here](https://s
 PCA is one of the most widely used dimensionality reduction techniques because it is unsupervised, projectable (new points can be mapped in), and invertible (low-dimensional points can be mapped back). Its main limitation is linearity: it cannot capture curved or otherwise nonlinear structure in the data.
 :::
 
+### Incremental PCA
+
+Standard PCA requires the entire dataset in memory at once to compute the covariance matrix. For large industrial datasets — sensor archives with millions of time steps, high-resolution spectra, or image libraries — this can exceed available RAM. `sklearn.decomposition.IncrementalPCA` fits PCA in mini-batches using an online SVD algorithm, making it practical for out-of-core or streaming data.
+
+```{code-cell} ipython3
+from sklearn.decomposition import IncrementalPCA
+
+batch_size = 200
+ipca = IncrementalPCA(n_components=20, batch_size=batch_size)
+
+# Simulate streaming: process data in chunks
+for i in range(0, X_mnist.shape[0], batch_size):
+    batch = X_mnist[i:i + batch_size]
+    if len(batch) >= 20:   # requires n_samples >= n_components per batch
+        ipca.partial_fit(batch)
+
+X_ipca = ipca.transform(X_mnist)
+print(f'Output shape: {X_ipca.shape}')
+print(f'Retained variance: {ipca.explained_variance_ratio_.sum():.3f}')
+```
+
+The results are nearly identical to standard PCA. We can verify by comparing the explained variance ratios directly:
+
+```{code-cell} ipython3
+pca_full = PCA(n_components=20)
+pca_full.fit(X_mnist)
+
+fig, ax = plt.subplots()
+ax.plot(ipca.explained_variance_ratio_, label='IncrementalPCA', color=clrs[0])
+ax.plot(pca_full.explained_variance_ratio_, label='PCA (full SVD)',
+        color=clrs[1], linestyle='--')
+ax.set_xlabel('Component')
+ax.set_ylabel('Explained Variance Ratio')
+ax.set_title('IncrementalPCA vs. full PCA')
+ax.legend()
+```
+
+The two curves overlap almost exactly. The main trade-off is that `IncrementalPCA` requires specifying `n_components` in advance and is marginally less accurate than the full SVD, but for large $n$ the difference is negligible.
+
 ## Kernel PCA
 
 Kernel PCA extends PCA to nonlinear settings using the kernel trick. Instead of the covariance matrix, it works with a **kernel matrix**:
@@ -503,18 +550,47 @@ The two key hyperparameters are `n_neighbors` (controls the balance between loca
 Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) `n_neighbors=5, min_dist=0.01`, (b) `n_neighbors=15, min_dist=0.1` (the default above), and (c) `n_neighbors=50, min_dist=0.5`. Plot the three embeddings side-by-side colored by digit. Describe how increasing `n_neighbors` changes the structure of the embedding.
 :::
 
+### PHATE
+
+PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve **trajectory and branching structure** in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths — reaction trajectories, transient process states, material synthesis routes, or any dataset where intermediate states are physically meaningful.
+
+The key idea is to compute a **diffusion operator** that models how information spreads through the data manifold, then embed points based on their *potential distances* under this diffusion. This captures multi-scale structure: fine local neighborhoods and broad global trajectories are both represented faithfully.
+
+In chemical engineering, PHATE is especially relevant for:
+
+- Time-series process data where plant states evolve continuously (startup, shutdown, grade transitions)
+- Reaction pathway analysis where the system passes through a sequence of intermediate compositions
+- Materials datasets where processing conditions trace a route through composition or microstructure space
+
+```{code-cell} ipython3
+import phate
+
+phate_op = phate.PHATE(n_components=2, knn=5, decay=40, t='auto',
+                       random_state=42, verbose=0)
+X_phate = phate_op.fit_transform(X_mnist)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(X_phate[:, 0], X_phate[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+fig.colorbar(sc, ax=ax, label='Digit')
+ax.set_title('PHATE — MNIST')
+```
+
+On MNIST (a dataset with discrete clusters rather than trajectories), PHATE reveals continuous paths connecting related digit classes — for example, a smooth "1"→"7"→"4" progression that reflects shared stroke geometry. This reflects PHATE's tendency to emphasize global connectivity and smooth transitions rather than isolated blobs. On process data with genuine trajectories, this behavior is exactly what is desired.
+
+The key hyperparameters are `knn` (number of nearest neighbors for the affinity graph — smaller values capture finer local structure) and `decay` (sharpness of the affinity kernel — larger values produce a tighter, more local kernel).
+
 ### Comparison: Manifold Learning vs. PCA
 
-| Property | PCA | Kernel PCA | MDS | t-SNE | UMAP |
-|---|---|---|---|---|---|
-| Linear? | Yes | No | No | No | No |
-| Projectable? | Yes | Yes | No | No | Yes |
-| Invertible? | Yes | Yes (approx.) | No | No | Approx. |
-| Speed | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) | Fast ($O(N^{1.1})$) |
-| Global structure | Yes | Partial | Yes | Poor | Good |
-| Best for | Linear structure, compression | Nonlinear, small datasets | Distance preservation | Visualization | Visualization + pipelines |
+| Property | PCA | Kernel PCA | MDS | t-SNE | UMAP | PHATE |
+|---|---|---|---|---|---|---|
+| Linear? | Yes | No | No | No | No | No |
+| Projectable? | Yes | Yes | No | No | Yes | No |
+| Invertible? | Yes | Yes (approx.) | No | No | Approx. | No |
+| Speed | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) | Fast ($O(N^{1.1})$) | Moderate |
+| Global structure | Yes | Partial | Yes | Poor | Good | Excellent |
+| Best for | Linear, compression | Nonlinear, small | Distance | Visualization | Visualization + pipelines | Trajectories, branching |
 
-Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. UMAP is the current best practice for visualization tasks where t-SNE was previously used.
+Manifold techniques provide powerful insight into data structure but are generally not projectable and scale poorly compared to PCA. For visualization, UMAP is the current best practice for cluster-structured data; PHATE is preferred when the data has trajectory or branching structure.
 
 ## Autoencoding
 
@@ -545,6 +621,13 @@ Training minimizes the reconstruction error $\|\mathbf{x} - \hat{\mathbf{x}}\|^2
 
 Autoencoders are an active research area. Specialized variants — variational autoencoders (VAEs) and denoising autoencoders — are used in generative modeling, anomaly detection, and representation learning. We revisit this topic in the Generative Models chapter.
 
+:::{exercise}
+:label: ex-eda-autoencoder-design
+
+Consider a dataset with 100 features. You want to use an autoencoder to compress it to a 5-dimensional latent space. (a) Sketch an encoder architecture with two hidden layers, specifying reasonable layer widths. (b) If you instead used PCA for the same 5-component reduction and found that 5 PCs retain only 40% of variance, would you expect an autoencoder to do better or worse? What assumption does PCA make that the autoencoder does not? (c) Name one practical disadvantage of the autoencoder approach for a dataset with only 500 observations.
+:::
+
+
 ## Summary
 
 - Dimensionality reduction compresses high-dimensional data into a lower-dimensional representation for visualization, denoising, or model efficiency.
@@ -554,7 +637,9 @@ Autoencoders are an active research area. Specialized variants — variational a
 - **Kernel PCA** extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter $\gamma$ controls the locality of the similarity measure.
 - **Manifold learning** methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as $O(N^2)$.
 - **t-SNE** produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. Pre-reducing with PCA (to ~30 components) before running t-SNE is a standard speed-up.
+- **Incremental PCA** (`IncrementalPCA`) fits PCA in mini-batches and is the go-to choice for datasets too large to fit in memory; results are nearly identical to full SVD-based PCA.
 - **UMAP** is faster than t-SNE, better preserves global structure, and is projectable — it is the current best practice for visualization and nonlinear feature extraction.
+- **PHATE** uses heat diffusion to capture trajectory and branching structure; it is particularly suited for process data with continuous state transitions or reaction pathway data.
 - **Autoencoders** use neural networks to learn nonlinear, projectable, and invertible representations, at the cost of requiring large datasets and hyperparameter tuning.
 
 ## Additional Reading
@@ -566,4 +651,7 @@ Autoencoders are an active research area. Specialized variants — variational a
 - [Distill.pub: How to Use t-SNE Effectively](https://distill.pub/2016/misread-tsne/)
 - [UMAP documentation](https://umap-learn.readthedocs.io/)
 - [McInnes et al. (2018): UMAP paper](https://arxiv.org/abs/1802.03426)
+- [PHATE documentation](https://phate.readthedocs.io/)
+- [Moon et al. (2019): PHATE paper](https://www.nature.com/articles/s41587-019-0336-3)
+- [scikit-learn: IncrementalPCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.IncrementalPCA.html)
 - [Hastie, Tibshirani & Friedman: The Elements of Statistical Learning, Ch. 14](https://hastie.su.domains/ElemStatLearn/)
