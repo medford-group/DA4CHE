@@ -27,14 +27,14 @@ Working with data that has many features — more than two or three — presents
 Throughout this chapter we use two contrasting datasets. The **Dow dataset** has 40 continuous process variables from a chemical distillation column — a typical scale for industrial sensor data. The **MNIST dataset** encodes each hand-written digit image as a 64-dimensional pixel vector — a simple example of structured high-dimensional data where every feature has an identical type and scale. Comparing strategies across both datasets builds transferable intuition.
 
 ```{code-cell} ipython3
+%matplotlib inline
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 plt.style.use('../settings/plot_style.mplstyle')
-clrs = np.array(['#003057', '#EAAA00', '#4B8B9B', '#B3A369', '#377117',
-                 '#1879DB', '#8E8B76', '#F5D580', '#002233'])
+clrs = np.array([p['color'] for p in plt.rcParams['axes.prop_cycle']])
 ```
 
 ## High-Dimensional Dataset Examples
@@ -255,7 +255,7 @@ The `seaborn` library provides `pairplot` as a convenient one-liner that produce
 
 ```{code-cell} ipython3
 mnist_df = pd.DataFrame(X_mnist, columns=[f'px{i}' for i in range(X_mnist.shape[1])])
-sns.pairplot(mnist_df[[f'px{i}' for i in features]], plot_kws={'s': 2, 'alpha': 0.3})
+sns.pairplot(mnist_df[[f'px{i}' for i in features]], plot_kws={'s': 2, 'alpha': 0.3});
 ```
 
 :::{note}
@@ -267,7 +267,7 @@ For the Dow dataset with continuous process variables, the pairplot shows smooth
 ```{code-cell} ipython3
 include_cols = list(df_dow_clean.columns[1:5])
 sns.pairplot(df_dow_clean[include_cols].apply(pd.to_numeric, errors='coerce').dropna(),
-             plot_kws={'s': 2, 'alpha': 0.2})
+             plot_kws={'s': 2, 'alpha': 0.2});
 ```
 
 ### Joint Plots
@@ -278,12 +278,12 @@ A joint plot zooms in on a single pair of features, showing the scatter and marg
 x_col = df_dow_clean.columns[3]   # x3: Input to Primary Column Bed 3 Flow
 y_col = df_dow_clean.columns[4]   # x4: Input to Primary Column Bed 2 Flow
 
-jp = sns.jointplot(
+sns.jointplot(
     x=x_col, y=y_col,
     data=df_dow_clean.apply(pd.to_numeric, errors='coerce').dropna(),
     kind='reg',
     scatter_kws={'s': 2, 'alpha': 0.2},
-)
+);
 ```
 
 The `kind='reg'` option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.
