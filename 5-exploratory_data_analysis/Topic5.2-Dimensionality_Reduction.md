@@ -544,6 +544,32 @@ ax.set_title('UMAP — MNIST')
 
 The two key hyperparameters are `n_neighbors` (controls the balance between local and global structure — larger values give more global context) and `min_dist` (controls how tightly points are packed in the embedding — smaller values produce more clustered layouts).
 
+Because UMAP is projectable, a fitted model can transform new points without re-running the full embedding — useful for applying a dimensionality reduction learned on training data to a held-out test set:
+
+```{code-cell} ipython3
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X_mnist, y_mnist, test_size=0.2, random_state=42)
+
+reducer_proj = umap.UMAP(n_components=2, n_neighbors=15, min_dist=0.1, random_state=42)
+X_train_umap = reducer_proj.fit_transform(X_train)   # fit on training data
+X_test_umap  = reducer_proj.transform(X_test)         # project test points into same space
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for ax, X_plot, y_plot, title in zip(
+        axes,
+        [X_train_umap, X_test_umap],
+        [y_train, y_test],
+        ['Training set (fit)', 'Test set (transform only)']):
+    sc = ax.scatter(X_plot[:, 0], X_plot[:, 1], c=y_plot, cmap='tab10', s=8, alpha=0.7)
+    fig.colorbar(sc, ax=ax, label='Digit')
+    ax.set_title(title)
+plt.tight_layout()
+```
+
+Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes. This is the key property that makes UMAP suitable for preprocessing in a supervised pipeline: fit the reducer on training data, then `transform` both train and test sets before passing them to a classifier.
+
 :::{exercise}
 :label: ex-eda-umap-params
 
@@ -575,7 +601,7 @@ fig.colorbar(sc, ax=ax, label='Digit')
 ax.set_title('PHATE — MNIST')
 ```
 
-On MNIST (a dataset with discrete clusters rather than trajectories), PHATE reveals continuous paths connecting related digit classes — for example, a smooth "1"→"7"→"4" progression that reflects shared stroke geometry. This reflects PHATE's tendency to emphasize global connectivity and smooth transitions rather than isolated blobs. On process data with genuine trajectories, this behavior is exactly what is desired.
+On MNIST (a dataset with discrete clusters rather than trajectories), PHATE tends to arrange digits with similar stroke structure closer together — for example, 8, 3, and 9 share curved closed strokes and typically appear in the same region of the embedding, while 1 and 7 appear nearby due to their shared vertical stroke. This reflects PHATE's emphasis on global connectivity and smooth transitions rather than isolated blobs. On process data with genuine trajectories, this behavior is exactly what is desired.
 
 The key hyperparameters are `knn` (number of nearest neighbors for the affinity graph — smaller values capture finer local structure) and `decay` (sharpness of the affinity kernel — larger values produce a tighter, more local kernel).
 
