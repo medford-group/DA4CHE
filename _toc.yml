@@ -28,3 +28,4 @@ chapters:
   - file: 5-exploratory_data_analysis/intro
     sections:
       - file: 5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data
+      - file: 5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction
