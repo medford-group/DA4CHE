@@ -55,9 +55,9 @@ def layer_ys(n):
 all_ys = [layer_ys(n) for n in LAYER_SIZES]
 
 # ─── Canvas ───────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(13, 6.8))
+fig, ax = plt.subplots(figsize=(13, 7.4))
 ax.set_xlim(-0.1, 11.2)
-ax.set_ylim(-0.1, 7.2)
+ax.set_ylim(-1.0, 7.2)
 ax.axis('off')
 fig.patch.set_facecolor('white')
 
@@ -169,11 +169,11 @@ ax.text(LAYER_X[6], 0.55, r'$\hat{\mathbf{x}}$' + '\n($d$ features)',
         ha='center', va='top', fontsize=11, color=TEAL, fontweight='bold')
 
 # ─── Reconstruction error bracket ─────────────────────────────────────────────
-err_y = 0.10
+err_y = -0.55
 ax.annotate('', xy=(LAYER_X[6], err_y), xytext=(LAYER_X[0], err_y),
             arrowprops=dict(arrowstyle='<->', color=RED, lw=1.8))
 ax.text((LAYER_X[0] + LAYER_X[6]) / 2, err_y + 0.18,
-        r'minimise $\|\mathbf{x} - \hat{\mathbf{x}}\|^2$',
+        r'minimize $\|\mathbf{x} - \hat{\mathbf{x}}\|^2$',
         ha='center', va='bottom', fontsize=11, color=RED, style='italic')
 
 # ─── Save ─────────────────────────────────────────────────────────────────────

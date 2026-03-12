@@ -647,6 +647,98 @@ Training minimizes the reconstruction error $\|\mathbf{x} - \hat{\mathbf{x}}\|^2
 
 Autoencoders are an active research area. Specialized variants — variational autoencoders (VAEs) and denoising autoencoders — are used in generative modeling, anomaly detection, and representation learning. We revisit this topic in the Generative Models chapter.
 
+The following example builds a simple autoencoder on the MNIST digits dataset using PyTorch. The encoder compresses 64 pixel values to a 2-dimensional latent space; the decoder reconstructs the image from that 2-D code.
+
+```{code-cell} ipython3
+import torch
+import torch.nn as nn
+from torch.utils.data import DataLoader, TensorDataset
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+X_tensor = torch.tensor(X_mnist / 16.0, dtype=torch.float32)   # scale to [0, 1]
+dataset   = TensorDataset(X_tensor)
+loader    = DataLoader(dataset, batch_size=128, shuffle=True)
+
+# ── Model ─────────────────────────────────────────────────────────────────────
+class Autoencoder(nn.Module):
+    def __init__(self, input_dim=64, latent_dim=2):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, 32), nn.ReLU(),
+            nn.Linear(32, 16),        nn.ReLU(),
+            nn.Linear(16, latent_dim)
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, 16), nn.ReLU(),
+            nn.Linear(16, 32),         nn.ReLU(),
+            nn.Linear(32, input_dim),  nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        z    = self.encoder(x)
+        x_hat = self.decoder(z)
+        return x_hat, z
+
+model     = Autoencoder(input_dim=64, latent_dim=2)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+criterion = nn.MSELoss()
+
+# ── Training loop ─────────────────────────────────────────────────────────────
+for epoch in range(30):
+    total_loss = 0.0
+    for (batch,) in loader:
+        x_hat, _ = model(batch)
+        loss = criterion(x_hat, batch)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item() * len(batch)
+    if (epoch + 1) % 10 == 0:
+        print(f"Epoch {epoch + 1:3d}  loss = {total_loss / len(dataset):.5f}")
+```
+
+```{code-cell} ipython3
+# ── Visualize the 2-D latent space ────────────────────────────────────────────
+model.eval()
+with torch.no_grad():
+    _, Z = model(X_tensor)
+Z = Z.numpy()
+
+fig, ax = plt.subplots(figsize=(6, 5))
+sc = ax.scatter(Z[:, 0], Z[:, 1], c=y_mnist, cmap='tab10', s=8, alpha=0.6)
+fig.colorbar(sc, ax=ax, label='Digit')
+ax.set_xlabel('Latent dimension 1')
+ax.set_ylabel('Latent dimension 2')
+ax.set_title('Autoencoder — 2-D latent space (MNIST digits)')
+plt.tight_layout()
+```
+
+```{code-cell} ipython3
+# ── Inspect a reconstruction ──────────────────────────────────────────────────
+n_show = 8
+fig, axes = plt.subplots(2, n_show, figsize=(12, 3))
+model.eval()
+with torch.no_grad():
+    x_hat_all, _ = model(X_tensor)
+
+for i in range(n_show):
+    axes[0, i].imshow(X_tensor[i].numpy().reshape(8, 8),
+                      cmap='binary', vmin=0, vmax=1)
+    axes[1, i].imshow(x_hat_all[i].numpy().reshape(8, 8),
+                      cmap='binary', vmin=0, vmax=1)
+    axes[0, i].axis('off')
+    axes[1, i].axis('off')
+
+axes[0, 0].set_title('Original', loc='left', fontsize=10)
+axes[1, 0].set_title('Reconstructed', loc='left', fontsize=10)
+plt.suptitle('Autoencoder reconstructions (latent dim = 2)', y=1.02)
+plt.tight_layout()
+```
+
+:::{note}
+With only 2 latent dimensions the reconstructions are blurry — the bottleneck is very tight. Increasing `latent_dim` to 8 or 16 produces sharper results at the cost of a less compact representation. The trade-off between reconstruction quality and compression is the central design decision when sizing the bottleneck.
+:::
+
 :::{exercise}
 :label: ex-eda-autoencoder-design
 
