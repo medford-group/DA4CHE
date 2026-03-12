@@ -376,6 +376,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-projection-and-visualization">2D Projection and Visualization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction">Reconstruction</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scikit-learn-pca">scikit-learn PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#incremental-pca">Incremental PCA</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-pca">Kernel PCA</a><ul class="nav section-nav flex-column">
@@ -386,6 +387,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-dimensional-scaling-mds">Multi-Dimensional Scaling (MDS)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">t-SNE</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#umap">UMAP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phate">PHATE</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-manifold-learning-vs-pca">Comparison: Manifold Learning vs. PCA</a></li>
 </ul>
 </li>
@@ -414,8 +416,10 @@ document.write(`
 <li><p>Use the scree plot and stress curve to choose the number of components</p></li>
 <li><p>Reconstruct and generate data points from a PCA low-dimensional representation</p></li>
 <li><p>Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter</p></li>
-<li><p>Describe the principles of manifold learning (MDS, t-SNE, UMAP) and compare them to PCA</p></li>
+<li><p>Describe the principles of manifold learning (MDS, t-SNE, UMAP, PHATE) and compare them to PCA</p></li>
 <li><p>Apply UMAP for fast, projectable nonlinear dimensionality reduction</p></li>
+<li><p>Apply Incremental PCA for memory-efficient processing of large datasets</p></li>
+<li><p>Recognize when PHATE is preferred for trajectory-structured data</p></li>
 <li><p>Recognize the autoencoder as a neural-network approach to dimensionality reduction</p></li>
 </ul>
 </div>
@@ -509,6 +513,13 @@ document.write(`
 <section id="visualization-and-model-performance">
 <h4>Visualization and Model Performance<a class="headerlink" href="#visualization-and-model-performance" title="Link to this heading">#</a></h4>
 <p>Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.</p>
+<div class="exercise admonition" id="ex-eda-dim-metrics">
+
+<p class="admonition-title"><span class="caption-number">Exercise 68 </span></p>
+<section id="exercise-content">
+<p>Using the MNIST dataset and the <code class="docutils literal notranslate"><span class="pre">stress</span></code> function defined above, compute the stress for a random 2D projection (generate a random 64×2 matrix with <code class="docutils literal notranslate"><span class="pre">np.random.default_rng(0).normal(size=(64,</span> <span class="pre">2))</span></code> and project <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> onto it). Compare this to the stress of the PCA 2D projection computed later in this chapter. What does the difference tell you about why PCA is preferred over a random projection?</p>
+</section>
+</div>
 </section>
 </section>
 </section>
@@ -633,7 +644,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x135797af0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x123537c70&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -641,7 +652,7 @@ Smallest eigenvalue:       0.0000
 </div>
 <div class="exercise admonition" id="ex-eda-pca-scree">
 
-<p class="admonition-title"><span class="caption-number">Exercise 68 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 69 </span></p>
 <section id="exercise-content">
 <p>Using the scree plot data above, determine the minimum number of principal components needed to retain at least <strong>90%</strong> of the total variance in the MNIST dataset. Then load the Dow dataset (<code class="docutils literal notranslate"><span class="pre">data/impurity_dataset-training.xlsx</span></code>) and apply PCA to report the number of components required for 90% retained variance. Which dataset is more compressible, and why?</p>
 </section>
@@ -785,7 +796,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14b9a0c40&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x132708c40&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -796,6 +807,61 @@ Smallest eigenvalue:       0.0000
 <p class="admonition-title">Note</p>
 <p>PCA is one of the most widely used dimensionality reduction techniques because it is unsupervised, projectable (new points can be mapped in), and invertible (low-dimensional points can be mapped back). Its main limitation is linearity: it cannot capture curved or otherwise nonlinear structure in the data.</p>
 </div>
+</section>
+<section id="incremental-pca">
+<h3>Incremental PCA<a class="headerlink" href="#incremental-pca" title="Link to this heading">#</a></h3>
+<p>Standard PCA requires the entire dataset in memory at once to compute the covariance matrix. For large industrial datasets — sensor archives with millions of time steps, high-resolution spectra, or image libraries — this can exceed available RAM. <code class="docutils literal notranslate"><span class="pre">sklearn.decomposition.IncrementalPCA</span></code> fits PCA in mini-batches using an online SVD algorithm, making it practical for out-of-core or streaming data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">IncrementalPCA</span>
+
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">ipca</span> <span class="o">=</span> <span class="n">IncrementalPCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+<span class="c1"># Simulate streaming: process data in chunks</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X_mnist</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">X_mnist</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>   <span class="c1"># requires n_samples &gt;= n_components per batch</span>
+        <span class="n">ipca</span><span class="o">.</span><span class="n">partial_fit</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+<span class="n">X_ipca</span> <span class="o">=</span> <span class="n">ipca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Output shape: </span><span class="si">{</span><span class="n">X_ipca</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Retained variance: </span><span class="si">{</span><span class="n">ipca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output shape: (1797, 20)
+Retained variance: 0.890
+</pre></div>
+</div>
+</div>
+</div>
+<p>The results are nearly identical to standard PCA. We can verify by comparing the explained variance ratios directly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca_full</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">pca_full</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ipca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;IncrementalPCA&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pca_full</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PCA (full SVD)&#39;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Component&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Explained Variance Ratio&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;IncrementalPCA vs. full PCA&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x13266ef80&gt;
+</pre></div>
+</div>
+<img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
+</div>
+</div>
+<p>The two curves overlap almost exactly. The main trade-off is that <code class="docutils literal notranslate"><span class="pre">IncrementalPCA</span></code> requires specifying <code class="docutils literal notranslate"><span class="pre">n_components</span></code> in advance and is marginally less accurate than the full SVD, but for large <span class="math notranslate nohighlight">\(n\)</span> the difference is negligible.</p>
 </section>
 </section>
 <section id="kernel-pca">
@@ -861,7 +927,7 @@ Smallest eigenvalue:       0.0000
 </div>
 <div class="exercise admonition" id="ex-eda-kpca-gamma">
 
-<p class="admonition-title"><span class="caption-number">Exercise 69 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 70 </span></p>
 <section id="exercise-content">
 <p>Using the moons dataset, fit <code class="docutils literal notranslate"><span class="pre">KernelPCA</span></code> with <code class="docutils literal notranslate"><span class="pre">kernel='rbf'</span></code> for five values of <code class="docutils literal notranslate"><span class="pre">gamma</span></code> spanning a wide range (e.g. 0.1, 1, 10, 100, 1000). For each, plot the 2D transformed data colored by class. Describe what happens to the separation as <code class="docutils literal notranslate"><span class="pre">gamma</span></code> increases. At what value does the transformation appear to overfit to individual points?</p>
 </section>
@@ -907,11 +973,11 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3455
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3611
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/15b85673c3c17eceb3db7beb0429eca4c229e4d8e01a5176176258a0c578b6cd.png" src="../_images/15b85673c3c17eceb3db7beb0429eca4c229e4d8e01a5176176258a0c578b6cd.png" />
+<img alt="../_images/fb9a189b8581854c258eb027663a7871f7aff92cdc220ffef246e7021f7ffc37.png" src="../_images/fb9a189b8581854c258eb027663a7871f7aff92cdc220ffef246e7021f7ffc37.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -941,10 +1007,10 @@ Stress PCA: 0.5405
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7788
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7646
 </pre></div>
 </div>
-<img alt="../_images/63484e1363a877f03eeb4a328cd2bfc51f73ed0c94842eab64d31bce617a609d.png" src="../_images/63484e1363a877f03eeb4a328cd2bfc51f73ed0c94842eab64d31bce617a609d.png" />
+<img alt="../_images/3221250d91fbac906dcec9ad1fa64f71615e9e6765ace0beacf13eb1ca70dde1.png" src="../_images/3221250d91fbac906dcec9ad1fa64f71615e9e6765ace0beacf13eb1ca70dde1.png" />
 </div>
 </div>
 <p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
@@ -980,7 +1046,7 @@ Stress PCA: 0.5405
 </div>
 <div class="exercise admonition" id="ex-eda-tsne-perp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 70 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
 <section id="exercise-content">
 <p>Run t-SNE on the MNIST dataset with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
 </section>
@@ -1024,11 +1090,46 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <p>The two key hyperparameters are <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> (controls the balance between local and global structure — larger values give more global context) and <code class="docutils literal notranslate"><span class="pre">min_dist</span></code> (controls how tightly points are packed in the embedding — smaller values produce more clustered layouts).</p>
 <div class="exercise admonition" id="ex-eda-umap-params">
 
-<p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 72 </span></p>
 <section id="exercise-content">
 <p>Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) <code class="docutils literal notranslate"><span class="pre">n_neighbors=5,</span> <span class="pre">min_dist=0.01</span></code>, (b) <code class="docutils literal notranslate"><span class="pre">n_neighbors=15,</span> <span class="pre">min_dist=0.1</span></code> (the default above), and (c) <code class="docutils literal notranslate"><span class="pre">n_neighbors=50,</span> <span class="pre">min_dist=0.5</span></code>. Plot the three embeddings side-by-side colored by digit. Describe how increasing <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> changes the structure of the embedding.</p>
 </section>
 </div>
+</section>
+<section id="phate">
+<h3>PHATE<a class="headerlink" href="#phate" title="Link to this heading">#</a></h3>
+<p>PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve <strong>trajectory and branching structure</strong> in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths — reaction trajectories, transient process states, material synthesis routes, or any dataset where intermediate states are physically meaningful.</p>
+<p>The key idea is to compute a <strong>diffusion operator</strong> that models how information spreads through the data manifold, then embed points based on their <em>potential distances</em> under this diffusion. This captures multi-scale structure: fine local neighborhoods and broad global trajectories are both represented faithfully.</p>
+<p>In chemical engineering, PHATE is especially relevant for:</p>
+<ul class="simple">
+<li><p>Time-series process data where plant states evolve continuously (startup, shutdown, grade transitions)</p></li>
+<li><p>Reaction pathway analysis where the system passes through a sequence of intermediate compositions</p></li>
+<li><p>Materials datasets where processing conditions trace a route through composition or microstructure space</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">phate</span>
+
+<span class="n">phate_op</span> <span class="o">=</span> <span class="n">phate</span><span class="o">.</span><span class="n">PHATE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">knn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                       <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_phate</span> <span class="o">=</span> <span class="n">phate_op</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_phate</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_phate</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y_mnist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Digit&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PHATE — MNIST&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;PHATE — MNIST&#39;)
+</pre></div>
+</div>
+<img alt="../_images/764e2e5b20ca66e359bd84561e5c48f6388527940189c2aba0a5dd36085a729d.png" src="../_images/764e2e5b20ca66e359bd84561e5c48f6388527940189c2aba0a5dd36085a729d.png" />
+</div>
+</div>
+<p>On MNIST (a dataset with discrete clusters rather than trajectories), PHATE reveals continuous paths connecting related digit classes — for example, a smooth “1”→”7”→”4” progression that reflects shared stroke geometry. This reflects PHATE’s tendency to emphasize global connectivity and smooth transitions rather than isolated blobs. On process data with genuine trajectories, this behavior is exactly what is desired.</p>
+<p>The key hyperparameters are <code class="docutils literal notranslate"><span class="pre">knn</span></code> (number of nearest neighbors for the affinity graph — smaller values capture finer local structure) and <code class="docutils literal notranslate"><span class="pre">decay</span></code> (sharpness of the affinity kernel — larger values produce a tighter, more local kernel).</p>
 </section>
 <section id="comparison-manifold-learning-vs-pca">
 <h3>Comparison: Manifold Learning vs. PCA<a class="headerlink" href="#comparison-manifold-learning-vs-pca" title="Link to this heading">#</a></h3>
@@ -1040,11 +1141,13 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <th class="head"><p>MDS</p></th>
 <th class="head"><p>t-SNE</p></th>
 <th class="head"><p>UMAP</p></th>
+<th class="head"><p>PHATE</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Linear?</p></td>
 <td><p>Yes</p></td>
+<td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
@@ -1056,6 +1159,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>Yes</p></td>
+<td><p>No</p></td>
 </tr>
 <tr class="row-even"><td><p>Invertible?</p></td>
 <td><p>Yes</p></td>
@@ -1063,6 +1167,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>Approx.</p></td>
+<td><p>No</p></td>
 </tr>
 <tr class="row-odd"><td><p>Speed</p></td>
 <td><p>Fast</p></td>
@@ -1070,6 +1175,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>Slow (<span class="math notranslate nohighlight">\(O(N^2)\)</span>)</p></td>
 <td><p>Slow (<span class="math notranslate nohighlight">\(O(N^2)\)</span>)</p></td>
 <td><p>Fast (<span class="math notranslate nohighlight">\(O(N^{1.1})\)</span>)</p></td>
+<td><p>Moderate</p></td>
 </tr>
 <tr class="row-even"><td><p>Global structure</p></td>
 <td><p>Yes</p></td>
@@ -1077,18 +1183,20 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>Yes</p></td>
 <td><p>Poor</p></td>
 <td><p>Good</p></td>
+<td><p>Excellent</p></td>
 </tr>
 <tr class="row-odd"><td><p>Best for</p></td>
-<td><p>Linear structure, compression</p></td>
-<td><p>Nonlinear, small datasets</p></td>
-<td><p>Distance preservation</p></td>
+<td><p>Linear, compression</p></td>
+<td><p>Nonlinear, small</p></td>
+<td><p>Distance</p></td>
 <td><p>Visualization</p></td>
 <td><p>Visualization + pipelines</p></td>
+<td><p>Trajectories, branching</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. UMAP is the current best practice for visualization tasks where t-SNE was previously used.</p>
+<p>Manifold techniques provide powerful insight into data structure but are generally not projectable and scale poorly compared to PCA. For visualization, UMAP is the current best practice for cluster-structured data; PHATE is preferred when the data has trajectory or branching structure.</p>
 </section>
 </section>
 <section id="autoencoding">
@@ -1120,6 +1228,13 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <li><p>No interpretable relationship between latent dimensions and original features</p></li>
 </ul>
 <p>Autoencoders are an active research area. Specialized variants — variational autoencoders (VAEs) and denoising autoencoders — are used in generative modeling, anomaly detection, and representation learning. We revisit this topic in the Generative Models chapter.</p>
+<div class="exercise admonition" id="ex-eda-autoencoder-design">
+
+<p class="admonition-title"><span class="caption-number">Exercise 73 </span></p>
+<section id="exercise-content">
+<p>Consider a dataset with 100 features. You want to use an autoencoder to compress it to a 5-dimensional latent space. (a) Sketch an encoder architecture with two hidden layers, specifying reasonable layer widths. (b) If you instead used PCA for the same 5-component reduction and found that 5 PCs retain only 40% of variance, would you expect an autoencoder to do better or worse? What assumption does PCA make that the autoencoder does not? (c) Name one practical disadvantage of the autoencoder approach for a dataset with only 500 observations.</p>
+</section>
+</div>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
@@ -1131,7 +1246,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <li><p><strong>Kernel PCA</strong> extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter <span class="math notranslate nohighlight">\(\gamma\)</span> controls the locality of the similarity measure.</p></li>
 <li><p><strong>Manifold learning</strong> methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as <span class="math notranslate nohighlight">\(O(N^2)\)</span>.</p></li>
 <li><p><strong>t-SNE</strong> produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. Pre-reducing with PCA (to ~30 components) before running t-SNE is a standard speed-up.</p></li>
+<li><p><strong>Incremental PCA</strong> (<code class="docutils literal notranslate"><span class="pre">IncrementalPCA</span></code>) fits PCA in mini-batches and is the go-to choice for datasets too large to fit in memory; results are nearly identical to full SVD-based PCA.</p></li>
 <li><p><strong>UMAP</strong> is faster than t-SNE, better preserves global structure, and is projectable — it is the current best practice for visualization and nonlinear feature extraction.</p></li>
+<li><p><strong>PHATE</strong> uses heat diffusion to capture trajectory and branching structure; it is particularly suited for process data with continuous state transitions or reaction pathway data.</p></li>
 <li><p><strong>Autoencoders</strong> use neural networks to learn nonlinear, projectable, and invertible representations, at the cost of requiring large datasets and hyperparameter tuning.</p></li>
 </ul>
 </section>
@@ -1145,6 +1262,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <li><p><a class="reference external" href="https://distill.pub/2016/misread-tsne/">Distill.pub: How to Use t-SNE Effectively</a></p></li>
 <li><p><a class="reference external" href="https://umap-learn.readthedocs.io/">UMAP documentation</a></p></li>
 <li><p><a class="reference external" href="https://arxiv.org/abs/1802.03426">McInnes et al. (2018): UMAP paper</a></p></li>
+<li><p><a class="reference external" href="https://phate.readthedocs.io/">PHATE documentation</a></p></li>
+<li><p><a class="reference external" href="https://www.nature.com/articles/s41587-019-0336-3">Moon et al. (2019): PHATE paper</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.IncrementalPCA.html">scikit-learn: IncrementalPCA</a></p></li>
 <li><p><a class="reference external" href="https://hastie.su.domains/ElemStatLearn/">Hastie, Tibshirani &amp; Friedman: The Elements of Statistical Learning, Ch. 14</a></p></li>
 </ul>
 </section>
@@ -1225,6 +1345,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-projection-and-visualization">2D Projection and Visualization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction">Reconstruction</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scikit-learn-pca">scikit-learn PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#incremental-pca">Incremental PCA</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-pca">Kernel PCA</a><ul class="nav section-nav flex-column">
@@ -1235,6 +1356,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-dimensional-scaling-mds">Multi-Dimensional Scaling (MDS)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">t-SNE</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#umap">UMAP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phate">PHATE</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-manifold-learning-vs-pca">Comparison: Manifold Learning vs. PCA</a></li>
 </ul>
 </li>

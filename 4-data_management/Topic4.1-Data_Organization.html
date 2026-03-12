@@ -1703,9 +1703,6 @@ strategy. The <code class="docutils literal notranslate"><span class="pre">numer
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>After dropping bad rows: (10297, 46)  (lost 406 rows)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
 </div>
 </div>
 </section>
@@ -2075,7 +2072,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.64 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.63 s
 </pre></div>
 </div>
 </div>
@@ -2179,9 +2176,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0006 s
-HDF5 one column:  0.0003 s
-In-memory slice:  0.000194 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0008 s
+HDF5 one column:  0.0004 s
+In-memory slice:  0.000191 s
 </pre></div>
 </div>
 </div>
@@ -2226,10 +2223,10 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0379 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0509 s
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet read:  0.0430 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet read:  0.0537 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
