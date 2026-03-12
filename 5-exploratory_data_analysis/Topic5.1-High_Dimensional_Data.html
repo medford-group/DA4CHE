@@ -369,8 +369,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter Plots</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#joint-plots">Joint Plots</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-matrix">Correlation Matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spearman-rank-correlation">Spearman Rank Correlation</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-eda">Automated EDA</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
@@ -391,9 +393,10 @@ document.write(`
 <p>By the end of this chapter, you will be able to:</p>
 <ul class="simple">
 <li><p>Describe the curse and blessing of dimensionality and their practical implications</p></li>
-<li><p>Compute and interpret summary statistics (mean, standard deviation, max) across a high-dimensional feature matrix</p></li>
-<li><p>Construct histogram grids and scatter plot matrices to explore feature distributions and pairwise relationships</p></li>
-<li><p>Build and interpret correlation heatmaps for both tabular process data and image-derived features</p></li>
+<li><p>Compute and interpret summary statistics across a high-dimensional feature matrix using both manual methods and <code class="docutils literal notranslate"><span class="pre">DataFrame.describe()</span></code></p></li>
+<li><p>Construct histogram grids and scatter plot matrices to explore feature distributions and pairwise relationships, including class-colored visualizations</p></li>
+<li><p>Rank features by their correlation with a target variable to identify potentially predictive sensors</p></li>
+<li><p>Build and interpret correlation heatmaps, and distinguish Pearson from Spearman rank correlation</p></li>
 <li><p>Identify zero-variance and highly correlated features as candidates for removal</p></li>
 </ul>
 </div>
@@ -904,6 +907,253 @@ document.write(`
 </table>
 </div></div></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">pandas</span></code> provides the same information in one call with <code class="docutils literal notranslate"><span class="pre">DataFrame.describe()</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_dow</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x1:Primary Column Reflux Flow</th>
+      <th>x2:Primary Column Tails Flow</th>
+      <th>x3:Input to Primary Column Bed 3 Flow</th>
+      <th>x4:Input to Primary Column Bed 2 Flow</th>
+      <th>x5:Primary Column Feed Flow from Feed Column</th>
+      <th>x6:Primary Column Make Flow</th>
+      <th>x7:Primary Column Base Level</th>
+      <th>x8:Primary Column Reflux Drum Pressure</th>
+      <th>x9:Primary Column Condenser Reflux Drum Level</th>
+      <th>x10:Primary Column Bed1 DP</th>
+      <th>...</th>
+      <th>x31: Secondary Column Bed 2 Temperature</th>
+      <th>x32: Secondary Column Tray 2 Temperature</th>
+      <th>x33: Secondary Column Tray 1 Temperature</th>
+      <th>x34: Secondary Column Tails Temperature</th>
+      <th>x35: Secondary Column Tails Concentration</th>
+      <th>x36: Feed Column Recycle Flow</th>
+      <th>x37: Feed Column Tails Flow to Primary Column</th>
+      <th>x38: Feed Column Calculated DP</th>
+      <th>x39: Feed Column Steam Flow</th>
+      <th>x40: Feed Column Tails Flow</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>...</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+      <td>10297.000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>363.769</td>
+      <td>48.043</td>
+      <td>2531.651</td>
+      <td>2462.788</td>
+      <td>111.402</td>
+      <td>105.253</td>
+      <td>54.302</td>
+      <td>39.617</td>
+      <td>52.162</td>
+      <td>10.620</td>
+      <td>...</td>
+      <td>55.753</td>
+      <td>82.839</td>
+      <td>103.999</td>
+      <td>138.421</td>
+      <td>0.015</td>
+      <td>62.291</td>
+      <td>45.008</td>
+      <td>66.467</td>
+      <td>8.318</td>
+      <td>113.176</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>75.652</td>
+      <td>8.344</td>
+      <td>571.323</td>
+      <td>503.672</td>
+      <td>27.231</td>
+      <td>28.087</td>
+      <td>9.015</td>
+      <td>4.618</td>
+      <td>8.890</td>
+      <td>3.791</td>
+      <td>...</td>
+      <td>6.701</td>
+      <td>18.304</td>
+      <td>18.990</td>
+      <td>18.885</td>
+      <td>0.026</td>
+      <td>3.291</td>
+      <td>0.001</td>
+      <td>15.050</td>
+      <td>1.789</td>
+      <td>27.192</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-1.356</td>
+      <td>-0.137</td>
+      <td>-0.363</td>
+      <td>-1.119</td>
+      <td>-0.977</td>
+      <td>-0.033</td>
+      <td>-0.127</td>
+      <td>2.185</td>
+      <td>-1.235</td>
+      <td>0.126</td>
+      <td>...</td>
+      <td>15.182</td>
+      <td>16.600</td>
+      <td>15.946</td>
+      <td>13.957</td>
+      <td>0.000</td>
+      <td>45.002</td>
+      <td>44.998</td>
+      <td>-2.900</td>
+      <td>0.000</td>
+      <td>-0.978</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>339.678</td>
+      <td>48.943</td>
+      <td>2347.260</td>
+      <td>2341.190</td>
+      <td>105.135</td>
+      <td>96.266</td>
+      <td>54.672</td>
+      <td>37.811</td>
+      <td>52.749</td>
+      <td>7.857</td>
+      <td>...</td>
+      <td>55.266</td>
+      <td>73.444</td>
+      <td>94.417</td>
+      <td>140.417</td>
+      <td>0.013</td>
+      <td>62.879</td>
+      <td>45.007</td>
+      <td>67.292</td>
+      <td>8.694</td>
+      <td>106.995</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>386.493</td>
+      <td>49.818</td>
+      <td>2414.810</td>
+      <td>2603.800</td>
+      <td>121.046</td>
+      <td>115.361</td>
+      <td>55.488</td>
+      <td>40.993</td>
+      <td>53.569</td>
+      <td>11.948</td>
+      <td>...</td>
+      <td>56.665</td>
+      <td>78.181</td>
+      <td>104.531</td>
+      <td>142.002</td>
+      <td>0.014</td>
+      <td>62.898</td>
+      <td>45.008</td>
+      <td>68.898</td>
+      <td>8.700</td>
+      <td>122.496</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>408.479</td>
+      <td>50.041</td>
+      <td>2902.500</td>
+      <td>2661.420</td>
+      <td>127.254</td>
+      <td>122.137</td>
+      <td>56.299</td>
+      <td>41.012</td>
+      <td>54.374</td>
+      <td>13.399</td>
+      <td>...</td>
+      <td>57.326</td>
+      <td>88.314</td>
+      <td>117.689</td>
+      <td>142.352</td>
+      <td>0.015</td>
+      <td>62.935</td>
+      <td>45.008</td>
+      <td>70.610</td>
+      <td>8.705</td>
+      <td>128.658</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>435.227</td>
+      <td>56.118</td>
+      <td>3222.690</td>
+      <td>3130.710</td>
+      <td>138.763</td>
+      <td>128.979</td>
+      <td>136.216</td>
+      <td>80.739</td>
+      <td>103.105</td>
+      <td>64.262</td>
+      <td>...</td>
+      <td>143.685</td>
+      <td>145.666</td>
+      <td>145.132</td>
+      <td>146.126</td>
+      <td>1.000</td>
+      <td>63.580</td>
+      <td>45.010</td>
+      <td>150.000</td>
+      <td>9.023</td>
+      <td>183.574</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 40 columns</p>
+</div></div></div>
+</div>
 <p>Summary statistics can quickly reveal:</p>
 <ul class="simple">
 <li><p>Features with near-zero standard deviation (effectively constant — no predictive value)</p></li>
@@ -982,14 +1232,17 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mnist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;px</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_mnist</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">mnist_df</span><span class="p">[[</span><span class="sa">f</span><span class="s1">&#39;px</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]],</span> <span class="n">plot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">});</span>
+<span class="n">mnist_df_plot</span> <span class="o">=</span> <span class="n">mnist_df</span><span class="p">[[</span><span class="sa">f</span><span class="s1">&#39;px</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mnist_df_plot</span><span class="p">[</span><span class="s1">&#39;digit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_mnist</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">mnist_df_plot</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;digit&#39;</span><span class="p">,</span> <span class="n">plot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">});</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/03a95508c9f987304dce4876d94b97c07ccc10ddd2bcce398a5340b379339465.png" src="../_images/03a95508c9f987304dce4876d94b97c07ccc10ddd2bcce398a5340b379339465.png" />
+<img alt="../_images/69fecb898157acc9aa00e56bafb7de068ef137840297c31eadeda50ea1ce7ddb.png" src="../_images/69fecb898157acc9aa00e56bafb7de068ef137840297c31eadeda50ea1ce7ddb.png" />
 </div>
 </div>
+<p>Adding <code class="docutils literal notranslate"><span class="pre">hue='digit'</span></code> reveals class structure that is invisible in a monochrome plot: pixels 0 and 1 (top-left corners) show nearly all digits stacked at zero, while central pixels display separated color clusters corresponding to different digit classes. Panels where the colored clusters overlap heavily indicate features that will be difficult to use for classification on their own.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What does a vertical or horizontal line in a scatter plot mean?</strong> It means one of the two features plotted on that panel takes only a single value (or a very narrow range of values) across the dataset. The feature contributes no information to differentiate observations. This is exactly the near-zero-variance pattern identified in the histogram and summary statistics sections, and is a strong signal to exclude that feature before modeling.</p>
@@ -1025,7 +1278,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fc99a174798483abca8982e67853d6863042ba7ee150064c471d6e6034b07951.png" src="../_images/fc99a174798483abca8982e67853d6863042ba7ee150064c471d6e6034b07951.png" />
+<img alt="../_images/853ff0358e899e39cd6a5865a6ce9c9af9c7b726add68f974f022d7de5e89049.png" src="../_images/853ff0358e899e39cd6a5865a6ce9c9af9c7b726add68f974f022d7de5e89049.png" />
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">kind='reg'</span></code> option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.</p>
@@ -1067,6 +1320,33 @@ document.write(`
 <img alt="../_images/461fc0e7754bb3b2c8c136850bd0e4c5388650818ce2acfbb39e396c5725b465.png" src="../_images/461fc0e7754bb3b2c8c136850bd0e4c5388650818ce2acfbb39e396c5725b465.png" />
 </div>
 </div>
+<p><strong>Demonstration: Feature–target correlations for the Dow dataset</strong></p>
+<p>A correlation heatmap between features is useful for detecting redundancy, but for supervised learning the most actionable analysis is how strongly each feature correlates with the <em>target variable</em> — here, the product impurity. Ranking features by <span class="math notranslate nohighlight">\(|r|\)</span> with the target gives a quick first screen for which sensors are predictive.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">X_dow</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">y_dow</span><span class="o">.</span><span class="n">ravel</span><span class="p">())[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_dow</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="p">])</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">corr_target</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">bar_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">corr_target</span><span class="p">[</span><span class="n">order</span><span class="p">]]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X_dow</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">corr_target</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">bar_colors</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X_dow</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pearson r with impurity&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dow features ranked by correlation with impurity target&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/50f58c6eb0667254df00688501d51ebd86016cdf787c07c3639ac3de9bff4cde.png" src="../_images/50f58c6eb0667254df00688501d51ebd86016cdf787c07c3639ac3de9bff4cde.png" />
+</div>
+</div>
+<p>Most features show weak linear correlation with the impurity target (<span class="math notranslate nohighlight">\(|r| &lt; 0.3\)</span>), which is typical of industrial process data where the output depends on complex, nonlinear interactions. A handful of features — particularly those related to reboiler and condenser flows — show stronger correlations and are likely to appear as important predictors in regression models.</p>
 <p><strong>Demonstration: Correlation as a regression slope</strong></p>
 <p>There is a precise algebraic relationship between the Pearson correlation coefficient and regression: if two features <span class="math notranslate nohighlight">\(x_i\)</span> and <span class="math notranslate nohighlight">\(x_j\)</span> are each standardized to zero mean and unit variance, the slope of a simple ordinary least squares regression of <span class="math notranslate nohighlight">\(x_j\)</span> on <span class="math notranslate nohighlight">\(x_i\)</span> equals their Pearson correlation coefficient. This connection helps interpret correlation matrices in terms of predictive relationships.</p>
 <div class="cell docutils container">
@@ -1108,17 +1388,63 @@ Difference: 2.22e-16
 </section>
 </div>
 </section>
+<section id="spearman-rank-correlation">
+<h3>Spearman Rank Correlation<a class="headerlink" href="#spearman-rank-correlation" title="Link to this heading">#</a></h3>
+<p>The Pearson correlation coefficient measures <em>linear</em> association. In chemical engineering data, features are often bounded (e.g. valve positions capped at 0–100%), physically nonlinear (reaction rates, thermodynamic equilibria), or contaminated by outliers — all situations where a linear correlation measure may understate the true relationship.</p>
+<p>The <strong>Spearman rank correlation</strong> is a simple alternative: replace each data value with its rank (1 = smallest) and then compute Pearson’s <span class="math notranslate nohighlight">\(r\)</span> on the ranks. Because ranking is a monotone transformation, the Spearman coefficient equals 1 or −1 whenever two variables are related by <em>any</em> monotonically increasing or decreasing function, not just a linear one. It is also more robust to outliers because extreme values map to the same ranks as other large values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">spearmanr</span>
+
+<span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">X_dow</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_dow</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">r_pearson</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">r_spearman</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pearson correlation:  </span><span class="si">{</span><span class="n">r_pearson</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Spearman correlation: </span><span class="si">{</span><span class="n">r_spearman</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pearson correlation:  0.8409
+Spearman correlation: 0.2359
+</pre></div>
+</div>
+</div>
+</div>
+<p>When Pearson and Spearman values agree closely, the relationship is approximately linear. A large discrepancy suggests nonlinearity or outlier influence, and warrants further investigation before assuming linear models are appropriate.</p>
+<div class="exercise admonition" id="ex-eda-spearman-compare">
+
+<p class="admonition-title"><span class="caption-number">Exercise 67 </span></p>
+<section id="exercise-content">
+<p>Compute both the Pearson and Spearman correlation matrices for all 40 Dow features. Calculate the element-wise absolute difference between the two matrices (excluding the diagonal). Which feature pair shows the largest discrepancy between Pearson and Spearman correlation? Plot a scatter plot of that pair and describe what you observe.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="automated-eda">
+<h2>Automated EDA<a class="headerlink" href="#automated-eda" title="Link to this heading">#</a></h2>
+<p>The manual workflow above — histograms, scatter matrices, heatmaps — builds intuition and gives precise control, but it is time-consuming for a completely unfamiliar dataset. The <code class="docutils literal notranslate"><span class="pre">ydata-profiling</span></code> library (formerly <code class="docutils literal notranslate"><span class="pre">pandas-profiling</span></code>) automates this process and generates a self-contained HTML report with a single function call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ydata_profiling</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProfileReport</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">ProfileReport</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_dow</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">feature_names</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Dow EDA&#39;</span><span class="p">)</span>
+<span class="n">report</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s1">&#39;dow_eda_report.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The report includes per-feature histograms and statistics, a full correlation matrix, missing value summaries, and alerts for high cardinality or near-constant features. It is especially useful as a first pass on a new dataset before deciding which manual analyses to pursue. Install with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ydata-profiling</span></code>.</p>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>High-dimensional data presents challenges (exponentially sparse sampling from the curse of dimensionality) and opportunities (better class separability from the blessing of dimensionality).</p></li>
-<li><p>Summary statistics (mean, std, max) computed per feature can expose constant features, scale mismatches, and structured spatial patterns in image data.</p></li>
+<li><p>Summary statistics (mean, std, max) computed per feature can expose constant features, scale mismatches, and structured spatial patterns; <code class="docutils literal notranslate"><span class="pre">DataFrame.describe()</span></code> provides these in one call.</p></li>
 <li><p>Histogram grids reveal marginal distributions; most real-world features are non-Gaussian, which matters for methods that assume normality.</p></li>
-<li><p>Scatter plot matrices and seaborn <code class="docutils literal notranslate"><span class="pre">pairplot</span></code> expose pairwise relationships and flag zero-variance features (appear as vertical or horizontal lines).</p></li>
+<li><p>Scatter plot matrices colored by class label reveal cluster structure and class separability that monochrome plots hide.</p></li>
+<li><p>Ranking features by their Pearson correlation with the target variable is a simple first screen for predictive relevance.</p></li>
 <li><p>Joint plots provide detailed views of individual feature pairs, including regression fits and marginal distributions.</p></li>
+<li><p>Pearson correlation measures linear association; Spearman rank correlation is more robust for nonlinear relationships and outliers. A large discrepancy between the two signals nonlinearity.</p></li>
 <li><p>Correlation heatmaps compress all pairwise linear relationships into a single matrix; the Pearson correlation between two standardized features equals the OLS regression slope.</p></li>
 <li><p>Near-zero-variance features and highly correlated feature groups are candidates for removal before fitting a model — both waste model capacity without adding information.</p></li>
+<li><p>Automated EDA tools like <code class="docutils literal notranslate"><span class="pre">ydata-profiling</span></code> can generate a comprehensive report in one call, useful for first-pass exploration of unfamiliar datasets.</p></li>
 </ul>
 </section>
 <section id="additional-reading">
@@ -1128,7 +1454,10 @@ Difference: 2.22e-16
 <li><p><a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.heatmap.html">Seaborn documentation: heatmap</a></p></li>
 <li><p><a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.jointplot.html">Seaborn documentation: jointplot</a></p></li>
 <li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html">Scikit-learn: the digits dataset</a></p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html">SciPy: spearmanr</a></p></li>
+<li><p><a class="reference external" href="https://docs.profiling.ydata.ai/">ydata-profiling documentation</a></p></li>
 <li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">Wikipedia: Curse of dimensionality</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient">Wikipedia: Spearman’s rank correlation coefficient</a></p></li>
 </ul>
 </section>
 </section>
@@ -1202,8 +1531,10 @@ Difference: 2.22e-16
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter Plots</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#joint-plots">Joint Plots</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-matrix">Correlation Matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spearman-rank-correlation">Spearman Rank Correlation</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-eda">Automated EDA</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
