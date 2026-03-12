@@ -385,6 +385,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manifold-learning">Manifold Learning</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-dimensional-scaling-mds">Multi-Dimensional Scaling (MDS)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">t-SNE</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#umap">UMAP</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-manifold-learning-vs-pca">Comparison: Manifold Learning vs. PCA</a></li>
 </ul>
 </li>
@@ -413,7 +414,8 @@ document.write(`
 <li><p>Use the scree plot and stress curve to choose the number of components</p></li>
 <li><p>Reconstruct and generate data points from a PCA low-dimensional representation</p></li>
 <li><p>Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter</p></li>
-<li><p>Describe the principles of manifold learning (MDS, t-SNE) and compare them to PCA</p></li>
+<li><p>Describe the principles of manifold learning (MDS, t-SNE, UMAP) and compare them to PCA</p></li>
+<li><p>Apply UMAP for fast, projectable nonlinear dimensionality reduction</p></li>
 <li><p>Recognize the autoencoder as a neural-network approach to dimensionality reduction</p></li>
 </ul>
 </div>
@@ -433,12 +435,16 @@ document.write(`
 <span class="n">X_mnist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 <span class="n">y_mnist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">show_image</span><span class="p">(</span><span class="n">digit_data</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the n-th row of data as an 8×8 grayscale image.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_image</span><span class="p">(</span><span class="n">digit_data</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the n-th row of data as an 8×8 grayscale image.</span>
+
+<span class="sd">    For eigenvectors or other data not in [0, 16], pass vmin=None, vmax=None</span>
+<span class="sd">    and a diverging cmap such as &#39;RdBu_r&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">digit_data</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-    <span class="n">cm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
@@ -554,12 +560,13 @@ document.write(`
 <p>The eigenvectors can be visualized as 8×8 images. The first principal component is the direction of maximum variance in the 64-dimensional pixel space:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_image</span><span class="p">(</span><span class="n">eig_vecs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;First principal component&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_image</span><span class="p">(</span><span class="n">eig_vecs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;First principal component&#39;</span><span class="p">,</span>
+           <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/9fccd62c318221ff879343b282bc2f6150a5d0048e3d5bcab6349585f9c62540.png" src="../_images/9fccd62c318221ff879343b282bc2f6150a5d0048e3d5bcab6349585f9c62540.png" />
+<img alt="../_images/40bbffc9b62f13045a1b0477f8f64d3aa62b8af7163bb0b299c076f8cd91e4d9.png" src="../_images/40bbffc9b62f13045a1b0477f8f64d3aa62b8af7163bb0b299c076f8cd91e4d9.png" />
 </div>
 </div>
 <p>The pattern is clearly not random — it reflects the global structure shared across digit images.</p>
@@ -626,7 +633,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1402e4b80&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x135797af0&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -778,7 +785,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1433b1a80&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14b9a0c40&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -900,11 +907,11 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3472
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3455
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/362f48c060b69a14d3200340cd2e7a719442be53f82956b6861f81ed954b8b91.png" src="../_images/362f48c060b69a14d3200340cd2e7a719442be53f82956b6861f81ed954b8b91.png" />
+<img alt="../_images/15b85673c3c17eceb3db7beb0429eca4c229e4d8e01a5176176258a0c578b6cd.png" src="../_images/15b85673c3c17eceb3db7beb0429eca4c229e4d8e01a5176176258a0c578b6cd.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -934,10 +941,10 @@ Stress PCA: 0.5405
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7772
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7788
 </pre></div>
 </div>
-<img alt="../_images/a12656f74d5bc796674bafc1818aefbe3c68b57c593111fce6b7d27d1fab6348.png" src="../_images/a12656f74d5bc796674bafc1818aefbe3c68b57c593111fce6b7d27d1fab6348.png" />
+<img alt="../_images/63484e1363a877f03eeb4a328cd2bfc51f73ed0c94842eab64d31bce617a609d.png" src="../_images/63484e1363a877f03eeb4a328cd2bfc51f73ed0c94842eab64d31bce617a609d.png" />
 </div>
 </div>
 <p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
@@ -945,11 +952,81 @@ Stress PCA: 0.5405
 <p class="admonition-title">Note</p>
 <p><strong>t-SNE hyperparameters:</strong> <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> (roughly, the number of effective nearest neighbors; typically 5–50) is the most important parameter to tune. <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> also affect results. t-SNE is sensitive to initialization and is not deterministic unless <code class="docutils literal notranslate"><span class="pre">random_state</span></code> is set. It is best used for visualization only — global distances between clusters are not meaningful.</p>
 </div>
+<p><strong>Practical tip: pre-process with PCA before t-SNE.</strong> Running t-SNE directly on 64-dimensional data is slow because pairwise distances must be computed in the full space. A common best practice is to first reduce to 30–50 components with PCA (retaining &gt;95% of variance) and then run t-SNE on the reduced representation. This dramatically speeds up t-SNE without meaningfully changing the embedding:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca_pre</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">X_pca_pre</span> <span class="o">=</span> <span class="n">pca_pre</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+
+<span class="n">tsne_fast</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
+                 <span class="n">learning_rate</span><span class="o">=</span><span class="mf">200.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                 <span class="n">init</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X_tsne_fast</span> <span class="o">=</span> <span class="n">tsne_fast</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_pca_pre</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_tsne_fast</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne_fast</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="n">c</span><span class="o">=</span><span class="n">y_mnist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Digit&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;t-SNE on PCA-reduced MNIST (30 components)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;t-SNE on PCA-reduced MNIST (30 components)&#39;)
+</pre></div>
+</div>
+<img alt="../_images/9f4e87a46a6d6a1d348768fe3d7d77535e64e195b1767649f7e4007d89433731.png" src="../_images/9f4e87a46a6d6a1d348768fe3d7d77535e64e195b1767649f7e4007d89433731.png" />
+</div>
+</div>
 <div class="exercise admonition" id="ex-eda-tsne-perp">
 
 <p class="admonition-title"><span class="caption-number">Exercise 70 </span></p>
 <section id="exercise-content">
 <p>Run t-SNE on the MNIST dataset with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
+</section>
+</div>
+</section>
+<section id="umap">
+<h3>UMAP<a class="headerlink" href="#umap" title="Link to this heading">#</a></h3>
+<p>Uniform Manifold Approximation and Projection (<strong>UMAP</strong>) is a more recent manifold learning method (McInnes et al., 2018) that has largely replaced t-SNE as the default visualization tool for high-dimensional data. It is based on Riemannian geometry and algebraic topology, but the practical intuition is similar to t-SNE: nearby points in the original space are pulled together in the embedding, while distant points are pushed apart.</p>
+<p>UMAP has two key advantages over t-SNE:</p>
+<ol class="arabic simple">
+<li><p><strong>Speed</strong> — UMAP scales approximately as <span class="math notranslate nohighlight">\(O(N^{1.14})\)</span> in practice, making it feasible on datasets with millions of points where t-SNE becomes prohibitive.</p></li>
+<li><p><strong>Global structure</strong> — Unlike t-SNE, UMAP better preserves the global relationships between clusters, not just local neighborhood structure.</p></li>
+<li><p><strong>Projectability</strong> — A fitted UMAP model can transform new points, enabling use in downstream pipelines.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+
+<span class="n">reducer</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X_umap</span> <span class="o">=</span> <span class="n">reducer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_umap</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_umap</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y_mnist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Digit&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;UMAP — MNIST&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/homebrew/Caskroom/miniforge/base/envs/DA4CHE/lib/python3.10/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;UMAP — MNIST&#39;)
+</pre></div>
+</div>
+<img alt="../_images/0dcf54a63b8ec1b6c3a57fd306b10192337a4e4dd38d730c8212a8bdf75da83c.png" src="../_images/0dcf54a63b8ec1b6c3a57fd306b10192337a4e4dd38d730c8212a8bdf75da83c.png" />
+</div>
+</div>
+<p>The two key hyperparameters are <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> (controls the balance between local and global structure — larger values give more global context) and <code class="docutils literal notranslate"><span class="pre">min_dist</span></code> (controls how tightly points are packed in the embedding — smaller values produce more clustered layouts).</p>
+<div class="exercise admonition" id="ex-eda-umap-params">
+
+<p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
+<section id="exercise-content">
+<p>Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) <code class="docutils literal notranslate"><span class="pre">n_neighbors=5,</span> <span class="pre">min_dist=0.01</span></code>, (b) <code class="docutils literal notranslate"><span class="pre">n_neighbors=15,</span> <span class="pre">min_dist=0.1</span></code> (the default above), and (c) <code class="docutils literal notranslate"><span class="pre">n_neighbors=50,</span> <span class="pre">min_dist=0.5</span></code>. Plot the three embeddings side-by-side colored by digit. Describe how increasing <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> changes the structure of the embedding.</p>
 </section>
 </div>
 </section>
@@ -962,11 +1039,13 @@ Stress PCA: 0.5405
 <th class="head"><p>Kernel PCA</p></th>
 <th class="head"><p>MDS</p></th>
 <th class="head"><p>t-SNE</p></th>
+<th class="head"><p>UMAP</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Linear?</p></td>
 <td><p>Yes</p></td>
+<td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
@@ -976,29 +1055,40 @@ Stress PCA: 0.5405
 <td><p>Yes</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
+<td><p>Yes</p></td>
 </tr>
 <tr class="row-even"><td><p>Invertible?</p></td>
 <td><p>Yes</p></td>
 <td><p>Yes (approx.)</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
+<td><p>Approx.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Speed</p></td>
 <td><p>Fast</p></td>
 <td><p>Moderate</p></td>
 <td><p>Slow (<span class="math notranslate nohighlight">\(O(N^2)\)</span>)</p></td>
 <td><p>Slow (<span class="math notranslate nohighlight">\(O(N^2)\)</span>)</p></td>
+<td><p>Fast (<span class="math notranslate nohighlight">\(O(N^{1.1})\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>Best for</p></td>
+<tr class="row-even"><td><p>Global structure</p></td>
+<td><p>Yes</p></td>
+<td><p>Partial</p></td>
+<td><p>Yes</p></td>
+<td><p>Poor</p></td>
+<td><p>Good</p></td>
+</tr>
+<tr class="row-odd"><td><p>Best for</p></td>
 <td><p>Linear structure, compression</p></td>
 <td><p>Nonlinear, small datasets</p></td>
 <td><p>Distance preservation</p></td>
-<td><p>Visualization only</p></td>
+<td><p>Visualization</p></td>
+<td><p>Visualization + pipelines</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. They are best used for exploratory visualization.</p>
+<p>Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. UMAP is the current best practice for visualization tasks where t-SNE was previously used.</p>
 </section>
 </section>
 <section id="autoencoding">
@@ -1040,7 +1130,8 @@ Stress PCA: 0.5405
 <li><p>A <strong>scree plot</strong> of cumulative explained variance guides the choice of the number of components <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
 <li><p><strong>Kernel PCA</strong> extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter <span class="math notranslate nohighlight">\(\gamma\)</span> controls the locality of the similarity measure.</p></li>
 <li><p><strong>Manifold learning</strong> methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as <span class="math notranslate nohighlight">\(O(N^2)\)</span>.</p></li>
-<li><p><strong>t-SNE</strong> is the standard tool for 2D visualization of high-dimensional labeled data; interpret cluster separation, not inter-cluster distances or axis values.</p></li>
+<li><p><strong>t-SNE</strong> produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. Pre-reducing with PCA (to ~30 components) before running t-SNE is a standard speed-up.</p></li>
+<li><p><strong>UMAP</strong> is faster than t-SNE, better preserves global structure, and is projectable — it is the current best practice for visualization and nonlinear feature extraction.</p></li>
 <li><p><strong>Autoencoders</strong> use neural networks to learn nonlinear, projectable, and invertible representations, at the cost of requiring large datasets and hyperparameter tuning.</p></li>
 </ul>
 </section>
@@ -1052,6 +1143,8 @@ Stress PCA: 0.5405
 <li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html">scikit-learn: MDS</a></p></li>
 <li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">scikit-learn: TSNE</a></p></li>
 <li><p><a class="reference external" href="https://distill.pub/2016/misread-tsne/">Distill.pub: How to Use t-SNE Effectively</a></p></li>
+<li><p><a class="reference external" href="https://umap-learn.readthedocs.io/">UMAP documentation</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1802.03426">McInnes et al. (2018): UMAP paper</a></p></li>
 <li><p><a class="reference external" href="https://hastie.su.domains/ElemStatLearn/">Hastie, Tibshirani &amp; Friedman: The Elements of Statistical Learning, Ch. 14</a></p></li>
 </ul>
 </section>
@@ -1141,6 +1234,7 @@ Stress PCA: 0.5405
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manifold-learning">Manifold Learning</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-dimensional-scaling-mds">Multi-Dimensional Scaling (MDS)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">t-SNE</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#umap">UMAP</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-manifold-learning-vs-pca">Comparison: Manifold Learning vs. PCA</a></li>
 </ul>
 </li>
