@@ -16,9 +16,10 @@ kernelspec:
 
 By the end of this chapter, you will be able to:
 - Describe the curse and blessing of dimensionality and their practical implications
-- Compute and interpret summary statistics (mean, standard deviation, max) across a high-dimensional feature matrix
-- Construct histogram grids and scatter plot matrices to explore feature distributions and pairwise relationships
-- Build and interpret correlation heatmaps for both tabular process data and image-derived features
+- Compute and interpret summary statistics across a high-dimensional feature matrix using both manual methods and `DataFrame.describe()`
+- Construct histogram grids and scatter plot matrices to explore feature distributions and pairwise relationships, including class-colored visualizations
+- Rank features by their correlation with a target variable to identify potentially predictive sensors
+- Build and interpret correlation heatmaps, and distinguish Pearson from Spearman rank correlation
 - Identify zero-variance and highly correlated features as candidates for removal
 :::
 
@@ -191,6 +192,12 @@ summary = pd.DataFrame({
 summary.round(3)
 ```
 
+`pandas` provides the same information in one call with `DataFrame.describe()`:
+
+```{code-cell} ipython3
+pd.DataFrame(X_dow, columns=feature_names).describe().round(3)
+```
+
 Summary statistics can quickly reveal:
 - Features with near-zero standard deviation (effectively constant — no predictive value)
 - Features on very different scales (e.g. flows in the hundreds vs. concentrations near zero), which may require standardization before distance-based modeling
@@ -255,8 +262,12 @@ The `seaborn` library provides `pairplot` as a convenient one-liner that produce
 
 ```{code-cell} ipython3
 mnist_df = pd.DataFrame(X_mnist, columns=[f'px{i}' for i in range(X_mnist.shape[1])])
-sns.pairplot(mnist_df[[f'px{i}' for i in features]], plot_kws={'s': 2, 'alpha': 0.3});
+mnist_df_plot = mnist_df[[f'px{i}' for i in features]].copy()
+mnist_df_plot['digit'] = y_mnist.astype(str)
+sns.pairplot(mnist_df_plot, hue='digit', plot_kws={'s': 5, 'alpha': 0.5});
 ```
+
+Adding `hue='digit'` reveals class structure that is invisible in a monochrome plot: pixels 0 and 1 (top-left corners) show nearly all digits stacked at zero, while central pixels display separated color clusters corresponding to different digit classes. Panels where the colored clusters overlap heavily indicate features that will be difficult to use for classification on their own.
 
 :::{note}
 **What does a vertical or horizontal line in a scatter plot mean?** It means one of the two features plotted on that panel takes only a single value (or a very narrow range of values) across the dataset. The feature contributes no information to differentiate observations. This is exactly the near-zero-variance pattern identified in the histogram and summary statistics sections, and is a strong signal to exclude that feature before modeling.
@@ -315,6 +326,30 @@ ax.set_title('Dow dataset: first 4 feature correlations')
 plt.tight_layout()
 ```
 
+**Demonstration: Feature–target correlations for the Dow dataset**
+
+A correlation heatmap between features is useful for detecting redundancy, but for supervised learning the most actionable analysis is how strongly each feature correlates with the *target variable* — here, the product impurity. Ranking features by $|r|$ with the target gives a quick first screen for which sensors are predictive.
+
+```{code-cell} ipython3
+corr_target = np.array([
+    np.corrcoef(X_dow[:, i], y_dow.ravel())[0, 1]
+    for i in range(X_dow.shape[1])
+])
+order = np.argsort(np.abs(corr_target))[::-1]
+
+fig, ax = plt.subplots(figsize=(12, 4))
+bar_colors = [clrs[0] if c >= 0 else clrs[1] for c in corr_target[order]]
+ax.bar(range(X_dow.shape[1]), corr_target[order], color=bar_colors)
+ax.axhline(0, color='k', linewidth=0.5)
+ax.set_xticks(range(X_dow.shape[1]))
+ax.set_xticklabels(feature_names[order], rotation=90, fontsize=7)
+ax.set_ylabel('Pearson r with impurity')
+ax.set_title('Dow features ranked by correlation with impurity target')
+plt.tight_layout()
+```
+
+Most features show weak linear correlation with the impurity target ($|r| < 0.3$), which is typical of industrial process data where the output depends on complex, nonlinear interactions. A handful of features — particularly those related to reboiler and condenser flows — show stronger correlations and are likely to appear as important predictors in regression models.
+
 **Demonstration: Correlation as a regression slope**
 
 There is a precise algebraic relationship between the Pearson correlation coefficient and regression: if two features $x_i$ and $x_j$ are each standardized to zero mean and unit variance, the slope of a simple ordinary least squares regression of $x_j$ on $x_i$ equals their Pearson correlation coefficient. This connection helps interpret correlation matrices in terms of predictive relationships.
@@ -347,15 +382,55 @@ The two values agree to numerical precision. Intuitively, the correlation matrix
 Extend the demonstration above to verify that the **full correlation matrix** of the first four Dow features equals the matrix of pairwise OLS regression slopes on standardized data. For each off-diagonal pair $(i, j)$: standardize both features, fit `LinearRegression`, and compare `.coef_[0]` to the corresponding entry in `corr_dow`. Display the maximum absolute difference across all pairs.
 :::
 
+### Spearman Rank Correlation
+
+The Pearson correlation coefficient measures *linear* association. In chemical engineering data, features are often bounded (e.g. valve positions capped at 0–100%), physically nonlinear (reaction rates, thermodynamic equilibria), or contaminated by outliers — all situations where a linear correlation measure may understate the true relationship.
+
+The **Spearman rank correlation** is a simple alternative: replace each data value with its rank (1 = smallest) and then compute Pearson's $r$ on the ranks. Because ranking is a monotone transformation, the Spearman coefficient equals 1 or −1 whenever two variables are related by *any* monotonically increasing or decreasing function, not just a linear one. It is also more robust to outliers because extreme values map to the same ranks as other large values.
+
+```{code-cell} ipython3
+from scipy.stats import spearmanr
+
+x0, x1 = X_dow[:, 0], X_dow[:, 1]
+r_pearson  = np.corrcoef(x0, x1)[0, 1]
+r_spearman, _ = spearmanr(x0, x1)
+
+print(f'Pearson correlation:  {r_pearson:.4f}')
+print(f'Spearman correlation: {r_spearman:.4f}')
+```
+
+When Pearson and Spearman values agree closely, the relationship is approximately linear. A large discrepancy suggests nonlinearity or outlier influence, and warrants further investigation before assuming linear models are appropriate.
+
+:::{exercise}
+:label: ex-eda-spearman-compare
+
+Compute both the Pearson and Spearman correlation matrices for all 40 Dow features. Calculate the element-wise absolute difference between the two matrices (excluding the diagonal). Which feature pair shows the largest discrepancy between Pearson and Spearman correlation? Plot a scatter plot of that pair and describe what you observe.
+:::
+
+## Automated EDA
+
+The manual workflow above — histograms, scatter matrices, heatmaps — builds intuition and gives precise control, but it is time-consuming for a completely unfamiliar dataset. The `ydata-profiling` library (formerly `pandas-profiling`) automates this process and generates a self-contained HTML report with a single function call:
+
+```python
+from ydata_profiling import ProfileReport
+report = ProfileReport(pd.DataFrame(X_dow, columns=feature_names), title='Dow EDA')
+report.to_file('dow_eda_report.html')
+```
+
+The report includes per-feature histograms and statistics, a full correlation matrix, missing value summaries, and alerts for high cardinality or near-constant features. It is especially useful as a first pass on a new dataset before deciding which manual analyses to pursue. Install with `pip install ydata-profiling`.
+
 ## Summary
 
 - High-dimensional data presents challenges (exponentially sparse sampling from the curse of dimensionality) and opportunities (better class separability from the blessing of dimensionality).
-- Summary statistics (mean, std, max) computed per feature can expose constant features, scale mismatches, and structured spatial patterns in image data.
+- Summary statistics (mean, std, max) computed per feature can expose constant features, scale mismatches, and structured spatial patterns; `DataFrame.describe()` provides these in one call.
 - Histogram grids reveal marginal distributions; most real-world features are non-Gaussian, which matters for methods that assume normality.
-- Scatter plot matrices and seaborn `pairplot` expose pairwise relationships and flag zero-variance features (appear as vertical or horizontal lines).
+- Scatter plot matrices colored by class label reveal cluster structure and class separability that monochrome plots hide.
+- Ranking features by their Pearson correlation with the target variable is a simple first screen for predictive relevance.
 - Joint plots provide detailed views of individual feature pairs, including regression fits and marginal distributions.
+- Pearson correlation measures linear association; Spearman rank correlation is more robust for nonlinear relationships and outliers. A large discrepancy between the two signals nonlinearity.
 - Correlation heatmaps compress all pairwise linear relationships into a single matrix; the Pearson correlation between two standardized features equals the OLS regression slope.
 - Near-zero-variance features and highly correlated feature groups are candidates for removal before fitting a model — both waste model capacity without adding information.
+- Automated EDA tools like `ydata-profiling` can generate a comprehensive report in one call, useful for first-pass exploration of unfamiliar datasets.
 
 ## Additional Reading
 
@@ -363,4 +438,7 @@ Extend the demonstration above to verify that the **full correlation matrix** of
 - [Seaborn documentation: heatmap](https://seaborn.pydata.org/generated/seaborn.heatmap.html)
 - [Seaborn documentation: jointplot](https://seaborn.pydata.org/generated/seaborn.jointplot.html)
 - [Scikit-learn: the digits dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)
+- [SciPy: spearmanr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html)
+- [ydata-profiling documentation](https://docs.profiling.ydata.ai/)
 - [Wikipedia: Curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality)
+- [Wikipedia: Spearman's rank correlation coefficient](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
