@@ -20,7 +20,8 @@ By the end of this chapter, you will be able to:
 - Use the scree plot and stress curve to choose the number of components
 - Reconstruct and generate data points from a PCA low-dimensional representation
 - Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter
-- Describe the principles of manifold learning (MDS, t-SNE) and compare them to PCA
+- Describe the principles of manifold learning (MDS, t-SNE, UMAP) and compare them to PCA
+- Apply UMAP for fast, projectable nonlinear dimensionality reduction
 - Recognize the autoencoder as a neural-network approach to dimensionality reduction
 :::
 
@@ -40,12 +41,16 @@ digits = load_digits()
 X_mnist = np.array(digits.data)
 y_mnist = np.array(digits.target)
 
-def show_image(digit_data, n, ax=None, title=None):
-    """Display the n-th row of data as an 8×8 grayscale image."""
+def show_image(digit_data, n, ax=None, title=None, vmin=0, vmax=16, cmap='binary'):
+    """Display the n-th row of data as an 8×8 grayscale image.
+
+    For eigenvectors or other data not in [0, 16], pass vmin=None, vmax=None
+    and a diverging cmap such as 'RdBu_r'.
+    """
     if ax is None:
         fig, ax = plt.subplots()
     img = digit_data[n].reshape(8, 8)
-    cm = ax.imshow(img, cmap='binary', vmin=0, vmax=16)
+    cm = ax.imshow(img, cmap=cmap, vmin=vmin, vmax=vmax)
     ax.get_figure().colorbar(cm, ax=ax)
     ax.set_xticks([])
     ax.set_yticks([])
@@ -144,7 +149,8 @@ eig_vecs = eig_vecs[sorted_idxs, :]
 The eigenvectors can be visualized as 8×8 images. The first principal component is the direction of maximum variance in the 64-dimensional pixel space:
 
 ```{code-cell} ipython3
-show_image(eig_vecs, 0, title='First principal component')
+show_image(eig_vecs, 0, title='First principal component',
+           vmin=None, vmax=None, cmap='RdBu_r')
 ```
 
 The pattern is clearly not random — it reflects the global structure shared across digit images.
@@ -443,23 +449,72 @@ t-SNE typically produces better-separated clusters than MDS or PCA on image data
 **t-SNE hyperparameters:** `perplexity` (roughly, the number of effective nearest neighbors; typically 5–50) is the most important parameter to tune. `learning_rate` and `max_iter` also affect results. t-SNE is sensitive to initialization and is not deterministic unless `random_state` is set. It is best used for visualization only — global distances between clusters are not meaningful.
 :::
 
+**Practical tip: pre-process with PCA before t-SNE.** Running t-SNE directly on 64-dimensional data is slow because pairwise distances must be computed in the full space. A common best practice is to first reduce to 30–50 components with PCA (retaining >95% of variance) and then run t-SNE on the reduced representation. This dramatically speeds up t-SNE without meaningfully changing the embedding:
+
+```{code-cell} ipython3
+pca_pre = PCA(n_components=30)
+X_pca_pre = pca_pre.fit_transform(X_mnist)
+
+tsne_fast = TSNE(n_components=2, perplexity=30.0,
+                 learning_rate=200.0, max_iter=1000,
+                 init='random', random_state=42)
+X_tsne_fast = tsne_fast.fit_transform(X_pca_pre)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(X_tsne_fast[:, 0], X_tsne_fast[:, 1],
+                c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+fig.colorbar(sc, ax=ax, label='Digit')
+ax.set_title('t-SNE on PCA-reduced MNIST (30 components)')
+```
+
 :::{exercise}
 :label: ex-eda-tsne-perp
 
 Run t-SNE on the MNIST dataset with `perplexity` values of 5, 30, and 100 (keep all other parameters fixed, and set `random_state=42`). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?
 :::
 
+### UMAP
+
+Uniform Manifold Approximation and Projection (**UMAP**) is a more recent manifold learning method (McInnes et al., 2018) that has largely replaced t-SNE as the default visualization tool for high-dimensional data. It is based on Riemannian geometry and algebraic topology, but the practical intuition is similar to t-SNE: nearby points in the original space are pulled together in the embedding, while distant points are pushed apart.
+
+UMAP has two key advantages over t-SNE:
+
+1. **Speed** — UMAP scales approximately as $O(N^{1.14})$ in practice, making it feasible on datasets with millions of points where t-SNE becomes prohibitive.
+2. **Global structure** — Unlike t-SNE, UMAP better preserves the global relationships between clusters, not just local neighborhood structure.
+3. **Projectability** — A fitted UMAP model can transform new points, enabling use in downstream pipelines.
+
+```{code-cell} ipython3
+import umap
+
+reducer = umap.UMAP(n_components=2, n_neighbors=15, min_dist=0.1, random_state=42)
+X_umap = reducer.fit_transform(X_mnist)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(X_umap[:, 0], X_umap[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+fig.colorbar(sc, ax=ax, label='Digit')
+ax.set_title('UMAP — MNIST')
+```
+
+The two key hyperparameters are `n_neighbors` (controls the balance between local and global structure — larger values give more global context) and `min_dist` (controls how tightly points are packed in the embedding — smaller values produce more clustered layouts).
+
+:::{exercise}
+:label: ex-eda-umap-params
+
+Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) `n_neighbors=5, min_dist=0.01`, (b) `n_neighbors=15, min_dist=0.1` (the default above), and (c) `n_neighbors=50, min_dist=0.5`. Plot the three embeddings side-by-side colored by digit. Describe how increasing `n_neighbors` changes the structure of the embedding.
+:::
+
 ### Comparison: Manifold Learning vs. PCA
 
-| Property | PCA | Kernel PCA | MDS | t-SNE |
-|---|---|---|---|---|
-| Linear? | Yes | No | No | No |
-| Projectable? | Yes | Yes | No | No |
-| Invertible? | Yes | Yes (approx.) | No | No |
-| Speed | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) |
-| Best for | Linear structure, compression | Nonlinear, small datasets | Distance preservation | Visualization only |
+| Property | PCA | Kernel PCA | MDS | t-SNE | UMAP |
+|---|---|---|---|---|---|
+| Linear? | Yes | No | No | No | No |
+| Projectable? | Yes | Yes | No | No | Yes |
+| Invertible? | Yes | Yes (approx.) | No | No | Approx. |
+| Speed | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) | Fast ($O(N^{1.1})$) |
+| Global structure | Yes | Partial | Yes | Poor | Good |
+| Best for | Linear structure, compression | Nonlinear, small datasets | Distance preservation | Visualization | Visualization + pipelines |
 
-Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. They are best used for exploratory visualization.
+Manifold techniques provide powerful insight into data structure, but their lack of projectability and slow scaling make them less suitable for model construction than PCA. UMAP is the current best practice for visualization tasks where t-SNE was previously used.
 
 ## Autoencoding
 
@@ -498,7 +553,8 @@ Autoencoders are an active research area. Specialized variants — variational a
 - A **scree plot** of cumulative explained variance guides the choice of the number of components $k$.
 - **Kernel PCA** extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter $\gamma$ controls the locality of the similarity measure.
 - **Manifold learning** methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as $O(N^2)$.
-- **t-SNE** is the standard tool for 2D visualization of high-dimensional labeled data; interpret cluster separation, not inter-cluster distances or axis values.
+- **t-SNE** produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. Pre-reducing with PCA (to ~30 components) before running t-SNE is a standard speed-up.
+- **UMAP** is faster than t-SNE, better preserves global structure, and is projectable — it is the current best practice for visualization and nonlinear feature extraction.
 - **Autoencoders** use neural networks to learn nonlinear, projectable, and invertible representations, at the cost of requiring large datasets and hyperparameter tuning.
 
 ## Additional Reading
@@ -508,4 +564,6 @@ Autoencoders are an active research area. Specialized variants — variational a
 - [scikit-learn: MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
 - [scikit-learn: TSNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
 - [Distill.pub: How to Use t-SNE Effectively](https://distill.pub/2016/misread-tsne/)
+- [UMAP documentation](https://umap-learn.readthedocs.io/)
+- [McInnes et al. (2018): UMAP paper](https://arxiv.org/abs/1802.03426)
 - [Hastie, Tibshirani & Friedman: The Elements of Statistical Learning, Ch. 14](https://hastie.su.domains/ElemStatLearn/)
