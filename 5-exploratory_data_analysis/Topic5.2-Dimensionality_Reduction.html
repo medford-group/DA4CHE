@@ -644,7 +644,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1359bc4f0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12eed04c0&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -796,7 +796,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x143394c40&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x145f74c40&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -855,7 +855,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x135a56c80&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x107e8bdc0&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -973,11 +973,11 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3541
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3446
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/52cc8436520dfd9f1b40428c8fc32a8e50dcf5788385b499fb24f63b23f02d0c.png" src="../_images/52cc8436520dfd9f1b40428c8fc32a8e50dcf5788385b499fb24f63b23f02d0c.png" />
+<img alt="../_images/5d5080aa4d0fafb6ea5bb181cb7efc9d5d81f77adfa669aa254aa079e32a4f38.png" src="../_images/5d5080aa4d0fafb6ea5bb181cb7efc9d5d81f77adfa669aa254aa079e32a4f38.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1007,10 +1007,10 @@ Stress PCA: 0.5405
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7728
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7824
 </pre></div>
 </div>
-<img alt="../_images/3157539bdd5ae0daabea0b359b785ceee87ae9d4cb874118773c691b419a83df.png" src="../_images/3157539bdd5ae0daabea0b359b785ceee87ae9d4cb874118773c691b419a83df.png" />
+<img alt="../_images/5415956f967a02f8f412a513134368b6a0a56021b01ca432267a2a4b5f48411d.png" src="../_images/5415956f967a02f8f412a513134368b6a0a56021b01ca432267a2a4b5f48411d.png" />
 </div>
 </div>
 <p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
@@ -1262,6 +1262,10 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <li><p>No interpretable relationship between latent dimensions and original features</p></li>
 </ul>
 <p>Autoencoders are an active research area. Specialized variants — variational autoencoders (VAEs) and denoising autoencoders — are used in generative modeling, anomaly detection, and representation learning. We revisit this topic in the Generative Models chapter.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>PyTorch and neural networks are outside the core scope of this course and are not required material. The example below is provided purely for reference, to make the autoencoder concept concrete for students who want to explore further.</p>
+</div>
 <p>The following example builds a simple autoencoder on the MNIST digits dataset using PyTorch. The encoder compresses 64 pixel values to a 2-dimensional latent space; the decoder reconstructs the image from that 2-D code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1314,9 +1318,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07349
-Epoch  20  loss = 0.06955
-Epoch  30  loss = 0.06264
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07379
+Epoch  20  loss = 0.07037
+Epoch  30  loss = 0.06085
 </pre></div>
 </div>
 </div>
@@ -1340,7 +1344,7 @@ Epoch  30  loss = 0.06264
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3c130836d3df37249b3b7110308a06f615fae97c61c257d87aac3b688bae347e.png" src="../_images/3c130836d3df37249b3b7110308a06f615fae97c61c257d87aac3b688bae347e.png" />
+<img alt="../_images/6d99bc8b44a01d4ffc7ab562108c9c2816b66cdcecdb6eaec1773472405f2269.png" src="../_images/6d99bc8b44a01d4ffc7ab562108c9c2816b66cdcecdb6eaec1773472405f2269.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1368,12 +1372,13 @@ Epoch  30  loss = 0.06264
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a9775842b8bc3eab1e39a38d3d5932cef23c568a07055ed5833ba505482f5d4d.png" src="../_images/a9775842b8bc3eab1e39a38d3d5932cef23c568a07055ed5833ba505482f5d4d.png" />
+<img alt="../_images/89c1a7d0968e47c82f91be0a12cc911058f94f61404c6508d42f630f0d2d22b2.png" src="../_images/89c1a7d0968e47c82f91be0a12cc911058f94f61404c6508d42f630f0d2d22b2.png" />
 </div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>With only 2 latent dimensions the reconstructions are blurry — the bottleneck is very tight. Increasing <code class="docutils literal notranslate"><span class="pre">latent_dim</span></code> to 8 or 16 produces sharper results at the cost of a less compact representation. The trade-off between reconstruction quality and compression is the central design decision when sizing the bottleneck.</p>
+<p>Beyond the bottleneck size, neural network performance is highly sensitive to a range of hyperparameters: learning rate, choice of optimizer, activation functions (ReLU, tanh, GELU, …), network depth and width, batch size, number of training epochs, and regularization strategy. Each of these can meaningfully affect whether the model converges, how quickly, and to what quality of solution. Finding a good combination typically requires systematic search (grid search, random search, or Bayesian optimization) and substantial domain experience. This complexity is a large part of why neural networks — despite their power — are not covered as core material in this course.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-autoencoder-design">
 
