@@ -647,6 +647,10 @@ Training minimizes the reconstruction error $\|\mathbf{x} - \hat{\mathbf{x}}\|^2
 
 Autoencoders are an active research area. Specialized variants — variational autoencoders (VAEs) and denoising autoencoders — are used in generative modeling, anomaly detection, and representation learning. We revisit this topic in the Generative Models chapter.
 
+:::{note}
+PyTorch and neural networks are outside the core scope of this course and are not required material. The example below is provided purely for reference, to make the autoencoder concept concrete for students who want to explore further.
+:::
+
 The following example builds a simple autoencoder on the MNIST digits dataset using PyTorch. The encoder compresses 64 pixel values to a 2-dimensional latent space; the decoder reconstructs the image from that 2-D code.
 
 ```{code-cell} ipython3
@@ -737,6 +741,8 @@ plt.tight_layout()
 
 :::{note}
 With only 2 latent dimensions the reconstructions are blurry — the bottleneck is very tight. Increasing `latent_dim` to 8 or 16 produces sharper results at the cost of a less compact representation. The trade-off between reconstruction quality and compression is the central design decision when sizing the bottleneck.
+
+Beyond the bottleneck size, neural network performance is highly sensitive to a range of hyperparameters: learning rate, choice of optimizer, activation functions (ReLU, tanh, GELU, …), network depth and width, batch size, number of training epochs, and regularization strategy. Each of these can meaningfully affect whether the model converges, how quickly, and to what quality of solution. Finding a good combination typically requires systematic search (grid search, random search, or Bayesian optimization) and substantial domain experience. This complexity is a large part of why neural networks — despite their power — are not covered as core material in this course.
 :::
 
 :::{exercise}
