@@ -208,6 +208,7 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Dimensionality Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic5.4-Generative_Models.html">Generative Models</a></li>
 </ul>
 </details></li>
 </ul>
@@ -646,7 +647,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14af37940&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x141d7c550&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -798,7 +799,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14e790c40&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1453ecc40&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -857,7 +858,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14e741270&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14539d1b0&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -975,11 +976,11 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3575
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3464
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/565e713f719f9b6480780f750266585635a1744b88d6a6679d1b64083ab2e1cd.png" src="../_images/565e713f719f9b6480780f750266585635a1744b88d6a6679d1b64083ab2e1cd.png" />
+<img alt="../_images/a23f9684bf180e1b94b9fffee3ace27b7fe478cc6ea05c7db0de75b718c43ba0.png" src="../_images/a23f9684bf180e1b94b9fffee3ace27b7fe478cc6ea05c7db0de75b718c43ba0.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1009,10 +1010,10 @@ Stress PCA: 0.5405
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7666
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7782
 </pre></div>
 </div>
-<img alt="../_images/104814f1be85c39e960904ff1f1699cffcb3e95fa409596479ca903a641ed151.png" src="../_images/104814f1be85c39e960904ff1f1699cffcb3e95fa409596479ca903a641ed151.png" />
+<img alt="../_images/c6fbbf81ab8a21df5dc9554fac958e7fe8e085673cf7d9c9127b522e4f382d09.png" src="../_images/c6fbbf81ab8a21df5dc9554fac958e7fe8e085673cf7d9c9127b522e4f382d09.png" />
 </div>
 </div>
 <p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
@@ -1320,9 +1321,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07347
-Epoch  20  loss = 0.07182
-Epoch  30  loss = 0.06250
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07278
+Epoch  20  loss = 0.06316
+Epoch  30  loss = 0.06103
 </pre></div>
 </div>
 </div>
@@ -1346,7 +1347,7 @@ Epoch  30  loss = 0.06250
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/454107a440b3c0f3e67df01839f2dd6ad035d8409722f046cdef5d4ca17717b2.png" src="../_images/454107a440b3c0f3e67df01839f2dd6ad035d8409722f046cdef5d4ca17717b2.png" />
+<img alt="../_images/7c65e76e248a96d98984227c68bc8cad34522a0926decfb0d5bc90adfd43bb84.png" src="../_images/7c65e76e248a96d98984227c68bc8cad34522a0926decfb0d5bc90adfd43bb84.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1374,7 +1375,7 @@ Epoch  30  loss = 0.06250
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e2f94b1ff5ac9952ca18eb721d445f5ac8bf00c1f331b5b2de7b0004b1d5b6a8.png" src="../_images/e2f94b1ff5ac9952ca18eb721d445f5ac8bf00c1f331b5b2de7b0004b1d5b6a8.png" />
+<img alt="../_images/d80c0e130411055c08ad6c423c6777a0d15323966631d14197c7e45017b82ac3.png" src="../_images/d80c0e130411055c08ad6c423c6777a0d15323966631d14197c7e45017b82ac3.png" />
 </div>
 </div>
 <div class="admonition note">
