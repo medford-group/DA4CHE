@@ -30,3 +30,4 @@ chapters:
       - file: 5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data
       - file: 5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction
       - file: 5-exploratory_data_analysis/Topic5.3-Clustering
+      - file: 5-exploratory_data_analysis/Topic5.4-Generative_Models
