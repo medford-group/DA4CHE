@@ -45,9 +45,19 @@ Once this distribution is known, it can be used to:
 - **Combine with Bayes' theorem** to build probabilistic classifiers without training a
   discriminative model directly
 
-In chemical engineering, generative models appear in process monitoring (detecting off-spec
-operating conditions), materials design (proposing candidate molecular structures), and data
-augmentation when new experiments are expensive.
+You may already be familiar with the word *generative* from large language models such as
+GPT. The connection is direct: a language model estimates
+$P(\text{next token} \mid \text{all preceding tokens})$ and samples from it one token at a
+time to produce text. The feature space is a vocabulary of tens of thousands of tokens, and
+a document lives in an astronomically high-dimensional space — yet the core operation is
+identical to what we do in this chapter: learn a probability distribution from data, then
+sample from it. The methods here (GMMs, KDE) are tailored to continuous, moderate-dimensional
+data such as process sensor readings, but the conceptual bridge to language and image
+generation is short.
+
+In chemical engineering specifically, generative models appear in process monitoring
+(detecting off-spec operating conditions), materials design (proposing candidate molecular
+structures), and data augmentation when new experiments are expensive.
 
 :::{exercise}
 :label: ex-eda-gen-conditional
@@ -560,14 +570,25 @@ Rather than tuning the bandwidth by hand, we can treat it as a hyperparameter an
 it via cross-validation. `GridSearchCV` maximizes the mean held-out log-likelihood across
 $k$ folds — a natural scoring criterion for density models.
 
+The CV signal is clearest when the data has genuine multimodal structure, because a
+bandwidth that merges two real modes loses information that the held-out fold can detect.
+We illustrate with a synthetic bimodal dataset before applying the procedure to real data:
+
 ```{code-cell} ipython3
 from sklearn.model_selection import GridSearchCV
 
-bandwidths = np.logspace(-2, 1, 30)
+# Synthetic bimodal distribution — two populations with different spreads
+rng = np.random.default_rng(42)
+x_bimodal = np.concatenate([
+    rng.normal(-2.0, 0.5, 500),
+    rng.normal( 2.0, 0.8, 500),
+]).reshape(-1, 1)
+
+bandwidths = np.logspace(-1.5, 0.5, 40)  # 0.03 to 3.2
 grid = GridSearchCV(KernelDensity(kernel='gaussian'),
                     {'bandwidth': bandwidths},
                     cv=5)
-grid.fit(x_1d_col)
+grid.fit(x_bimodal)
 
 best_bw = grid.best_params_['bandwidth']
 print(f"Optimal bandwidth: {best_bw:.4f}")
@@ -575,32 +596,62 @@ print(f"Optimal bandwidth: {best_bw:.4f}")
 
 ```{code-cell} ipython3
 cv_scores = grid.cv_results_['mean_test_score']
+x_grid = np.linspace(-5, 5, 500).reshape(-1, 1)
 
-fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 
+# Left: CV log-likelihood curve
 axes[0].semilogx(bandwidths, cv_scores, marker='o', markersize=3)
-axes[0].axvline(best_bw, color=clrs[1], linestyle='--', label='Optimal')
+axes[0].axvline(best_bw, color=clrs[1], linestyle='--',
+                label=f'Optimal h={best_bw:.2f}')
 axes[0].set_xlabel('Bandwidth')
 axes[0].set_ylabel('Mean CV Log-Likelihood')
 axes[0].set_title('Bandwidth Selection via Cross-Validation')
 axes[0].legend()
 
-log_prob_opt = grid.best_estimator_.score_samples(x_cont)
-axes[1].hist(x_1d_col, density=True, bins=100, alpha=0.5, label='Data')
-axes[1].plot(x_cont, np.exp(log_prob_opt), linewidth=2,
-             label=f'KDE (h={best_bw:.3f})')
-axes[1].set_xlabel('X')
-axes[1].set_ylabel('P(X)')
-axes[1].set_title('Cross-Validated KDE')
-axes[1].legend()
+# Right: KDE at three bandwidths to show each regime
+for bw, ls, lbl in [(0.05,    ':',  'h=0.05 (overfit)'),
+                     (best_bw, '-',  f'h={best_bw:.2f} (CV optimal)'),
+                     (2.5,     '--', 'h=2.50 (underfit)')]:
+    lp = KernelDensity(bandwidth=bw, kernel='gaussian').fit(x_bimodal).score_samples(x_grid)
+    axes[1].plot(x_grid, np.exp(lp), linestyle=ls, linewidth=2, label=lbl)
+axes[1].hist(x_bimodal, density=True, bins=40, alpha=0.3, color=clrs[0])
+axes[1].set_xlabel('x')
+axes[1].set_ylabel('P(x)')
+axes[1].set_title('KDE at Three Bandwidths')
+axes[1].legend(fontsize=9)
 
 plt.tight_layout();
 ```
 
-The left panel shows a clear optimum: bandwidths below ~0.05 overfit (each data point
-becomes its own spike) while bandwidths above ~1.0 underfit (the distribution is smeared
-into a single broad hump). The right panel shows the KDE evaluated at the optimal bandwidth.
-This cross-validation procedure generalizes directly to higher-dimensional KDE fits.
+The CV curve has a clear peak at the optimal bandwidth. The right panel shows why: a
+bandwidth of 0.05 spikes around individual data points (overfitting); the CV-optimal
+bandwidth cleanly resolves both modes; a bandwidth of 2.5 merges the two populations into
+a single broad hump (underfitting). The held-out log-likelihood falls sharply in both
+extreme cases, giving the CV a reliable signal to optimize.
+
+This procedure applies directly to real data. Applying it to Dow feature 6:
+
+```{code-cell} ipython3
+grid_dow = GridSearchCV(KernelDensity(kernel='gaussian'),
+                        {'bandwidth': np.logspace(-2, 0.5, 30)},
+                        cv=5)
+grid_dow.fit(x_1d_col)
+best_bw_dow = grid_dow.best_params_['bandwidth']
+print(f"Dow feature 6 optimal bandwidth: {best_bw_dow:.4f}")
+
+x_cont_dow = np.linspace(x_1d_col.min(), x_1d_col.max(), 500).reshape(-1, 1)
+lp_dow = grid_dow.best_estimator_.score_samples(x_cont_dow)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.hist(x_1d_col, density=True, bins=80, alpha=0.5, label='Data')
+ax.plot(x_cont_dow, np.exp(lp_dow), linewidth=2,
+        label=f'CV-optimal KDE (h={best_bw_dow:.3f})')
+ax.set_xlabel('X')
+ax.set_ylabel('P(X)')
+ax.set_title('Dow Feature 6 — CV-Optimal KDE')
+ax.legend();
+```
 
 ### KDE in High Dimensions
 

@@ -424,9 +424,18 @@ augmenting sparse or imbalanced datasets</p></li>
 <li><p><strong>Combine with Bayes’ theorem</strong> to build probabilistic classifiers without training a
 discriminative model directly</p></li>
 </ul>
-<p>In chemical engineering, generative models appear in process monitoring (detecting off-spec
-operating conditions), materials design (proposing candidate molecular structures), and data
-augmentation when new experiments are expensive.</p>
+<p>You may already be familiar with the word <em>generative</em> from large language models such as
+GPT. The connection is direct: a language model estimates
+<span class="math notranslate nohighlight">\(P(\text{next token} \mid \text{all preceding tokens})\)</span> and samples from it one token at a
+time to produce text. The feature space is a vocabulary of tens of thousands of tokens, and
+a document lives in an astronomically high-dimensional space — yet the core operation is
+identical to what we do in this chapter: learn a probability distribution from data, then
+sample from it. The methods here (GMMs, KDE) are tailored to continuous, moderate-dimensional
+data such as process sensor readings, but the conceptual bridge to language and image
+generation is short.</p>
+<p>In chemical engineering specifically, generative models appear in process monitoring
+(detecting off-spec operating conditions), materials design (proposing candidate molecular
+structures), and data augmentation when new experiments are expensive.</p>
 <div class="exercise admonition" id="ex-eda-gen-conditional">
 
 <p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
@@ -510,7 +519,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3186bfb5f2529019adff8e78c7d10c32f0847c659d9fd62864f081d8839e3f6a.png" src="../_images/3186bfb5f2529019adff8e78c7d10c32f0847c659d9fd62864f081d8839e3f6a.png" />
+<img alt="../_images/7a2105fef0f6fd2fa7fcc5f22c628f9b75e5f51b2134e603ea93cc71b8c16d01.png" src="../_images/7a2105fef0f6fd2fa7fcc5f22c628f9b75e5f51b2134e603ea93cc71b8c16d01.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -559,7 +568,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ad14e21115662088fa955eb397c37a6aa8b076e1f294dce7aa05f4a53a67fa9e.png" src="../_images/ad14e21115662088fa955eb397c37a6aa8b076e1f294dce7aa05f4a53a67fa9e.png" />
+<img alt="../_images/86e0e9fdf4200eb9fe03a0466226762e7aa4fbd9c811e4fb9e5b0c957e0114be.png" src="../_images/86e0e9fdf4200eb9fe03a0466226762e7aa4fbd9c811e4fb9e5b0c957e0114be.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -1034,7 +1043,7 @@ point), too large and features are washed out (underfitting).</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c9342174f58a530fedf39c0e7592376f5c23a95f38dedcbd24396c1efb3bc82f.png" src="../_images/c9342174f58a530fedf39c0e7592376f5c23a95f38dedcbd24396c1efb3bc82f.png" />
+<img alt="../_images/57c2ecb602e4a25d9b3d39e7b09912611e97f41e7e025a81f3b45ab7eeb10734.png" src="../_images/57c2ecb602e4a25d9b3d39e7b09912611e97f41e7e025a81f3b45ab7eeb10734.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
@@ -1055,15 +1064,25 @@ estimation.</p>
 <p>Rather than tuning the bandwidth by hand, we can treat it as a hyperparameter and select
 it via cross-validation. <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> maximizes the mean held-out log-likelihood across
 <span class="math notranslate nohighlight">\(k\)</span> folds — a natural scoring criterion for density models.</p>
+<p>The CV signal is clearest when the data has genuine multimodal structure, because a
+bandwidth that merges two real modes loses information that the held-out fold can detect.
+We illustrate with a synthetic bimodal dataset before applying the procedure to real data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
 
-<span class="n">bandwidths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="c1"># Synthetic bimodal distribution — two populations with different spreads</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">x_bimodal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
+    <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
+    <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
+<span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">bandwidths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>  <span class="c1"># 0.03 to 3.2</span>
 <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">),</span>
                     <span class="p">{</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">:</span> <span class="n">bandwidths</span><span class="p">},</span>
                     <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">)</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_bimodal</span><span class="p">)</span>
 
 <span class="n">best_bw</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal bandwidth: </span><span class="si">{</span><span class="n">best_bw</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1071,7 +1090,7 @@ it via cross-validation. <code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal bandwidth: 3.8566
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal bandwidth: 0.1859
 </pre></div>
 </div>
 </div>
@@ -1079,37 +1098,75 @@ it via cross-validation. <code class="docutils literal notranslate"><span class=
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_scores</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">]</span>
+<span class="n">x_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
+<span class="c1"># Left: CV log-likelihood curve</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">bandwidths</span><span class="p">,</span> <span class="n">cv_scores</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">best_bw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Optimal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">best_bw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Optimal h=</span><span class="si">{</span><span class="n">best_bw</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Bandwidth&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean CV Log-Likelihood&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Bandwidth Selection via Cross-Validation&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
-<span class="n">log_prob_opt</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_cont</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_cont</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_prob_opt</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;KDE (h=</span><span class="si">{</span><span class="n">best_bw</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X)&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cross-Validated KDE&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="c1"># Right: KDE at three bandwidths to show each regime</span>
+<span class="k">for</span> <span class="n">bw</span><span class="p">,</span> <span class="n">ls</span><span class="p">,</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="p">[(</span><span class="mf">0.05</span><span class="p">,</span>    <span class="s1">&#39;:&#39;</span><span class="p">,</span>  <span class="s1">&#39;h=0.05 (overfit)&#39;</span><span class="p">),</span>
+                     <span class="p">(</span><span class="n">best_bw</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>  <span class="sa">f</span><span class="s1">&#39;h=</span><span class="si">{</span><span class="n">best_bw</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> (CV optimal)&#39;</span><span class="p">),</span>
+                     <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span>     <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="s1">&#39;h=2.50 (underfit)&#39;</span><span class="p">)]:</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="n">bw</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_bimodal</span><span class="p">)</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_grid</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lp</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">lbl</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x_bimodal</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(x)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;KDE at Three Bandwidths&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d516074ca2d3755be9ab05d3c43a39900210de3e5f5c33b62856e510d0a40f83.png" src="../_images/d516074ca2d3755be9ab05d3c43a39900210de3e5f5c33b62856e510d0a40f83.png" />
+<img alt="../_images/fe87363e733b3a1cb5922f41bd499ac47a54e7c67cc477856b507b1e6916ca5c.png" src="../_images/fe87363e733b3a1cb5922f41bd499ac47a54e7c67cc477856b507b1e6916ca5c.png" />
 </div>
 </div>
-<p>The left panel shows a clear optimum: bandwidths below ~0.05 overfit (each data point
-becomes its own spike) while bandwidths above ~1.0 underfit (the distribution is smeared
-into a single broad hump). The right panel shows the KDE evaluated at the optimal bandwidth.
-This cross-validation procedure generalizes directly to higher-dimensional KDE fits.</p>
+<p>The CV curve has a clear peak at the optimal bandwidth. The right panel shows why: a
+bandwidth of 0.05 spikes around individual data points (overfitting); the CV-optimal
+bandwidth cleanly resolves both modes; a bandwidth of 2.5 merges the two populations into
+a single broad hump (underfitting). The held-out log-likelihood falls sharply in both
+extreme cases, giving the CV a reliable signal to optimize.</p>
+<p>This procedure applies directly to real data. Applying it to Dow feature 6:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid_dow</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">),</span>
+                        <span class="p">{</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">30</span><span class="p">)},</span>
+                        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">grid_dow</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">)</span>
+<span class="n">best_bw_dow</span> <span class="o">=</span> <span class="n">grid_dow</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dow feature 6 optimal bandwidth: </span><span class="si">{</span><span class="n">best_bw_dow</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">x_cont_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_1d_col</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_1d_col</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">lp_dow</span> <span class="o">=</span> <span class="n">grid_dow</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_cont_dow</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_cont_dow</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lp_dow</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;CV-optimal KDE (h=</span><span class="si">{</span><span class="n">best_bw_dow</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dow Feature 6 — CV-Optimal KDE&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dow feature 6 optimal bandwidth: 3.1623
+</pre></div>
+</div>
+<img alt="../_images/0a34780aef5c93d5e7e2c5173891df2200550ee8f1597fe10e6372a309e1320e.png" src="../_images/0a34780aef5c93d5e7e2c5173891df2200550ee8f1597fe10e6372a309e1320e.png" />
+</div>
+</div>
 </section>
 <section id="kde-in-high-dimensions">
 <h3>KDE in High Dimensions<a class="headerlink" href="#kde-in-high-dimensions" title="Link to this heading">#</a></h3>
@@ -1132,7 +1189,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2858071e7aabf4789ca3bb756b9ead36dc8ee1d3220c2ef248940ac00f7d6b9f.png" src="../_images/2858071e7aabf4789ca3bb756b9ead36dc8ee1d3220c2ef248940ac00f7d6b9f.png" />
+<img alt="../_images/956f04f834bb0664203df753aa6202992923bbff4d281ee01bdcc3fee0189120.png" src="../_images/956f04f834bb0664203df753aa6202992923bbff4d281ee01bdcc3fee0189120.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
