@@ -519,7 +519,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/7a2105fef0f6fd2fa7fcc5f22c628f9b75e5f51b2134e603ea93cc71b8c16d01.png" src="../_images/7a2105fef0f6fd2fa7fcc5f22c628f9b75e5f51b2134e603ea93cc71b8c16d01.png" />
+<img alt="../_images/960ab767c908014e129eb9a4bc08b10a63389bb8f5bd6165db99bfeca38c8fbe.png" src="../_images/960ab767c908014e129eb9a4bc08b10a63389bb8f5bd6165db99bfeca38c8fbe.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -568,7 +568,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/86e0e9fdf4200eb9fe03a0466226762e7aa4fbd9c811e4fb9e5b0c957e0114be.png" src="../_images/86e0e9fdf4200eb9fe03a0466226762e7aa4fbd9c811e4fb9e5b0c957e0114be.png" />
+<img alt="../_images/95f5d14175172904813f0268b461b43b3ea593dc740488effff3e072020f0a86.png" src="../_images/95f5d14175172904813f0268b461b43b3ea593dc740488effff3e072020f0a86.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -1043,7 +1043,7 @@ point), too large and features are washed out (underfitting).</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/57c2ecb602e4a25d9b3d39e7b09912611e97f41e7e025a81f3b45ab7eeb10734.png" src="../_images/57c2ecb602e4a25d9b3d39e7b09912611e97f41e7e025a81f3b45ab7eeb10734.png" />
+<img alt="../_images/46e1d1300e90689de510c218eff4c131803450cf36b1c2abfe3ce2f79627a07d.png" src="../_images/46e1d1300e90689de510c218eff4c131803450cf36b1c2abfe3ce2f79627a07d.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
@@ -1136,35 +1136,69 @@ bandwidth of 0.05 spikes around individual data points (overfitting); the CV-opt
 bandwidth cleanly resolves both modes; a bandwidth of 2.5 merges the two populations into
 a single broad hump (underfitting). The held-out log-likelihood falls sharply in both
 extreme cases, giving the CV a reliable signal to optimize.</p>
-<p>This procedure applies directly to real data. Applying it to Dow feature 6:</p>
+<p>This procedure applies directly to real data, but a practical complication arises with
+large datasets: with ~10,000 points the held-out log-likelihood becomes nearly flat because
+a test point almost always lands close to a training point regardless of bandwidth.
+<strong>Subsampling</strong> to ~1,000 points restores the CV’s discriminating power while preserving
+the shape of the distribution. The bandwidth found on the subsample is then used to fit a
+KDE on the full dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid_dow</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">),</span>
-                        <span class="p">{</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">30</span><span class="p">)},</span>
-                        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">grid_dow</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subsample for CV, fit final model on all data</span>
+<span class="n">rng_sub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">idx_sub</span> <span class="o">=</span> <span class="n">rng_sub</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">x_dow_sub</span> <span class="o">=</span> <span class="n">x_1d_col</span><span class="p">[</span><span class="n">idx_sub</span><span class="p">]</span>
+
+<span class="c1"># Fine grid (60 log-spaced points, 0.1–10) with 10-fold CV</span>
+<span class="n">bandwidths_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">grid_dow</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">),</span>
+                        <span class="p">{</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">:</span> <span class="n">bandwidths_dow</span><span class="p">},</span>
+                        <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">grid_dow</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_dow_sub</span><span class="p">)</span>
 <span class="n">best_bw_dow</span> <span class="o">=</span> <span class="n">grid_dow</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dow feature 6 optimal bandwidth: </span><span class="si">{</span><span class="n">best_bw_dow</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="n">x_cont_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_1d_col</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_1d_col</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">lp_dow</span> <span class="o">=</span> <span class="n">grid_dow</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_cont_dow</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_cont_dow</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lp_dow</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;CV-optimal KDE (h=</span><span class="si">{</span><span class="n">best_bw_dow</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dow Feature 6 — CV-Optimal KDE&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dow feature 6 optimal bandwidth: 3.1623
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dow feature 6 optimal bandwidth: 0.6021
 </pre></div>
 </div>
-<img alt="../_images/0a34780aef5c93d5e7e2c5173891df2200550ee8f1597fe10e6372a309e1320e.png" src="../_images/0a34780aef5c93d5e7e2c5173891df2200550ee8f1597fe10e6372a309e1320e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_scores_dow</span> <span class="o">=</span> <span class="n">grid_dow</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">]</span>
+<span class="n">x_cont_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_1d_col</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_1d_col</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Refit on full dataset with the CV-selected bandwidth</span>
+<span class="n">kde_dow_opt</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="n">best_bw_dow</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">)</span>
+<span class="n">lp_dow</span> <span class="o">=</span> <span class="n">kde_dow_opt</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_cont_dow</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">bandwidths_dow</span><span class="p">,</span> <span class="n">cv_scores_dow</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">best_bw_dow</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Optimal h=</span><span class="si">{</span><span class="n">best_bw_dow</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Bandwidth&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean CV Log-Likelihood&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;CV Search — Dow Feature 6 (n=1 000 subsample, 10-fold)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_cont_dow</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lp_dow</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;CV-optimal KDE (h=</span><span class="si">{</span><span class="n">best_bw_dow</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dow Feature 6 — CV-Optimal KDE (fit on all data)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0bb194fa4080794f00fd265ea3cee37f6fd547cb4c5c5d6369c4748c98efccc4.png" src="../_images/0bb194fa4080794f00fd265ea3cee37f6fd547cb4c5c5d6369c4748c98efccc4.png" />
 </div>
 </div>
 </section>
@@ -1189,7 +1223,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/956f04f834bb0664203df753aa6202992923bbff4d281ee01bdcc3fee0189120.png" src="../_images/956f04f834bb0664203df753aa6202992923bbff4d281ee01bdcc3fee0189120.png" />
+<img alt="../_images/14a966823e8af8cacd62b2bb8e6ad0731b23de021298e7026ea7dee333e75add.png" src="../_images/14a966823e8af8cacd62b2bb8e6ad0731b23de021298e7026ea7dee333e75add.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
