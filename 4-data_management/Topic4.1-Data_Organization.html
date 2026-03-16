@@ -1705,6 +1705,9 @@ strategy. The <code class="docutils literal notranslate"><span class="pre">numer
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>After dropping bad rows: (10297, 46)  (lost 406 rows)
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -2074,7 +2077,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.60 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.62 s
 </pre></div>
 </div>
 </div>
@@ -2126,7 +2129,9 @@ data, keeping provenance in one place.</p></li>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array shape: (8042, 45)
-Dataset stored: shape=(8042, 45), dtype=float64
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dataset stored: shape=(8042, 45), dtype=float64
 Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, &#39;x2:Primary Column Tails Flow&#39;, &#39;x3:Input to Primary Column Bed 3 Flow&#39;, &#39;x4:Input to Primary Column Bed 2 Flow&#39;, &#39;x5:Primary Column Feed Flow from Feed Column&#39;, &#39;x6:Primary Column Make Flow&#39;, &#39;x7:Primary Column Base Level&#39;, &#39;x8:Primary Column Reflux Drum Pressure&#39;, &#39;x9:Primary Column Condenser Reflux Drum Level&#39;, &#39;x10:Primary Column Bed1 DP&#39;, &#39;x11:Primary Column Bed2 DP&#39;, &#39;x12:Primary Column Bed3 DP&#39;, &#39;x13:Primary Column Bed4 DP&#39;, &#39;x14:Primary Column Base Pressure&#39;, &#39;x15:Primary Column Head Pressure&#39;, &#39;x16:Primary Column Tails Temperature&#39;, &#39;x17:Primary Column Tails Temperature 1&#39;, &#39;x18:Primary Column Bed 4 Temperature&#39;, &#39;x19:Primary Column Bed 3 Temperature&#39;, &#39;x20:Primary Column Bed 2 Temperature&#39;, &#39;x21:Primary Column Bed 1 Temperature&#39;, &#39;x22: Secondary Column Base Concentration&#39;, &#39;x23: Flow from Input to Secondary Column&#39;, &#39;x24: Secondary Column Tails Flow&#39;, &#39;x25: Secondary Column Tray DP&#39;, &#39;x26: Secondary Column Head Pressure&#39;, &#39;x27: Secondary Column Base Pressure&#39;, &#39;x28: Secondary Column Base Temperature&#39;, &#39;x29: Secondary Column Tray 3 Temperature&#39;, &#39;x30: Secondary Column Bed 1 Temperature&#39;, &#39;x31: Secondary Column Bed 2 Temperature&#39;, &#39;x32: Secondary Column Tray 2 Temperature&#39;, &#39;x33: Secondary Column Tray 1 Temperature&#39;, &#39;x34: Secondary Column Tails Temperature&#39;, &#39;x35: Secondary Column Tails Concentration&#39;, &#39;x36: Feed Column Recycle Flow&#39;, &#39;x37: Feed Column Tails Flow to Primary Column&#39;, &#39;x38: Feed Column Calculated DP&#39;, &#39;x39: Feed Column Steam Flow&#39;, &#39;x40: Feed Column Tails Flow&#39;, &#39;Avg_Reactor_Outlet_Impurity&#39;, &#39;Avg_Delta_Composition Primary Column&#39;, &#39;y:Impurity&#39;, &#39;Primary Column Reflux/Feed Ratio&#39;, &#39;Primary Column Make/Reflux Ratio&#39;]&quot;, &#39;company&#39;: &#39;Dow Chemical&#39;, &#39;course&#39;: &#39;ChBE 4745/6745&#39;, &#39;name&#39;: &#39;Dow impurity training set&#39;}
 </pre></div>
 </div>
@@ -2179,8 +2184,8 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0008 s
-HDF5 one column:  0.0003 s
-In-memory slice:  0.000204 s
+HDF5 one column:  0.0004 s
+In-memory slice:  0.000149 s
 </pre></div>
 </div>
 </div>
@@ -2225,8 +2230,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0532 s
-Parquet read:  0.0616 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0721 s
+Parquet read:  0.0899 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:

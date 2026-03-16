@@ -370,10 +370,13 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-density-estimation">Kernel Density Estimation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kde-vs-histograms">KDE vs. Histograms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bandwidth-selection-via-cross-validation">Bandwidth Selection via Cross-Validation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kde-in-high-dimensions">KDE in High Dimensions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-classification-with-kernel-density-estimation">Bayesian Classification with Kernel Density Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-model-for-the-full-dow-dataset">Generative Model for the Full Dow Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anomaly-detection-with-density-models">Anomaly Detection with Density Models</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
@@ -398,7 +401,10 @@ document.write(`
 <li><p>Apply the Bayesian Information Criterion (BIC) to select the optimal number of GMM components</p></li>
 <li><p>Combine PCA with a GMM to build a generative model for high-dimensional data</p></li>
 <li><p>Estimate a probability density using kernel density estimation (KDE) and compare KDE to histograms</p></li>
+<li><p>Select the optimal KDE bandwidth via cross-validation using held-out log-likelihood</p></li>
+<li><p>Build a full generative model for a high-dimensional process dataset by combining standardization, PCA, and GMM</p></li>
 <li><p>Implement a non-naive Bayesian classifier using per-class KDE densities and interpret its accuracy</p></li>
+<li><p>Apply density-based anomaly detection by scoring samples under a fitted generative model</p></li>
 </ul>
 </div>
 <section id="generative-model-overview">
@@ -487,7 +493,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/eb4abc391c61d00521f3e79d164b054ecfd31ee7713b4caaafcaa6155bf6baaa.png" src="../_images/eb4abc391c61d00521f3e79d164b054ecfd31ee7713b4caaafcaa6155bf6baaa.png" />
+<img alt="../_images/5f3fdf3f5b4d1295673082a60d0978ea9c8b023f81855e110b06556a2b382c53.png" src="../_images/5f3fdf3f5b4d1295673082a60d0978ea9c8b023f81855e110b06556a2b382c53.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -536,7 +542,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/aa2f5a9bab219df469207d6ba2be1e146b2ff3e20d402ad12215a3b158f1f515.png" src="../_images/aa2f5a9bab219df469207d6ba2be1e146b2ff3e20d402ad12215a3b158f1f515.png" />
+<img alt="../_images/9ba4317b0019b3363ab88dc1e584d3489bb42b2713d6c51a8c003ca0b7635a18.png" src="../_images/9ba4317b0019b3363ab88dc1e584d3489bb42b2713d6c51a8c003ca0b7635a18.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -1009,7 +1015,7 @@ point), too large and features are washed out (underfitting).</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/095f85c1e00dd032becbb117af4e2d603c161d2dfffae70ea079a9f98c57041a.png" src="../_images/095f85c1e00dd032becbb117af4e2d603c161d2dfffae70ea079a9f98c57041a.png" />
+<img alt="../_images/d66e059cfc1a4d3c9daf11b297b3378db09881a5f973f74c18238d58b48ccff2.png" src="../_images/d66e059cfc1a4d3c9daf11b297b3378db09881a5f973f74c18238d58b48ccff2.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
@@ -1024,6 +1030,67 @@ Describe qualitatively how the bandwidth controls the bias-variance tradeoff in 
 estimation.</p>
 </section>
 </div>
+</section>
+<section id="bandwidth-selection-via-cross-validation">
+<h3>Bandwidth Selection via Cross-Validation<a class="headerlink" href="#bandwidth-selection-via-cross-validation" title="Link to this heading">#</a></h3>
+<p>Rather than tuning the bandwidth by hand, we can treat it as a hyperparameter and select
+it via cross-validation. <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> maximizes the mean held-out log-likelihood across
+<span class="math notranslate nohighlight">\(k\)</span> folds — a natural scoring criterion for density models.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">bandwidths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">),</span>
+                    <span class="p">{</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">:</span> <span class="n">bandwidths</span><span class="p">},</span>
+                    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">)</span>
+
+<span class="n">best_bw</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal bandwidth: </span><span class="si">{</span><span class="n">best_bw</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal bandwidth: 3.8566
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_scores</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">bandwidths</span><span class="p">,</span> <span class="n">cv_scores</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">best_bw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Optimal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Bandwidth&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean CV Log-Likelihood&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Bandwidth Selection via Cross-Validation&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">log_prob_opt</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_cont</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x_1d_col</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_cont</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_prob_opt</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;KDE (h=</span><span class="si">{</span><span class="n">best_bw</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cross-Validated KDE&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d516074ca2d3755be9ab05d3c43a39900210de3e5f5c33b62856e510d0a40f83.png" src="../_images/d516074ca2d3755be9ab05d3c43a39900210de3e5f5c33b62856e510d0a40f83.png" />
+</div>
+</div>
+<p>The left panel shows a clear optimum: bandwidths below ~0.05 overfit (each data point
+becomes its own spike) while bandwidths above ~1.0 underfit (the distribution is smeared
+into a single broad hump). The right panel shows the KDE evaluated at the optimal bandwidth.
+This cross-validation procedure generalizes directly to higher-dimensional KDE fits.</p>
 </section>
 <section id="kde-in-high-dimensions">
 <h3>KDE in High Dimensions<a class="headerlink" href="#kde-in-high-dimensions" title="Link to this heading">#</a></h3>
@@ -1044,7 +1111,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2d079e9b47964b489b76a73bf5465eff9a51fb38064aaa5fcdd051e5d84a0c93.png" src="../_images/2d079e9b47964b489b76a73bf5465eff9a51fb38064aaa5fcdd051e5d84a0c93.png" />
+<img alt="../_images/6f4533c27d1e265b6133486cc9ee61f3c18270a8a964aee9a64900ef69f7e99e.png" src="../_images/6f4533c27d1e265b6133486cc9ee61f3c18270a8a964aee9a64900ef69f7e99e.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
@@ -1159,6 +1226,202 @@ very small or very large bandwidths hurt accuracy?</p>
 </section>
 </div>
 </section>
+<section id="generative-model-for-the-full-dow-dataset">
+<h2>Generative Model for the Full Dow Dataset<a class="headerlink" href="#generative-model-for-the-full-dow-dataset" title="Link to this heading">#</a></h2>
+<p>The examples above used only 1–2 features of the Dow dataset. A truly useful generative
+model must capture all 40 process variables simultaneously. The strategy is the same as for
+MNIST: standardize the data (process variables have different units and ranges), reduce with
+PCA, fit a GMM with BIC selection, then invert both transforms to produce full-dimensional
+synthetic process records.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_dow_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_dow</span><span class="p">)</span>
+
+<span class="n">pca_dow</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_dow_k</span> <span class="o">=</span> <span class="n">pca_dow</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_dow_scaled</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PCA components retained: </span><span class="si">{</span><span class="n">pca_dow</span><span class="o">.</span><span class="n">n_components_</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">X_dow</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variance retained: </span><span class="si">{</span><span class="n">pca_dow</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PCA components retained: 12 / 40
+Variance retained: 95.5%
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_range_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">bics_dow</span><span class="p">,</span> <span class="n">models_dow</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_range_dow</span><span class="p">:</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span>
+                        <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_dow_k</span><span class="p">)</span>
+    <span class="n">bics_dow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">bic</span><span class="p">(</span><span class="n">X_dow_k</span><span class="p">))</span>
+    <span class="n">models_dow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+<span class="n">best_dow_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">bics_dow</span><span class="p">)</span>
+<span class="n">best_dow_gmm</span> <span class="o">=</span> <span class="n">models_dow</span><span class="p">[</span><span class="n">best_dow_idx</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal GMM components: </span><span class="si">{</span><span class="n">n_range_dow</span><span class="p">[</span><span class="n">best_dow_idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_range_dow</span><span class="p">,</span> <span class="n">bics_dow</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Components&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;BIC&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;BIC — GMM on PCA-reduced Dow data (95% variance)&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal GMM components: 24
+</pre></div>
+</div>
+<img alt="../_images/3b06626de95d34fee7f46c23c821d03fe0a4f0c110355fd45bedbf3a44b7ab22.png" src="../_images/3b06626de95d34fee7f46c23c821d03fe0a4f0c110355fd45bedbf3a44b7ab22.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_synth_k</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">best_dow_gmm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_dow</span><span class="p">))</span>
+<span class="n">X_synth</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">pca_dow</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">X_synth_k</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthetic data shape: </span><span class="si">{</span><span class="n">X_synth</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Synthetic data shape: (10297, 40)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We compare the marginal distributions of four representative process features:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">feature_cols</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X_dow</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Real&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X_synth</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Synthetic&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Real vs. Synthetic Dow Features&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/89e6d239a4b3bd3b86288df6133231a290db1d94d86713a643736db752d1f3c7.png" src="../_images/89e6d239a4b3bd3b86288df6133231a290db1d94d86713a643736db752d1f3c7.png" />
+</div>
+</div>
+<p>The marginal distributions of the synthetic data closely mirror the real data. The PCA step
+is critical here: fitting a GMM directly in 40-D with a full covariance matrix would require
+estimating <span class="math notranslate nohighlight">\(40 \times 41 / 2 = 820\)</span> parameters per component — orders of magnitude more than
+after PCA reduction.</p>
+<div class="exercise admonition" id="ex-eda-gmm-dow-full">
+
+<p class="admonition-title"><span class="caption-number">Exercise 88 </span></p>
+<section id="exercise-content">
+<p>Re-run the full Dow generative pipeline with <code class="docutils literal notranslate"><span class="pre">n_components=0.80</span></code> (retaining 80% of the
+variance instead of 95%). How many PCA components are used? Does the synthetic data still
+match the real feature distributions reasonably well? Print the number of PCA components and
+overlay the histograms for the same four features.</p>
+</section>
+</div>
+</section>
+<section id="anomaly-detection-with-density-models">
+<h2>Anomaly Detection with Density Models<a class="headerlink" href="#anomaly-detection-with-density-models" title="Link to this heading">#</a></h2>
+<p>In Topic 5.1 we identified unusual data points visually using scatter plots and univariate
+histograms. Generative models offer a quantitative, multivariate alternative: assign every
+data point a log-probability score under the fitted density and flag points in the lowest
+percentile as statistically anomalous. A point with very low probability is one that the
+model has rarely seen — it lives in a low-density region of feature space.</p>
+<p>We reuse the Dow GMM from the previous section. The <code class="docutils literal notranslate"><span class="pre">score_samples</span></code> method returns the
+per-sample log-probability <span class="math notranslate nohighlight">\(\ln P(\mathbf{x})\)</span> in the reduced PCA space:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log_scores</span> <span class="o">=</span> <span class="n">best_dow_gmm</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">X_dow_k</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">log_scores</span><span class="p">)),</span> <span class="n">log_scores</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample Index (time)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Log-Probability Score&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;GMM Log-Probability Score — Dow Dataset&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2c9bbbe74340d9b6cea1cf4e97270019114ca7c5f9ad80f9b8f7b9e9101feefb.png" src="../_images/2c9bbbe74340d9b6cea1cf4e97270019114ca7c5f9ad80f9b8f7b9e9101feefb.png" />
+</div>
+</div>
+<p>We flag the bottom 1% of scores as anomalous:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">log_scores</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">anomaly_mask</span> <span class="o">=</span> <span class="n">log_scores</span> <span class="o">&lt;</span> <span class="n">threshold</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Anomalous points flagged: </span><span class="si">{</span><span class="n">anomaly_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_dow</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_dow_k</span><span class="p">[</span><span class="o">~</span><span class="n">anomaly_mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_dow_k</span><span class="p">[</span><span class="o">~</span><span class="n">anomaly_mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+           <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_dow_k</span><span class="p">[</span><span class="n">anomaly_mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_dow_k</span><span class="p">[</span><span class="n">anomaly_mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+           <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Anomalous (bottom 1%)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;PC 1&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;PC 2&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Anomalous Samples in PCA Space&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Anomalous points flagged: 103 / 10297
+</pre></div>
+</div>
+<img alt="../_images/6932bd625e6609abda172cd0885b48cb2348f9a7acd3415a634c4a39b970e31c.png" src="../_images/6932bd625e6609abda172cd0885b48cb2348f9a7acd3415a634c4a39b970e31c.png" />
+</div>
+</div>
+<p>The flagged points cluster at the edges of the data cloud in PCA space — exactly the sparse,
+low-density regions where we would expect unusual operating conditions. We can also check
+whether these anomalous time steps correspond to elevated product impurity:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">log_scores</span><span class="p">[</span><span class="o">~</span><span class="n">anomaly_mask</span><span class="p">],</span> <span class="n">y_dow</span><span class="p">[</span><span class="o">~</span><span class="n">anomaly_mask</span><span class="p">],</span>
+           <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">log_scores</span><span class="p">[</span><span class="n">anomaly_mask</span><span class="p">],</span> <span class="n">y_dow</span><span class="p">[</span><span class="n">anomaly_mask</span><span class="p">],</span>
+           <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Anomalous&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Log-Probability Score&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Impurity Target&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Density Score vs. Product Impurity&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1843b6b57f0692ad80de3f8f7cffc06926067468cbc724ac6b8c6b3143da0bda.png" src="../_images/1843b6b57f0692ad80de3f8f7cffc06926067468cbc724ac6b8c6b3143da0bda.png" />
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A weak but visible trend is typically present: points flagged as anomalous by the density
+model tend to have higher product impurity on average. This confirms that low-probability
+process states are industrially meaningful, not just statistical artifacts. The strength of
+the association will depend on how well the training data captures normal operation.</p>
+</div>
+<div class="exercise admonition" id="ex-eda-anomaly-score">
+
+<p class="admonition-title"><span class="caption-number">Exercise 89 </span></p>
+<section id="exercise-content">
+<p>Re-run the anomaly detection using the full-dimensional KDE model (<code class="docutils literal notranslate"><span class="pre">kde_dow</span></code> applied to
+<code class="docutils literal notranslate"><span class="pre">X_dow_k</span></code>). Compare the anomalous points flagged by the KDE to those flagged by the GMM:
+how many overlap? Which method flags anomalies in a wider region of PCA space? Use a 2%
+percentile threshold for both.</p>
+</section>
+</div>
+</section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -1178,6 +1441,14 @@ a fully non-parametric density that makes no assumptions about the number of clu
 <li><p>KDE combined with Bayes’ theorem produces a <strong>probabilistic classifier</strong> that captures full
 multivariate structure per class, substantially outperforming naive Bayes on correlated
 data.</p></li>
+<li><p>The optimal KDE <strong>bandwidth</strong> can be selected via cross-validation by maximizing held-out
+log-likelihood, avoiding manual tuning.</p></li>
+<li><p>A full-dimensional generative model for process data is built by standardizing features,
+compressing with PCA, fitting a BIC-optimal GMM, and inverting both transforms to produce
+realistic synthetic process records.</p></li>
+<li><p><strong>Anomaly detection</strong> with density models assigns each sample a log-probability score;
+points in the lowest percentile are flagged as operating in statistically rare regions,
+providing a quantitative complement to visual outlier inspection.</p></li>
 </ul>
 </section>
 <section id="additional-reading">
@@ -1261,10 +1532,13 @@ and <a class="reference external" href="https://scikit-learn.org/stable/modules/
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-density-estimation">Kernel Density Estimation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kde-vs-histograms">KDE vs. Histograms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bandwidth-selection-via-cross-validation">Bandwidth Selection via Cross-Validation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kde-in-high-dimensions">KDE in High Dimensions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-classification-with-kernel-density-estimation">Bayesian Classification with Kernel Density Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-model-for-the-full-dow-dataset">Generative Model for the Full Dow Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anomaly-detection-with-density-models">Anomaly Detection with Density Models</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
