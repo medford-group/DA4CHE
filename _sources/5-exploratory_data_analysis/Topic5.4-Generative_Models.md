@@ -50,11 +50,31 @@ operating conditions), materials design (proposing candidate molecular structure
 augmentation when new experiments are expensive.
 
 :::{exercise}
-:label: ex-eda-gen-usecases
+:label: ex-eda-gen-conditional
 
-List two chemical engineering scenarios where generating synthetic data points could be
-practically valuable. For each scenario, briefly describe what the features would represent
-and why synthetic augmentation would be useful.
+The generative model overview mentions $P(\mathbf{x} \mid \text{features})$. A closely
+related quantity is the **class-conditional density** $P(\mathbf{x} \mid y)$: the
+distribution of inputs given a particular output value. Use `scipy.stats.norm` to explore
+this on the Dow dataset.
+
+Split the dataset into two subsets — rows where `y_dow` is below its median ("low
+impurity") and rows where it is above ("high impurity"). For Dow feature column 6, fit a
+separate 1-D Gaussian to each subset and plot the two PDFs on the same axes. Compute and
+print the mean and standard deviation of each distribution.
+
+```python
+from scipy.stats import norm
+import numpy as np
+
+y_median = np.median(y_dow)
+mask_low  = (y_dow[:, 0] <= y_median)
+mask_high = (y_dow[:, 0] >  y_median)
+
+# fit and plot P(x_6 | y_low) and P(x_6 | y_high) here
+```
+
+If the two distributions are clearly separated, what does that tell you about feature 6's
+usefulness as a predictor of impurity?
 :::
 
 ## Normal Distribution
@@ -355,10 +375,11 @@ ax.set_title('GMM on full 64-D MNIST');
 ```{code-cell} ipython3
 best_full = models_full[np.argmin(bics_full)]
 
+# Draw all 10 samples in one call so each is different
+X_samples, _ = best_full.sample(n_samples=10)
 fig, axes = plt.subplots(2, 5, figsize=(10, 4))
-for ax in axes.ravel():
-    X_sample, _ = best_full.sample()
-    show_image(X_sample[0], ax=ax)
+for ax, sample in zip(axes.ravel(), X_samples):
+    show_image(sample, ax=ax)
 fig.suptitle('Samples from full-D GMM');
 ```
 
@@ -396,11 +417,12 @@ ax.set_title('GMM after PCA (30 components)');
 ```{code-cell} ipython3
 best_pca = models_pca[np.argmin(bics_pca)]
 
+# Sample all 10 at once, then batch-invert the PCA transform
+X_samples_low, _ = best_pca.sample(n_samples=10)
+X_samples_high = pca.inverse_transform(X_samples_low)  # shape (10, 64)
 fig, axes = plt.subplots(2, 5, figsize=(10, 4))
-for ax in axes.ravel():
-    X_low, _ = best_pca.sample()
-    X_high = pca.inverse_transform(X_low)
-    show_image(X_high[0], ax=ax)
+for ax, sample in zip(axes.ravel(), X_samples_high):
+    show_image(sample, ax=ax)
 fig.suptitle('Samples from PCA + GMM');
 ```
 
@@ -438,11 +460,11 @@ print(f"Optimal components: {n_range_6[best_idx]}")
 ```
 
 ```{code-cell} ipython3
+s_samples_low, _ = best_6.sample(n_samples=10)
+s_samples_high = pca_6.inverse_transform(s_samples_low)  # shape (10, 64)
 fig, axes = plt.subplots(2, 5, figsize=(10, 4))
-for ax in axes.ravel():
-    s_low, _ = best_6.sample()
-    s_high = pca_6.inverse_transform(s_low)
-    show_image(s_high[0], ax=ax)
+for ax, sample in zip(axes.ravel(), s_samples_high):
+    show_image(sample, ax=ax)
 fig.suptitle('Synthetic digit-6 samples from PCA + GMM');
 ```
 
@@ -590,10 +612,12 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 kde_images = KernelDensity(bandwidth=0.25, kernel='gaussian')
 kde_images.fit(X_mnist)
 
+# KernelDensity.sample() also reseeds from random_state each call —
+# draw all 10 at once to get distinct images
+kde_samples = kde_images.sample(n_samples=10)  # shape (10, 64)
 fig, axes = plt.subplots(2, 5, figsize=(10, 4))
-for ax in axes.ravel():
-    sample = kde_images.sample()
-    show_image(sample[0], ax=ax)
+for ax, sample in zip(axes.ravel(), kde_samples):
+    show_image(sample, ax=ax)
 fig.suptitle('Samples from KDE on 64-D MNIST');
 ```
 
