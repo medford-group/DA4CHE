@@ -630,27 +630,56 @@ bandwidth cleanly resolves both modes; a bandwidth of 2.5 merges the two populat
 a single broad hump (underfitting). The held-out log-likelihood falls sharply in both
 extreme cases, giving the CV a reliable signal to optimize.
 
-This procedure applies directly to real data. Applying it to Dow feature 6:
+This procedure applies directly to real data, but a practical complication arises with
+large datasets: with ~10,000 points the held-out log-likelihood becomes nearly flat because
+a test point almost always lands close to a training point regardless of bandwidth.
+**Subsampling** to ~1,000 points restores the CV's discriminating power while preserving
+the shape of the distribution. The bandwidth found on the subsample is then used to fit a
+KDE on the full dataset.
 
 ```{code-cell} ipython3
+# Subsample for CV, fit final model on all data
+rng_sub = np.random.default_rng(0)
+idx_sub = rng_sub.choice(len(x_1d_col), size=1000, replace=False)
+x_dow_sub = x_1d_col[idx_sub]
+
+# Fine grid (60 log-spaced points, 0.1–10) with 10-fold CV
+bandwidths_dow = np.logspace(-1, 1, 60)
 grid_dow = GridSearchCV(KernelDensity(kernel='gaussian'),
-                        {'bandwidth': np.logspace(-2, 0.5, 30)},
-                        cv=5)
-grid_dow.fit(x_1d_col)
+                        {'bandwidth': bandwidths_dow},
+                        cv=10)
+grid_dow.fit(x_dow_sub)
 best_bw_dow = grid_dow.best_params_['bandwidth']
 print(f"Dow feature 6 optimal bandwidth: {best_bw_dow:.4f}")
+```
 
+```{code-cell} ipython3
+cv_scores_dow = grid_dow.cv_results_['mean_test_score']
 x_cont_dow = np.linspace(x_1d_col.min(), x_1d_col.max(), 500).reshape(-1, 1)
-lp_dow = grid_dow.best_estimator_.score_samples(x_cont_dow)
 
-fig, ax = plt.subplots(figsize=(8, 4))
-ax.hist(x_1d_col, density=True, bins=80, alpha=0.5, label='Data')
-ax.plot(x_cont_dow, np.exp(lp_dow), linewidth=2,
-        label=f'CV-optimal KDE (h={best_bw_dow:.3f})')
-ax.set_xlabel('X')
-ax.set_ylabel('P(X)')
-ax.set_title('Dow Feature 6 — CV-Optimal KDE')
-ax.legend();
+# Refit on full dataset with the CV-selected bandwidth
+kde_dow_opt = KernelDensity(bandwidth=best_bw_dow, kernel='gaussian').fit(x_1d_col)
+lp_dow = kde_dow_opt.score_samples(x_cont_dow)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+axes[0].semilogx(bandwidths_dow, cv_scores_dow, marker='o', markersize=3)
+axes[0].axvline(best_bw_dow, color=clrs[1], linestyle='--',
+                label=f'Optimal h={best_bw_dow:.2f}')
+axes[0].set_xlabel('Bandwidth')
+axes[0].set_ylabel('Mean CV Log-Likelihood')
+axes[0].set_title('CV Search — Dow Feature 6 (n=1 000 subsample, 10-fold)')
+axes[0].legend()
+
+axes[1].hist(x_1d_col, density=True, bins=80, alpha=0.5, label='Data')
+axes[1].plot(x_cont_dow, np.exp(lp_dow), linewidth=2,
+             label=f'CV-optimal KDE (h={best_bw_dow:.2f})')
+axes[1].set_xlabel('X')
+axes[1].set_ylabel('P(X)')
+axes[1].set_title('Dow Feature 6 — CV-Optimal KDE (fit on all data)')
+axes[1].legend()
+
+plt.tight_layout();
 ```
 
 ### KDE in High Dimensions
