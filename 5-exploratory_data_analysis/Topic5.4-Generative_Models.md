@@ -20,7 +20,10 @@ By the end of this chapter, you will be able to:
 - Apply the Bayesian Information Criterion (BIC) to select the optimal number of GMM components
 - Combine PCA with a GMM to build a generative model for high-dimensional data
 - Estimate a probability density using kernel density estimation (KDE) and compare KDE to histograms
+- Select the optimal KDE bandwidth via cross-validation using held-out log-likelihood
+- Build a full generative model for a high-dimensional process dataset by combining standardization, PCA, and GMM
 - Implement a non-naive Bayesian classifier using per-class KDE densities and interpret its accuracy
+- Apply density-based anomaly detection by scoring samples under a fitted generative model
 :::
 
 ## Generative Model Overview
@@ -529,6 +532,54 @@ Describe qualitatively how the bandwidth controls the bias-variance tradeoff in 
 estimation.
 :::
 
+### Bandwidth Selection via Cross-Validation
+
+Rather than tuning the bandwidth by hand, we can treat it as a hyperparameter and select
+it via cross-validation. `GridSearchCV` maximizes the mean held-out log-likelihood across
+$k$ folds — a natural scoring criterion for density models.
+
+```{code-cell} ipython3
+from sklearn.model_selection import GridSearchCV
+
+bandwidths = np.logspace(-2, 1, 30)
+grid = GridSearchCV(KernelDensity(kernel='gaussian'),
+                    {'bandwidth': bandwidths},
+                    cv=5)
+grid.fit(x_1d_col)
+
+best_bw = grid.best_params_['bandwidth']
+print(f"Optimal bandwidth: {best_bw:.4f}")
+```
+
+```{code-cell} ipython3
+cv_scores = grid.cv_results_['mean_test_score']
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+axes[0].semilogx(bandwidths, cv_scores, marker='o', markersize=3)
+axes[0].axvline(best_bw, color=clrs[1], linestyle='--', label='Optimal')
+axes[0].set_xlabel('Bandwidth')
+axes[0].set_ylabel('Mean CV Log-Likelihood')
+axes[0].set_title('Bandwidth Selection via Cross-Validation')
+axes[0].legend()
+
+log_prob_opt = grid.best_estimator_.score_samples(x_cont)
+axes[1].hist(x_1d_col, density=True, bins=100, alpha=0.5, label='Data')
+axes[1].plot(x_cont, np.exp(log_prob_opt), linewidth=2,
+             label=f'KDE (h={best_bw:.3f})')
+axes[1].set_xlabel('X')
+axes[1].set_ylabel('P(X)')
+axes[1].set_title('Cross-Validated KDE')
+axes[1].legend()
+
+plt.tight_layout();
+```
+
+The left panel shows a clear optimum: bandwidths below ~0.05 overfit (each data point
+becomes its own spike) while bandwidths above ~1.0 underfit (the distribution is smeared
+into a single broad hump). The right panel shows the KDE evaluated at the optimal bandwidth.
+This cross-validation procedure generalizes directly to higher-dimensional KDE fits.
+
 ### KDE in High Dimensions
 
 KDE scales more gracefully to high dimensions than GMMs because each kernel is centered on
@@ -633,6 +684,152 @@ test-set accuracy for each. Which bandwidth gives the best performance, and why 
 very small or very large bandwidths hurt accuracy?
 :::
 
+## Generative Model for the Full Dow Dataset
+
+The examples above used only 1–2 features of the Dow dataset. A truly useful generative
+model must capture all 40 process variables simultaneously. The strategy is the same as for
+MNIST: standardize the data (process variables have different units and ranges), reduce with
+PCA, fit a GMM with BIC selection, then invert both transforms to produce full-dimensional
+synthetic process records.
+
+```{code-cell} ipython3
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_dow_scaled = scaler.fit_transform(X_dow)
+
+pca_dow = PCA(n_components=0.95, random_state=0)
+X_dow_k = pca_dow.fit_transform(X_dow_scaled)
+print(f"PCA components retained: {pca_dow.n_components_} / {X_dow.shape[1]}")
+print(f"Variance retained: {pca_dow.explained_variance_ratio_.sum():.1%}")
+```
+
+```{code-cell} ipython3
+n_range_dow = np.arange(2, 25, 2)
+bics_dow, models_dow = [], []
+for n in n_range_dow:
+    g = GaussianMixture(n, covariance_type='full',
+                        random_state=0).fit(X_dow_k)
+    bics_dow.append(g.bic(X_dow_k))
+    models_dow.append(g)
+
+best_dow_idx = np.argmin(bics_dow)
+best_dow_gmm = models_dow[best_dow_idx]
+print(f"Optimal GMM components: {n_range_dow[best_dow_idx]}")
+
+fig, ax = plt.subplots()
+ax.plot(n_range_dow, bics_dow, marker='o', markersize=4)
+ax.set_xlabel('Number of Components')
+ax.set_ylabel('BIC')
+ax.set_title('BIC — GMM on PCA-reduced Dow data (95% variance)');
+```
+
+```{code-cell} ipython3
+X_synth_k, _ = best_dow_gmm.sample(len(X_dow))
+X_synth = scaler.inverse_transform(pca_dow.inverse_transform(X_synth_k))
+print(f"Synthetic data shape: {X_synth.shape}")
+```
+
+We compare the marginal distributions of four representative process features:
+
+```{code-cell} ipython3
+feature_cols = [1, 6, 15, 25]
+fig, axes = plt.subplots(2, 2, figsize=(10, 7))
+for ax, col in zip(axes.ravel(), feature_cols):
+    ax.hist(X_dow[:, col], density=True, alpha=0.5, bins=40, label='Real')
+    ax.hist(X_synth[:, col], density=True, alpha=0.5, bins=40, label='Synthetic')
+    ax.set_title(df.columns[col + 1], fontsize=9)
+    ax.set_ylabel('Density')
+axes[0, 0].legend()
+fig.suptitle('Real vs. Synthetic Dow Features')
+plt.tight_layout();
+```
+
+The marginal distributions of the synthetic data closely mirror the real data. The PCA step
+is critical here: fitting a GMM directly in 40-D with a full covariance matrix would require
+estimating $40 \times 41 / 2 = 820$ parameters per component — orders of magnitude more than
+after PCA reduction.
+
+:::{exercise}
+:label: ex-eda-gmm-dow-full
+
+Re-run the full Dow generative pipeline with `n_components=0.80` (retaining 80% of the
+variance instead of 95%). How many PCA components are used? Does the synthetic data still
+match the real feature distributions reasonably well? Print the number of PCA components and
+overlay the histograms for the same four features.
+:::
+
+## Anomaly Detection with Density Models
+
+In Topic 5.1 we identified unusual data points visually using scatter plots and univariate
+histograms. Generative models offer a quantitative, multivariate alternative: assign every
+data point a log-probability score under the fitted density and flag points in the lowest
+percentile as statistically anomalous. A point with very low probability is one that the
+model has rarely seen — it lives in a low-density region of feature space.
+
+We reuse the Dow GMM from the previous section. The `score_samples` method returns the
+per-sample log-probability $\ln P(\mathbf{x})$ in the reduced PCA space:
+
+```{code-cell} ipython3
+log_scores = best_dow_gmm.score_samples(X_dow_k)
+
+fig, ax = plt.subplots(figsize=(9, 3))
+ax.scatter(range(len(log_scores)), log_scores, alpha=0.15, s=2, c=clrs[0])
+ax.set_xlabel('Sample Index (time)')
+ax.set_ylabel('Log-Probability Score')
+ax.set_title('GMM Log-Probability Score — Dow Dataset');
+```
+
+We flag the bottom 1% of scores as anomalous:
+
+```{code-cell} ipython3
+threshold = np.percentile(log_scores, 1)
+anomaly_mask = log_scores < threshold
+print(f"Anomalous points flagged: {anomaly_mask.sum()} / {len(X_dow)}")
+
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.scatter(X_dow_k[~anomaly_mask, 0], X_dow_k[~anomaly_mask, 1],
+           alpha=0.15, s=4, c=clrs[0], label='Normal')
+ax.scatter(X_dow_k[anomaly_mask, 0], X_dow_k[anomaly_mask, 1],
+           alpha=0.8, s=15, c=clrs[1], label='Anomalous (bottom 1%)')
+ax.set_xlabel('PC 1')
+ax.set_ylabel('PC 2')
+ax.set_title('Anomalous Samples in PCA Space')
+ax.legend();
+```
+
+The flagged points cluster at the edges of the data cloud in PCA space — exactly the sparse,
+low-density regions where we would expect unusual operating conditions. We can also check
+whether these anomalous time steps correspond to elevated product impurity:
+
+```{code-cell} ipython3
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.scatter(log_scores[~anomaly_mask], y_dow[~anomaly_mask],
+           alpha=0.15, s=4, c=clrs[0], label='Normal')
+ax.scatter(log_scores[anomaly_mask], y_dow[anomaly_mask],
+           alpha=0.8, s=15, c=clrs[1], label='Anomalous')
+ax.set_xlabel('Log-Probability Score')
+ax.set_ylabel('Impurity Target')
+ax.set_title('Density Score vs. Product Impurity')
+ax.legend();
+```
+
+:::{note}
+A weak but visible trend is typically present: points flagged as anomalous by the density
+model tend to have higher product impurity on average. This confirms that low-probability
+process states are industrially meaningful, not just statistical artifacts. The strength of
+the association will depend on how well the training data captures normal operation.
+:::
+
+:::{exercise}
+:label: ex-eda-anomaly-score
+
+Re-run the anomaly detection using the full-dimensional KDE model (`kde_dow` applied to
+`X_dow_k`). Compare the anomalous points flagged by the KDE to those flagged by the GMM:
+how many overlap? Which method flags anomalies in a wider region of PCA space? Use a 2%
+percentile threshold for both.
+:::
+
 ## Summary
 
 - **Generative models** estimate $P(\mathbf{x})$, the probability distribution of the data
@@ -651,6 +848,14 @@ very small or very large bandwidths hurt accuracy?
 - KDE combined with Bayes' theorem produces a **probabilistic classifier** that captures full
   multivariate structure per class, substantially outperforming naive Bayes on correlated
   data.
+- The optimal KDE **bandwidth** can be selected via cross-validation by maximizing held-out
+  log-likelihood, avoiding manual tuning.
+- A full-dimensional generative model for process data is built by standardizing features,
+  compressing with PCA, fitting a BIC-optimal GMM, and inverting both transforms to produce
+  realistic synthetic process records.
+- **Anomaly detection** with density models assigns each sample a log-probability score;
+  points in the lowest percentile are flagged as operating in statistically rare regions,
+  providing a quantitative complement to visual outlier inspection.
 
 ## Additional Reading
 
