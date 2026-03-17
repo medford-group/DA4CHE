@@ -15,6 +15,7 @@ chapters:
       - file: 2-regression/Topic2.3-Complexity_Optimization
       - file: 2-regression/Topic2.4-High_dimensional_data
       - file: 2-regression/Topic2.5-High_dimensional_regression
+      - file: 2-regression/Topic2.6-Nonlinear_Feature_Engineering
   - file: 3-classification/intro
     sections:
       - file: 3-classification/Topic3.1-Classification_Basics
@@ -31,3 +32,9 @@ chapters:
       - file: 5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction
       - file: 5-exploratory_data_analysis/Topic5.3-Clustering
       - file: 5-exploratory_data_analysis/Topic5.4-Generative_Models
+  - file: 6-advanced_topics/intro
+    sections:
+      - file: 6-advanced_topics/Topic6.1-Time_Series_Basics
+      - file: 6-advanced_topics/Topic6.2-Time_Series_Models
+      - file: 6-advanced_topics/Topic6.3-Neural_Network_Basics
+      - file: 6-advanced_topics/Topic6.4-Neural_Network_Architectures
