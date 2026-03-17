@@ -190,6 +190,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -209,6 +210,13 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering.html">Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
 </ul>
 </details></li>
 </ul>
@@ -502,7 +510,7 @@ document.write(`
 <p>Each row of <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> is a 64-element vector. The <code class="docutils literal notranslate"><span class="pre">show_image</span></code> helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — a point we will return to in the Feature Engineering module.</p>
 <div class="exercise admonition" id="ex-eda-dataset-shapes">
 
-<p class="admonition-title"><span class="caption-number">Exercise 63 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 68 </span></p>
 <section id="exercise-content">
 <p>Compute the <strong>samples-to-features ratio</strong> (n/d) for both the Dow and MNIST datasets. If a linear model has roughly one free parameter per feature (plus an intercept), what does a low n/d ratio imply about the risk of overfitting? Which dataset is more at risk?</p>
 </section>
@@ -554,7 +562,7 @@ document.write(`
 <p>Adding the third feature separates the two classes that overlapped in 2D — a concrete illustration of the blessing. However, if Feature 3 were pure noise, the added dimension would only degrade model performance.</p>
 <div class="exercise admonition" id="ex-eda-volume-growth">
 
-<p class="admonition-title"><span class="caption-number">Exercise 64 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 69 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">grid_points(d,</span> <span class="pre">N)</span></code> that returns the number of uniform grid points needed to cover a <span class="math notranslate nohighlight">\(d\)</span>-dimensional unit hypercube at resolution <span class="math notranslate nohighlight">\(1/N\)</span> (i.e. <span class="math notranslate nohighlight">\(N^d\)</span>). Plot <span class="math notranslate nohighlight">\(\log_{10}(\text{grid points})\)</span> vs <span class="math notranslate nohighlight">\(d\)</span> for <span class="math notranslate nohighlight">\(N = 10\)</span> and <span class="math notranslate nohighlight">\(d \in \{1, 2, \ldots, 20\}\)</span>. Add a horizontal reference line at <span class="math notranslate nohighlight">\(\log_{10}(10^{83})\)</span> (approximate number of atoms in the observable universe). At what dimension does the required sampling exceed this limit?</p>
 </section>
@@ -1166,7 +1174,7 @@ document.write(`
 </ul>
 <div class="exercise admonition" id="ex-eda-zero-pixels">
 
-<p class="admonition-title"><span class="caption-number">Exercise 65 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 70 </span></p>
 <section id="exercise-content">
 <p>Identify all MNIST pixels (features) with standard deviation less than 0.5. Visualize their positions as an 8×8 binary mask using <code class="docutils literal notranslate"><span class="pre">plt.imshow</span></code> (1 = near-zero variance, 0 = informative). How many such pixels are there, and where are they located in the image grid?</p>
 </section>
@@ -1282,7 +1290,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/99254ad7d941cde9785d787e5f1d3e43c6fa79e924d21f3c1f7c7aaed76a955f.png" src="../_images/99254ad7d941cde9785d787e5f1d3e43c6fa79e924d21f3c1f7c7aaed76a955f.png" />
+<img alt="../_images/7542b598da468bffa0905f8f3b0dd4d077fe1adbe6b1e4acfe780a69803c348d.png" src="../_images/7542b598da468bffa0905f8f3b0dd4d077fe1adbe6b1e4acfe780a69803c348d.png" />
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">kind='reg'</span></code> option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.</p>
@@ -1386,7 +1394,7 @@ Difference: 2.22e-16
 <p>The two values agree to numerical precision. Intuitively, the correlation matrix is a compact representation of all pairwise linear regressions on standardized data — a useful framing when deciding which features to include or exclude from a model.</p>
 <div class="exercise admonition" id="ex-eda-corr-slope">
 
-<p class="admonition-title"><span class="caption-number">Exercise 66 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
 <section id="exercise-content">
 <p>Extend the demonstration above to verify that the <strong>full correlation matrix</strong> of the first four Dow features equals the matrix of pairwise OLS regression slopes on standardized data. For each off-diagonal pair <span class="math notranslate nohighlight">\((i, j)\)</span>: standardize both features, fit <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>, and compare <code class="docutils literal notranslate"><span class="pre">.coef_[0]</span></code> to the corresponding entry in <code class="docutils literal notranslate"><span class="pre">corr_dow</span></code>. Display the maximum absolute difference across all pairs.</p>
 </section>
@@ -1419,7 +1427,7 @@ Spearman correlation: 0.2359
 <p>When Pearson and Spearman values agree closely, the relationship is approximately linear. A large discrepancy suggests nonlinearity or outlier influence, and warrants further investigation before assuming linear models are appropriate.</p>
 <div class="exercise admonition" id="ex-eda-spearman-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 67 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 72 </span></p>
 <section id="exercise-content">
 <p>Compute both the Pearson and Spearman correlation matrices for all 40 Dow features. Calculate the element-wise absolute difference between the two matrices (excluding the diagonal). Which feature pair shows the largest discrepancy between Pearson and Spearman correlation? Plot a scatter plot of that pair and describe what you observe.</p>
 </section>

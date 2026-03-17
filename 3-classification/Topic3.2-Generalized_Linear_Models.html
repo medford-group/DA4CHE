@@ -190,6 +190,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Classification</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -209,6 +210,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
 </ul>
 </details></li>
 </ul>
@@ -580,7 +588,7 @@ document.write(`
 <p>All the generalized linear models for classification—logistic regression, SVMs, and others—share this same single-layer architecture. What distinguishes them is the choice of <strong>activation function</strong> (equivalently, the <strong>loss function</strong> used during training).</p>
 <div class="exercise admonition" id="ex-cls-perceptron-circles">
 
-<p class="admonition-title"><span class="caption-number">Exercise 41 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 44 </span></p>
 <section id="exercise-content">
 <p>Apply the perceptron to the circles dataset. Rescale <code class="docutils literal notranslate"><span class="pre">y_circles</span></code> to ±1, minimize <code class="docutils literal notranslate"><span class="pre">max_cost</span></code> starting from <code class="docutils literal notranslate"><span class="pre">w_init</span></code>, and plot the resulting decision boundary. Think about whether a straight line can ever perfectly separate this dataset, and what the optimizer is forced to do instead.</p>
 </section>
@@ -690,7 +698,7 @@ Logistic loss     (optimized): 53.9395
 <p>The perceptron loss reaches near zero because it only penalizes points on the wrong side of the boundary and ignores <em>how far</em> wrong they are. The logistic loss is higher because the softmax assigns a small but non-zero penalty even to correctly classified points far from the boundary—this is a feature, not a bug, since it keeps pushing the boundary away from the data and prevents overconfident solutions.</p>
 <div class="exercise admonition" id="ex-cls-logit-init-sens">
 
-<p class="admonition-title"><span class="caption-number">Exercise 42 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 45 </span></p>
 <section id="exercise-content">
 <p>Run <code class="docutils literal notranslate"><span class="pre">minimize(softmax_cost,</span> <span class="pre">w0,</span> <span class="pre">args=(X,</span> <span class="pre">y))</span></code> for the blobs dataset using three different initial guesses: <code class="docutils literal notranslate"><span class="pre">w0</span> <span class="pre">=</span> <span class="pre">[-10,</span> <span class="pre">-4,</span> <span class="pre">-10]</span></code>, <code class="docutils literal notranslate"><span class="pre">w0</span> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>, and <code class="docutils literal notranslate"><span class="pre">w0</span> <span class="pre">=</span> <span class="pre">[10,</span> <span class="pre">4,</span> <span class="pre">10]</span></code>. Plot the three resulting decision boundaries on the same scatter plot. Think about whether the boundaries converge to the same solution, and what that implies for the choice of initial guess in practice.</p>
 </section>
@@ -785,7 +793,7 @@ Logistic loss     (optimized): 53.9395
 </div>
 <div class="exercise admonition" id="ex-cls-margin-moons">
 
-<p class="admonition-title"><span class="caption-number">Exercise 43 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 46 </span></p>
 <section id="exercise-content">
 <p>Apply both <code class="docutils literal notranslate"><span class="pre">margin_cost</span></code> and <code class="docutils literal notranslate"><span class="pre">margin_cost_squared</span></code> to the moons dataset. Rescale <code class="docutils literal notranslate"><span class="pre">y_moons</span></code> to ±1 and minimize both starting from <code class="docutils literal notranslate"><span class="pre">w_init_moons</span></code>. Plot the two resulting decision boundaries on the same scatter plot and print the optimized loss values. Think about which cost function has a smoother gradient near the boundary and how that affects the optimizer’s convergence.</p>
 </section>
@@ -883,7 +891,7 @@ Logistic loss     (optimized): 53.9395
 </div>
 <div class="exercise admonition" id="ex-cls-linearsvc-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 44 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 47 </span></p>
 <section id="exercise-content">
 <p>Fit <code class="docutils literal notranslate"><span class="pre">sklearn.svm.LinearSVC</span></code> to the blobs dataset using <code class="docutils literal notranslate"><span class="pre">y_blob</span></code> directly—scikit-learn handles the ±1 rescaling internally. Extract the learned weights from <code class="docutils literal notranslate"><span class="pre">model.coef_</span></code> and <code class="docutils literal notranslate"><span class="pre">model.intercept_</span></code> and plot the <code class="docutils literal notranslate"><span class="pre">LinearSVC</span></code> decision boundary alongside <code class="docutils literal notranslate"><span class="pre">w_svm</span></code> from the Demonstration above. Think about what might cause any visible differences between the two boundaries.</p>
 </section>
@@ -1093,7 +1101,7 @@ Logistic loss     (optimized): 53.9395
 </div>
 <div class="exercise admonition" id="ex-cls-svc-gamma">
 
-<p class="admonition-title"><span class="caption-number">Exercise 45 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 48 </span></p>
 <section id="exercise-content">
 <p>Fit <code class="docutils literal notranslate"><span class="pre">SVC(kernel='rbf',</span> <span class="pre">C=10)</span></code> to the moons dataset (use <code class="docutils literal notranslate"><span class="pre">y_moons</span></code> directly) for <code class="docutils literal notranslate"><span class="pre">gamma</span></code> values <code class="docutils literal notranslate"><span class="pre">[0.1,</span> <span class="pre">1,</span> <span class="pre">10,</span> <span class="pre">100]</span></code>. Plot the decision boundary for each using <code class="docutils literal notranslate"><span class="pre">plot_svc_decision_function</span></code>. Think about what happens to the number of support vectors as <code class="docutils literal notranslate"><span class="pre">gamma</span></code> increases, and which value is likely to generalize best to new data.</p>
 </section>

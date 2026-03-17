@@ -1,0 +1,1097 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Nonlinear Feature Engineering &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2-regression/Topic2.6-Nonlinear_Feature_Engineering';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Classification" href="../3-classification/intro.html" />
+    <link rel="prev" title="High-dimensional Regression" href="Topic2.5-High_dimensional_regression.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/2-regression/Topic2.6-Nonlinear_Feature_Engineering.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Nonlinear Feature Engineering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-when-linear-combinations-are-not-enough">Motivation: When Linear Combinations Are Not Enough</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomial-features">Polynomial Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-polynomial-features-with-sklearn">Generating Polynomial Features with sklearn</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combinatorial-explosion">Combinatorial Explosion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regularized-polynomial-regression-with-lasso">Regularized Polynomial Regression with LASSO</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-selected-features">Interpreting the Selected Features</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-regression-with-autofeat">Symbolic Regression with <code class="docutils literal notranslate"><span class="pre">autofeat</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-autofeatregressor">Basic <code class="docutils literal notranslate"><span class="pre">AutoFeatRegressor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transforming-the-feature-matrix-directly">Transforming the Feature Matrix Directly</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#units-aware-feature-generation">Units-Aware Feature Generation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical Guidance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="nonlinear-feature-engineering">
+<h1>Nonlinear Feature Engineering<a class="headerlink" href="#nonlinear-feature-engineering" title="Link to this heading">#</a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#motivation-when-linear-combinations-are-not-enough" id="id1">Motivation: When Linear Combinations Are Not Enough</a></p></li>
+<li><p><a class="reference internal" href="#polynomial-features" id="id2">Polynomial Features</a></p>
+<ul>
+<li><p><a class="reference internal" href="#generating-polynomial-features-with-sklearn" id="id3">Generating Polynomial Features with sklearn</a></p></li>
+<li><p><a class="reference internal" href="#combinatorial-explosion" id="id4">Combinatorial Explosion</a></p></li>
+<li><p><a class="reference internal" href="#regularized-polynomial-regression-with-lasso" id="id5">Regularized Polynomial Regression with LASSO</a></p></li>
+<li><p><a class="reference internal" href="#interpreting-the-selected-features" id="id6">Interpreting the Selected Features</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#symbolic-regression-with-autofeat" id="id7">Symbolic Regression with <code class="docutils literal notranslate"><span class="pre">autofeat</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#basic-autofeatregressor" id="id8">Basic <code class="docutils literal notranslate"><span class="pre">AutoFeatRegressor</span></code></a></p></li>
+<li><p><a class="reference internal" href="#transforming-the-feature-matrix-directly" id="id9">Transforming the Feature Matrix Directly</a></p></li>
+<li><p><a class="reference internal" href="#units-aware-feature-generation" id="id10">Units-Aware Feature Generation</a></p></li>
+<li><p><a class="reference internal" href="#practical-guidance" id="id11">Practical Guidance</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#summary" id="id12">Summary</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id13">Additional Reading</a></p></li>
+</ul>
+</nav>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
+<p>By the end of this chapter, you will be able to:</p>
+<ul class="simple">
+<li><p>Explain why nonlinear feature transformations are necessary when linear combinations cannot improve a linear model’s performance.</p></li>
+<li><p>Construct polynomial feature matrices with <code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.PolynomialFeatures</span></code> and estimate the combinatorial growth of feature count with polynomial order.</p></li>
+<li><p>Apply LASSO regularization to a polynomial feature matrix to select a sparse, interpretable set of nonlinear features.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">autofeat</span></code> to generate and select physically meaningful nonlinear features from engineering data, with and without dimensional constraints.</p></li>
+<li><p>Articulate the practical trade-offs of symbolic regression: interpretability and efficiency at test time vs. high training cost and sensitivity to train/test splits.</p></li>
+</ul>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Lasso</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+
+<span class="n">clrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#003057&#39;</span><span class="p">,</span> <span class="s1">&#39;#EAAA00&#39;</span><span class="p">,</span> <span class="s1">&#39;#4B8B9B&#39;</span><span class="p">,</span> <span class="s1">&#39;#B3A369&#39;</span><span class="p">,</span> <span class="s1">&#39;#377117&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;#1879DB&#39;</span><span class="p">,</span> <span class="s1">&#39;#8E8B76&#39;</span><span class="p">,</span> <span class="s1">&#39;#F5D580&#39;</span><span class="p">,</span> <span class="s1">&#39;#002233&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load Dow dataset — same preprocessing as Topic 2.4/2.5</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;data/impurity_dataset-training.xlsx&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_real_and_finite</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="n">nondate_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">numeric_map</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">nondate_cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">is_real_and_finite</span><span class="p">))</span>
+<span class="n">real_rows</span> <span class="o">=</span> <span class="n">numeric_map</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">all_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">nondate_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">dow_feature_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nondate_cols</span><span class="p">)</span>
+
+<span class="n">X_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_data</span><span class="p">[</span><span class="n">real_rows</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">y_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_data</span><span class="p">[</span><span class="n">real_rows</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span>  <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+<span class="c1"># Standardize features</span>
+<span class="n">X_dow_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_dow</span> <span class="o">-</span> <span class="n">X_dow</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">X_dow</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;X shape: </span><span class="si">{</span><span class="n">X_dow_scaled</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">,  y shape: </span><span class="si">{</span><span class="n">y_dow</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X shape: (10297, 40),  y shape: (10297,)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="motivation-when-linear-combinations-are-not-enough">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Motivation: When Linear Combinations Are Not Enough</a><a class="headerlink" href="#motivation-when-linear-combinations-are-not-enough" title="Link to this heading">#</a></h2>
+<p>In Topic 2.5 we showed that linear combinations — including PCA and PLS — can reduce
+dimensionality and sometimes improve model performance. But they share a fundamental
+limitation: <strong>a linear combination of features fed into a linear model is still a linear
+model</strong>. No matter how we rotate or re-weight the input columns, we cannot capture
+interactions like <span class="math notranslate nohighlight">\(x_i \cdot x_j\)</span> or nonlinear effects like <span class="math notranslate nohighlight">\(x_i^2\)</span>.</p>
+<p>This matters for engineering systems, where the physics is rarely linear. A distillation
+column impurity may depend on the product of two flow rates (a multiplicative interaction),
+or on the square of a temperature difference. To capture such effects with a linear
+regression model, we must <strong>create the nonlinear features explicitly</strong> — add columns like
+<span class="math notranslate nohighlight">\(x_i^2\)</span> or <span class="math notranslate nohighlight">\(x_i x_j\)</span> to the feature matrix before fitting.</p>
+<p>The challenge is that the number of such features grows rapidly, so we need both a
+systematic way to generate them and a regularization strategy to select the useful ones.</p>
+<div class="exercise admonition" id="ex-reg-nonlin-motive">
+
+<p class="admonition-title"><span class="caption-number">Exercise 36 </span></p>
+<section id="exercise-content">
+<p>Verify the linear-model ceiling on the Dow dataset.</p>
+<ol class="arabic simple">
+<li><p>Using the scaled features <code class="docutils literal notranslate"><span class="pre">X_dow_scaled</span></code> and target <code class="docutils literal notranslate"><span class="pre">y_dow</span></code> from above, fit a
+<code class="docutils literal notranslate"><span class="pre">LinearRegression()</span></code> and record the train <span class="math notranslate nohighlight">\(r^2\)</span>.</p></li>
+<li><p>Fit a <code class="docutils literal notranslate"><span class="pre">Ridge(alpha=1.0)</span></code> and compare the train and test <span class="math notranslate nohighlight">\(r^2\)</span> (use a 70/30 split
+with <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>). Is there evidence of overfitting?</p></li>
+<li><p>Compute the Pearson correlation between each individual feature and the target.
+Report the top-5 most correlated features. Are any correlations very strong
+(<span class="math notranslate nohighlight">\(|r| &gt; 0.5\)</span>)?</p></li>
+<li><p>Based on your results, argue briefly whether a linear model is likely to be
+the best achievable model for this dataset.</p></li>
+</ol>
+</section>
+</div>
+</section>
+<section id="polynomial-features">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Polynomial Features</a><a class="headerlink" href="#polynomial-features" title="Link to this heading">#</a></h2>
+<section id="generating-polynomial-features-with-sklearn">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Generating Polynomial Features with sklearn</a><a class="headerlink" href="#generating-polynomial-features-with-sklearn" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.PolynomialFeatures</span></code> creates all monomials up to a specified
+degree from an input matrix. For degree 2 with two input features <span class="math notranslate nohighlight">\(x_0, x_1\)</span>, it produces
+<span class="math notranslate nohighlight">\([1,\, x_0,\, x_1,\, x_0^2,\, x_0 x_1,\, x_1^2]\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolynomialFeatures</span>
+
+<span class="c1"># Subsample to keep memory manageable (see note below)</span>
+<span class="n">X_sub</span> <span class="o">=</span> <span class="n">X_dow_scaled</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">y_sub</span> <span class="o">=</span> <span class="n">y_dow</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X_sub</span><span class="p">,</span> <span class="n">y_sub</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">poly</span> <span class="o">=</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">X_poly_train</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_poly_test</span>  <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Original features:  </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Degree-2 features:  </span><span class="si">{</span><span class="n">X_poly_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Original features:  40
+Degree-2 features:  860
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Why subsample?</strong> With 40 features and degree-2 polynomial expansion, the feature count
+is <span class="math notranslate nohighlight">\(\binom{40 + 2}{2} - 1 = 859\)</span>. At degree 3 it exceeds 11,000 — larger than many training
+sets. We subsample to avoid memory issues during the fitting step below. In practice you
+would use regularization (LASSO, ridge) rather than subsampling to handle the
+large-feature regime.</p>
+</div>
+</section>
+<section id="combinatorial-explosion">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Combinatorial Explosion</a><a class="headerlink" href="#combinatorial-explosion" title="Link to this heading">#</a></h3>
+<p>The exact count of degree-<span class="math notranslate nohighlight">\(d\)</span> polynomial features from <span class="math notranslate nohighlight">\(p\)</span> original features (without the
+intercept) is the multiset coefficient <span class="math notranslate nohighlight">\(\binom{p + d}{d} - 1\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">comb</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">40</span>  <span class="c1"># original features</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">n_poly</span> <span class="o">=</span> <span class="n">comb</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Degree </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">n_poly</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> features&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Degree 1: 40 features
+Degree 2: 860 features
+Degree 3: 12,340 features
+Degree 4: 135,750 features
+</pre></div>
+</div>
+</div>
+</div>
+<p>Beyond degree 2 or 3, the number of features quickly exceeds the number of data points,
+making unregularized least squares completely ill-conditioned. This is one manifestation
+of the <strong>curse of dimensionality</strong>.</p>
+</section>
+<section id="regularized-polynomial-regression-with-lasso">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Regularized Polynomial Regression with LASSO</a><a class="headerlink" href="#regularized-polynomial-regression-with-lasso" title="Link to this heading">#</a></h3>
+<p>With more features than samples, standard linear regression overfits badly. LASSO
+regularization shrinks many coefficients to exactly zero, effectively selecting a sparse
+subset of the polynomial features:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Baseline: plain linear regression on original features</span>
+<span class="n">linreg</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">linreg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_base_train</span> <span class="o">=</span> <span class="n">linreg</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_base_test</span>  <span class="o">=</span> <span class="n">linreg</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span>  <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Linear regression:  train r² = </span><span class="si">{</span><span class="n">r2_base_train</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">,  test r² = </span><span class="si">{</span><span class="n">r2_base_test</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear regression:  train r² = 0.723,  test r² = 0.660
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Unregularized: polynomial features + ordinary least squares — should overfit</span>
+<span class="n">linreg_poly</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">linreg_poly</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_poly_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_poly_train</span> <span class="o">=</span> <span class="n">linreg_poly</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_poly_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_poly_test</span>  <span class="o">=</span> <span class="n">linreg_poly</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_poly_test</span><span class="p">,</span>  <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Poly + OLS:         train r² = </span><span class="si">{</span><span class="n">r2_poly_train</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">,  test r² = </span><span class="si">{</span><span class="n">r2_poly_test</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Poly + OLS:         train r² = 0.949,  test r² = -132958.239
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># LASSO on polynomial features — sparse selection</span>
+<span class="n">lasso</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_poly_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_lasso_train</span> <span class="o">=</span> <span class="n">lasso</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_poly_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">r2_lasso_test</span>  <span class="o">=</span> <span class="n">lasso</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_poly_test</span><span class="p">,</span>  <span class="n">y_test</span><span class="p">)</span>
+<span class="n">n_nonzero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">coef_</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Poly + LASSO (α=1): train r² = </span><span class="si">{</span><span class="n">r2_lasso_train</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">,  test r² = </span><span class="si">{</span><span class="n">r2_lasso_test</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;                    non-zero coefficients: </span><span class="si">{</span><span class="n">n_nonzero</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Poly + LASSO (α=1): train r² = 0.052,  test r² = 0.052
+                    non-zero coefficients: 4 of 860
+</pre></div>
+</div>
+</div>
+</div>
+<p>The LASSO reduces training accuracy compared to unregularized polynomial regression but
+improves test accuracy significantly — and with far fewer nonzero coefficients.</p>
+</section>
+<section id="interpreting-the-selected-features">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Interpreting the Selected Features</a><a class="headerlink" href="#interpreting-the-selected-features" title="Link to this heading">#</a></h3>
+<p>A key advantage over black-box approaches is that <code class="docutils literal notranslate"><span class="pre">PolynomialFeatures</span></code> can name every
+output column:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">(</span>
+    <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;x</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+<span class="n">coef</span> <span class="o">=</span> <span class="n">lasso</span><span class="o">.</span><span class="n">coef_</span>
+<span class="n">nonzero_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">coef</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">sorted_idx</span> <span class="o">=</span> <span class="n">nonzero_idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coef</span><span class="p">[</span><span class="n">nonzero_idx</span><span class="p">]))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Top 10 selected polynomial features (by |coefficient|):&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sorted_idx</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s1">30s</span><span class="si">}</span><span class="s1">  coef = </span><span class="si">{</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s1">+.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top 10 selected polynomial features (by |coefficient|):
+  x21^2                           coef = -0.0099
+  x35^2                           coef = -0.0077
+  x7^2                            coef = -0.0050
+  x34^2                           coef = -0.0001
+</pre></div>
+</div>
+</div>
+</div>
+<p>The feature names reveal which interactions and squared terms the model found useful. In
+engineering problems, a feature like <code class="docutils literal notranslate"><span class="pre">x5^2</span></code> or <code class="docutils literal notranslate"><span class="pre">x3</span> <span class="pre">x7</span></code> may have a clear physical
+interpretation (e.g., a quadratic temperature effect or a cross-flow interaction).</p>
+<div class="exercise admonition" id="ex-reg-lasso-poly">
+
+<p class="admonition-title"><span class="caption-number">Exercise 37 </span></p>
+<section id="exercise-content">
+<p>Compare the test <span class="math notranslate nohighlight">\(r^2\)</span> of LASSO polynomial regression against plain linear regression
+as a function of the LASSO regularization strength <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+<ol class="arabic simple">
+<li><p>Using the same 50/50 split above, sweep <span class="math notranslate nohighlight">\(\alpha\)</span> over <code class="docutils literal notranslate"><span class="pre">np.logspace(-2,</span> <span class="pre">2,</span> <span class="pre">20)</span></code>.</p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(\alpha\)</span>, fit <code class="docutils literal notranslate"><span class="pre">Lasso(alpha=alpha,</span> <span class="pre">max_iter=5000)</span></code> on <code class="docutils literal notranslate"><span class="pre">X_poly_train</span></code>
+and record train and test <span class="math notranslate nohighlight">\(r^2\)</span> and the number of nonzero coefficients.</p></li>
+<li><p>Plot train <span class="math notranslate nohighlight">\(r^2\)</span>, test <span class="math notranslate nohighlight">\(r^2\)</span>, and nonzero coefficient count vs. <span class="math notranslate nohighlight">\(\log_{10}(\alpha)\)</span>
+on two subplots (shared x-axis).</p></li>
+<li><p>Identify the <span class="math notranslate nohighlight">\(\alpha\)</span> that maximizes test <span class="math notranslate nohighlight">\(r^2\)</span> and report the corresponding
+number of nonzero features. How does this compare to the baseline linear regression
+test <span class="math notranslate nohighlight">\(r^2\)</span>?</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<section id="symbolic-regression-with-autofeat">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Symbolic Regression with <code class="docutils literal notranslate"><span class="pre">autofeat</span></code></a><a class="headerlink" href="#symbolic-regression-with-autofeat" title="Link to this heading">#</a></h2>
+<p>Polynomial features restrict transformations to integer powers of original features.
+<strong>Symbolic regression</strong> extends this to arbitrary nonlinear combinations — ratios,
+exponentials, square roots, and products thereof — and uses a built-in feature selection
+step to keep only the combinations that improve prediction.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">autofeat</span></code> library implements this workflow: it generates a large library of
+nonlinear feature candidates, then applies multi-stage feature selection to reduce to a
+compact, interpretable set.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">autofeat</span></code> is not installed by default. Install it with:
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">autofeat</span></code>
+or
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">autofeat</span></code></p>
+</div>
+<section id="basic-autofeatregressor">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Basic <code class="docutils literal notranslate"><span class="pre">AutoFeatRegressor</span></code></a><a class="headerlink" href="#basic-autofeatregressor" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">autofeat</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoFeatRegressor</span>
+    <span class="n">_autofeat_available</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;autofeat not installed — skipping symbolic regression cells.&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Install with: pip install autofeat&#39;</span><span class="p">)</span>
+    <span class="n">_autofeat_available</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="c1"># Use the same subsampled/split data from above</span>
+    <span class="n">transforms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1/&#39;</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="s1">&#39;abs&#39;</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="s1">&#39;^2&#39;</span><span class="p">,</span> <span class="s1">&#39;^3&#39;</span><span class="p">]</span>
+    <span class="n">afreg</span> <span class="o">=</span> <span class="n">AutoFeatRegressor</span><span class="p">(</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">feateng_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">featsel_runs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">transformations</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">afreg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>autofeat not installed — skipping symbolic regression cells.
+Install with: pip install autofeat
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">feateng_steps=2</span></code> parameter controls how many times transformations are nested
+(e.g., <code class="docutils literal notranslate"><span class="pre">sqrt(x0</span> <span class="pre">*</span> <span class="pre">exp(x1))</span></code> requires 2 steps). Higher values create exponentially more
+candidate features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="c1"># New nonlinear features selected as predictive</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;New features generated:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">afreg</span><span class="o">.</span><span class="n">new_feat_cols_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="c1"># All features (original + new) retained after final selection</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All selected features (used in model):&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">afreg</span><span class="o">.</span><span class="n">good_cols_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="n">r2_af_test</span> <span class="o">=</span> <span class="n">afreg</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;autofeat test r²: </span><span class="si">{</span><span class="n">r2_af_test</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The selected features include ratios, square roots, and products that a polynomial
+expansion would not generate. Note that results vary across runs due to the random
+train/test split; do not over-interpret any specific feature unless it has clear
+physical meaning and is consistent across multiple runs.</p>
+</section>
+<section id="transforming-the-feature-matrix-directly">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Transforming the Feature Matrix Directly</a><a class="headerlink" href="#transforming-the-feature-matrix-directly" title="Link to this heading">#</a></h3>
+<p>We can also access the full transformed feature matrix and build our own model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="n">X_af_train</span> <span class="o">=</span> <span class="n">afreg</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">X_af_test</span>  <span class="o">=</span> <span class="n">afreg</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+    <span class="n">linreg2</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">linreg2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_af_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">r2_af_linreg</span> <span class="o">=</span> <span class="n">linreg2</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_af_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Linear model on autofeat features: test r² = </span><span class="si">{</span><span class="n">r2_af_linreg</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If this is much lower than <code class="docutils literal notranslate"><span class="pre">afreg.score()</span></code>, it indicates overfitting because the full
+transformed matrix includes features beyond those in <code class="docutils literal notranslate"><span class="pre">good_cols_</span></code>.</p>
+</section>
+<section id="units-aware-feature-generation">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Units-Aware Feature Generation</a><a class="headerlink" href="#units-aware-feature-generation" title="Link to this heading">#</a></h3>
+<p>One of <code class="docutils literal notranslate"><span class="pre">autofeat</span></code>’s most powerful capabilities is <strong>dimensional analysis</strong>: if you
+supply physical units for each input feature, it will only generate dimensionally
+consistent combinations. This dramatically reduces the number of candidates and
+biases the search toward physically meaningful features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="c1"># Assign physical units to the Dow features based on column name suffixes</span>
+    <span class="n">unit_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">dow_feature_names</span><span class="p">[:</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]:</span>
+        <span class="n">last_word</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">last_word</span> <span class="o">==</span> <span class="s1">&#39;Flow&#39;</span><span class="p">:</span>
+            <span class="n">unit_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;L/s&#39;</span>
+        <span class="k">elif</span> <span class="n">last_word</span> <span class="o">==</span> <span class="s1">&#39;Level&#39;</span><span class="p">:</span>
+            <span class="n">unit_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+        <span class="k">elif</span> <span class="n">last_word</span> <span class="o">==</span> <span class="s1">&#39;DP&#39;</span><span class="p">:</span>
+            <span class="n">unit_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bar&#39;</span>
+        <span class="k">elif</span> <span class="n">last_word</span> <span class="o">==</span> <span class="s1">&#39;Pressure&#39;</span><span class="p">:</span>
+            <span class="n">unit_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bar&#39;</span>
+        <span class="k">elif</span> <span class="n">last_word</span> <span class="o">==</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">:</span>
+            <span class="n">unit_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;K&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unit_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>   <span class="c1"># dimensionless</span>
+
+    <span class="c1"># Build DataFrames so autofeat knows which feature is which</span>
+    <span class="n">dow_input_names</span> <span class="o">=</span> <span class="n">dow_feature_names</span><span class="p">[:</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">X_train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">dow_input_names</span><span class="p">)</span>
+    <span class="n">X_test_df</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span>  <span class="n">columns</span><span class="o">=</span><span class="n">dow_input_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="n">transforms_extended</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1/&#39;</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;abs&#39;</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="s1">&#39;^2&#39;</span><span class="p">,</span> <span class="s1">&#39;^3&#39;</span><span class="p">,</span> <span class="s1">&#39;1+&#39;</span><span class="p">,</span> <span class="s1">&#39;1-&#39;</span><span class="p">,</span> <span class="s1">&#39;exp-&#39;</span><span class="p">]</span>
+    <span class="n">afreg_units</span> <span class="o">=</span> <span class="n">AutoFeatRegressor</span><span class="p">(</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">feateng_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">featsel_runs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">transformations</span><span class="o">=</span><span class="n">transforms_extended</span><span class="p">,</span>
+        <span class="n">units</span><span class="o">=</span><span class="n">unit_dict</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">afreg_units</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_df</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">_autofeat_available</span><span class="p">:</span>
+    <span class="n">r2_af_units</span> <span class="o">=</span> <span class="n">afreg_units</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test_df</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;autofeat (units-aware) test r²: </span><span class="si">{</span><span class="n">r2_af_units</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">New features (dimensionless combinations):&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">afreg_units</span><span class="o">.</span><span class="n">new_feat_cols_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>By constraining the search to dimensionless combinations, <code class="docutils literal notranslate"><span class="pre">autofeat</span></code> finds features
+that correspond to physically interpretable ratios and products — the kind of
+dimensionless groups (analogous to Reynolds or Damköhler numbers) that engineers
+use to characterize process behavior.</p>
+</section>
+<section id="practical-guidance">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Practical Guidance</a><a class="headerlink" href="#practical-guidance" title="Link to this heading">#</a></h3>
+<p><strong>When is symbolic regression worth using?</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Situation</p></th>
+<th class="head"><p>Recommendation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Dataset is small–medium (<span class="math notranslate nohighlight">\(n &lt; 10{,}000\)</span>) and you want an interpretable model</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">autofeat</span></code> is viable; budget 5–30 min of training time</p></td>
+</tr>
+<tr class="row-odd"><td><p>Features have known physical units and you want dimensionless groups</p></td>
+<td><p>Use <code class="docutils literal notranslate"><span class="pre">autofeat</span></code> with <code class="docutils literal notranslate"><span class="pre">units=</span></code> — the dimensional constraint keeps the feature count tractable</p></td>
+</tr>
+<tr class="row-even"><td><p>You need fast training (batch re-training, CI pipelines)</p></td>
+<td><p>Use LASSO polynomial instead; faster and more predictable</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dataset is large (<span class="math notranslate nohighlight">\(n &gt; 50{,}000\)</span>) or you have <span class="math notranslate nohighlight">\(&gt;\)</span>50 input features</p></td>
+<td><p>Symbolic regression becomes very slow; prefer tree-based models or neural networks</p></td>
+</tr>
+<tr class="row-even"><td><p>You need to deploy a model that other engineers can inspect</p></td>
+<td><p>Symbolic/polynomial regression produces plain algebraic expressions — ideal for documentation</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The key caution is <strong>train/test sensitivity</strong>: because many feature combinations give
+similar <span class="math notranslate nohighlight">\(r^2\)</span> values on the training set, different random splits may yield very
+different selected features. Always run a few different splits and check whether the
+same features appear consistently before drawing conclusions about physical importance.</p>
+<div class="exercise admonition" id="ex-reg-autofeat-units">
+
+<p class="admonition-title"><span class="caption-number">Exercise 38 </span></p>
+<section id="exercise-content">
+<p>Apply units-aware <code class="docutils literal notranslate"><span class="pre">AutoFeatRegressor</span></code> to the Dow dataset.</p>
+<ol class="arabic simple">
+<li><p>Verify that the features in <code class="docutils literal notranslate"><span class="pre">afreg_units.new_feat_cols_</span></code> are dimensionless (every
+generated feature should be a dimensionless combination of input variables, given
+the unit assignments above).</p></li>
+<li><p>Compare the test <span class="math notranslate nohighlight">\(r^2\)</span> of the units-aware model with the non-units-aware model
+and the LASSO polynomial model from the earlier exercise. Which performs best?</p></li>
+<li><p>Pick one of the selected features and write a one-sentence physical interpretation
+of what it represents (e.g., a ratio of flow rates, a product of pressures).</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<section id="summary">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Linear feature combinations</strong> (PCA, PLS, random projections) cannot improve a
+linear model beyond what the original features can achieve; nonlinear feature
+engineering is necessary to capture interactions and higher-order effects.</p></li>
+<li><p><strong>Polynomial features</strong> with <code class="docutils literal notranslate"><span class="pre">PolynomialFeatures</span></code> generate all monomials up to a
+specified degree. Feature count grows as <span class="math notranslate nohighlight">\(\binom{p+d}{d}\)</span>, making unregularized fitting
+impossible beyond degree 2–3 for typical engineering datasets.</p></li>
+<li><p><strong>LASSO regularization</strong> on a polynomial feature matrix simultaneously performs
+feature selection (setting many coefficients to zero) and regularization (preventing
+overfitting), often yielding better test accuracy than ordinary linear regression.</p></li>
+<li><p><strong>Symbolic regression</strong> (<code class="docutils literal notranslate"><span class="pre">autofeat</span></code>) generates a broader library of nonlinear
+candidates (ratios, exponentials, roots) and selects the most predictive subset.
+Results are compact and interpretable but sensitive to train/test splits; physical
+units constraints (<code class="docutils literal notranslate"><span class="pre">units=</span></code>) improve robustness and chemical interpretability.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Kanter, J. M. &amp; Veeramachaneni, K. (2015), “Deep Feature Synthesis: Towards
+Automating Data Science Endeavors” — foundational automated feature engineering</p></li>
+<li><p>Orzechowski, P. et al. (2018), “Where are we now? A large benchmark study of recent
+symbolic regression methods” — survey of symbolic regression approaches</p></li>
+<li><p>Tibshirani, R. (1996), “Regression Shrinkage and Selection via the Lasso,”
+<em>Journal of the Royal Statistical Society B</em> — original LASSO paper</p></li>
+<li><p>scikit-learn User Guide:
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html">PolynomialFeatures</a>,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html">Lasso</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./2-regression"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic2.5-High_dimensional_regression.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">High-dimensional Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../3-classification/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Classification</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-when-linear-combinations-are-not-enough">Motivation: When Linear Combinations Are Not Enough</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomial-features">Polynomial Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-polynomial-features-with-sklearn">Generating Polynomial Features with sklearn</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combinatorial-explosion">Combinatorial Explosion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regularized-polynomial-regression-with-lasso">Regularized Polynomial Regression with LASSO</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-selected-features">Interpreting the Selected Features</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-regression-with-autofeat">Symbolic Regression with <code class="docutils literal notranslate"><span class="pre">autofeat</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-autofeatregressor">Basic <code class="docutils literal notranslate"><span class="pre">AutoFeatRegressor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transforming-the-feature-matrix-directly">Transforming the Feature Matrix Directly</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#units-aware-feature-generation">Units-Aware Feature Generation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical Guidance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

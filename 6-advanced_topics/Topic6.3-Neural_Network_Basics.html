@@ -1,0 +1,1322 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Neural Network Basics &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '6-advanced_topics/Topic6.3-Neural_Network_Basics';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Neural Network Architectures" href="Topic6.4-Neural_Network_Architectures.html" />
+    <link rel="prev" title="Time Series Models" href="Topic6.2-Time_Series_Models.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Advanced Topics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/6-advanced_topics/Topic6.3-Neural_Network_Basics.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Neural Network Basics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-where-simpler-methods-fall-short">Motivation: Where Simpler Methods Fall Short</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-perceptron-a-single-neuron">The Perceptron: A Single Neuron</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computation">Computation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-linear-decision-boundary">Visualizing the Linear Decision Boundary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#activation-functions">Activation Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-nonlinearity-is-essential">Why Nonlinearity Is Essential</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-perceptrons">Multi-Layer Perceptrons</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stacking-layers">Stacking Layers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-what-two-layer-xor-looks-like">Visualization: What Two-Layer XOR Looks Like</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-loss-and-gradient-descent">Training: Loss and Gradient Descent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-loss-surface">The Loss Surface</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-backpropagation">Training: Backpropagation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-chain-rule-on-a-two-layer-network">The Chain Rule on a Two-Layer Network</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-mlpregressor-on-the-dow-dataset">Demonstration: <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> on the Dow Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-and-training-loss">Fitting and Training Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-of-hidden-layer-size">Effect of Hidden Layer Size</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-guide">Hyperparameter Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="neural-network-basics">
+<h1>Neural Network Basics<a class="headerlink" href="#neural-network-basics" title="Link to this heading">#</a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#motivation-where-simpler-methods-fall-short" id="id1">Motivation: Where Simpler Methods Fall Short</a></p></li>
+<li><p><a class="reference internal" href="#the-perceptron-a-single-neuron" id="id2">The Perceptron: A Single Neuron</a></p>
+<ul>
+<li><p><a class="reference internal" href="#computation" id="id3">Computation</a></p></li>
+<li><p><a class="reference internal" href="#visualizing-the-linear-decision-boundary" id="id4">Visualizing the Linear Decision Boundary</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#activation-functions" id="id5">Activation Functions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#why-nonlinearity-is-essential" id="id6">Why Nonlinearity Is Essential</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#multi-layer-perceptrons" id="id7">Multi-Layer Perceptrons</a></p>
+<ul>
+<li><p><a class="reference internal" href="#stacking-layers" id="id8">Stacking Layers</a></p></li>
+<li><p><a class="reference internal" href="#visualization-what-two-layer-xor-looks-like" id="id9">Visualization: What Two-Layer XOR Looks Like</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#training-loss-and-gradient-descent" id="id10">Training: Loss and Gradient Descent</a></p>
+<ul>
+<li><p><a class="reference internal" href="#the-loss-surface" id="id11">The Loss Surface</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#training-backpropagation" id="id12">Training: Backpropagation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#the-chain-rule-on-a-two-layer-network" id="id13">The Chain Rule on a Two-Layer Network</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#demonstration-mlpregressor-on-the-dow-dataset" id="id14">Demonstration: <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> on the Dow Dataset</a></p>
+<ul>
+<li><p><a class="reference internal" href="#fitting-and-training-loss" id="id15">Fitting and Training Loss</a></p></li>
+<li><p><a class="reference internal" href="#effect-of-hidden-layer-size" id="id16">Effect of Hidden Layer Size</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#hyperparameter-guide" id="id17">Hyperparameter Guide</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id18">Summary</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id19">Additional Reading</a></p></li>
+</ul>
+</nav>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
+<p>By the end of this chapter, you will be able to:</p>
+<ul class="simple">
+<li><p>Explain why linear and kernel methods fall short for some problems and motivate the
+need for neural networks.</p></li>
+<li><p>Describe the computation performed by a single neuron (weighted sum + activation)
+and implement it from scratch.</p></li>
+<li><p>Compare step, sigmoid, and ReLU activation functions and explain why nonlinearity
+is essential for learning complex functions.</p></li>
+<li><p>Describe the architecture of a multi-layer perceptron (MLP) and explain the
+universal approximation theorem conceptually.</p></li>
+<li><p>Derive the chain rule for a two-layer network and explain how backpropagation
+distributes credit across layers.</p></li>
+<li><p>Fit <code class="docutils literal notranslate"><span class="pre">sklearn.neural_network.MLPRegressor</span></code> to a regression task, visualize the
+training loss curve, and tune hidden-layer size to control overfitting.</p></li>
+</ul>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+
+<span class="n">clrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#003057&#39;</span><span class="p">,</span> <span class="s1">&#39;#EAAA00&#39;</span><span class="p">,</span> <span class="s1">&#39;#4B8B9B&#39;</span><span class="p">,</span> <span class="s1">&#39;#B3A369&#39;</span><span class="p">,</span> <span class="s1">&#39;#377117&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;#1879DB&#39;</span><span class="p">,</span> <span class="s1">&#39;#8E8B76&#39;</span><span class="p">,</span> <span class="s1">&#39;#F5D580&#39;</span><span class="p">,</span> <span class="s1">&#39;#002233&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="motivation-where-simpler-methods-fall-short">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Motivation: Where Simpler Methods Fall Short</a><a class="headerlink" href="#motivation-where-simpler-methods-fall-short" title="Link to this heading">#</a></h2>
+<p>The methods we have studied so far follow a common pattern: transform the raw features
+into a new space, then apply a linear model. Kernel methods (KRR, SVM) achieve
+nonlinearity by computing pairwise similarities; polynomial and symbolic regression
+achieve it by constructing explicit products and powers of input features.</p>
+<p>Both approaches have fundamental limitations:</p>
+<ul class="simple">
+<li><p><strong>Kernel methods</strong> scale quadratically or cubically in the number of training points.
+A 50,000-point dataset requires a 50,000 × 50,000 kernel matrix — impractical.</p></li>
+<li><p><strong>Polynomial/symbolic regression</strong> requires explicit feature construction that grows
+combinatorially with input dimension and polynomial degree.</p></li>
+<li><p>Neither approach learns a <strong>hierarchical representation</strong>: a face recognition model
+should learn edges first, then corners, then parts, then faces — not a flat
+transformation of raw pixel values.</p></li>
+</ul>
+<p>Neural networks address all three limitations. They learn <strong>layered feature
+representations</strong> directly from data, with computational cost that scales linearly
+in the number of training samples at inference time.</p>
+<p>The classic motivating example is the <strong>XOR function</strong>: two inputs <span class="math notranslate nohighlight">\(x_1, x_2 \in \{0,1\}\)</span>,
+output 1 if exactly one input is 1, else 0. No linear model can separate the two
+classes because they are not linearly separable in the original 2-D space — but a
+two-layer network can.</p>
+<div class="exercise admonition" id="ex-eda-nn-xor-check">
+
+<p class="admonition-title"><span class="caption-number">Exercise 106 </span></p>
+<section id="exercise-content">
+<p>Verify that no linear model can solve XOR.</p>
+<ol class="arabic simple">
+<li><p>Fit <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> to <code class="docutils literal notranslate"><span class="pre">X_xor</span></code> and <code class="docutils literal notranslate"><span class="pre">y_xor</span></code> and round the predictions to
+0 or 1. Report the accuracy.</p></li>
+<li><p>Fit <code class="docutils literal notranslate"><span class="pre">SVC(kernel='linear')</span></code> and <code class="docutils literal notranslate"><span class="pre">SVC(kernel='rbf')</span></code>. Report accuracy for both.</p></li>
+<li><p>Explain in one sentence why the RBF kernel SVC can solve XOR while a linear model
+cannot.</p></li>
+</ol>
+</section>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># XOR: linear model fails, MLP succeeds</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neural_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPClassifier</span>
+
+<span class="n">X_xor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">y_xor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="n">linear_svm</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_xor</span><span class="p">,</span> <span class="n">y_xor</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_xor</span><span class="p">,</span> <span class="n">y_xor</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Linear SVM accuracy:  </span><span class="si">{</span><span class="n">linear_svm</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_xor</span><span class="p">,</span><span class="w"> </span><span class="n">y_xor</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MLP accuracy:         </span><span class="si">{</span><span class="n">mlp</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_xor</span><span class="p">,</span><span class="w"> </span><span class="n">y_xor</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear SVM accuracy:  0.50
+MLP accuracy:         1.00
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="the-perceptron-a-single-neuron">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">The Perceptron: A Single Neuron</a><a class="headerlink" href="#the-perceptron-a-single-neuron" title="Link to this heading">#</a></h2>
+<section id="computation">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Computation</a><a class="headerlink" href="#computation" title="Link to this heading">#</a></h3>
+<p>The fundamental unit of a neural network is the <strong>neuron</strong> (or perceptron). It:</p>
+<ol class="arabic simple">
+<li><p>Takes a vector of inputs <span class="math notranslate nohighlight">\(\mathbf{x} = [x_1, \ldots, x_n]\)</span>.</p></li>
+<li><p>Computes a <strong>weighted sum</strong>: <span class="math notranslate nohighlight">\(z = \mathbf{w}^\top \mathbf{x} + b\)</span>.</p></li>
+<li><p>Passes it through a nonlinear <strong>activation function</strong>: <span class="math notranslate nohighlight">\(a = \sigma(z)\)</span>.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">neuron</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">activation</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">activation</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="c1"># Step function (original perceptron)</span>
+<span class="n">step</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="c1"># Sigmoid</span>
+<span class="n">sigmoid</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span>
+<span class="c1"># ReLU</span>
+<span class="n">relu</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+<span class="c1"># Example: 2-input neuron with w = [1, -1], b = 0</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">fn</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">sigmoid</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">relu</span><span class="p">)]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s1">8s</span><span class="si">}</span><span class="s1">: z = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">x_test</span><span class="p">)</span><span class="o">+</span><span class="n">b</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">,  a = </span><span class="si">{</span><span class="n">neuron</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">fn</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>step    : z = 1.00,  a = 1.0000
+sigmoid : z = 1.00,  a = 0.7311
+relu    : z = 1.00,  a = 1.0000
+</pre></div>
+</div>
+</div>
+</div>
+<p>With a step activation, the neuron is a binary classifier: it fires (<span class="math notranslate nohighlight">\(a=1\)</span>) if the
+weighted sum is positive. With sigmoid or ReLU, the output is a smooth function that
+can represent graded responses.</p>
+</section>
+<section id="visualizing-the-linear-decision-boundary">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Visualizing the Linear Decision Boundary</a><a class="headerlink" href="#visualizing-the-linear-decision-boundary" title="Link to this heading">#</a></h3>
+<p>A single neuron with a step or sigmoid activation places a <strong>linear</strong> decision boundary
+in the input space — exactly the same as logistic regression:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">xx</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]),</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]))</span> <span class="o">+</span> <span class="mf">0.0</span>   <span class="c1"># z = x1 - x2</span>
+<span class="n">Z_sig</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">Z_sig</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">Z_sig</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;σ(z)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Single neuron: sigmoid output surface&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0bef816343c7d5d5220ae10a3e195a41641c228de18df89d73b0a5988189adae.png" src="../_images/0bef816343c7d5d5220ae10a3e195a41641c228de18df89d73b0a5988189adae.png" />
+</div>
+</div>
+<p>The straight black line is the decision boundary <span class="math notranslate nohighlight">\(z = 0\)</span> (i.e., <span class="math notranslate nohighlight">\(x_1 - x_2 = 0\)</span>).
+A single neuron can only separate data with a straight line — it cannot solve XOR.</p>
+<div class="exercise admonition" id="ex-eda-nn-neuron-impl">
+
+<p class="admonition-title"><span class="caption-number">Exercise 107 </span></p>
+<section id="exercise-content">
+<p>Implement and test a single neuron from scratch.</p>
+<ol class="arabic simple">
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">neuron</span></code> function defined above, create a neuron with weights
+<code class="docutils literal notranslate"><span class="pre">w</span> <span class="pre">=</span> <span class="pre">[2.0,</span> <span class="pre">-1.5]</span></code> and bias <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">0.5</span></code>. Evaluate it on all four XOR inputs
+using the sigmoid activation. Report the four outputs.</p></li>
+<li><p>Find weights and bias by hand (not by training) such that the neuron correctly
+classifies the AND function: output 1 only when both inputs are 1. Verify your
+solution by evaluating on all four inputs.</p></li>
+<li><p>Is it possible to solve XOR with a single neuron and any choice of weights?
+Explain why or why not.</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="activation-functions">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Activation Functions</a><a class="headerlink" href="#activation-functions" title="Link to this heading">#</a></h2>
+<section id="why-nonlinearity-is-essential">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Why Nonlinearity Is Essential</a><a class="headerlink" href="#why-nonlinearity-is-essential" title="Link to this heading">#</a></h3>
+<p>If every neuron used a linear activation, stacking layers would still produce a linear
+function: <span class="math notranslate nohighlight">\(W_2 (W_1 \mathbf{x} + \mathbf{b}_1) + \mathbf{b}_2 = (W_2 W_1)\mathbf{x} + \mathbf{b}'\)</span>
+is just another linear transformation. Nonlinear activations are what allow multiple
+layers to represent exponentially more complex functions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Step</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">step</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Step (Heaviside)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;σ(z)&#39;</span><span class="p">)</span>
+
+<span class="c1"># Sigmoid</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Sigmoid $σ(z) = 1/(1+e^{-z})$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+
+<span class="c1"># ReLU</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">relu</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ReLU $σ(z) = </span><span class="se">\\</span><span class="s1">max(0, z)$&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/17b31cc1d897f51070b0ae65fc7c5468df034d1e189dfa3976d0136c0997eea9.png" src="../_images/17b31cc1d897f51070b0ae65fc7c5468df034d1e189dfa3976d0136c0997eea9.png" />
+</div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Activation</p></th>
+<th class="head"><p>Range</p></th>
+<th class="head"><p>Advantages</p></th>
+<th class="head"><p>Disadvantages</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Step</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\(\{0,1\}\)</span></p></td>
+<td><p>Interpretable; original perceptron</p></td>
+<td><p>Non-differentiable; no gradient</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sigmoid</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\((0,1)\)</span></p></td>
+<td><p>Smooth; natural probability output</p></td>
+<td><p>Vanishing gradients for large $</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Tanh</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\((-1,1)\)</span></p></td>
+<td><p>Zero-centered</p></td>
+<td><p>Vanishing gradients</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>ReLU</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\([0,\infty)\)</span></p></td>
+<td><p>Fast; no vanishing gradient for <span class="math notranslate nohighlight">\(z&gt;0\)</span></p></td>
+<td><p>“Dying ReLU” for <span class="math notranslate nohighlight">\(z &lt; 0\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Leaky ReLU</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\((-\infty,\infty)\)</span></p></td>
+<td><p>Fixes dying ReLU</p></td>
+<td><p>One extra hyperparameter</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In practice, <strong>ReLU</strong> is the default for hidden layers in most modern networks.
+Sigmoid and softmax are used in output layers for binary and multi-class classification
+respectively.</p>
+<div class="exercise admonition" id="ex-eda-nn-activation-plot">
+
+<p class="admonition-title"><span class="caption-number">Exercise 108 </span></p>
+<section id="exercise-content">
+<p>Compare the gradient properties of activation functions.</p>
+<ol class="arabic simple">
+<li><p>Plot the sigmoid, tanh, and ReLU functions over <span class="math notranslate nohighlight">\(z \in [-4, 4]\)</span> on the same axes.</p></li>
+<li><p>Plot their derivatives (analytical or numerical) on a second set of axes.</p></li>
+<li><p>For the sigmoid function, identify the range of <span class="math notranslate nohighlight">\(z\)</span> where the gradient falls
+below 0.01. What fraction of the <span class="math notranslate nohighlight">\([-4, 4]\)</span> range does this represent?</p></li>
+<li><p>Based on your plot, explain why ReLU is preferred over sigmoid for deep networks
+from a gradient flow perspective.</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="multi-layer-perceptrons">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Multi-Layer Perceptrons</a><a class="headerlink" href="#multi-layer-perceptrons" title="Link to this heading">#</a></h2>
+<section id="stacking-layers">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Stacking Layers</a><a class="headerlink" href="#stacking-layers" title="Link to this heading">#</a></h3>
+<p>A <strong>multi-layer perceptron (MLP)</strong> (also called a fully-connected or dense network)
+stacks multiple layers of neurons. Each layer takes the activations of the previous
+layer as input:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{h}^{(1)} = \sigma(W^{(1)} \mathbf{x} + \mathbf{b}^{(1)})\]</div>
+<div class="math notranslate nohighlight">
+\[\mathbf{h}^{(2)} = \sigma(W^{(2)} \mathbf{h}^{(1)} + \mathbf{b}^{(2)})\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{y} = W^{(3)} \mathbf{h}^{(2)} + b^{(3)}\]</div>
+<p>(For regression, the output layer is typically linear; for classification, softmax.)</p>
+<p><strong>The Universal Approximation Theorem</strong> states that a single hidden layer with enough
+neurons can approximate any continuous function on a compact domain — but this says
+nothing about how many neurons are needed or how easily the model can be trained.
+In practice, <strong>depth</strong> (more layers) is often more efficient than <strong>width</strong> (more
+neurons per layer): each added layer can represent exponentially more functions for
+the same number of parameters.</p>
+</section>
+<section id="visualization-what-two-layer-xor-looks-like">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Visualization: What Two-Layer XOR Looks Like</a><a class="headerlink" href="#visualization-what-two-layer-xor-looks-like" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit a two-layer MLP to XOR and visualize the decision surface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neural_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.inspection</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecisionBoundaryDisplay</span>
+
+<span class="n">mlp_xor</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span>
+                         <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">mlp_xor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_xor</span><span class="p">,</span> <span class="n">y_xor</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">DecisionBoundaryDisplay</span><span class="o">.</span><span class="n">from_estimator</span><span class="p">(</span><span class="n">mlp_xor</span><span class="p">,</span> <span class="n">X_xor</span><span class="p">,</span> <span class="n">response_method</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">,</span>
+                                        <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_xor</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_xor</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="n">clrs</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span> <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="n">y_xor</span><span class="p">],</span>
+           <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MLP decision boundary — XOR&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c8028615d12cf0a9424719c714c7e01294c3fe1a5925f54f8cf877477120bd44.png" src="../_images/c8028615d12cf0a9424719c714c7e01294c3fe1a5925f54f8cf877477120bd44.png" />
+</div>
+</div>
+<p>The MLP finds a non-linear boundary that correctly separates the XOR pattern — something
+no single neuron or linear model can achieve.</p>
+<div class="exercise admonition" id="ex-eda-nn-mlp-width">
+
+<p class="admonition-title"><span class="caption-number">Exercise 109 </span></p>
+<section id="exercise-content">
+<p>Explore the effect of hidden layer width on XOR and a regression task.</p>
+<ol class="arabic simple">
+<li><p>Fit <code class="docutils literal notranslate"><span class="pre">MLPClassifier</span></code> with <code class="docutils literal notranslate"><span class="pre">hidden_layer_sizes=(n,)</span></code> for <span class="math notranslate nohighlight">\(n \in \{1, 2, 4, 8\}\)</span>
+on the XOR data. For each, report accuracy and whether the model solves XOR
+perfectly. What is the minimum width needed?</p></li>
+<li><p>Generate a 1-D regression dataset: <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">np.linspace(0,</span> <span class="pre">2*np.pi,</span> <span class="pre">100)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">np.sin(x)</span> <span class="pre">+</span> <span class="pre">0.1</span> <span class="pre">*</span> <span class="pre">np.random.randn(100)</span></code>. Fit <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> with
+one hidden layer and widths <code class="docutils literal notranslate"><span class="pre">(4,</span> <span class="pre">8,</span> <span class="pre">16,</span> <span class="pre">32,</span> <span class="pre">64)</span></code>. Plot train and test <span class="math notranslate nohighlight">\(r^2\)</span>
+vs. width (use an 80/20 split). At what width does the model adequately fit
+the sine curve?</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="training-loss-and-gradient-descent">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Training: Loss and Gradient Descent</a><a class="headerlink" href="#training-loss-and-gradient-descent" title="Link to this heading">#</a></h2>
+<section id="the-loss-surface">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">The Loss Surface</a><a class="headerlink" href="#the-loss-surface" title="Link to this heading">#</a></h3>
+<p>Training a neural network means finding weights <span class="math notranslate nohighlight">\(\{W^{(l)}, \mathbf{b}^{(l)}\}\)</span> that
+minimize a loss function. For regression, the standard choice is <strong>mean squared error</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta) = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i(\theta))^2\]</div>
+<p>The loss is a function of all the weights — a surface in a very high-dimensional space.
+For a deep network with millions of parameters, visualizing this surface is impossible,
+but the key insight is that <strong>gradient descent</strong> can find a local minimum by repeatedly
+moving in the direction of steepest descent:</p>
+<div class="math notranslate nohighlight">
+\[\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta\)</span> is the <strong>learning rate</strong> (step size). Too large and the optimizer
+overshoots; too small and convergence is slow. <strong>Mini-batch stochastic gradient descent
+(SGD)</strong> estimates the gradient from a random subset of data at each step, which is
+faster and often finds better solutions than full-batch gradient descent.</p>
+<div class="exercise admonition" id="ex-eda-nn-lr-effect">
+
+<p class="admonition-title"><span class="caption-number">Exercise 110 </span></p>
+<section id="exercise-content">
+<p>Investigate the effect of learning rate on <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> training.</p>
+<ol class="arabic simple">
+<li><p>Using the sine regression data from the previous exercise (80/20 split,
+<code class="docutils literal notranslate"><span class="pre">hidden_layer_sizes=(32,)</span></code>, <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>), train <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> with
+learning rates <code class="docutils literal notranslate"><span class="pre">[1e-4,</span> <span class="pre">1e-3,</span> <span class="pre">1e-2,</span> <span class="pre">0.1]</span></code> using <code class="docutils literal notranslate"><span class="pre">solver='sgd'</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_iter=200</span></code>.</p></li>
+<li><p>Plot the training loss curve for each learning rate on the same axes.</p></li>
+<li><p>Report the final train <span class="math notranslate nohighlight">\(r^2\)</span> for each. Which learning rate converges fastest
+without diverging?</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="training-backpropagation">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Training: Backpropagation</a><a class="headerlink" href="#training-backpropagation" title="Link to this heading">#</a></h2>
+<section id="the-chain-rule-on-a-two-layer-network">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">The Chain Rule on a Two-Layer Network</a><a class="headerlink" href="#the-chain-rule-on-a-two-layer-network" title="Link to this heading">#</a></h3>
+<p>The challenge of training deep networks is computing <span class="math notranslate nohighlight">\(\nabla_\theta \mathcal{L}\)</span>
+efficiently — the gradient of the loss with respect to weights in the first layer
+depends on how those weights affect the output through all subsequent layers.
+<strong>Backpropagation</strong> solves this with the chain rule of calculus.</p>
+<p>Consider a minimal two-layer network with scalar inputs and outputs:</p>
+<div class="math notranslate nohighlight">
+\[z_1 = w_1 x + b_1, \quad h = \sigma(z_1)\]</div>
+<div class="math notranslate nohighlight">
+\[z_2 = w_2 h + b_2, \quad \hat{y} = z_2\]</div>
+<div class="math notranslate nohighlight">
+\[\mathcal{L} = (\hat{y} - y)^2\]</div>
+<p>The gradient with respect to <span class="math notranslate nohighlight">\(w_1\)</span> (the first-layer weight) is:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial \mathcal{L}}{\partial w_1} =
+  \underbrace{\frac{\partial \mathcal{L}}{\partial \hat{y}}}_{\text{output layer error}}
+  \cdot
+  \underbrace{\frac{\partial \hat{y}}{\partial h}}_{\text{= }w_2}
+  \cdot
+  \underbrace{\frac{\partial h}{\partial z_1}}_{\text{= }\sigma'(z_1)}
+  \cdot
+  \underbrace{\frac{\partial z_1}{\partial w_1}}_{\text{= }x}\]</div>
+<p>In words: the output error is multiplied by the second-layer weight (how much the
+output depends on <span class="math notranslate nohighlight">\(h\)</span>), then by the activation derivative (how much <span class="math notranslate nohighlight">\(h\)</span> changes when
+<span class="math notranslate nohighlight">\(z_1\)</span> changes), then by the input <span class="math notranslate nohighlight">\(x\)</span> (how much <span class="math notranslate nohighlight">\(z_1\)</span> changes when <span class="math notranslate nohighlight">\(w_1\)</span> changes).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Manual forward + backward pass for a one-hidden-neuron network</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">):</span>
+    <span class="n">z1</span> <span class="o">=</span> <span class="n">w1</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b1</span>
+    <span class="n">h</span>  <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span>
+    <span class="n">z2</span> <span class="o">=</span> <span class="n">w2</span> <span class="o">*</span> <span class="n">h</span> <span class="o">+</span> <span class="n">b2</span>
+    <span class="n">yhat</span> <span class="o">=</span> <span class="n">z2</span>
+    <span class="k">return</span> <span class="n">yhat</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">z1</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span>
+    <span class="n">dL_dyhat</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">yhat</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>           <span class="c1"># ∂L/∂ŷ</span>
+    <span class="n">dyhat_dh</span> <span class="o">=</span> <span class="n">w2</span>                        <span class="c1"># ∂ŷ/∂h</span>
+    <span class="n">dh_dz1</span>   <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z1</span><span class="p">))</span>   <span class="c1"># σ&#39; = σ(1-σ)</span>
+    <span class="n">dz1_dw1</span>  <span class="o">=</span> <span class="n">x</span>                         <span class="c1"># ∂z1/∂w1</span>
+
+    <span class="n">dL_dw2</span> <span class="o">=</span> <span class="n">dL_dyhat</span> <span class="o">*</span> <span class="n">h</span>
+    <span class="n">dL_dw1</span> <span class="o">=</span> <span class="n">dL_dyhat</span> <span class="o">*</span> <span class="n">dyhat_dh</span> <span class="o">*</span> <span class="n">dh_dz1</span> <span class="o">*</span> <span class="n">dz1_dw1</span>
+    <span class="k">return</span> <span class="n">dL_dw1</span><span class="p">,</span> <span class="n">dL_dw2</span>
+
+<span class="c1"># Example: one data point</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y_true</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.5</span>
+<span class="n">w1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span>
+
+<span class="n">yhat</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dw1</span><span class="p">,</span> <span class="n">dw2</span> <span class="o">=</span> <span class="n">backward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Forward:  z1=</span><span class="si">{</span><span class="n">z1</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">,  h=</span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">,  ŷ=</span><span class="si">{</span><span class="n">yhat</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loss:     </span><span class="si">{</span><span class="p">(</span><span class="n">yhat</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;∂L/∂w1 = </span><span class="si">{</span><span class="n">dw1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;∂L/∂w2 = </span><span class="si">{</span><span class="n">dw2</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Forward:  z1=1.0000,  h=0.7311,  ŷ=-0.2193
+Loss:     2.9561
+∂L/∂w1 = 0.405646
+∂L/∂w2 = -2.513844
+</pre></div>
+</div>
+</div>
+</div>
+<p>This manual calculation is exactly what PyTorch’s <code class="docutils literal notranslate"><span class="pre">autograd</span></code> engine performs
+automatically for any computational graph, regardless of depth or architecture —
+the key innovation that makes deep learning tractable.</p>
+<div class="exercise admonition" id="ex-eda-nn-backprop">
+
+<p class="admonition-title"><span class="caption-number">Exercise 111 </span></p>
+<section id="exercise-content">
+<p>Verify the manual backpropagation calculation numerically.</p>
+<ol class="arabic simple">
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">forward</span></code> and <code class="docutils literal notranslate"><span class="pre">backward</span></code> functions above with <code class="docutils literal notranslate"><span class="pre">x=2.0</span></code>, <code class="docutils literal notranslate"><span class="pre">y_true=1.5</span></code>,
+<code class="docutils literal notranslate"><span class="pre">w1=0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">b1=0.0</span></code>, <code class="docutils literal notranslate"><span class="pre">w2=-0.3</span></code>, <code class="docutils literal notranslate"><span class="pre">b2=0.0</span></code>, compute the analytical gradients
+<code class="docutils literal notranslate"><span class="pre">dL_dw1</span></code> and <code class="docutils literal notranslate"><span class="pre">dL_dw2</span></code>.</p></li>
+<li><p>Compute the same gradients numerically using finite differences:
+<span class="math notranslate nohighlight">\(\partial L / \partial w_1 \approx [L(w_1 + h) - L(w_1 - h)] / (2h)\)</span> with <span class="math notranslate nohighlight">\(h = 10^{-5}\)</span>.</p></li>
+<li><p>Report the absolute difference between the analytical and numerical gradients.
+Are they in agreement to at least 6 decimal places?</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="demonstration-mlpregressor-on-the-dow-dataset">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Demonstration: <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> on the Dow Dataset</a><a class="headerlink" href="#demonstration-mlpregressor-on-the-dow-dataset" title="Link to this heading">#</a></h2>
+<section id="fitting-and-training-loss">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Fitting and Training Loss</a><a class="headerlink" href="#fitting-and-training-loss" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neural_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPRegressor</span>
+
+<span class="c1"># Load and prepare Dow data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;data/impurity_dataset-training.xlsx&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_real_and_finite</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="n">nondate</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">numeric_map</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">nondate</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">is_real_and_finite</span><span class="p">))</span>
+<span class="n">real_rows</span> <span class="o">=</span> <span class="n">numeric_map</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">X_dow</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">nondate</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">real_rows</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">y_dow</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">nondate</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">real_rows</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X_dow</span><span class="p">,</span> <span class="n">y_dow</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Standardize</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_tr</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_te</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mlp_reg</span> <span class="o">=</span> <span class="n">MLPRegressor</span><span class="p">(</span>
+    <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,),</span>
+    <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">validation_fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mlp_reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Train r²: </span><span class="si">{</span><span class="n">mlp_reg</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span><span class="w"> </span><span class="n">y_train</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Test  r²: </span><span class="si">{</span><span class="n">mlp_reg</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Stopped at iteration: </span><span class="si">{</span><span class="n">mlp_reg</span><span class="o">.</span><span class="n">n_iter_</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train r²: 0.914
+Test  r²: 0.902
+Stopped at iteration: 161
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mlp_reg</span><span class="o">.</span><span class="n">loss_curve_</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training loss&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mlp_reg</span><span class="o">.</span><span class="n">validation_scores_</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Validation r²&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Epoch&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Loss / Score&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Training curve — MLPRegressor&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/17d6830f25fd57f8f257d92a8d86fd60c3603369c319f080e04bb5a0e585cebc.png" src="../_images/17d6830f25fd57f8f257d92a8d86fd60c3603369c319f080e04bb5a0e585cebc.png" />
+</div>
+</div>
+</section>
+<section id="effect-of-hidden-layer-size">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Effect of Hidden Layer Size</a><a class="headerlink" href="#effect-of-hidden-layer-size" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">]</span>
+<span class="n">train_scores</span><span class="p">,</span> <span class="n">test_scores</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">MLPRegressor</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+                     <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">train_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
+    <span class="n">test_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">train_scores</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Train&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span>  <span class="s1">&#39;s-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Test&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Hidden units (1 layer)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$r^2$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Network width vs. performance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/3693328ad972023c0e9345dd60dc243b91f2c399257586a10068978959ed5bcd.png" src="../_images/3693328ad972023c0e9345dd60dc243b91f2c399257586a10068978959ed5bcd.png" />
+</div>
+</div>
+<p>As the hidden layer grows, training <span class="math notranslate nohighlight">\(r^2\)</span> increases monotonically (the model has more
+capacity), but test <span class="math notranslate nohighlight">\(r^2\)</span> peaks and may decrease — the signature of overfitting.
+Early stopping (<code class="docutils literal notranslate"><span class="pre">early_stopping=True</span></code>) helps, but is not a substitute for choosing a
+network architecture appropriate to the dataset size.</p>
+<div class="exercise admonition" id="ex-eda-nn-mlp">
+
+<p class="admonition-title"><span class="caption-number">Exercise 112 </span></p>
+<section id="exercise-content">
+<p>Using the Dow dataset with <code class="docutils literal notranslate"><span class="pre">X_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">X_te</span></code>, <code class="docutils literal notranslate"><span class="pre">y_train</span></code>, <code class="docutils literal notranslate"><span class="pre">y_test</span></code> from above, explore
+the effect of network depth.</p>
+<ol class="arabic simple">
+<li><p>Train <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> with one hidden layer of 64 units and then with two hidden
+layers of sizes <code class="docutils literal notranslate"><span class="pre">(64,</span> <span class="pre">32)</span></code>. Use <code class="docutils literal notranslate"><span class="pre">early_stopping=True</span></code> and <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>.
+Report train and test <span class="math notranslate nohighlight">\(r^2\)</span> for both.</p></li>
+<li><p>Plot the training loss curve for each configuration on the same axes. Which
+converges faster?</p></li>
+<li><p>Change the activation from <code class="docutils literal notranslate"><span class="pre">'relu'</span></code> to <code class="docutils literal notranslate"><span class="pre">'tanh'</span></code> for the two-layer network. Does
+it affect the test <span class="math notranslate nohighlight">\(r^2\)</span>?</p></li>
+<li><p>From the bias-variance perspective, what does a high train <span class="math notranslate nohighlight">\(r^2\)</span> but low test <span class="math notranslate nohighlight">\(r^2\)</span>
+tell you about the model?</p></li>
+</ol>
+</section>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="hyperparameter-guide">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink">Hyperparameter Guide</a><a class="headerlink" href="#hyperparameter-guide" title="Link to this heading">#</a></h2>
+<p>The table below summarizes the most important hyperparameters and how to tune them:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Hyperparameter</p></th>
+<th class="head"><p>What it controls</p></th>
+<th class="head"><p>Practical guidance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Hidden layer sizes</strong> (depth × width)</p></td>
+<td><p>Model capacity</p></td>
+<td><p>Start with 1–2 layers, 32–128 units; increase only if underfitting</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Activation</strong></p></td>
+<td><p>Nonlinearity type</p></td>
+<td><p>Use <code class="docutils literal notranslate"><span class="pre">'relu'</span></code> by default; <code class="docutils literal notranslate"><span class="pre">'tanh'</span></code> for smooth outputs</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Learning rate</strong></p></td>
+<td><p>Step size in SGD</p></td>
+<td><p>Adam with default lr (0.001) works well; decrease if loss oscillates</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Batch size</strong></p></td>
+<td><p>Gradient noise level</p></td>
+<td><p>Larger batches → smoother gradients; smaller → more regularization</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Early stopping</strong></p></td>
+<td><p>Overfitting control</p></td>
+<td><p>Always enable for small datasets; monitor validation loss</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>L2 regularization</strong> (<code class="docutils literal notranslate"><span class="pre">alpha</span></code>)</p></td>
+<td><p>Weight magnitude penalty</p></td>
+<td><p>Increase if test r² &lt;&lt; train r²</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="exercise admonition" id="ex-eda-nn-l2-reg">
+
+<p class="admonition-title"><span class="caption-number">Exercise 113 </span></p>
+<section id="exercise-content">
+<p>Explore the effect of L2 regularization on the Dow MLPRegressor.</p>
+<ol class="arabic simple">
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">X_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">X_te</span></code>, <code class="docutils literal notranslate"><span class="pre">y_train</span></code>, <code class="docutils literal notranslate"><span class="pre">y_test</span></code> from above, train <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> with
+<code class="docutils literal notranslate"><span class="pre">hidden_layer_sizes=(128,)</span></code>, <code class="docutils literal notranslate"><span class="pre">solver='adam'</span></code>, <code class="docutils literal notranslate"><span class="pre">max_iter=500</span></code>, <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>,
+and L2 penalty <code class="docutils literal notranslate"><span class="pre">alpha</span></code> swept over <code class="docutils literal notranslate"><span class="pre">[1e-5,</span> <span class="pre">1e-4,</span> <span class="pre">1e-3,</span> <span class="pre">1e-2,</span> <span class="pre">0.1,</span> <span class="pre">1.0]</span></code>.</p></li>
+<li><p>For each <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, record train <span class="math notranslate nohighlight">\(r^2\)</span> and test <span class="math notranslate nohighlight">\(r^2\)</span>.</p></li>
+<li><p>Plot train and test <span class="math notranslate nohighlight">\(r^2\)</span> vs. <code class="docutils literal notranslate"><span class="pre">log10(alpha)</span></code>. Identify the <code class="docutils literal notranslate"><span class="pre">alpha</span></code> that maximizes
+test <span class="math notranslate nohighlight">\(r^2\)</span> and note how the gap between train and test <span class="math notranslate nohighlight">\(r^2\)</span> changes.</p></li>
+</ol>
+</section>
+</div>
+</section>
+<hr class="docutils" />
+<section id="summary">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Neural networks learn <strong>layered feature representations</strong>: each layer transforms
+the previous layer’s activations, allowing the network to represent arbitrarily
+complex functions.</p></li>
+<li><p>A single neuron computes <span class="math notranslate nohighlight">\(a = \sigma(\mathbf{w}^\top \mathbf{x} + b)\)</span>. Without a
+nonlinear activation <span class="math notranslate nohighlight">\(\sigma\)</span>, stacking layers is equivalent to a single linear model.</p></li>
+<li><p>Common activations: <strong>step</strong> (non-differentiable, historical), <strong>sigmoid</strong> (smooth,
+vanishing gradient for large <span class="math notranslate nohighlight">\(|z|\)</span>), <strong>ReLU</strong> (fast, no vanishing gradient for
+<span class="math notranslate nohighlight">\(z &gt; 0\)</span>, default for hidden layers).</p></li>
+<li><p><strong>Backpropagation</strong> applies the chain rule to propagate the gradient from the output
+back through each layer, enabling efficient computation of <span class="math notranslate nohighlight">\(\nabla_\theta \mathcal{L}\)</span>
+for any depth.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sklearn.neural_network.MLPRegressor</span></code> provides a practical interface for regression
+with MLPs. Training loss curves and width/depth sweeps are essential diagnostics for
+understanding capacity and overfitting.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Goodfellow, I., Bengio, Y. &amp; Courville, A. (2016), <em>Deep Learning</em> — the standard
+reference, free at <a class="reference external" href="https://www.deeplearningbook.org/">deeplearningbook.org</a></p></li>
+<li><p>Nielsen, M. A. (2015), <em>Neural Networks and Deep Learning</em> — free online book
+with excellent visual intuitions: <a class="reference external" href="http://neuralnetworksanddeeplearning.com/">neuralnetworksanddeeplearning.com</a></p></li>
+<li><p>scikit-learn User Guide:
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html">MLPRegressor</a>,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/neural_networks_supervised.html">Neural network models</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./6-advanced_topics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic6.2-Time_Series_Models.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Time Series Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic6.4-Neural_Network_Architectures.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Neural Network Architectures</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-where-simpler-methods-fall-short">Motivation: Where Simpler Methods Fall Short</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-perceptron-a-single-neuron">The Perceptron: A Single Neuron</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computation">Computation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-linear-decision-boundary">Visualizing the Linear Decision Boundary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#activation-functions">Activation Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-nonlinearity-is-essential">Why Nonlinearity Is Essential</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-perceptrons">Multi-Layer Perceptrons</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stacking-layers">Stacking Layers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-what-two-layer-xor-looks-like">Visualization: What Two-Layer XOR Looks Like</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-loss-and-gradient-descent">Training: Loss and Gradient Descent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-loss-surface">The Loss Surface</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-backpropagation">Training: Backpropagation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-chain-rule-on-a-two-layer-network">The Chain Rule on a Two-Layer Network</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-mlpregressor-on-the-dow-dataset">Demonstration: <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> on the Dow Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-and-training-loss">Fitting and Training Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-of-hidden-layer-size">Effect of Hidden Layer Size</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-guide">Hyperparameter Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

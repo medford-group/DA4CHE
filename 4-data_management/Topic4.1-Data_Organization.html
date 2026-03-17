@@ -190,6 +190,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -209,6 +210,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
 </ul>
 </details></li>
 </ul>
@@ -388,6 +396,13 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modern-alternatives-parquet">Modern Alternatives: Parquet</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variables-and-one-hot-encoding">Categorical Variables and One-Hot Encoding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-vs-ordinal-variables">Categorical vs. Ordinal Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-hot-encoding-with-pandas">One-Hot Encoding with pandas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-classifier-accuracy-with-and-without-one-hot-features">Demonstration: Classifier Accuracy With and Without One-Hot Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sklearn-onehotencoder">sklearn <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
@@ -413,6 +428,8 @@ document.write(`
 <li><p>Identify outliers with the z-score method and remove them systematically</p></li>
 <li><p>Store and retrieve large datasets efficiently using HDF5 and Parquet formats</p></li>
 <li><p>Explain the trade-offs between different missing-value strategies and storage formats</p></li>
+<li><p>Distinguish categorical from ordinal variables and apply one-hot encoding with <code class="docutils literal notranslate"><span class="pre">pd.get_dummies</span></code> and <code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.OneHotEncoder</span></code></p></li>
+<li><p>Integrate one-hot encoding into a scikit-learn <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> using <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> to prevent category leakage</p></li>
 </ul>
 </div>
 <p>Data organization and management is a critical part of any data science project.
@@ -462,7 +479,7 @@ column and a single <code class="docutils literal notranslate"><span class="pre"
 instead of three separate code paths.</p>
 <div class="exercise admonition" id="ex-dm-tidy-check">
 
-<p class="admonition-title"><span class="caption-number">Exercise 52 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
 <section id="exercise-content">
 <p>After loading <code class="docutils literal notranslate"><span class="pre">df</span></code>, print <code class="docutils literal notranslate"><span class="pre">df.dtypes</span></code> and <code class="docutils literal notranslate"><span class="pre">df.isnull().sum()</span></code> to perform a basic
 data validation check. Then answer: does the Dow DataFrame satisfy all three tidy
@@ -1497,7 +1514,7 @@ keeping only the 12 sensor features (x1–x12):</p>
 </div>
 <div class="exercise admonition" id="ex-dm-dow-filter">
 
-<p class="admonition-title"><span class="caption-number">Exercise 53 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 57 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">df_shortnames</span></code>, create a filtered DataFrame that satisfies <strong>all three</strong>
 conditions simultaneously:</p>
@@ -1806,7 +1823,7 @@ only on training data.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-mean-impute">
 
-<p class="admonition-title"><span class="caption-number">Exercise 54 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 58 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">df_dropped</span></code>, create a copy of the DataFrame where any <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or non-numeric
 value (after converting to float with <code class="docutils literal notranslate"><span class="pre">pd.to_numeric(...,</span> <span class="pre">errors='coerce')</span></code>) is
@@ -1931,7 +1948,7 @@ each feature independently. For variables with discrete or heavily skewed
 distributions, IQR-based filtering is more robust.</p>
 <div class="exercise admonition" id="ex-dm-iqr-outlier">
 
-<p class="admonition-title"><span class="caption-number">Exercise 55 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 59 </span></p>
 <section id="exercise-content">
 <p>Implement an <strong>IQR-based</strong> outlier filter as an alternative to z-score.
 For a single column <code class="docutils literal notranslate"><span class="pre">x1:Primary</span> <span class="pre">Column</span> <span class="pre">Reflux</span> <span class="pre">Flow</span></code>:</p>
@@ -2035,7 +2052,7 @@ Agreement (both flag as outlier): 245
 </div>
 <div class="exercise admonition" id="ex-dm-multivar-outlier">
 
-<p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 60 </span></p>
 <section id="exercise-content">
 <p>Apply <code class="docutils literal notranslate"><span class="pre">IsolationForest</span></code> to the <strong>full numeric feature matrix</strong> of <code class="docutils literal notranslate"><span class="pre">df_no_outliers</span></code>
 (all columns except <code class="docutils literal notranslate"><span class="pre">Date</span></code>) with <code class="docutils literal notranslate"><span class="pre">contamination=0.05</span></code>.</p>
@@ -2074,7 +2091,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.66 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.71 s
 </pre></div>
 </div>
 </div>
@@ -2180,7 +2197,7 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0006 s
 HDF5 one column:  0.0003 s
-In-memory slice:  0.000218 s
+In-memory slice:  0.000144 s
 </pre></div>
 </div>
 </div>
@@ -2225,10 +2242,10 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0537 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0434 s
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet read:  0.0709 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet read:  0.0511 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
@@ -2273,13 +2290,416 @@ Name: count, dtype: int64
 </div>
 <div class="exercise admonition" id="ex-dm-parquet">
 
-<p class="admonition-title"><span class="caption-number">Exercise 57 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 61 </span></p>
 <section id="exercise-content">
 <p>Compare the file sizes of <code class="docutils literal notranslate"><span class="pre">impurity_data.hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">impurity_clean.parquet</span></code>
 using <code class="docutils literal notranslate"><span class="pre">Path('data/...').stat().st_size</span></code>. Then use <code class="docutils literal notranslate"><span class="pre">pd.read_parquet()</span></code> to load
 only two numeric feature columns and the target <code class="docutils literal notranslate"><span class="pre">y</span></code> (Parquet supports column
 selection natively via the <code class="docutils literal notranslate"><span class="pre">columns=</span></code> argument). Print the shape and compare
 the read time to the full-file HDF5 read above.</p>
+</section>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+<hr class="docutils" />
+<section id="categorical-variables-and-one-hot-encoding">
+<h2>Categorical Variables and One-Hot Encoding<a class="headerlink" href="#categorical-variables-and-one-hot-encoding" title="Link to this heading">#</a></h2>
+<section id="categorical-vs-ordinal-variables">
+<h3>Categorical vs. Ordinal Variables<a class="headerlink" href="#categorical-vs-ordinal-variables" title="Link to this heading">#</a></h3>
+<p>Numerical features can be measured on a continuous scale, but many real datasets contain <strong>discrete variables</strong> that represent categories rather than magnitudes. There are two important types:</p>
+<ul class="simple">
+<li><p><strong>Ordinal variables</strong>: the order of values carries meaning (e.g., satisfaction rating 1–5, polymer chain length). Converting to a continuous float is often reasonable.</p></li>
+<li><p><strong>Categorical variables</strong>: the values are labels with no inherent ordering (e.g., element symbol, solvent name, process type). Representing “Ba” as 1 and “Sr” as 2 would mislead any model into thinking Ba is “twice” some quantity relative to Sr.</p></li>
+</ul>
+<p>The standard solution for categorical variables is <strong>one-hot encoding</strong>: replace a column with <span class="math notranslate nohighlight">\(k\)</span> unique values by <span class="math notranslate nohighlight">\(k\)</span> binary columns (indicators), one per category. For example, a three-level color variable becomes:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>color</p></th>
+<th class="head"><p>color_red</p></th>
+<th class="head"><p>color_blue</p></th>
+<th class="head"><p>color_green</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>red</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>blue</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>green</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Euclidean distance between two one-hot vectors is <span class="math notranslate nohighlight">\(0\)</span> if they share the same category and <span class="math notranslate nohighlight">\(\sqrt{2}\)</span> otherwise — so distance-based algorithms (k-NN, SVM with RBF kernel, k-means) can now meaningfully compare categorical entries.</p>
+</section>
+<section id="one-hot-encoding-with-pandas">
+<h3>One-Hot Encoding with pandas<a class="headerlink" href="#one-hot-encoding-with-pandas" title="Link to this heading">#</a></h3>
+<p>The perovskite dataset (introduced in Module 3) contains string columns for the A, B, and X ion identities. <code class="docutils literal notranslate"><span class="pre">pd.get_dummies()</span></code> converts all non-numeric columns to one-hot automatically:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">df_perov</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/perovskite_data.csv&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Original shape: </span><span class="si">{</span><span class="n">df_perov</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">df_perov</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Original shape: (576, 13)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ABX3</th>
+      <th>A</th>
+      <th>B</th>
+      <th>X</th>
+      <th>nA</th>
+      <th>nB</th>
+      <th>nX</th>
+      <th>rA (Ang)</th>
+      <th>rB (Ang)</th>
+      <th>rX (Ang)</th>
+      <th>t</th>
+      <th>tau</th>
+      <th>exp_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AgBiO3</td>
+      <td>Ag</td>
+      <td>Bi</td>
+      <td>O</td>
+      <td>1</td>
+      <td>5</td>
+      <td>-2</td>
+      <td>1.28</td>
+      <td>0.76</td>
+      <td>1.40</td>
+      <td>0.88</td>
+      <td>4.07</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AgBrO3</td>
+      <td>Ag</td>
+      <td>Br</td>
+      <td>O</td>
+      <td>1</td>
+      <td>5</td>
+      <td>-2</td>
+      <td>1.28</td>
+      <td>0.31</td>
+      <td>1.40</td>
+      <td>1.11</td>
+      <td>6.43</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AgCaCl3</td>
+      <td>Ag</td>
+      <td>Ca</td>
+      <td>Cl</td>
+      <td>1</td>
+      <td>2</td>
+      <td>-1</td>
+      <td>1.28</td>
+      <td>1.00</td>
+      <td>1.81</td>
+      <td>0.78</td>
+      <td>6.00</td>
+      <td>-1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop the formula column (compound identity, not a feature)</span>
+<span class="n">df_features</span> <span class="o">=</span> <span class="n">df_perov</span><span class="p">[</span><span class="n">df_perov</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+
+<span class="n">df_onehot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df_features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;After one-hot encoding: </span><span class="si">{</span><span class="n">df_onehot</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">df_onehot</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>After one-hot encoding: (576, 130)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nA</th>
+      <th>nB</th>
+      <th>nX</th>
+      <th>rA (Ang)</th>
+      <th>rB (Ang)</th>
+      <th>rX (Ang)</th>
+      <th>t</th>
+      <th>tau</th>
+      <th>exp_label</th>
+      <th>A_Ag</th>
+      <th>...</th>
+      <th>B_W</th>
+      <th>B_Y</th>
+      <th>B_Yb</th>
+      <th>B_Zn</th>
+      <th>B_Zr</th>
+      <th>X_Br</th>
+      <th>X_Cl</th>
+      <th>X_F</th>
+      <th>X_I</th>
+      <th>X_O</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>5</td>
+      <td>-2</td>
+      <td>1.28</td>
+      <td>0.76</td>
+      <td>1.40</td>
+      <td>0.88</td>
+      <td>4.07</td>
+      <td>-1</td>
+      <td>True</td>
+      <td>...</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>5</td>
+      <td>-2</td>
+      <td>1.28</td>
+      <td>0.31</td>
+      <td>1.40</td>
+      <td>1.11</td>
+      <td>6.43</td>
+      <td>-1</td>
+      <td>True</td>
+      <td>...</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>2</td>
+      <td>-1</td>
+      <td>1.28</td>
+      <td>1.00</td>
+      <td>1.81</td>
+      <td>0.78</td>
+      <td>6.00</td>
+      <td>-1</td>
+      <td>True</td>
+      <td>...</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 130 columns</p>
+</div></div></div>
+</div>
+<p>The A, B, and X element columns (each with many unique symbols) expand into indicator columns. The numeric features (<code class="docutils literal notranslate"><span class="pre">nA</span></code>, <code class="docutils literal notranslate"><span class="pre">nB</span></code>, <code class="docutils literal notranslate"><span class="pre">nX</span></code>, <code class="docutils literal notranslate"><span class="pre">rA</span> <span class="pre">(Ang)</span></code>, etc.) are left unchanged.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># How many indicator columns were created per element site?</span>
+<span class="n">onehot_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_onehot</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;A_&#39;</span><span class="p">)]</span>
+<span class="n">onehot_B</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_onehot</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;B_&#39;</span><span class="p">)]</span>
+<span class="n">onehot_X</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_onehot</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;X_&#39;</span><span class="p">)]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A-site indicators: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_A</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;B-site indicators: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_B</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;X-site indicators: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_X</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total new dimensions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_A</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_B</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_X</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>A-site indicators: 49
+B-site indicators: 67
+X-site indicators: 5
+Total new dimensions: 121
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="demonstration-classifier-accuracy-with-and-without-one-hot-features">
+<h3>Demonstration: Classifier Accuracy With and Without One-Hot Features<a class="headerlink" href="#demonstration-classifier-accuracy-with-and-without-one-hot-features" title="Link to this heading">#</a></h3>
+<p>We can compare how a support vector classifier performs using only the six numeric features vs. the full one-hot-encoded feature matrix:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+
+<span class="n">regular_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nA&#39;</span><span class="p">,</span> <span class="s1">&#39;nB&#39;</span><span class="p">,</span> <span class="s1">&#39;nX&#39;</span><span class="p">,</span> <span class="s1">&#39;rA (Ang)&#39;</span><span class="p">,</span> <span class="s1">&#39;rB (Ang)&#39;</span><span class="p">,</span> <span class="s1">&#39;rX (Ang)&#39;</span><span class="p">]</span>
+<span class="n">all_cols</span> <span class="o">=</span> <span class="n">onehot_A</span> <span class="o">+</span> <span class="n">onehot_B</span> <span class="o">+</span> <span class="n">onehot_X</span> <span class="o">+</span> <span class="n">regular_cols</span>
+
+<span class="n">X_full</span> <span class="o">=</span> <span class="n">df_onehot</span><span class="p">[</span><span class="n">all_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_perov</span> <span class="o">=</span> <span class="n">df_onehot</span><span class="p">[</span><span class="s1">&#39;exp_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_full</span><span class="p">,</span> <span class="n">y_perov</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Numeric-only model</span>
+<span class="n">N_reg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">regular_cols</span><span class="p">)</span>
+<span class="n">X_train_reg</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="o">-</span><span class="n">N_reg</span><span class="p">:]</span>
+<span class="n">X_test_reg</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[:,</span> <span class="o">-</span><span class="n">N_reg</span><span class="p">:]</span>
+
+<span class="n">C_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">gamma_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">C_range</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">gamma_range</span><span class="p">}</span>
+
+<span class="n">clf_reg</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">clf_reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_reg</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">score_reg</span> <span class="o">=</span> <span class="n">clf_reg</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test_reg</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Full one-hot model</span>
+<span class="n">clf_full</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">clf_full</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">score_full</span> <span class="o">=</span> <span class="n">clf_full</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Accuracy (numeric only, 6 features):     </span><span class="si">{</span><span class="n">score_reg</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Accuracy (+ one-hot elements, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_cols</span><span class="p">)</span><span class="si">}</span><span class="s1"> features): </span><span class="si">{</span><span class="n">score_full</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy (numeric only, 6 features):     0.922
+Accuracy (+ one-hot elements, 127 features): 0.857
+</pre></div>
+</div>
+</div>
+</div>
+<p>Results vary with the random split, but including element identity typically increases or maintains accuracy while exposing the model to richer chemical information.</p>
+</section>
+<section id="sklearn-onehotencoder">
+<h3>sklearn <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code><a class="headerlink" href="#sklearn-onehotencoder" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pd.get_dummies</span></code> is convenient for exploration, but <code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.OneHotEncoder</span></code> integrates cleanly into <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> objects and handles train/test separation correctly (it learns the category list from training data only):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.compose</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+
+<span class="n">cat_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">]</span>
+<span class="n">num_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nA&#39;</span><span class="p">,</span> <span class="s1">&#39;nB&#39;</span><span class="p">,</span> <span class="s1">&#39;nX&#39;</span><span class="p">,</span> <span class="s1">&#39;rA (Ang)&#39;</span><span class="p">,</span> <span class="s1">&#39;rB (Ang)&#39;</span><span class="p">,</span> <span class="s1">&#39;rX (Ang)&#39;</span><span class="p">]</span>
+
+<span class="n">X_raw</span> <span class="o">=</span> <span class="n">df_perov</span><span class="p">[</span><span class="n">cat_cols</span> <span class="o">+</span> <span class="n">num_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_raw</span> <span class="o">=</span> <span class="n">df_perov</span><span class="p">[</span><span class="s1">&#39;exp_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">ct</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;ohe&#39;</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_cols</span><span class="p">)))),</span>
+<span class="p">],</span> <span class="n">remainder</span><span class="o">=</span><span class="s1">&#39;passthrough&#39;</span><span class="p">)</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;encode&#39;</span><span class="p">,</span> <span class="n">ct</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;clf&#39;</span><span class="p">,</span>    <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)),</span>
+<span class="p">])</span>
+
+<span class="n">X_tr</span><span class="p">,</span> <span class="n">X_te</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_te</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">y_raw</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pipeline accuracy: </span><span class="si">{</span><span class="n">pipe</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span><span class="w"> </span><span class="n">y_te</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pipeline accuracy: 0.853
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> applies <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code> only to the categorical columns and passes the numeric columns through unchanged. Using a pipeline ensures that the encoder is fit only on training data, preventing category leakage.</p>
+<div class="exercise admonition" id="ex-dm-ohe-sklearn">
+
+<p class="admonition-title"><span class="caption-number">Exercise 62 </span></p>
+<section id="exercise-content">
+<p>Using the <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> + <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> pattern above, add <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> to the numeric columns (as a second transformer in the <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code>) before passing them to the SVC. Then:</p>
+<ol class="arabic simple">
+<li><p>Fit the pipeline on <code class="docutils literal notranslate"><span class="pre">X_tr,</span> <span class="pre">y_tr</span></code> and report the test accuracy.</p></li>
+<li><p>Inspect the fitted encoder: print the categories learned from training data for each of the three element columns.</p></li>
+<li><p>Explain in one sentence why fitting the encoder on training data only (rather than the full dataset) matters for avoiding data leakage.</p></li>
+</ol>
 </section>
 </div>
 </section>
@@ -2311,6 +2731,11 @@ Mahalanobis distance (<code class="docutils literal notranslate"><span class="pr
 attributes, and fast partial reads. <strong>Parquet</strong> is the modern default for tabular
 DataFrames: schema metadata, native mixed-dtype support, and cloud integration.
 <strong>LMDB</strong> is a strong choice for key-value data in machine learning pipelines.</p></li>
+<li><p><strong>Categorical variables</strong> must not be converted to raw integers; <strong>one-hot encoding</strong>
+replaces each category with a binary indicator column so that distance-based
+algorithms can compare categories correctly. <code class="docutils literal notranslate"><span class="pre">pd.get_dummies</span></code> is convenient for
+exploration; <code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.OneHotEncoder</span></code> inside a <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> is the
+leakage-safe production pattern.</p></li>
 </ul>
 </section>
 <section id="additional-reading">
@@ -2421,6 +2846,13 @@ foundational principles for organizing tabular data; <a class="reference externa
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hdf5-files">HDF5 Files</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timing-comparison">Timing Comparison</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modern-alternatives-parquet">Modern Alternatives: Parquet</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variables-and-one-hot-encoding">Categorical Variables and One-Hot Encoding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-vs-ordinal-variables">Categorical vs. Ordinal Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-hot-encoding-with-pandas">One-Hot Encoding with pandas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-classifier-accuracy-with-and-without-one-hot-features">Demonstration: Classifier Accuracy With and Without One-Hot Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sklearn-onehotencoder">sklearn <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>

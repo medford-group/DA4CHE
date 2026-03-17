@@ -21,6 +21,8 @@ kernelspec:
 
 - Construct and evaluate multiple linear regression models in high-dimensional settings with proper validation.
 - Apply dimensionality reduction (e.g., PCA) and interpret explained variance and loadings; perform principal component regression and compare to baseline models.
+- Explain the difference between PCA (unsupervised) and PLS (supervised) dimensionality reduction and compare their predictive performance as a function of the number of components.
+- Interpret the PLS projection matrix in terms of `x_weights_` and `x_loadings_` and verify the result against `model.transform()`.
 :::
 
 ```{code-cell} ipython3
@@ -513,12 +515,88 @@ print(f"PLS (k={pls_k})  test r^2: {pipe_pls.score(X_test,  y_test):.3f}")
 If we compare the $r^2$ for PLS with 8 components, we see that it is higher than the $r^2$ for PCR with the same number of features. It is also higher than the $r^2$ for regular multi-linear regression with 10 features selected from forward selection. The PLS approach will generally give the highest $r^2$ score of any linear model as a function of the number of features, since the features are directly constructed to maximize the correlation. However, similar to PCR, it does require all of the original features as an input, so it may be less practical than feature selection in some cases (e.g. one of the features is very hard or expensive to measure or compute).
 
 ```{note}
-**Tuning PLS components**  
-It is possible to use cross-validation to select `n_components`. With a pipeline, you can use `GridSearchCV` and the step name `plsregression__n_components`, e.g. `{'plsregression__n_components': range(1, min(20, X.shape[1]) + 1)}`. 
+**Tuning PLS components**
+It is possible to use cross-validation to select `n_components`. With a pipeline, you can use `GridSearchCV` and the step name `plsregression__n_components`, e.g. `{'plsregression__n_components': range(1, min(20, X.shape[1]) + 1)}`.
 ```
 
-### A note on neural networks
-Neural networks (including “deep learning”) are among the best-known examples of *high-dimensional regression* models. We do not cover them here because they introduce additional concepts (e.g., network architectures, activation functions, backpropagation/optimizers, and regularization) and are challenging to use well in practice due to many hyperparameters and training options. Entire courses are dedicated to neural networks. If this topic interests you, consider exploring a dedicated deep-learning resource (e.g. the textbook [Deep Learning](https://www.deeplearningbook.org/) by Goodfellow, Bengio, and Courville) after you are comfortable with the basic concepts and ideas developed in this course.
+#### Understanding the PLS Projection Matrix
+
+Under the hood, `PLSRegression` computes two sets of weights at each latent component: the **X-weights** ($W$, `x_weights_`) and the **X-loadings** ($P$, `x_loadings_`). These capture different aspects of how the original features relate to the latent components.
+
+- **X-weights** $W$: the directions in the original feature space that maximize covariance with $y$. These are the raw coefficients used to form each latent score from the *deflated* $X$ matrix at each iteration.
+- **X-loadings** $P$: how much of the original $X$ is explained by each latent score after it is computed. They describe the back-projection from score space to the original feature space.
+
+Because the deflation step modifies $X$ at each iteration, the weight vectors are not exactly orthogonal in the original feature space. The actual projection matrix that maps $X$ directly to the latent scores (without iterative deflation) is:
+
+$$W^* = W (P^\top W)^{-1}$$
+
+and in scikit-learn notation: `W_star = model.x_weights_ @ np.linalg.inv(model.x_loadings_.T @ model.x_weights_)`.
+
+This is also accessible via `model.x_rotations_`. We can verify that applying this matrix manually gives the same scores as `model.transform(X)`:
+
+```{code-cell} ipython3
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+pls_k = 8
+pls = PLSRegression(n_components=pls_k)
+pls.fit(StandardScaler().fit_transform(X_train), y_train.ravel())
+
+# Reconstruct the projection matrix from weights and loadings
+W_star = pls.x_weights_ @ np.linalg.inv(pls.x_loadings_.T @ pls.x_weights_)
+X_train_manual = StandardScaler().fit_transform(X_train) @ W_star
+X_train_transform = pls.transform(StandardScaler().fit_transform(X_train))
+
+max_diff = np.abs(X_train_manual - X_train_transform).max()
+print(f'Max absolute difference (manual vs transform): {max_diff:.2e}')
+print(f'x_rotations_ and W_star agree: {np.allclose(W_star, pls.x_rotations_, atol=1e-10)}')
+```
+
+The numerical agreement confirms that `x_rotations_` encodes the full, non-iterative projection from $X$ to latent score space.
+
+#### PCR vs. PLS: r² as a Function of Components
+
+A useful diagnostic is to compare how quickly PCR and PLS accumulate predictive power as more latent components are added:
+
+```{code-cell} ipython3
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LinearRegression
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+k_range = range(1, 21)
+r2_pcr = []
+r2_pls = []
+
+for k in k_range:
+    pipe_pcr = make_pipeline(StandardScaler(), PCA(n_components=k), LinearRegression())
+    pipe_pcr.fit(X_train, y_train)
+    r2_pcr.append(pipe_pcr.score(X_test, y_test))
+
+    pipe_pls = make_pipeline(StandardScaler(), PLSRegression(n_components=k))
+    pipe_pls.fit(X_train, y_train.ravel())
+    r2_pls.append(pipe_pls.score(X_test, y_test))
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(list(k_range), r2_pcr, 'o-', label='PCR')
+ax.plot(list(k_range), r2_pls, 's-', label='PLS')
+ax.set_xlabel('Number of components (k)')
+ax.set_ylabel('Test $r^2$')
+ax.set_title('PCR vs. PLS on Dow dataset')
+ax.legend()
+plt.tight_layout()
+```
+
+PLS consistently achieves higher test $r^2$ than PCR with the same number of components. This is because PLS explicitly uses $y$ when constructing each latent direction, whereas PCA orders components purely by variance in $X$ — some high-variance directions may be nearly orthogonal to the target.
+
+The crossover behavior (PLS saturates earlier) is also typical: because PLS components are already chosen to be predictive, adding more components yields diminishing returns faster than PCR, where many early components may carry little signal about $y$.
 
 
 :::{exercise}
@@ -542,6 +620,8 @@ Here you will use pipelines to compare some of the models above:
 - **Forward selection** ranks features by univariate correlation; `SequentialFeatureSelector` performs true forward stepwise selection with cross-validation.
 - **PCA** rotates data into orthogonal directions of maximum variance in **X**; **PCR** uses these components as regression features.
 - **PLS** is supervised—it maximizes covariance between **X** and **y**—and typically achieves higher predictive accuracy than PCR with the same number of components.
+- The PLS **projection matrix** $W^* = W(P^\top W)^{-1}$ maps the original features directly to latent scores; it is accessible via `model.x_rotations_` and can be verified by comparison with `model.transform(X)`.
+- A PCR vs. PLS $r^2$ comparison plot shows that PLS saturates faster: its components are explicitly chosen to be predictive, whereas PCA components are ordered by variance in $X$ alone.
 
 ## Additional reading
 

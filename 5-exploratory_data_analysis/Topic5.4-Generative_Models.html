@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '5-exploratory_data_analysis/Topic5.4-Generative_Models';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced Topics" href="../6-advanced_topics/intro.html" />
     <link rel="prev" title="Clustering" href="Topic5.3-Clustering.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -189,6 +190,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -208,6 +210,13 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering.html">Clustering</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
 </ul>
 </details></li>
 </ul>
@@ -438,7 +447,7 @@ generation is short.</p>
 structures), and data augmentation when new experiments are expensive.</p>
 <div class="exercise admonition" id="ex-eda-gen-conditional">
 
-<p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 87 </span></p>
 <section id="exercise-content">
 <p>The generative model overview mentions <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid \text{features})\)</span>. A closely
 related quantity is the <strong>class-conditional density</strong> <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid y)\)</span>: the
@@ -519,7 +528,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/960ab767c908014e129eb9a4bc08b10a63389bb8f5bd6165db99bfeca38c8fbe.png" src="../_images/960ab767c908014e129eb9a4bc08b10a63389bb8f5bd6165db99bfeca38c8fbe.png" />
+<img alt="../_images/c50795d5332a6c81ecd045954f7a63b4d91bc98530044cf88dc185a6a4526020.png" src="../_images/c50795d5332a6c81ecd045954f7a63b4d91bc98530044cf88dc185a6a4526020.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -568,7 +577,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/95f5d14175172904813f0268b461b43b3ea593dc740488effff3e072020f0a86.png" src="../_images/95f5d14175172904813f0268b461b43b3ea593dc740488effff3e072020f0a86.png" />
+<img alt="../_images/69cb8777dcb1233a03e01cb7452b852b0c0f129e4e0d866fc66b1ac544d11258.png" src="../_images/69cb8777dcb1233a03e01cb7452b852b0c0f129e4e0d866fc66b1ac544d11258.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -576,7 +585,7 @@ Gaussian. Furthermore, this captures only one of the 40 features, so a single fi
 distribution is a very limited generative model for the full dataset.</p>
 <div class="exercise admonition" id="ex-eda-norm-fit">
 
-<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 88 </span></p>
 <section id="exercise-content">
 <p>Select a different feature from the Dow dataset (try column index 10 or 20). Fit a normal
 distribution to that feature, generate 500 synthetic samples using <code class="docutils literal notranslate"><span class="pre">norm.rvs</span></code>, and overlay
@@ -758,7 +767,7 @@ The optimal model minimizes the BIC.</p>
 accuracy and complexity for this 2-D dataset.</p>
 <div class="exercise admonition" id="ex-eda-gmm-bic3d">
 
-<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 89 </span></p>
 <section id="exercise-content">
 <p>Extend the 2-D GMM analysis to three features by adding Dow feature column index 2 so that
 <code class="docutils literal notranslate"><span class="pre">X_3d</span> <span class="pre">=</span> <span class="pre">X_dow[:,</span> <span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">6]]</span></code>. Fit GMMs with 2 to 30 components using
@@ -969,7 +978,7 @@ imbalance in deep learning — in our case with a simple GMM, and in state-of-th
 with deep generative models such as Variational Autoencoders (VAEs).</p>
 <div class="exercise admonition" id="ex-eda-gmm-digit-other">
 
-<p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 90 </span></p>
 <section id="exercise-content">
 <p>Adapt the digit-6 demonstration above to generate synthetic samples for a digit of your
 choice (0–9, excluding 6). Use <code class="docutils literal notranslate"><span class="pre">PCA(n_components=20)</span></code> and BIC to select the optimal number
@@ -1043,14 +1052,14 @@ point), too large and features are washed out (underfitting).</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/46e1d1300e90689de510c218eff4c131803450cf36b1c2abfe3ce2f79627a07d.png" src="../_images/46e1d1300e90689de510c218eff4c131803450cf36b1c2abfe3ce2f79627a07d.png" />
+<img alt="../_images/24b75ac7799351e620eb728bccd47a234b4a783ec830d70b7949813a9ff5a6be.png" src="../_images/24b75ac7799351e620eb728bccd47a234b4a783ec830d70b7949813a9ff5a6be.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
 the data density accurately.</p>
 <div class="exercise admonition" id="ex-eda-kde-bandwidth">
 
-<p class="admonition-title"><span class="caption-number">Exercise 86 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 91 </span></p>
 <section id="exercise-content">
 <p>Fit KDE models to the same Dow feature using three different bandwidths: 0.01, 0.15, and
 1.0. Plot the three KDE curves on the same axes alongside a histogram of the original data.
@@ -1223,7 +1232,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/14a966823e8af8cacd62b2bb8e6ad0731b23de021298e7026ea7dee333e75add.png" src="../_images/14a966823e8af8cacd62b2bb8e6ad0731b23de021298e7026ea7dee333e75add.png" />
+<img alt="../_images/fd708d51033f9eb06953ccaca0a8b8791e8ed9978c4ee7d7059ee921052a236a.png" src="../_images/fd708d51033f9eb06953ccaca0a8b8791e8ed9978c4ee7d7059ee921052a236a.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
@@ -1330,7 +1339,7 @@ discards all of that structure. By fitting a full multivariate KDE to each class
 not-so-naive classifier captures these correlations and achieves near-perfect accuracy.</p>
 <div class="exercise admonition" id="ex-eda-kde-bw-cls">
 
-<p class="admonition-title"><span class="caption-number">Exercise 87 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 92 </span></p>
 <section id="exercise-content">
 <p>Re-run <code class="docutils literal notranslate"><span class="pre">kde_bayes_predict</span></code> with three different bandwidth values: 1, 10, and 50. Print the
 test-set accuracy for each. Which bandwidth gives the best performance, and why do you think
@@ -1435,7 +1444,7 @@ estimating <span class="math notranslate nohighlight">\(40 \times 41 / 2 = 820\)
 after PCA reduction.</p>
 <div class="exercise admonition" id="ex-eda-gmm-dow-full">
 
-<p class="admonition-title"><span class="caption-number">Exercise 88 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 93 </span></p>
 <section id="exercise-content">
 <p>Re-run the full Dow generative pipeline with <code class="docutils literal notranslate"><span class="pre">n_components=0.80</span></code> (retaining 80% of the
 variance instead of 95%). How many PCA components are used? Does the synthetic data still
@@ -1525,7 +1534,7 @@ the association will depend on how well the training data captures normal operat
 </div>
 <div class="exercise admonition" id="ex-eda-anomaly-score">
 
-<p class="admonition-title"><span class="caption-number">Exercise 89 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 94 </span></p>
 <section id="exercise-content">
 <p>Re-run the anomaly detection using the full-dimensional KDE model (<code class="docutils literal notranslate"><span class="pre">kde_dow</span></code> applied to
 <code class="docutils literal notranslate"><span class="pre">X_dow_k</span></code>). Compare the anomalous points flagged by the KDE to those flagged by the GMM:
@@ -1615,6 +1624,15 @@ and <a class="reference external" href="https://scikit-learn.org/stable/modules/
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Clustering</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="../6-advanced_topics/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Advanced Topics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

@@ -21,6 +21,8 @@ By the end of this chapter, you will be able to:
 - Use `GridSearchCV` to tune SVC hyperparameters on a held-out training set
 - Evaluate classifier performance using accuracy, precision, recall, and confusion matrices
 - Apply and interpret a depth-limited decision tree and read feature importances from the result
+- Derive the five steps of Linear Discriminant Analysis (LDA) and explain why it finds more class-discriminative projections than PCA
+- Apply `sklearn.discriminant_analysis.LinearDiscriminantAnalysis` as both a classifier and a feature extractor, and compare accuracy and speed against SVC on raw features
 :::
 
 The previous chapters introduced classification algorithms on simple two-dimensional
@@ -475,6 +477,282 @@ the depth-3 tree and note any differences in the relative ranking of `tau` and `
 
 ---
 
+---
+
+## Linear Discriminant Analysis
+
+In Topic 2.5 we saw that **Partial Least Squares** is a supervised dimensionality
+reduction technique for regression — it finds latent directions that maximize covariance
+between $X$ and $y$. The classification analogue is **Linear Discriminant Analysis
+(LDA)**: it finds directions that maximize the separation between class centroids relative
+to the within-class spread.
+
+LDA is simultaneously a **dimensionality reduction** method (project $n$-dimensional
+features to at most $C - 1$ dimensions, where $C$ is the number of classes) and a
+**classifier** (assign points to the class whose centroid is nearest in the projected
+space). The decision boundaries are hyperplanes perpendicular to the LDA axes.
+
+### The LDA Algorithm: Manual Derivation
+
+We will step through the five-step derivation on a two-class toy dataset, then apply
+the scikit-learn implementation to the MNIST digits dataset.
+
+#### Step 1 — Class Centroids
+
+```{code-cell} ipython3
+from sklearn.datasets import make_blobs
+
+np.random.seed(0)
+X_blobs, y_blobs = make_blobs(
+    n_samples=50, centers=2, cluster_std=0.5, n_features=2, random_state=0)
+
+classes = [0, 1]
+mean_vectors = []
+for cl in classes:
+    mu_cl = X_blobs[y_blobs == cl].mean(axis=0)
+    mean_vectors.append(mu_cl)
+    print(f'Class {cl} centroid: {mu_cl}')
+
+fig, ax = plt.subplots(figsize=(5, 4))
+ax.scatter(X_blobs[:, 0], X_blobs[:, 1], c=[clrs[yi] for yi in y_blobs])
+for mv in mean_vectors:
+    ax.plot(mv[0], mv[1], marker='*', markersize=15, c=clrs[2])
+ax.set_title('Two-class blobs with class centroids')
+plt.tight_layout()
+```
+
+#### Step 2 — Intra-class Covariance
+
+The within-class (intra-class) covariance measures the spread of points around their
+own class centroid. LDA assumes all classes share the same covariance matrix, so we
+average:
+
+```{code-cell} ipython3
+class_covs = []
+for cl, center in zip(classes, mean_vectors):
+    subX = X_blobs[y_blobs == cl]
+    subX_centered = subX - center
+    cov = (subX_centered.T @ subX_centered) / (subX.shape[0] - 1)
+    class_covs.append(cov)
+
+# Pooled (averaged) intra-class covariance
+intra = sum(class_covs) / len(class_covs)
+print('Intra-class covariance:\n', intra)
+```
+
+#### Step 3 — Inter-class Covariance
+
+The between-class (inter-class) covariance measures the spread of the class centroids
+themselves:
+
+```{code-cell} ipython3
+center_array = np.array(mean_vectors)
+inter = np.cov(center_array.T)
+print('Inter-class covariance:\n', inter)
+```
+
+#### Step 4 — Composite Covariance Eigendecomposition
+
+We want directions where between-class variance is large and within-class variance is
+small. The composite matrix $C_\text{intra}^{-1} C_\text{inter}$ achieves this:
+
+```{code-cell} ipython3
+comp = np.linalg.inv(intra) @ inter
+eig_vals, eig_vecs = np.linalg.eig(comp)
+eig_vecs = eig_vecs.T   # rows are eigenvectors
+
+print('Eigenvalues:', eig_vals)
+
+LDvec1 = eig_vecs[0]
+LDvec2 = eig_vecs[1]
+mu_all = X_blobs.mean(axis=0)
+
+# PCA axes for comparison
+cov_all = np.cov(X_blobs.T)
+_, pc_vecs = np.linalg.eig(cov_all)
+pc_vecs = pc_vecs.T
+PCvec1 = pc_vecs[0]
+
+fig, ax = plt.subplots(figsize=(5, 4))
+ax.scatter(X_blobs[:, 0], X_blobs[:, 1], c=[clrs[yi] for yi in y_blobs])
+ax.plot(*mu_all, marker='x', color=clrs[3], markersize=10)
+ax.plot([mu_all[0] - LDvec1[0], mu_all[0] + LDvec1[0]],
+        [mu_all[1] - LDvec1[1], mu_all[1] + LDvec1[1]],
+        '-', color=clrs[0], label='LDA axis 1')
+ax.plot([mu_all[0] - PCvec1[0], mu_all[0] + PCvec1[0]],
+        [mu_all[1] - PCvec1[1], mu_all[1] + PCvec1[1]],
+        '-', color=clrs[1], label='PCA axis 1')
+ax.legend()
+ax.set_title('LDA vs PCA — first component axes')
+plt.tight_layout()
+```
+
+LDA's axis points from one class centroid toward the other; PCA's axis points toward
+maximum total variance regardless of class labels. For well-separated clusters these
+often agree, but they diverge when class variance is not aligned with inter-class
+separation.
+
+#### Step 5 — Decision Boundary
+
+The LDA decision boundary is the hyperplane perpendicular to the discriminant axis,
+passing through the mean of the two class centroids. In 2D, rotating the eigenvector
+by 90° gives the boundary direction:
+
+```{code-cell} ipython3
+boundary = np.array([[0, -1], [1, 0]]) @ LDvec2
+
+fig, ax = plt.subplots(figsize=(5, 4))
+ax.scatter(X_blobs[:, 0], X_blobs[:, 1], c=[clrs[yi] for yi in y_blobs])
+ax.plot([mu_all[0] - LDvec2[0], mu_all[0] + LDvec2[0]],
+        [mu_all[1] - LDvec2[1], mu_all[1] + LDvec2[1]],
+        '-', color=clrs[0], label='LDA axis')
+ax.plot([mu_all[0] - boundary[0], mu_all[0] + boundary[0]],
+        [mu_all[1] - boundary[1], mu_all[1] + boundary[1]],
+        '--', color=clrs[0], label='Decision boundary')
+ax.legend()
+ax.set_title('LDA decision boundary (perpendicular to axis)')
+plt.tight_layout()
+```
+
+### LDA on MNIST Digits
+
+The scikit-learn `LinearDiscriminantAnalysis` scales efficiently to high dimensions.
+For the MNIST digits (10 classes, 64 features per 8×8 image), LDA projects down to at
+most 9 components ($C - 1$):
+
+```{code-cell} ipython3
+from sklearn.datasets import load_digits
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.decomposition import PCA
+import seaborn as sns
+
+digits = load_digits()
+X_mnist = digits.data.astype(float)
+y_mnist = digits.target
+
+print(f'MNIST shape: {X_mnist.shape},  classes: {np.unique(y_mnist)}')
+```
+
+```{code-cell} ipython3
+lda = LinearDiscriminantAnalysis()
+lda.fit(X_mnist, y_mnist)
+X_lda = lda.transform(X_mnist)
+print(f'LDA projected shape: {X_lda.shape}')
+```
+
+```{code-cell} ipython3
+# PCA for comparison (same number of components)
+pca9 = PCA(n_components=9)
+X_pca9 = pca9.fit_transform(X_mnist)
+
+# Color by digit label (10 classes — use tab10 colormap)
+tab10 = plt.cm.tab10(np.linspace(0, 1, 10))
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+for label in range(10):
+    mask = y_mnist == label
+    axes[0].scatter(X_pca9[mask, 0], X_pca9[mask, 1],
+                    color=tab10[label], alpha=0.4, s=10, label=str(label))
+    axes[1].scatter(X_lda[mask, 0],  X_lda[mask, 1],
+                    color=tab10[label], alpha=0.4, s=10, label=str(label))
+
+axes[0].set_title('PCA (components 0 vs 1)')
+axes[1].set_title('LDA (components 0 vs 1)')
+for ax in axes:
+    ax.set_xlabel('Component 0')
+    ax.set_ylabel('Component 1')
+    ax.legend(ncol=5, fontsize=7, markerscale=2)
+plt.tight_layout()
+```
+
+The LDA projection shows substantially better cluster separation than PCA because LDA
+explicitly maximizes the ratio of between-class to within-class variance. PCA simply
+captures directions of maximum total variance in the data, which may mix classes.
+
+### LDA as a Classifier and Feature Extractor
+
+```{code-cell} ipython3
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.svm import SVC
+from sklearn.metrics import confusion_matrix
+
+X_tr, X_te, y_tr, y_te = train_test_split(X_mnist, y_mnist, test_size=0.4, random_state=0)
+
+# LDA classifier (built-in)
+lda_clf = LinearDiscriminantAnalysis(n_components=9)
+lda_clf.fit(X_tr, y_tr)
+lda_score = lda_clf.score(X_te, y_te)
+print(f'LDA classifier accuracy: {lda_score:.3f}')
+```
+
+```{code-cell} ipython3
+y_pred_lda = lda_clf.predict(X_te)
+cm_lda = confusion_matrix(y_te, y_pred_lda)
+
+fig, ax = plt.subplots(figsize=(7, 6))
+sns.heatmap(cm_lda, annot=True, fmt='d', linewidth=0.5, cbar=False, ax=ax)
+ax.set_xlabel('Predicted')
+ax.set_ylabel('True')
+ax.set_title('LDA — MNIST confusion matrix')
+plt.tight_layout()
+```
+
+```{code-cell} ipython3
+# SVC on LDA features vs. SVC on raw features
+X_tr_lda = lda_clf.transform(X_tr)
+X_te_lda = lda_clf.transform(X_te)
+
+C_range = np.logspace(-1, 1, 8)
+gamma_range = np.logspace(-4, -1, 8)
+params = {'C': C_range, 'gamma': gamma_range}
+
+svc_lda = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
+svc_lda.fit(X_tr_lda, y_tr)
+score_svc_lda = svc_lda.best_estimator_.score(X_te_lda, y_te)
+
+svc_full = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
+svc_full.fit(X_tr, y_tr)
+score_svc_full = svc_full.best_estimator_.score(X_te, y_te)
+
+print(f'SVC on LDA features ({X_tr_lda.shape[1]} dims):  accuracy = {score_svc_lda:.3f}')
+print(f'SVC on raw features  ({X_tr.shape[1]} dims): accuracy = {score_svc_full:.3f}')
+```
+
+LDA features achieve comparable accuracy to the full-feature SVM while compressing 64
+dimensions to 9 — a 7× reduction. This speedup scales dramatically as image resolution
+increases: for a 128×128 image (16,384 pixels), LDA would still reduce to at most 9
+components for a 10-class problem.
+
+:::{note}
+**LDA vs. PLS: the supervised dimensionality reduction pair**
+LDA (for classification) and PLS (for regression) occupy symmetric roles: both find
+linear combinations of features supervised by the output, and both are especially useful
+when the number of features is large relative to the number of samples. The key
+difference is the type of output variable — discrete class labels for LDA, continuous
+values for PLS.
+:::
+
+:::{exercise}
+:label: ex-cls-lda-pca-acc
+
+Compare the classification accuracy of LDA-based and PCA-based dimensionality
+reduction for MNIST digits.
+
+1. Using the same train/test split (`X_tr`, `X_te`, `y_tr`, `y_te`) from above,
+   project the data to 9 components with both `LinearDiscriminantAnalysis(n_components=9)`
+   and `PCA(n_components=9)`.
+2. For each projection, train a `LinearRegression`-free *linear* classifier using
+   `LinearDiscriminantAnalysis` (the built-in classifier mode) on the projected training
+   data and evaluate on the projected test data.
+3. Then train `SVC(kernel='rbf')` with `GridSearchCV` on each projected space and
+   report the best test accuracy.
+4. Make a bar chart comparing the four accuracy values (LDA linear, LDA + SVC, PCA
+   linear, PCA + SVC) and comment on the relative ranking.
+:::
+
+---
+
 ## Summary
 
 - The perovskite dataset illustrates the full classification workflow on real data:
@@ -501,6 +779,14 @@ the depth-3 tree and note any differences in the relative ranking of `tau` and `
   interpretability — readable splitting rules and feature importance scores — makes
   them especially useful in science and engineering applications where understanding
   *why* a model makes a prediction matters as much as accuracy.
+
+- **Linear Discriminant Analysis (LDA)** finds projections that maximize between-class
+  variance relative to within-class variance — the supervised analogue of PCA for
+  classification. It reduces $p$-dimensional features to at most $C-1$ dimensions
+  ($C$ = number of classes) and serves as both a linear classifier and a preprocessing
+  step for non-linear classifiers. LDA projections show better class separation than
+  PCA projections because they use the class labels; PCA maximizes total variance
+  regardless of class identity.
 
 ## Additional Reading
 
