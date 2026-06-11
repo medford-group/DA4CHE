@@ -648,7 +648,7 @@ document.write(`
 </ol>
 <p>These steps are repeated until the centroids no longer move.</p>
 <figure class="align-default" id="fig-kmeans-anim">
-<a class="reference internal image-reference" href="../_images/kmeans.gif"><img alt="../_images/kmeans.gif" src="../_images/kmeans.gif" style="width: 55%;" />
+<a class="reference internal image-reference" href="../_images/kmeans_animation.gif"><img alt="../_images/kmeans_animation.gif" src="../_images/kmeans_animation.gif" style="width: 55%;" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 19 </span><span class="caption-text">k-means on three well-separated synthetic clusters. All three centroids are deliberately initialized inside a single blob; over a few iterations the expectation and maximization steps pull them apart until each settles on its own cluster.</span><a class="headerlink" href="#fig-kmeans-anim" title="Link to this image">#</a></p>
@@ -809,7 +809,7 @@ document.write(`
 \[P(\mathbf{x}) = \sum_k \phi_k \,\mathcal{N}(\mathbf{x};\, \boldsymbol{\mu}_k,\, \boldsymbol{\Sigma}_k)\]</div>
 <p>where <span class="math notranslate nohighlight">\(\phi_k\)</span> are mixture weights (<span class="math notranslate nohighlight">\(\sum_k \phi_k = 1\)</span>), <span class="math notranslate nohighlight">\(\boldsymbol{\mu}_k\)</span> is the cluster mean, and <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_k\)</span> is the covariance matrix.</p>
 <figure class="align-default" id="fig-gmm-em">
-<a class="reference internal image-reference" href="../_images/GMM.gif"><img alt="../_images/GMM.gif" src="../_images/GMM.gif" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/gmm_em_animation.gif"><img alt="../_images/gmm_em_animation.gif" src="../_images/gmm_em_animation.gif" style="width: 60%;" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 20 </span><span class="caption-text">Illustration of the GMM expectation-maximization algorithm. Ellipses show the current Gaussian components; points are colored by their most probable cluster assignment. Over iterations the components shift to better describe the data.</span><a class="headerlink" href="#fig-gmm-em" title="Link to this image">#</a></p>
@@ -963,7 +963,7 @@ Silhouette (well-defined): 0.638
 \[\mathbf{c}^{(t+1)} = \frac{\sum_{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq r} \mathbf{x}_i}{\left|\{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq r\}\right|}\]</div>
 <p>A key insight is that every data point can serve as an initial centroid. After convergence, nearby centroids are merged, and the resulting unique centroids define the clusters.</p>
 <figure class="align-default" id="fig-meanshift-anim">
-<a class="reference internal image-reference" href="../_images/meanshift.gif"><img alt="../_images/meanshift.gif" src="../_images/meanshift.gif" style="width: 55%;" />
+<a class="reference internal image-reference" href="../_images/meanshift_animation.gif"><img alt="../_images/meanshift_animation.gif" src="../_images/meanshift_animation.gif" style="width: 55%;" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 21 </span><span class="caption-text">Mean shift on three synthetic clusters. Many candidate centroids (gold) each climb toward the nearest peak of point density; centroids that converge to the same location merge, so the number of clusters emerges from the bandwidth rather than being specified in advance.</span><a class="headerlink" href="#fig-meanshift-anim" title="Link to this image">#</a></p>
@@ -1090,7 +1090,7 @@ Silhouette (well-defined): 0.638
 <h3>DBSCAN<a class="headerlink" href="#dbscan" title="Link to this heading">#</a></h3>
 <p>DBSCAN (Density-Based Spatial Clustering of Applications with Noise) defines clusters as dense regions of points connected through short-range neighborhoods. Unlike mean shift, DBSCAN can find clusters of arbitrary shape and explicitly marks low-density points as noise (label <span class="math notranslate nohighlight">\(-1\)</span>).</p>
 <figure class="align-default" id="fig-dbscan-anim">
-<a class="reference internal image-reference" href="../_images/DBSCAN.gif"><img alt="../_images/DBSCAN.gif" src="../_images/DBSCAN.gif" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/dbscan_animation.gif"><img alt="../_images/dbscan_animation.gif" src="../_images/dbscan_animation.gif" style="width: 60%;" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 22 </span><span class="caption-text">Illustration of the DBSCAN algorithm. Core points (within a dense neighborhood) are shown in color; border points lie on the edge of a cluster; noise points remain gray.</span><a class="headerlink" href="#fig-dbscan-anim" title="Link to this image">#</a></p>
@@ -1154,7 +1154,7 @@ Silhouette (well-defined): 0.638
 <p>A <strong>dendrogram</strong> is a tree diagram that visualizes hierarchical cluster structure. The horizontal axis enumerates points or sub-clusters; the vertical axis shows the distance at which two groups were merged. Cutting the dendrogram horizontally at a chosen height yields flat clusters.</p>
 <p>A familiar example from biology:</p>
 <figure class="align-default" id="fig-bio-dendrogram">
-<a class="reference internal image-reference" href="../_images/bio_dendrogram.png"><img alt="../_images/bio_dendrogram.png" src="../_images/bio_dendrogram.png" style="width: 60%;" />
+<a class="reference internal image-reference" href="../_images/species_dendrogram.png"><img alt="../_images/species_dendrogram.png" src="../_images/species_dendrogram.png" style="width: 60%;" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 23 </span><span class="caption-text">A species dendrogram from biology. Choosing a different height for the horizontal cut yields different numbers of species clusters — the same principle applies to data clustering.</span><a class="headerlink" href="#fig-bio-dendrogram" title="Link to this image">#</a></p>
@@ -1287,7 +1287,7 @@ ward        cophenetic = 0.8213
 </div>
 </div>
 <figure class="align-default" id="fig-agglomerative-anim">
-<a class="reference internal image-reference" href="../_images/agglomerative.gif"><img alt="../_images/agglomerative.gif" src="../_images/agglomerative.gif" style="width: 70%;" />
+<a class="reference internal image-reference" href="../_images/agglomerative_animation.gif"><img alt="../_images/agglomerative_animation.gif" src="../_images/agglomerative_animation.gif" style="width: 70%;" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 24 </span><span class="caption-text">Animation of agglomerative hierarchical clustering. At each step the two closest clusters are merged. The horizontal cut height determines how many final clusters are produced.</span><a class="headerlink" href="#fig-agglomerative-anim" title="Link to this image">#</a></p>
