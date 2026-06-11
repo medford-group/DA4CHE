@@ -74,6 +74,7 @@ translation step that an assistant handles well.
 > Then draw the graph for caffeine, coloring atoms by element."*
 
 ```{code-cell} ipython3
+%matplotlib inline
 import requests
 import networkx as nx
 import matplotlib.pyplot as plt

@@ -232,6 +232,7 @@ not a sign that something went wrong.
 Let's run it and look at the result:
 
 ```{code-cell} ipython3
+%matplotlib inline
 import matplotlib.pyplot as plt
 
 T, Cp = nist_gas_cp("methane")

@@ -721,7 +721,8 @@ not a sign that something went wrong.</p>
 <p>Let’s run it and look at the result:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">T</span><span class="p">,</span> <span class="n">Cp</span> <span class="o">=</span> <span class="n">nist_gas_cp</span><span class="p">(</span><span class="s2">&quot;methane&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">Cp</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">)</span>
@@ -733,10 +734,7 @@ not a sign that something went wrong.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_53480/1907223172.py:8: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
-  plt.show()
-</pre></div>
-</div>
+<img alt="../_images/6b72e259b3e741e14dd446e87bc5122ac6d938a3702dcf943a0938757a169394.png" src="../_images/6b72e259b3e741e14dd446e87bc5122ac6d938a3702dcf943a0938757a169394.png" />
 </div>
 </div>
 <p>The curve rises smoothly with temperature, as we expect for a polyatomic gas — a quick
