@@ -421,7 +421,7 @@ document.write(`
 <h2>Clustering Overview<a class="headerlink" href="#clustering-overview" title="Link to this heading">#</a></h2>
 <section id="problem-statement">
 <h3>Problem Statement<a class="headerlink" href="#problem-statement" title="Link to this heading">#</a></h3>
-<p>Clustering algorithms identify groups of data points that are similar to each other based on a set of descriptive features. Unlike supervised learning, clustering is <strong>unsupervised</strong>: there are no output labels. The goal is to extract insight about the inherent structure of a dataset without any ground-truth class information.</p>
+<p>Clustering algorithms identify groups of data points that are similar to each other based on a set of descriptive features. Unlike classification (which is a form of supervised learning), clustering is <strong>unsupervised</strong>: there are no output labels. The goal is to extract insight about the inherent structure of a dataset without any ground-truth class information.</p>
 <p>Common applications include:</p>
 <ul class="simple">
 <li><p>Data compression and summarization</p></li>
@@ -532,6 +532,7 @@ document.write(`
 <section id="dataset-preparation">
 <h2>Dataset Preparation<a class="headerlink" href="#dataset-preparation" title="Link to this heading">#</a></h2>
 <p>In this chapter we work with the Dow chemical process dataset. Clustering algorithms operate in any dimension, but intuition is much easier to build in 2D. A common EDA strategy is therefore to apply dimensionality reduction first, cluster on the low-dimensional representation to build intuition, and then verify whether the same structure holds in the full feature space.</p>
+<p>The following code blocks load and standardize the Dow dataset (the same cleaning steps used in earlier chapters), then subsample it to keep the clustering demonstrations fast.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -586,6 +587,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Here we apply three different dimensionality reduction options — linear PCA, kernel PCA, and t-SNE — so we can see how the choice of embedding affects the clusters that each algorithm subsequently finds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span><span class="p">,</span> <span class="n">KernelPCA</span>
@@ -644,7 +646,15 @@ document.write(`
 <li><p><strong>Expectation</strong>: assign each point to the nearest centroid</p></li>
 <li><p><strong>Maximization</strong>: move each centroid to the mean of its assigned points</p></li>
 </ol>
-<p>These steps are repeated until the centroids no longer move. To make the mechanics concrete, here is a minimal implementation applied to the PCA-reduced Dow dataset:</p>
+<p>These steps are repeated until the centroids no longer move.</p>
+<figure class="align-default" id="fig-kmeans-anim">
+<a class="reference internal image-reference" href="../_images/kmeans.gif"><img alt="../_images/kmeans.gif" src="../_images/kmeans.gif" style="width: 55%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">k-means on three well-separated synthetic clusters. All three centroids are deliberately initialized inside a single blob; over a few iterations the expectation and maximization steps pull them apart until each settles on its own cluster.</span><a class="headerlink" href="#fig-kmeans-anim" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>To make the mechanics concrete, here is a minimal implementation applied to the PCA-reduced Dow dataset:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">dist</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
@@ -666,9 +676,9 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Animate four iterations of k-means from a deliberately poor initial guess</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show four iterations of k-means from a deliberately poor initial guess</span>
 <span class="n">X_km</span>    <span class="o">=</span> <span class="n">X_pca</span>
-<span class="n">centers</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">])]</span>
+<span class="n">centers</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])]</span>
 <span class="n">n_k</span>     <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
@@ -693,10 +703,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3ab794d2014b89160849f657a567c605baa848304cfd873f1075d85b6234565b.png" src="../_images/3ab794d2014b89160849f657a567c605baa848304cfd873f1075d85b6234565b.png" />
+<img alt="../_images/4fc8e701ac3c217426bcf81b97ce42fcc30966c9259a1a3f40e91324b2094672.png" src="../_images/4fc8e701ac3c217426bcf81b97ce42fcc30966c9259a1a3f40e91324b2094672.png" />
 </div>
 </div>
-<p>The X markers show old centroid positions; stars show updated positions. Even with a very poor initial guess (<code class="docutils literal notranslate"><span class="pre">[100,</span> <span class="pre">100]</span></code>), the centroids converge to the data within a few iterations.</p>
+<p>The X markers show old centroid positions; stars show updated positions. Even though all three centroids start clustered on the left side of the data, they redistribute over the first few iterations until each one settles into a distinct region — including the small isolated group near the right, which becomes its own cluster.</p>
 <p>In practice, use the scikit-learn implementation, which is substantially faster and more robust:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -744,7 +754,7 @@ document.write(`
 <p>The geometrically isolated cluster visible in the PCA scatter may represent an outlier operating regime. k-means assigns every point to a cluster and never flags outliers explicitly — if outlier detection is the goal, a density-based method is more appropriate.</p>
 </div>
 <p><strong>Demonstration: k-means with a convergence criterion</strong></p>
-<p>The scikit-learn implementation runs multiple random restarts and checks for convergence automatically. Below is a standalone implementation illustrating how a tolerance-based stopping criterion works:</p>
+<p>The animation above ran a fixed number of iterations, but in practice we do not know in advance how many are needed. The standard solution is a <strong>tolerance-based stopping criterion</strong>: stop as soon as the centroids move less than some small distance <code class="docutils literal notranslate"><span class="pre">tol</span></code> in an iteration, which signals that the algorithm has effectively converged. The implementation below adds exactly this check (and reports how many iterations it took), starting from the same poor initial guess as before:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">kmeans</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">initial_centers</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
@@ -764,7 +774,7 @@ document.write(`
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span>
 
 <span class="n">labels_custom</span><span class="p">,</span> <span class="n">centers_custom</span> <span class="o">=</span> <span class="n">kmeans</span><span class="p">(</span>
-    <span class="n">X_pca</span><span class="p">,</span> <span class="n">initial_centers</span><span class="o">=</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]))</span>
+    <span class="n">X_pca</span><span class="p">,</span> <span class="n">initial_centers</span><span class="o">=</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
@@ -778,10 +788,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Converged after 2 iterations (delta=0.0000)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Converged after 3 iterations (delta=0.0000)
 </pre></div>
 </div>
-<img alt="../_images/f4ee8190da3595d9d964ee232d5dc0f92f6d676f80c38abf999764e66c98751a.png" src="../_images/f4ee8190da3595d9d964ee232d5dc0f92f6d676f80c38abf999764e66c98751a.png" />
+<img alt="../_images/0ed223b1fbe50dc118fcf208320c3c7831d9457fe01e57d0e7d653efc0063990.png" src="../_images/0ed223b1fbe50dc118fcf208320c3c7831d9457fe01e57d0e7d653efc0063990.png" />
 </div>
 </div>
 <div class="exercise admonition" id="ex-eda-kmeans-elbow">
@@ -802,9 +812,10 @@ document.write(`
 <a class="reference internal image-reference" href="../_images/GMM.gif"><img alt="../_images/GMM.gif" src="../_images/GMM.gif" style="width: 60%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Illustration of the GMM expectation-maximization algorithm. Ellipses show the current Gaussian components; points are colored by their most probable cluster assignment. Over iterations the components shift to better describe the data.</span><a class="headerlink" href="#fig-gmm-em" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Illustration of the GMM expectation-maximization algorithm. Ellipses show the current Gaussian components; points are colored by their most probable cluster assignment. Over iterations the components shift to better describe the data.</span><a class="headerlink" href="#fig-gmm-em" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
+<p>GMMs are fit with the same expectation-maximization loop as k-means, but expressed in terms of probabilities. Two statistical terms recur. The <strong>posterior probability</strong> <span class="math notranslate nohighlight">\(\gamma_{ik}\)</span> is the probability that point <span class="math notranslate nohighlight">\(i\)</span> belongs to cluster <span class="math notranslate nohighlight">\(k\)</span> <em>given</em> the current model — computed with Bayes’ rule from the mixture weights and the Gaussian densities. <strong>Maximum likelihood</strong> estimation chooses the parameters (means, covariances, weights) that make the observed data most probable under the model. The two steps alternate: estimate the posteriors with the current parameters, then update the parameters to maximize the likelihood given those posteriors.</p>
 <p><strong>Expectation step</strong> — compute the posterior probability that point <span class="math notranslate nohighlight">\(i\)</span> belongs to cluster <span class="math notranslate nohighlight">\(k\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\gamma_{ik} = \frac{\phi_k \,\mathcal{N}(\mathbf{x}_i;\,\boldsymbol{\mu}_k,\,\boldsymbol{\Sigma}_k)}{\sum_j \phi_j \,\mathcal{N}(\mathbf{x}_i;\,\boldsymbol{\mu}_j,\,\boldsymbol{\Sigma}_j)}\]</div>
@@ -895,8 +906,9 @@ document.write(`
 <img alt="../_images/5010cc5c53d6c27d6c3ac6ab01a40a7bbff55f2b349126710ceba4f98d244257.png" src="../_images/5010cc5c53d6c27d6c3ac6ab01a40a7bbff55f2b349126710ceba4f98d244257.png" />
 </div>
 </div>
-<p>Unlike the silhouette score, BIC penalizes model complexity, so it is less prone to selecting too many clusters. The two criteria often disagree — using both in tandem gives a more balanced picture.</p>
+<p>Unlike the silhouette score, BIC explicitly penalizes model complexity by adding a term proportional to the number of parameters. In textbook cases with a few clean Gaussian clusters this keeps BIC from selecting too many components. On this dataset, however, BIC keeps decreasing well past a handful of components and only bottoms out around a dozen — because the Dow process data is not actually a small number of tidy Gaussians. Each extra component improves the likelihood more than the complexity penalty costs, so BIC is effectively using many Gaussians to approximate a continuous density rather than identifying a few “true” clusters. This is a useful reminder that these criteria answer “which model fits best,” not “how many real groups are there” — the two questions only coincide when the data genuinely is clustered. The silhouette score, which rewards compact well-separated groups, often prefers far fewer clusters; using both in tandem gives a more balanced picture.</p>
 <p><strong>Demonstration: filtering to well-defined cluster members</strong></p>
+<p>This demonstration puts the GMM’s mixed-membership probabilities to practical use. Because each point carries a full probability vector across clusters (not just a hard label), we can keep only the points the model is confident about — those whose highest cluster probability exceeds 0.95 — and discard ambiguous boundary points. This is a common way to extract a “clean core” of each operating regime before further analysis:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span>  <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -950,6 +962,13 @@ Silhouette (well-defined): 0.638
 <div class="math notranslate nohighlight">
 \[\mathbf{c}^{(t+1)} = \frac{\sum_{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq r} \mathbf{x}_i}{\left|\{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq r\}\right|}\]</div>
 <p>A key insight is that every data point can serve as an initial centroid. After convergence, nearby centroids are merged, and the resulting unique centroids define the clusters.</p>
+<figure class="align-default" id="fig-meanshift-anim">
+<a class="reference internal image-reference" href="../_images/meanshift.gif"><img alt="../_images/meanshift.gif" src="../_images/meanshift.gif" style="width: 55%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Mean shift on three synthetic clusters. Many candidate centroids (gold) each climb toward the nearest peak of point density; centroids that converge to the same location merge, so the number of clusters emerges from the bandwidth rather than being specified in advance.</span><a class="headerlink" href="#fig-meanshift-anim" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_new_centroid</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">x_list</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
@@ -1028,6 +1047,7 @@ Silhouette (well-defined): 0.638
 </div>
 </div>
 <p><strong>Demonstration: silhouette score vs. bandwidth</strong></p>
+<p>The bandwidth is mean shift’s single most important hyperparameter, and unlike k-means there is no <span class="math notranslate nohighlight">\(k\)</span> to set — the number of clusters is an <em>output</em> that depends on the bandwidth. This demonstration sweeps a range of bandwidths and tracks two things at once: how many clusters mean shift finds, and how good those clusters are (silhouette score). Together they show the trade-off — too small a bandwidth fragments the data into many clusters, too large a bandwidth merges everything into one:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bandwidths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
@@ -1073,7 +1093,7 @@ Silhouette (well-defined): 0.638
 <a class="reference internal image-reference" href="../_images/DBSCAN.gif"><img alt="../_images/DBSCAN.gif" src="../_images/DBSCAN.gif" style="width: 60%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Illustration of the DBSCAN algorithm. Core points (within a dense neighborhood) are shown in color; border points lie on the edge of a cluster; noise points remain gray.</span><a class="headerlink" href="#fig-dbscan-anim" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Illustration of the DBSCAN algorithm. Core points (within a dense neighborhood) are shown in color; border points lie on the edge of a cluster; noise points remain gray.</span><a class="headerlink" href="#fig-dbscan-anim" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The algorithm:</p>
@@ -1137,7 +1157,7 @@ Silhouette (well-defined): 0.638
 <a class="reference internal image-reference" href="../_images/bio_dendrogram.png"><img alt="../_images/bio_dendrogram.png" src="../_images/bio_dendrogram.png" style="width: 60%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 21 </span><span class="caption-text">A species dendrogram from biology. Choosing a different height for the horizontal cut yields different numbers of species clusters — the same principle applies to data clustering.</span><a class="headerlink" href="#fig-bio-dendrogram" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">A species dendrogram from biology. Choosing a different height for the horizontal cut yields different numbers of species clusters — the same principle applies to data clustering.</span><a class="headerlink" href="#fig-bio-dendrogram" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The <strong>linkage method</strong> controls how inter-cluster distance is computed when two clusters each contain multiple points:</p>
@@ -1210,6 +1230,32 @@ ward        cophenetic = 0.8213
 <img alt="../_images/6cdefd00bb5bb23bf986b75dbe7fffd68a9edef978257b43b8d06c904625ecee.png" src="../_images/6cdefd00bb5bb23bf986b75dbe7fffd68a9edef978257b43b8d06c904625ecee.png" />
 </div>
 </div>
+<p>With 2,060 points and a truncated dendrogram, it is hard to see how an individual point maps onto a dendrogram leaf. The mapping is easiest to grasp on a handful of labeled points: below we sample 15 points, label them in PC space, and show the full (untruncated) dendrogram using the same labels, so each leaf can be traced back to its location.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_hier</span><span class="p">),</span> <span class="mi">15</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">X_small</span> <span class="o">=</span> <span class="n">X_hier</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">Z_small</span> <span class="o">=</span> <span class="n">linkage</span><span class="p">(</span><span class="n">X_small</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_small</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_small</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X_small</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;15 sampled points (labeled)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;PC1&#39;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;PC2&#39;</span><span class="p">)</span>
+
+<span class="n">dendrogram</span><span class="p">(</span><span class="n">Z_small</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_small</span><span class="p">))],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Full dendrogram (same point labels)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Point index&#39;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Merge distance&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c94216d8c9a7213640f071c307223c38cc4ad48cbc31c63c33330d18fcd3a191.png" src="../_images/c94216d8c9a7213640f071c307223c38cc4ad48cbc31c63c33330d18fcd3a191.png" />
+</div>
+</div>
+<p>Tracing the labels between the two panels makes the correspondence concrete: points that join low in the tree (small merge distance) are near neighbors in the scatter, while points joined only near the top are far apart. The same logic scales to the full dataset — there are simply too many leaves to label individually.</p>
 </section>
 <section id="agglomerative-clustering">
 <h3>Agglomerative Clustering<a class="headerlink" href="#agglomerative-clustering" title="Link to this heading">#</a></h3>
@@ -1244,7 +1290,7 @@ ward        cophenetic = 0.8213
 <a class="reference internal image-reference" href="../_images/agglomerative.gif"><img alt="../_images/agglomerative.gif" src="../_images/agglomerative.gif" style="width: 70%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Animation of agglomerative hierarchical clustering. At each step the two closest clusters are merged. The horizontal cut height determines how many final clusters are produced.</span><a class="headerlink" href="#fig-agglomerative-anim" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Animation of agglomerative hierarchical clustering. At each step the two closest clusters are merged. The horizontal cut height determines how many final clusters are produced.</span><a class="headerlink" href="#fig-agglomerative-anim" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>An alternative to a manual cutoff is the <strong>inconsistency method</strong>, which detects jumps in merge distances:</p>
