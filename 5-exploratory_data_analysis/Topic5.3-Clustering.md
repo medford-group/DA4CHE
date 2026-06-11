@@ -187,7 +187,7 @@ The algorithm uses **expectation-maximization** in two alternating steps:
 
 These steps are repeated until the centroids no longer move.
 
-:::{figure} images/kmeans.gif
+:::{figure} images/kmeans_animation.gif
 :name: fig-kmeans-anim
 :width: 55%
 
@@ -323,7 +323,7 @@ $$P(\mathbf{x}) = \sum_k \phi_k \,\mathcal{N}(\mathbf{x};\, \boldsymbol{\mu}_k,\
 
 where $\phi_k$ are mixture weights ($\sum_k \phi_k = 1$), $\boldsymbol{\mu}_k$ is the cluster mean, and $\boldsymbol{\Sigma}_k$ is the covariance matrix.
 
-:::{figure} images/GMM.gif
+:::{figure} images/gmm_em_animation.gif
 :name: fig-gmm-em
 :width: 60%
 
@@ -450,7 +450,7 @@ $$\mathbf{c}^{(t+1)} = \frac{\sum_{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq 
 
 A key insight is that every data point can serve as an initial centroid. After convergence, nearby centroids are merged, and the resulting unique centroids define the clusters.
 
-:::{figure} images/meanshift.gif
+:::{figure} images/meanshift_animation.gif
 :name: fig-meanshift-anim
 :width: 55%
 
@@ -558,7 +558,7 @@ Extend the bandwidth sweep above to include `bandwidth=3` and `bandwidth=50`. Fo
 
 DBSCAN (Density-Based Spatial Clustering of Applications with Noise) defines clusters as dense regions of points connected through short-range neighborhoods. Unlike mean shift, DBSCAN can find clusters of arbitrary shape and explicitly marks low-density points as noise (label $-1$).
 
-:::{figure} images/DBSCAN.gif
+:::{figure} images/dbscan_animation.gif
 :name: fig-dbscan-anim
 :width: 60%
 
@@ -614,7 +614,7 @@ A **dendrogram** is a tree diagram that visualizes hierarchical cluster structur
 
 A familiar example from biology:
 
-:::{figure} images/bio_dendrogram.png
+:::{figure} images/species_dendrogram.png
 :name: fig-bio-dendrogram
 :width: 60%
 
@@ -705,7 +705,7 @@ for ax, labs, title in zip(axes[1:],
 plt.tight_layout()
 ```
 
-:::{figure} images/agglomerative.gif
+:::{figure} images/agglomerative_animation.gif
 :name: fig-agglomerative-anim
 :width: 70%
 

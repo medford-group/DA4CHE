@@ -29,12 +29,14 @@ def fig_to_img(fig):
     return Image.open(buf).convert("RGB")
 
 
-def save_gif(frames, path, duration=160):
+def save_gif(frames, path, duration=550, end_hold=2000):
     # quantize all frames to a single 64-color palette for a small, flicker-free GIF
     pal = frames[0].convert("P", palette=Image.ADAPTIVE, colors=64)
     q = [f.quantize(palette=pal, dither=Image.NONE) for f in frames]
+    # slow base frame rate so students can follow; hold the final frame longer
+    durations = [duration] * (len(q) - 1) + [end_hold]
     q[0].save(path, save_all=True, append_images=q[1:],
-              duration=duration, loop=0, optimize=True)
+              duration=durations, loop=0, optimize=True)
     import os
     print(f"  {os.path.basename(path)}: {os.path.getsize(path)/1024:.0f} KB, {len(frames)} frames")
 
@@ -70,7 +72,7 @@ def kmeans_gif():
         if np.allclose(new, centers):
             frames.append(frames[-1]); break
         centers = new
-    save_gif(frames, f"{OUT}/kmeans.gif")
+    save_gif(frames, f"{OUT}/kmeans_animation.gif")
 
 
 # ── 2. GMM expectation-maximization ─────────────────────────────────────────
@@ -96,19 +98,20 @@ def gmm_gif():
             ax.plot(*gm.means_[k], 'k*', ms=12, mec='w')
         ax.set_title(f'GMM (EM) — iteration {it + 1}'); ax.set_xticks([]); ax.set_yticks([])
         frames.append(fig_to_img(fig))
-    save_gif(frames, f"{OUT}/GMM.gif")
+    save_gif(frames, f"{OUT}/gmm_em_animation.gif")
 
 
 # ── 3. mean-shift convergence ───────────────────────────────────────────────
 def meanshift_gif():
-    centers = np.array([[-4.0, -4.0], [4.5, -1.0], [0.0, 5.0]])   # match GMM: 3 separated blobs
-    X, _ = make_blobs(n_samples=250, centers=centers, cluster_std=0.8, random_state=5)
-    r = 2.5
+    centers = np.array([[-3.0, -2.0], [3.0, -2.0], [0.0, 3.2]])   # blobs with overlapping edges
+    X, ylab = make_blobs(n_samples=260, centers=centers, cluster_std=1.1, random_state=5)
+    r = 2.6
     seeds = X[::8].copy().astype(float)   # a subset of points as moving centroids
     frames = []
-    for it in range(12):
+    for it in range(15):
         fig, ax = plt.subplots(figsize=(3.6, 3.6))
-        ax.scatter(X[:, 0], X[:, 1], c='0.8', s=12)
+        # faint true groups so the overlap between clusters is visible
+        ax.scatter(X[:, 0], X[:, 1], c=CLRS[ylab], s=12, alpha=0.25)
         ax.scatter(seeds[:, 0], seeds[:, 1], c=CLRS[1], s=40, edgecolors='k', zorder=5)
         ax.set_title(f'mean shift — iteration {it}'); ax.set_xticks([]); ax.set_yticks([])
         frames.append(fig_to_img(fig))
@@ -120,7 +123,7 @@ def meanshift_gif():
         if np.allclose(new, seeds, atol=1e-3):
             frames.append(frames[-1]); break
         seeds = new
-    save_gif(frames, f"{OUT}/meanshift.gif")
+    save_gif(frames, f"{OUT}/meanshift_animation.gif")
 
 
 # ── 4. DBSCAN (moons: arbitrary shapes + noise) ─────────────────────────────
@@ -145,7 +148,7 @@ def dbscan_gif():
         ax.set_xticks([]); ax.set_yticks([])
         frames.append(fig_to_img(fig))
     frames += [frames[-1]] * 3
-    save_gif(frames, f"{OUT}/DBSCAN.gif")
+    save_gif(frames, f"{OUT}/dbscan_animation.gif", duration=320)
 
 
 # ── 5. agglomerative merging ────────────────────────────────────────────────
@@ -180,7 +183,7 @@ def agglomerative_gif():
         nid += 1
         draw()
     frames += [frames[-1]] * 3
-    save_gif(frames, f"{OUT}/agglomerative.gif", duration=400)
+    save_gif(frames, f"{OUT}/agglomerative_animation.gif", duration=320)
 
 
 # ── 6. toy species dendrogram (static) ──────────────────────────────────────
@@ -197,10 +200,10 @@ def bio_dendrogram():
     ax.set_ylabel('Distance')
     ax.set_title('Illustrative species dendrogram')
     fig.tight_layout()
-    fig.savefig(f"{OUT}/bio_dendrogram.png", dpi=110)
+    fig.savefig(f"{OUT}/species_dendrogram.png", dpi=110)
     plt.close(fig)
     import os
-    print(f"  bio_dendrogram.png: {os.path.getsize(f'{OUT}/bio_dendrogram.png')/1024:.0f} KB")
+    print(f"  species_dendrogram.png: {os.path.getsize(f'{OUT}/species_dendrogram.png')/1024:.0f} KB")
 
 
 if __name__ == "__main__":
