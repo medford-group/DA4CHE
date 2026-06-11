@@ -115,14 +115,28 @@ def stress(X_reduced, X):
 Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.
 
 :::{exercise}
-:label: ex-eda-dim-metrics
+:label: ex-eda-stress-variance
 
-Using the MNIST dataset and the `stress` function defined above, compute the stress for a random 2D projection (generate a random 64×2 matrix with `np.random.default_rng(0).normal(size=(64, 2))` and project `X_mnist` onto it). Compare this to the stress of the PCA 2D projection computed later in this chapter. What does the difference tell you about why PCA is preferred over a random projection?
+Retained variance and stress do not always agree. Consider the three vertices of an equilateral triangle centered at the origin:
+
+```python
+tri = np.array([[0, 1],
+                [-np.sqrt(3)/2, -0.5],
+                [ np.sqrt(3)/2, -0.5]])
+```
+
+(a) Project these points onto the $x$-axis and onto the $y$-axis (a 1D projection in each case), and verify that the **projected variance is identical** for the two directions. (In fact, this configuration has the same variance along *every* direction — try a few others to convince yourself.)
+
+(b) Using the `stress` function defined above, compute the stress of each projection. (Hint: `pdist` expects a 2D array, so reshape each projection with `.reshape(-1, 1)`.) Which direction preserves the triangle's geometry better?
+
+(c) Retained variance cannot distinguish these two projections, but stress can. Explain in one or two sentences what stress "sees" that variance does not.
 :::
 
 ## Principal Component Analysis (PCA)
 
-PCA finds an orthonormal set of directions — the **principal components** — along which the variance of the data is maximized. The principal components are the eigenvectors of the sample covariance matrix, sorted by decreasing eigenvalue (variance).
+PCA may already be familiar from the regression module, where we used it to build principal component regression models. Here we slow down and take a closer look at how it actually works, because the ideas behind it — variance, covariance, and eigendecomposition — are the foundation for almost every other method in this chapter.
+
+The central idea is simple to state: PCA finds an orthonormal set of directions — the **principal components** — along which the variance of the data is maximized. The first component points in the direction of greatest spread, the second in the direction of greatest remaining spread perpendicular to the first, and so on. These directions turn out to be the eigenvectors of the sample covariance matrix, sorted by decreasing eigenvalue, so we can compute them with the linear algebra tools from Module 1.
 
 ### The Covariance Matrix
 
@@ -141,7 +155,7 @@ ax.set_title('MNIST covariance matrix')
 
 ### Eigendecomposition
 
-The principal components are the eigenvectors of $C$, sorted by decreasing eigenvalue. Each eigenvalue equals the variance of the data projected onto the corresponding eigenvector.
+The principal components are the eigenvectors of $C$, sorted by decreasing eigenvalue. Each eigenvalue equals the variance of the data projected onto the corresponding eigenvector. To see why, project the (centered) data onto a unit eigenvector $\mathbf{v}$: the projected values are $X\mathbf{v}$, and their variance is $\mathbf{v}^T C \mathbf{v} = \lambda \mathbf{v}^T \mathbf{v} = \lambda$. Conceptually, the covariance matrix stretches any direction by an amount that reflects the spread of the data along it; an eigenvector is a direction that gets stretched without being rotated, so its stretch factor $\lambda$ *is* the variance in that direction.
 
 ```{code-cell} ipython3
 eig_vals, eig_vecs = np.linalg.eig(C)
@@ -165,7 +179,7 @@ The pattern is clearly not random — it reflects the global structure shared ac
 
 **Demonstration: Rank of the covariance matrix**
 
-The rank of a matrix equals the number of non-zero eigenvalues. For MNIST, the data has 1,797 samples and 64 features, so the covariance matrix can have rank at most $\min(1797-1, 64) = 63$.
+The rank of a matrix equals the number of non-zero eigenvalues. For MNIST, the data has 1,797 samples and 64 features, so the covariance matrix can have rank at most $\min(1797-1, 64) = 64$. (The $-1$ arises because subtracting the mean removes one independent direction — a covariance matrix built from $n$ samples has rank at most $n-1$. With far more samples than features here, the binding limit is the 64 features.)
 
 ```{code-cell} ipython3
 print(f'Rank of covariance matrix: {np.linalg.matrix_rank(C)}')
@@ -178,7 +192,9 @@ The rank equals the number of non-zero (or numerically non-negligible) eigenvalu
 
 ### Dimensionality Reduction as Low-Rank Approximation
 
-PCA finds the best rank-$k$ approximation of the data matrix $\mathbf{X}$ in the Frobenius norm sense:
+It is worth pausing to notice that so far we have not reduced the dimensionality at all. We have only found a new orthonormal set of axes aligned with the data and rotated the data onto them — all 64 dimensions are still there. The reduction happens when we *keep only the first $k$ of these new axes* and discard the rest. Because the axes are sorted by variance, dropping the trailing ones throws away as little structure as possible.
+
+This intuition can be made precise: PCA finds the best rank-$k$ approximation of the data matrix $\mathbf{X}$ in the Frobenius norm sense:
 
 $$\min_{\mathbf{A}}\; \|\mathbf{X} - \mathbf{A}\|_F \quad \text{subject to } \operatorname{rank}(\mathbf{A}) \leq k$$
 
@@ -237,7 +253,7 @@ Stress decreases monotonically as more components are included. It drops quickly
 
 ### 2D Projection and Visualization
 
-Projecting onto the first two principal components allows direct visualization:
+One of the most common uses of PCA is to project all the way down to two dimensions so the data can be plotted. Each 64-pixel image becomes a single point whose coordinates are its scores along the two highest-variance directions — in effect, the two-number summary of each image that loses the least information. Plotting these points reveals structure that is impossible to see in the raw 64-dimensional data:
 
 ```{code-cell} ipython3
 k = 2
@@ -275,7 +291,7 @@ The reconstruction captures the essential shape of the digit while discarding fi
 
 **Demonstration: Generating an "average" digit**
 
-Because PCA is invertible, we can generate synthetic examples by averaging the low-dimensional representations of a class and projecting back to pixel space:
+Because PCA is invertible, **any** point in the low-dimensional space can be projected back to pixel space — not just points that came from real images. This means we can construct entirely new examples. The "average" digits below never existed in the dataset: for each class we average the low-dimensional representations of its members, producing a new point in the reduced space, and then project that point back to 64 pixels. This is a first taste of a *generative* model — an idea we will develop properly in the Generative Models chapter:
 
 ```{code-cell} ipython3
 for target_digit in [0, 8]:
@@ -367,7 +383,7 @@ The two curves overlap almost exactly. The main trade-off is that `IncrementalPC
 
 ## Kernel PCA
 
-Kernel PCA extends PCA to nonlinear settings using the kernel trick. Instead of the covariance matrix, it works with a **kernel matrix**:
+The solution to PCA's linearity limitation is a familiar one: the **kernel trick**, which we met with support vector machines in [Generalized Linear Models](../3-classification/Topic3.2-Generalized_Linear_Models). The idea, briefly: instead of explicitly constructing a nonlinear feature transformation, we work with a matrix of pairwise *similarities* between points, which implicitly corresponds to operating in a much higher-dimensional feature space. Kernel PCA applies this same move to PCA — instead of the covariance matrix, it eigendecomposes a **kernel matrix**:
 
 $$K_{ij} = \kappa(\mathbf{x}_i, \mathbf{x}_j)$$
 
@@ -404,7 +420,7 @@ plt.tight_layout()
 
 Linear PCA cannot separate the two moon-shaped classes because the decision boundary is not linear. Kernel PCA with the RBF kernel maps the data to a higher-dimensional space where the classes become linearly separable, then projects back to 2D.
 
-Kernel PCA is also invertible (when `fit_inverse_transform=True`):
+Kernel PCA is also invertible (when `fit_inverse_transform=True`), but with an important caveat:
 
 ```{code-cell} ipython3
 X_pca_recon  = pca_lin.inverse_transform(X_pca)
@@ -418,6 +434,8 @@ for ax, X_plot, title in zip(axes,
     ax.set_title(title)
 plt.tight_layout()
 ```
+
+Compare the two reconstructions to the original. Linear PCA with both components retained reproduces the data exactly — the transform is just a rotation, so inverting it loses nothing. The kernel PCA reconstruction, in contrast, is visibly distorted: the moons are recognizable but warped. The nonlinear mapping into the implicit feature space is not exactly reversible — `inverse_transform` only *approximates* a pre-image of each point, and some information is lost in the round trip. Kernel PCA is therefore "invertible" only in this approximate sense, which is what the comparison table at the end of the chapter means by "Yes (approx.)".
 
 :::{exercise}
 :label: ex-eda-kpca-gamma
@@ -433,11 +451,11 @@ PCA has many variants worth knowing:
 - **Partial Least Squares (PLS)** — supervised variant that maximizes the covariance between the projected inputs and the target variable, rather than maximizing variance in the inputs alone
 - **Linear Discriminant Analysis (LDA)** — supervised variant that maximizes the ratio of between-class to within-class variance, making it directly useful for classification
 
-We will revisit PLS and LDA in later modules.
+Both supervised variants have already appeared in this course: PLS was introduced in [High-Dimensional Regression](../2-regression/Topic2.5-High_dimensional_regression) and LDA in [High-Dimensional Classification](../3-classification/Topic3.4-High-dimensional_Classification). It is worth revisiting those sections with fresh eyes now that the eigendecomposition machinery behind PCA is familiar.
 
 ## Manifold Learning
 
-Manifold learning approaches use pairwise **distance metrics** rather than variance to define structure. The goal is to find a low-dimensional embedding that preserves distances as faithfully as possible. This makes them well-suited for nonlinear data where the true structure lies on a curved surface (manifold) embedded in the high-dimensional space.
+Manifold learning approaches use pairwise **distance metrics** rather than variance to define structure. The goal is to find a low-dimensional embedding that preserves distances as faithfully as possible. The advantage of working with distances rather than variance is that distances capture the *local* structure of the data — which points are near which — and this local structure can be exploited even when the global shape is highly nonlinear. This makes manifold methods well-suited for data whose true structure lies on a curved surface (a *manifold*) embedded in the high-dimensional space: think of points scattered along a rolled-up sheet, where straight-line variance directions cut across the roll but local distances follow it.
 
 ### Multi-Dimensional Scaling (MDS)
 
@@ -469,55 +487,37 @@ MDS directly optimizes stress and therefore achieves lower stress than PCA, but 
 
 ### t-SNE
 
-t-distributed Stochastic Neighbor Embedding (**t-SNE**) uses a probabilistic similarity measure based on the t-distribution. Points that are nearby in the original space are given high probability of being neighbors in the low-dimensional space, while distant points are pushed apart. This makes t-SNE particularly effective at revealing local cluster structure.
+t-distributed Stochastic Neighbor Embedding (**t-SNE**) uses a probabilistic similarity measure based on the t-distribution: points that are nearby in the original space are given high probability of being neighbors in the embedding, while distant points are pushed apart. For roughly a decade it was the default tool for visualizing high-dimensional data, and you will encounter it constantly in the literature — though for new work it has largely been superseded by UMAP (next section), which is faster and preserves global structure better.
+
+The standard recipe is to first reduce the data to 30–50 components with PCA (retaining most of the variance) and then run t-SNE on the reduced representation — computing pairwise similarities in the full 64-dimensional space is slow and adds little:
 
 ```{code-cell} ipython3
 from sklearn.manifold import TSNE
 
-tsne = TSNE(n_components=2, perplexity=30.0,
-            early_exaggeration=12.0,
-            learning_rate=200.0,
-            max_iter=1000,
-            init='random',
-            method='exact')
+pca_pre = PCA(n_components=30)
+X_pca_pre = pca_pre.fit_transform(X_mnist)
 
-X_tsne = tsne.fit_transform(X_mnist)
+tsne = TSNE(n_components=2, perplexity=30.0,
+            learning_rate=200.0, max_iter=1000,
+            init='random', random_state=42)
+X_tsne = tsne.fit_transform(X_pca_pre)
 
 fig, ax = plt.subplots()
 sc = ax.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
 fig.colorbar(sc, ax=ax, label='Digit')
-ax.set_title('t-SNE — MNIST')
-print(f'Stress: {stress(X_tsne, X_mnist):.4f}')
-```
-
-t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.
-
-:::{note}
-**t-SNE hyperparameters:** `perplexity` (roughly, the number of effective nearest neighbors; typically 5–50) is the most important parameter to tune. `learning_rate` and `max_iter` also affect results. t-SNE is sensitive to initialization and is not deterministic unless `random_state` is set. It is best used for visualization only — global distances between clusters are not meaningful.
-:::
-
-**Practical tip: pre-process with PCA before t-SNE.** Running t-SNE directly on 64-dimensional data is slow because pairwise distances must be computed in the full space. A common best practice is to first reduce to 30–50 components with PCA (retaining >95% of variance) and then run t-SNE on the reduced representation. This dramatically speeds up t-SNE without meaningfully changing the embedding:
-
-```{code-cell} ipython3
-pca_pre = PCA(n_components=30)
-X_pca_pre = pca_pre.fit_transform(X_mnist)
-
-tsne_fast = TSNE(n_components=2, perplexity=30.0,
-                 learning_rate=200.0, max_iter=1000,
-                 init='random', random_state=42)
-X_tsne_fast = tsne_fast.fit_transform(X_pca_pre)
-
-fig, ax = plt.subplots()
-sc = ax.scatter(X_tsne_fast[:, 0], X_tsne_fast[:, 1],
-                c=y_mnist, cmap='tab10', s=5, alpha=0.7)
-fig.colorbar(sc, ax=ax, label='Digit')
 ax.set_title('t-SNE on PCA-reduced MNIST (30 components)')
 ```
+
+t-SNE produces well-separated clusters on image data, though the axes have no interpretable meaning.
+
+:::{note}
+**t-SNE hyperparameters:** t-SNE has many hyperparameters without clear physical meaning, and results depend on all of them. `perplexity` (roughly, the number of effective nearest neighbors; typically 5–50) is the most important to tune; `learning_rate` and `max_iter` also affect results, and the embedding is not deterministic unless `random_state` is set. PCA pre-reduction to ~30–50 components (as above) is standard practice and should be considered part of the recipe. Use t-SNE for visualization only — global distances between clusters in the embedding are not meaningful.
+:::
 
 :::{exercise}
 :label: ex-eda-tsne-perp
 
-Run t-SNE on the MNIST dataset with `perplexity` values of 5, 30, and 100 (keep all other parameters fixed, and set `random_state=42`). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?
+Using the PCA-reduced MNIST data (`X_pca_pre` above), run t-SNE with `perplexity` values of 5, 30, and 100 (keep all other parameters fixed, and set `random_state=42`). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?
 :::
 
 ### UMAP
@@ -582,11 +582,7 @@ PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon
 
 The key idea is to compute a **diffusion operator** that models how information spreads through the data manifold, then embed points based on their *potential distances* under this diffusion. This captures multi-scale structure: fine local neighborhoods and broad global trajectories are both represented faithfully.
 
-In chemical engineering, PHATE is especially relevant for:
-
-- Time-series process data where plant states evolve continuously (startup, shutdown, grade transitions)
-- Reaction pathway analysis where the system passes through a sequence of intermediate compositions
-- Materials datasets where processing conditions trace a route through composition or microstructure space
+PHATE was developed for single-cell genomics, where cells trace continuous developmental trajectories rather than falling into discrete groups. Analogous trajectory structure plausibly arises in chemical engineering data — plant states evolving through startup, shutdown, or grade transitions; reaction pathways passing through a sequence of intermediate compositions; processing conditions tracing a route through composition space — though published applications in this space are still rare. Treat PHATE as a tool worth trying when your data has a path-like character rather than discrete clusters, not as an established ChE workhorse.
 
 ```{code-cell} ipython3
 import phate
@@ -748,7 +744,7 @@ Beyond the bottleneck size, neural network performance is highly sensitive to a 
 :::{exercise}
 :label: ex-eda-autoencoder-design
 
-Consider a dataset with 100 features. You want to use an autoencoder to compress it to a 5-dimensional latent space. (a) Sketch an encoder architecture with two hidden layers, specifying reasonable layer widths. (b) If you instead used PCA for the same 5-component reduction and found that 5 PCs retain only 40% of variance, would you expect an autoencoder to do better or worse? What assumption does PCA make that the autoencoder does not? (c) Name one practical disadvantage of the autoencoder approach for a dataset with only 500 observations.
+Sketch an autoencoder architecture that compresses a 20-dimensional input into a 3-dimensional latent space, specifying the width of each encoder and decoder layer.
 :::
 
 
@@ -760,7 +756,7 @@ Consider a dataset with 100 features. You want to use an autoencoder to compress
 - A **scree plot** of cumulative explained variance guides the choice of the number of components $k$.
 - **Kernel PCA** extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter $\gamma$ controls the locality of the similarity measure.
 - **Manifold learning** methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as $O(N^2)$.
-- **t-SNE** produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. Pre-reducing with PCA (to ~30 components) before running t-SNE is a standard speed-up.
+- **t-SNE** produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. PCA pre-reduction (to ~30 components) is part of the standard recipe. For new work it has largely been superseded by UMAP.
 - **Incremental PCA** (`IncrementalPCA`) fits PCA in mini-batches and is the go-to choice for datasets too large to fit in memory; results are nearly identical to full SVD-based PCA.
 - **UMAP** is faster than t-SNE, better preserves global structure, and is projectable — it is the current best practice for visualization and nonlinear feature extraction.
 - **PHATE** uses heat diffusion to capture trajectory and branching structure; it is particularly suited for process data with continuous state transitions or reaction pathway data.

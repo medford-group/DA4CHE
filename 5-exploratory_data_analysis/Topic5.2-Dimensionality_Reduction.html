@@ -526,11 +526,19 @@ document.write(`
 <section id="visualization-and-model-performance">
 <h4>Visualization and Model Performance<a class="headerlink" href="#visualization-and-model-performance" title="Link to this heading">#</a></h4>
 <p>Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.</p>
-<div class="exercise admonition" id="ex-eda-dim-metrics">
+<div class="exercise admonition" id="ex-eda-stress-variance">
 
 <p class="admonition-title"><span class="caption-number">Exercise 80 </span></p>
 <section id="exercise-content">
-<p>Using the MNIST dataset and the <code class="docutils literal notranslate"><span class="pre">stress</span></code> function defined above, compute the stress for a random 2D projection (generate a random 64×2 matrix with <code class="docutils literal notranslate"><span class="pre">np.random.default_rng(0).normal(size=(64,</span> <span class="pre">2))</span></code> and project <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> onto it). Compare this to the stress of the PCA 2D projection computed later in this chapter. What does the difference tell you about why PCA is preferred over a random projection?</p>
+<p>Retained variance and stress do not always agree. Consider the three vertices of an equilateral triangle centered at the origin:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+                <span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>(a) Project these points onto the <span class="math notranslate nohighlight">\(x\)</span>-axis and onto the <span class="math notranslate nohighlight">\(y\)</span>-axis (a 1D projection in each case), and verify that the <strong>projected variance is identical</strong> for the two directions. (In fact, this configuration has the same variance along <em>every</em> direction — try a few others to convince yourself.)</p>
+<p>(b) Using the <code class="docutils literal notranslate"><span class="pre">stress</span></code> function defined above, compute the stress of each projection. (Hint: <code class="docutils literal notranslate"><span class="pre">pdist</span></code> expects a 2D array, so reshape each projection with <code class="docutils literal notranslate"><span class="pre">.reshape(-1,</span> <span class="pre">1)</span></code>.) Which direction preserves the triangle’s geometry better?</p>
+<p>(c) Retained variance cannot distinguish these two projections, but stress can. Explain in one or two sentences what stress “sees” that variance does not.</p>
 </section>
 </div>
 </section>
@@ -538,7 +546,8 @@ document.write(`
 </section>
 <section id="principal-component-analysis-pca">
 <h2>Principal Component Analysis (PCA)<a class="headerlink" href="#principal-component-analysis-pca" title="Link to this heading">#</a></h2>
-<p>PCA finds an orthonormal set of directions — the <strong>principal components</strong> — along which the variance of the data is maximized. The principal components are the eigenvectors of the sample covariance matrix, sorted by decreasing eigenvalue (variance).</p>
+<p>PCA may already be familiar from the regression module, where we used it to build principal component regression models. Here we slow down and take a closer look at how it actually works, because the ideas behind it — variance, covariance, and eigendecomposition — are the foundation for almost every other method in this chapter.</p>
+<p>The central idea is simple to state: PCA finds an orthonormal set of directions — the <strong>principal components</strong> — along which the variance of the data is maximized. The first component points in the direction of greatest spread, the second in the direction of greatest remaining spread perpendicular to the first, and so on. These directions turn out to be the eigenvectors of the sample covariance matrix, sorted by decreasing eigenvalue, so we can compute them with the linear algebra tools from Module 1.</p>
 <section id="the-covariance-matrix">
 <h3>The Covariance Matrix<a class="headerlink" href="#the-covariance-matrix" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
@@ -566,7 +575,7 @@ document.write(`
 </section>
 <section id="eigendecomposition">
 <h3>Eigendecomposition<a class="headerlink" href="#eigendecomposition" title="Link to this heading">#</a></h3>
-<p>The principal components are the eigenvectors of <span class="math notranslate nohighlight">\(C\)</span>, sorted by decreasing eigenvalue. Each eigenvalue equals the variance of the data projected onto the corresponding eigenvector.</p>
+<p>The principal components are the eigenvectors of <span class="math notranslate nohighlight">\(C\)</span>, sorted by decreasing eigenvalue. Each eigenvalue equals the variance of the data projected onto the corresponding eigenvector. To see why, project the (centered) data onto a unit eigenvector <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>: the projected values are <span class="math notranslate nohighlight">\(X\mathbf{v}\)</span>, and their variance is <span class="math notranslate nohighlight">\(\mathbf{v}^T C \mathbf{v} = \lambda \mathbf{v}^T \mathbf{v} = \lambda\)</span>. Conceptually, the covariance matrix stretches any direction by an amount that reflects the spread of the data along it; an eigenvector is a direction that gets stretched without being rotated, so its stretch factor <span class="math notranslate nohighlight">\(\lambda\)</span> <em>is</em> the variance in that direction.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
@@ -595,7 +604,7 @@ document.write(`
 </div>
 <p>The pattern is clearly not random — it reflects the global structure shared across digit images.</p>
 <p><strong>Demonstration: Rank of the covariance matrix</strong></p>
-<p>The rank of a matrix equals the number of non-zero eigenvalues. For MNIST, the data has 1,797 samples and 64 features, so the covariance matrix can have rank at most <span class="math notranslate nohighlight">\(\min(1797-1, 64) = 63\)</span>.</p>
+<p>The rank of a matrix equals the number of non-zero eigenvalues. For MNIST, the data has 1,797 samples and 64 features, so the covariance matrix can have rank at most <span class="math notranslate nohighlight">\(\min(1797-1, 64) = 64\)</span>. (The <span class="math notranslate nohighlight">\(-1\)</span> arises because subtracting the mean removes one independent direction — a covariance matrix built from <span class="math notranslate nohighlight">\(n\)</span> samples has rank at most <span class="math notranslate nohighlight">\(n-1\)</span>. With far more samples than features here, the binding limit is the 64 features.)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Rank of covariance matrix: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -617,7 +626,8 @@ Smallest eigenvalue:       0.0000
 </section>
 <section id="dimensionality-reduction-as-low-rank-approximation">
 <h3>Dimensionality Reduction as Low-Rank Approximation<a class="headerlink" href="#dimensionality-reduction-as-low-rank-approximation" title="Link to this heading">#</a></h3>
-<p>PCA finds the best rank-<span class="math notranslate nohighlight">\(k\)</span> approximation of the data matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> in the Frobenius norm sense:</p>
+<p>It is worth pausing to notice that so far we have not reduced the dimensionality at all. We have only found a new orthonormal set of axes aligned with the data and rotated the data onto them — all 64 dimensions are still there. The reduction happens when we <em>keep only the first <span class="math notranslate nohighlight">\(k\)</span> of these new axes</em> and discard the rest. Because the axes are sorted by variance, dropping the trailing ones throws away as little structure as possible.</p>
+<p>This intuition can be made precise: PCA finds the best rank-<span class="math notranslate nohighlight">\(k\)</span> approximation of the data matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> in the Frobenius norm sense:</p>
 <div class="math notranslate nohighlight">
 \[\min_{\mathbf{A}}\; \|\mathbf{X} - \mathbf{A}\|_F \quad \text{subject to } \operatorname{rank}(\mathbf{A}) \leq k\]</div>
 <p>where <span class="math notranslate nohighlight">\(\|\mathbf{M}\|_F = \sqrt{\sum_{i,j} M_{ij}^2}\)</span>. The solution is to project <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> onto the top <span class="math notranslate nohighlight">\(k\)</span> eigenvectors of the covariance matrix. Reducing <span class="math notranslate nohighlight">\(k\)</span> compresses the data; the fraction of variance retained is <span class="math notranslate nohighlight">\(\sum_{i=1}^k \lambda_i / \sum_{i=1}^n \lambda_i\)</span>.</p>
@@ -657,7 +667,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12e054400&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x133d84cd0&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -701,7 +711,7 @@ Smallest eigenvalue:       0.0000
 </section>
 <section id="d-projection-and-visualization">
 <h3>2D Projection and Visualization<a class="headerlink" href="#d-projection-and-visualization" title="Link to this heading">#</a></h3>
-<p>Projecting onto the first two principal components allows direct visualization:</p>
+<p>One of the most common uses of PCA is to project all the way down to two dimensions so the data can be plotted. Each 64-pixel image becomes a single point whose coordinates are its scores along the two highest-variance directions — in effect, the two-number summary of each image that loses the least information. Plotting these points reveals structure that is impossible to see in the raw 64-dimensional data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
@@ -750,7 +760,7 @@ Smallest eigenvalue:       0.0000
 </div>
 <p>The reconstruction captures the essential shape of the digit while discarding fine detail — analogous to image compression. Noise components, which tend to be random and spread across many principal components, are also suppressed in the reconstruction.</p>
 <p><strong>Demonstration: Generating an “average” digit</strong></p>
-<p>Because PCA is invertible, we can generate synthetic examples by averaging the low-dimensional representations of a class and projecting back to pixel space:</p>
+<p>Because PCA is invertible, <strong>any</strong> point in the low-dimensional space can be projected back to pixel space — not just points that came from real images. This means we can construct entirely new examples. The “average” digits below never existed in the dataset: for each class we average the low-dimensional representations of its members, producing a new point in the reduced space, and then project that point back to 64 pixels. This is a first taste of a <em>generative</em> model — an idea we will develop properly in the Generative Models chapter:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">target_digit</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">]:</span>
@@ -809,7 +819,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x139edcc10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x141c60c10&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -868,7 +878,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12fae2c20&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1354d9900&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -879,7 +889,7 @@ Retained variance: 0.890
 </section>
 <section id="kernel-pca">
 <h2>Kernel PCA<a class="headerlink" href="#kernel-pca" title="Link to this heading">#</a></h2>
-<p>Kernel PCA extends PCA to nonlinear settings using the kernel trick. Instead of the covariance matrix, it works with a <strong>kernel matrix</strong>:</p>
+<p>The solution to PCA’s linearity limitation is a familiar one: the <strong>kernel trick</strong>, which we met with support vector machines in <a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html"><span class="doc std std-doc">Generalized Linear Models</span></a>. The idea, briefly: instead of explicitly constructing a nonlinear feature transformation, we work with a matrix of pairwise <em>similarities</em> between points, which implicitly corresponds to operating in a much higher-dimensional feature space. Kernel PCA applies this same move to PCA — instead of the covariance matrix, it eigendecomposes a <strong>kernel matrix</strong>:</p>
 <div class="math notranslate nohighlight">
 \[K_{ij} = \kappa(\mathbf{x}_i, \mathbf{x}_j)\]</div>
 <p>where <span class="math notranslate nohighlight">\(\kappa\)</span> is a kernel function. For the radial basis function (RBF) kernel:</p>
@@ -918,7 +928,7 @@ Retained variance: 0.890
 </div>
 </div>
 <p>Linear PCA cannot separate the two moon-shaped classes because the decision boundary is not linear. Kernel PCA with the RBF kernel maps the data to a higher-dimensional space where the classes become linearly separable, then projects back to 2D.</p>
-<p>Kernel PCA is also invertible (when <code class="docutils literal notranslate"><span class="pre">fit_inverse_transform=True</span></code>):</p>
+<p>Kernel PCA is also invertible (when <code class="docutils literal notranslate"><span class="pre">fit_inverse_transform=True</span></code>), but with an important caveat:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_pca_recon</span>  <span class="o">=</span> <span class="n">pca_lin</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">X_pca</span><span class="p">)</span>
@@ -938,6 +948,7 @@ Retained variance: 0.890
 <img alt="../_images/45178f41e23b0e3a6282e6e79bbc8262db6b35bdeb53752338b4746afb8f8c35.png" src="../_images/45178f41e23b0e3a6282e6e79bbc8262db6b35bdeb53752338b4746afb8f8c35.png" />
 </div>
 </div>
+<p>Compare the two reconstructions to the original. Linear PCA with both components retained reproduces the data exactly — the transform is just a rotation, so inverting it loses nothing. The kernel PCA reconstruction, in contrast, is visibly distorted: the moons are recognizable but warped. The nonlinear mapping into the implicit feature space is not exactly reversible — <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> only <em>approximates</em> a pre-image of each point, and some information is lost in the round trip. Kernel PCA is therefore “invertible” only in this approximate sense, which is what the comparison table at the end of the chapter means by “Yes (approx.)”.</p>
 <div class="exercise admonition" id="ex-eda-kpca-gamma">
 
 <p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
@@ -953,12 +964,12 @@ Retained variance: 0.890
 <li><p><strong>Partial Least Squares (PLS)</strong> — supervised variant that maximizes the covariance between the projected inputs and the target variable, rather than maximizing variance in the inputs alone</p></li>
 <li><p><strong>Linear Discriminant Analysis (LDA)</strong> — supervised variant that maximizes the ratio of between-class to within-class variance, making it directly useful for classification</p></li>
 </ul>
-<p>We will revisit PLS and LDA in later modules.</p>
+<p>Both supervised variants have already appeared in this course: PLS was introduced in <a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html"><span class="doc std std-doc">High-Dimensional Regression</span></a> and LDA in <a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html"><span class="doc std std-doc">High-Dimensional Classification</span></a>. It is worth revisiting those sections with fresh eyes now that the eigendecomposition machinery behind PCA is familiar.</p>
 </section>
 </section>
 <section id="manifold-learning">
 <h2>Manifold Learning<a class="headerlink" href="#manifold-learning" title="Link to this heading">#</a></h2>
-<p>Manifold learning approaches use pairwise <strong>distance metrics</strong> rather than variance to define structure. The goal is to find a low-dimensional embedding that preserves distances as faithfully as possible. This makes them well-suited for nonlinear data where the true structure lies on a curved surface (manifold) embedded in the high-dimensional space.</p>
+<p>Manifold learning approaches use pairwise <strong>distance metrics</strong> rather than variance to define structure. The goal is to find a low-dimensional embedding that preserves distances as faithfully as possible. The advantage of working with distances rather than variance is that distances capture the <em>local</em> structure of the data — which points are near which — and this local structure can be exploited even when the global shape is highly nonlinear. This makes manifold methods well-suited for data whose true structure lies on a curved surface (a <em>manifold</em>) embedded in the high-dimensional space: think of points scattered along a rolled-up sheet, where straight-line variance directions cut across the roll but local distances follow it.</p>
 <section id="multi-dimensional-scaling-mds">
 <h3>Multi-Dimensional Scaling (MDS)<a class="headerlink" href="#multi-dimensional-scaling-mds" title="Link to this heading">#</a></h3>
 <p>MDS directly minimizes the stress function. Given pairwise distances <span class="math notranslate nohighlight">\(d_{ij}\)</span> in the original space, it finds a low-dimensional configuration <span class="math notranslate nohighlight">\(\{\mathbf{x}_i\}\)</span> that minimizes the stress <span class="math notranslate nohighlight">\(S\)</span> defined above. Unlike PCA, MDS is iterative — it does not have a closed-form solution.</p>
@@ -986,65 +997,33 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3381
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3490
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/7698f96a07a59fdb61b9c85147829ab0f48e7345d23997ee3f24ed027f724192.png" src="../_images/7698f96a07a59fdb61b9c85147829ab0f48e7345d23997ee3f24ed027f724192.png" />
+<img alt="../_images/c6394a882e24a55a8601257697c2b4cbd216cb573ece9a92de87a2199fbd2f1e.png" src="../_images/c6394a882e24a55a8601257697c2b4cbd216cb573ece9a92de87a2199fbd2f1e.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
 </section>
 <section id="t-sne">
 <h3>t-SNE<a class="headerlink" href="#t-sne" title="Link to this heading">#</a></h3>
-<p>t-distributed Stochastic Neighbor Embedding (<strong>t-SNE</strong>) uses a probabilistic similarity measure based on the t-distribution. Points that are nearby in the original space are given high probability of being neighbors in the low-dimensional space, while distant points are pushed apart. This makes t-SNE particularly effective at revealing local cluster structure.</p>
+<p>t-distributed Stochastic Neighbor Embedding (<strong>t-SNE</strong>) uses a probabilistic similarity measure based on the t-distribution: points that are nearby in the original space are given high probability of being neighbors in the embedding, while distant points are pushed apart. For roughly a decade it was the default tool for visualizing high-dimensional data, and you will encounter it constantly in the literature — though for new work it has largely been superseded by UMAP (next section), which is faster and preserves global structure better.</p>
+<p>The standard recipe is to first reduce the data to 30–50 components with PCA (retaining most of the variance) and then run t-SNE on the reduced representation — computing pairwise similarities in the full 64-dimensional space is slow and adds little:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">TSNE</span>
 
-<span class="n">tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
-            <span class="n">early_exaggeration</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span>
-            <span class="n">learning_rate</span><span class="o">=</span><span class="mf">200.0</span><span class="p">,</span>
-            <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-            <span class="n">init</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
-            <span class="n">method</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">)</span>
+<span class="n">pca_pre</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">X_pca_pre</span> <span class="o">=</span> <span class="n">pca_pre</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
 
-<span class="n">X_tsne</span> <span class="o">=</span> <span class="n">tsne</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+<span class="n">tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
+            <span class="n">learning_rate</span><span class="o">=</span><span class="mf">200.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="n">init</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X_tsne</span> <span class="o">=</span> <span class="n">tsne</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_pca_pre</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_tsne</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y_mnist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Digit&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;t-SNE — MNIST&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Stress: </span><span class="si">{</span><span class="n">stress</span><span class="p">(</span><span class="n">X_tsne</span><span class="p">,</span><span class="w"> </span><span class="n">X_mnist</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7757
-</pre></div>
-</div>
-<img alt="../_images/08eccd88f628a2e276e963dfedd953d402fad1623c86b4f9e5ece938c6616840.png" src="../_images/08eccd88f628a2e276e963dfedd953d402fad1623c86b4f9e5ece938c6616840.png" />
-</div>
-</div>
-<p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>t-SNE hyperparameters:</strong> <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> (roughly, the number of effective nearest neighbors; typically 5–50) is the most important parameter to tune. <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> also affect results. t-SNE is sensitive to initialization and is not deterministic unless <code class="docutils literal notranslate"><span class="pre">random_state</span></code> is set. It is best used for visualization only — global distances between clusters are not meaningful.</p>
-</div>
-<p><strong>Practical tip: pre-process with PCA before t-SNE.</strong> Running t-SNE directly on 64-dimensional data is slow because pairwise distances must be computed in the full space. A common best practice is to first reduce to 30–50 components with PCA (retaining &gt;95% of variance) and then run t-SNE on the reduced representation. This dramatically speeds up t-SNE without meaningfully changing the embedding:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca_pre</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="n">X_pca_pre</span> <span class="o">=</span> <span class="n">pca_pre</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
-
-<span class="n">tsne_fast</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
-                 <span class="n">learning_rate</span><span class="o">=</span><span class="mf">200.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-                 <span class="n">init</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">X_tsne_fast</span> <span class="o">=</span> <span class="n">tsne_fast</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_pca_pre</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_tsne_fast</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne_fast</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
-                <span class="n">c</span><span class="o">=</span><span class="n">y_mnist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Digit&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;t-SNE on PCA-reduced MNIST (30 components)&#39;</span><span class="p">)</span>
 </pre></div>
@@ -1057,11 +1036,16 @@ Stress PCA: 0.5405
 <img alt="../_images/9f4e87a46a6d6a1d348768fe3d7d77535e64e195b1767649f7e4007d89433731.png" src="../_images/9f4e87a46a6d6a1d348768fe3d7d77535e64e195b1767649f7e4007d89433731.png" />
 </div>
 </div>
+<p>t-SNE produces well-separated clusters on image data, though the axes have no interpretable meaning.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>t-SNE hyperparameters:</strong> t-SNE has many hyperparameters without clear physical meaning, and results depend on all of them. <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> (roughly, the number of effective nearest neighbors; typically 5–50) is the most important to tune; <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> also affect results, and the embedding is not deterministic unless <code class="docutils literal notranslate"><span class="pre">random_state</span></code> is set. PCA pre-reduction to ~30–50 components (as above) is standard practice and should be considered part of the recipe. Use t-SNE for visualization only — global distances between clusters in the embedding are not meaningful.</p>
+</div>
 <div class="exercise admonition" id="ex-eda-tsne-perp">
 
 <p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
 <section id="exercise-content">
-<p>Run t-SNE on the MNIST dataset with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
+<p>Using the PCA-reduced MNIST data (<code class="docutils literal notranslate"><span class="pre">X_pca_pre</span></code> above), run t-SNE with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
 </section>
 </div>
 </section>
@@ -1147,12 +1131,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <h3>PHATE<a class="headerlink" href="#phate" title="Link to this heading">#</a></h3>
 <p>PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve <strong>trajectory and branching structure</strong> in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths — reaction trajectories, transient process states, material synthesis routes, or any dataset where intermediate states are physically meaningful.</p>
 <p>The key idea is to compute a <strong>diffusion operator</strong> that models how information spreads through the data manifold, then embed points based on their <em>potential distances</em> under this diffusion. This captures multi-scale structure: fine local neighborhoods and broad global trajectories are both represented faithfully.</p>
-<p>In chemical engineering, PHATE is especially relevant for:</p>
-<ul class="simple">
-<li><p>Time-series process data where plant states evolve continuously (startup, shutdown, grade transitions)</p></li>
-<li><p>Reaction pathway analysis where the system passes through a sequence of intermediate compositions</p></li>
-<li><p>Materials datasets where processing conditions trace a route through composition or microstructure space</p></li>
-</ul>
+<p>PHATE was developed for single-cell genomics, where cells trace continuous developmental trajectories rather than falling into discrete groups. Analogous trajectory structure plausibly arises in chemical engineering data — plant states evolving through startup, shutdown, or grade transitions; reaction pathways passing through a sequence of intermediate compositions; processing conditions tracing a route through composition space — though published applications in this space are still rare. Treat PHATE as a tool worth trying when your data has a path-like character rather than discrete clusters, not as an established ChE workhorse.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">phate</span>
@@ -1331,9 +1310,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07368
-Epoch  20  loss = 0.06318
-Epoch  30  loss = 0.06031
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07343
+Epoch  20  loss = 0.07232
+Epoch  30  loss = 0.06634
 </pre></div>
 </div>
 </div>
@@ -1357,7 +1336,7 @@ Epoch  30  loss = 0.06031
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/573e8fca3294b8e177a86c0d5d0b46fa9fcfd0dc6fc3dc12f68b1fe207a3bbbf.png" src="../_images/573e8fca3294b8e177a86c0d5d0b46fa9fcfd0dc6fc3dc12f68b1fe207a3bbbf.png" />
+<img alt="../_images/a5e4a167e957968576e0b9e3eeb08a8ed47b247cc59aedd85802cb81df5b990a.png" src="../_images/a5e4a167e957968576e0b9e3eeb08a8ed47b247cc59aedd85802cb81df5b990a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1385,7 +1364,7 @@ Epoch  30  loss = 0.06031
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/642be47876b4cf80c7b99e30284392db47956e163aba5bb05e13a4ba3aea685b.png" src="../_images/642be47876b4cf80c7b99e30284392db47956e163aba5bb05e13a4ba3aea685b.png" />
+<img alt="../_images/029ce8e889e0084b832f78f8cb402c3204aa58ef9921d3a52a54adf306d05140.png" src="../_images/029ce8e889e0084b832f78f8cb402c3204aa58ef9921d3a52a54adf306d05140.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -1397,7 +1376,7 @@ Epoch  30  loss = 0.06031
 
 <p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
 <section id="exercise-content">
-<p>Consider a dataset with 100 features. You want to use an autoencoder to compress it to a 5-dimensional latent space. (a) Sketch an encoder architecture with two hidden layers, specifying reasonable layer widths. (b) If you instead used PCA for the same 5-component reduction and found that 5 PCs retain only 40% of variance, would you expect an autoencoder to do better or worse? What assumption does PCA make that the autoencoder does not? (c) Name one practical disadvantage of the autoencoder approach for a dataset with only 500 observations.</p>
+<p>Sketch an autoencoder architecture that compresses a 20-dimensional input into a 3-dimensional latent space, specifying the width of each encoder and decoder layer.</p>
 </section>
 </div>
 </section>
@@ -1410,7 +1389,7 @@ Epoch  30  loss = 0.06031
 <li><p>A <strong>scree plot</strong> of cumulative explained variance guides the choice of the number of components <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
 <li><p><strong>Kernel PCA</strong> extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter <span class="math notranslate nohighlight">\(\gamma\)</span> controls the locality of the similarity measure.</p></li>
 <li><p><strong>Manifold learning</strong> methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as <span class="math notranslate nohighlight">\(O(N^2)\)</span>.</p></li>
-<li><p><strong>t-SNE</strong> produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. Pre-reducing with PCA (to ~30 components) before running t-SNE is a standard speed-up.</p></li>
+<li><p><strong>t-SNE</strong> produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. PCA pre-reduction (to ~30 components) is part of the standard recipe. For new work it has largely been superseded by UMAP.</p></li>
 <li><p><strong>Incremental PCA</strong> (<code class="docutils literal notranslate"><span class="pre">IncrementalPCA</span></code>) fits PCA in mini-batches and is the go-to choice for datasets too large to fit in memory; results are nearly identical to full SVD-based PCA.</p></li>
 <li><p><strong>UMAP</strong> is faster than t-SNE, better preserves global structure, and is projectable — it is the current best practice for visualization and nonlinear feature extraction.</p></li>
 <li><p><strong>PHATE</strong> uses heat diffusion to capture trajectory and branching structure; it is particularly suited for process data with continuous state transitions or reaction pathway data.</p></li>
