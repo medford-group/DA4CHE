@@ -203,6 +203,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Exploratory Data Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -475,7 +477,7 @@ document.write(`
 </div>
 <div class="exercise admonition" id="ex-eda-cluster-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 79 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
 <section id="exercise-content">
 <p>For each scenario below, identify the most appropriate clustering algorithm family (EM, density-based, or hierarchical) and briefly justify your choice: (a) You have 50,000 process sensor readings and expect 4 distinct operating regimes. (b) You have 200 samples from a chemical reaction trajectory and want to visualize how reaction states relate to each other. (c) Your dataset has irregularly shaped clusters and you want noise points explicitly flagged.</p>
 </section>
@@ -521,7 +523,7 @@ document.write(`
 <p>The Mahalanobis distance implicitly standardizes using the covariance matrix <span class="math notranslate nohighlight">\(\mathbf{C}\)</span>, making it scale-invariant. In scikit-learn, the metric is typically controlled by a <code class="docutils literal notranslate"><span class="pre">metric=</span></code> keyword argument.</p>
 <div class="exercise admonition" id="ex-eda-silhouette-calc">
 
-<p class="admonition-title"><span class="caption-number">Exercise 80 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 86 </span></p>
 <section id="exercise-content">
 <p>Point <span class="math notranslate nohighlight">\(p\)</span> has within-cluster average distance <span class="math notranslate nohighlight">\(a = 0.4\)</span> and average distance to the nearest other cluster <span class="math notranslate nohighlight">\(b = 1.2\)</span>. (a) Compute the silhouette score for <span class="math notranslate nohighlight">\(p\)</span>. (b) If <span class="math notranslate nohighlight">\(b\)</span> were reduced to <span class="math notranslate nohighlight">\(0.5\)</span> (clusters move closer together), recompute the silhouette score and explain what this change implies about cluster quality.</p>
 </section>
@@ -621,7 +623,7 @@ document.write(`
 <p>The structure of the low-dimensional representations differs markedly across techniques. Throughout this chapter we use all three embeddings to illustrate how the same clustering algorithm can yield different groupings depending on how the data were reduced.</p>
 <div class="exercise admonition" id="ex-eda-cluster-prep">
 
-<p class="admonition-title"><span class="caption-number">Exercise 81 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 87 </span></p>
 <section id="exercise-content">
 <p>Re-run the dimensionality reduction above but use <code class="docutils literal notranslate"><span class="pre">n_components=3</span></code> instead of 2. Then create a 3D scatter plot of the PCA result using <code class="docutils literal notranslate"><span class="pre">ax</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(projection='3d')</span></code> and <code class="docutils literal notranslate"><span class="pre">ax.scatter(X_pca3[:,</span> <span class="pre">0],</span> <span class="pre">X_pca3[:,</span> <span class="pre">1],</span> <span class="pre">X_pca3[:,</span> <span class="pre">2],</span> <span class="pre">alpha=0.3,</span> <span class="pre">s=10)</span></code>. Does the third principal component reveal additional structure that is not visible in the 2D projection?</p>
 </section>
@@ -784,7 +786,7 @@ document.write(`
 </div>
 <div class="exercise admonition" id="ex-eda-kmeans-elbow">
 
-<p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 88 </span></p>
 <section id="exercise-content">
 <p>The <strong>elbow method</strong> selects the number of clusters by plotting within-cluster inertia (<code class="docutils literal notranslate"><span class="pre">model.inertia_</span></code> after fitting <code class="docutils literal notranslate"><span class="pre">KMeans</span></code>) against <span class="math notranslate nohighlight">\(k\)</span> and identifying the point where adding more clusters yields diminishing returns. Using the PCA-reduced Dow dataset, plot both inertia and silhouette score for <span class="math notranslate nohighlight">\(k \in [2, 12]\)</span>. Do the two criteria suggest the same optimal <span class="math notranslate nohighlight">\(k\)</span>?</p>
 </section>
@@ -932,7 +934,7 @@ Silhouette (well-defined): 0.638
 <p>Restricting to high-confidence assignments substantially improves the silhouette score, confirming that ambiguous boundary points are responsible for much of the cluster overlap.</p>
 <div class="exercise admonition" id="ex-eda-gmm-bic">
 
-<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 89 </span></p>
 <section id="exercise-content">
 <p>Using the BIC curve above as a guide, identify the optimal number of GMM components for the PCA-reduced Dow dataset. Refit a GMM with that number of components and plot the cluster assignments. Then refit a k-means model with the same <span class="math notranslate nohighlight">\(k\)</span> and compare silhouette scores for the two methods. Which better separates the data, and why might that be?</p>
 </section>
@@ -1058,7 +1060,7 @@ Silhouette (well-defined): 0.638
 </div>
 <div class="exercise admonition" id="ex-eda-meanshift-bw">
 
-<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 90 </span></p>
 <section id="exercise-content">
 <p>Extend the bandwidth sweep above to include <code class="docutils literal notranslate"><span class="pre">bandwidth=3</span></code> and <code class="docutils literal notranslate"><span class="pre">bandwidth=50</span></code>. For each bandwidth, also report the Calinski-Harabász score (<code class="docutils literal notranslate"><span class="pre">calinski_harabasz_score</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>). Does the Calinski-Harabász score agree with the silhouette score on the best bandwidth?</p>
 </section>
@@ -1117,7 +1119,7 @@ Silhouette (well-defined): 0.638
 </div>
 <div class="exercise admonition" id="ex-eda-dbscan-eps">
 
-<p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 91 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">DBSCAN</span></code> on the PCA-reduced Dow dataset, vary <code class="docutils literal notranslate"><span class="pre">eps</span></code> over <code class="docutils literal notranslate"><span class="pre">[0.5,</span> <span class="pre">1.0,</span> <span class="pre">2.0,</span> <span class="pre">3.0,</span> <span class="pre">5.0]</span></code> with <code class="docutils literal notranslate"><span class="pre">min_samples=5</span></code>. For each value, record the number of clusters found and the fraction of points labeled as noise. Plot a 1×5 panel of scatter plots and comment on how the cluster structure changes with <code class="docutils literal notranslate"><span class="pre">eps</span></code>.</p>
 </section>
@@ -1282,7 +1284,7 @@ ward        cophenetic = 0.8213
 </div>
 <div class="exercise admonition" id="ex-eda-linkage-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 86 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 92 </span></p>
 <section id="exercise-content">
 <p>Fit agglomerative hierarchical clustering models on the PCA-reduced Dow dataset using linkage methods <code class="docutils literal notranslate"><span class="pre">single</span></code>, <code class="docutils literal notranslate"><span class="pre">complete</span></code>, <code class="docutils literal notranslate"><span class="pre">average</span></code>, and <code class="docutils literal notranslate"><span class="pre">ward</span></code>, each extracting <code class="docutils literal notranslate"><span class="pre">k=4</span></code> clusters via <code class="docutils literal notranslate"><span class="pre">criterion='maxclust'</span></code>. Plot the four cluster assignments side-by-side and compute the silhouette score for each method. Which linkage produces the most compact, well-separated clusters?</p>
 </section>

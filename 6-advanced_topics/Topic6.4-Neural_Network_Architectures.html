@@ -202,6 +202,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -498,7 +500,7 @@ feature engineering decisions of deep learning. A well-chosen architecture encod
 domain knowledge that would otherwise need to be hand-crafted.</p>
 <div class="exercise admonition" id="ex-eda-nn-arch-table">
 
-<p class="admonition-title"><span class="caption-number">Exercise 114 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 121 </span></p>
 <section id="exercise-content">
 <p>Use the unifying view to reason about architecture choice.</p>
 <p>For each scenario below, identify the most appropriate architecture from the table
@@ -687,7 +689,7 @@ it to unsupervised (PCA) and supervised (LDA) projections:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_4204/2142271274.py:37: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_53515/2142271274.py:37: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
   plt.tight_layout()
 /opt/homebrew/Caskroom/miniforge/base/envs/DA4CHE/lib/python3.10/site-packages/IPython/core/events.py:82: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
   func(*args, **kwargs)
@@ -702,7 +704,7 @@ it to unsupervised (PCA) and supervised (LDA) projections:</p>
 use label information — LDA explicitly, CNN implicitly through the classification loss.</p>
 <div class="exercise admonition" id="ex-eda-nn-cnn-filters">
 
-<p class="admonition-title"><span class="caption-number">Exercise 115 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 122 </span></p>
 <section id="exercise-content">
 <p>Inspect the learned filters of the trained CNN.</p>
 <ol class="arabic simple">
@@ -865,7 +867,7 @@ we use a chronological train/test split:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/81ed1edee0ad280003a81028590c7d457a3f6a0aa066ec41032ca1ef10b2b2f0.png" src="../_images/81ed1edee0ad280003a81028590c7d457a3f6a0aa066ec41032ca1ef10b2b2f0.png" />
+<img alt="../_images/d5e73dea1b3810a8c0a7209d3588efeb010949f187bebc869c71e0a681384c20.png" src="../_images/d5e73dea1b3810a8c0a7209d3588efeb010949f187bebc869c71e0a681384c20.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -900,7 +902,7 @@ we use a chronological train/test split:</p>
 LSTM test r²:  0.993
 </pre></div>
 </div>
-<img alt="../_images/d3f6a1905394956f5fdef5fc862012fb602f4421c93125811721660c944a33dc.png" src="../_images/d3f6a1905394956f5fdef5fc862012fb602f4421c93125811721660c944a33dc.png" />
+<img alt="../_images/c720ea043cdbf2a2931a4c8a26ddd141c0fa82eb2765c7753b0ecd29544a1e21.png" src="../_images/c720ea043cdbf2a2931a4c8a26ddd141c0fa82eb2765c7753b0ecd29544a1e21.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -913,7 +915,7 @@ when many training examples are available.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-nn-lstm-window">
 
-<p class="admonition-title"><span class="caption-number">Exercise 116 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 123 </span></p>
 <section id="exercise-content">
 <p>Investigate the effect of window size on LSTM forecasting performance.</p>
 <ol class="arabic simple">
@@ -1085,7 +1087,7 @@ Increasing the latent dimension or adding a classification loss would tighten th
 clustering.</p>
 <div class="exercise admonition" id="ex-eda-nn-ae">
 
-<p class="admonition-title"><span class="caption-number">Exercise 117 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 124 </span></p>
 <section id="exercise-content">
 <p>Extend the autoencoder experiment.</p>
 <ol class="arabic simple">
@@ -1153,7 +1155,7 @@ filters has far fewer parameters than an MLP on the same input size.</p></li>
 </ul>
 <div class="exercise admonition" id="ex-eda-nn-cnn-vs-mlp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 118 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 125 </span></p>
 <section id="exercise-content">
 <p>Compare CNN and MLP on the MNIST digits dataset.</p>
 <ol class="arabic simple">
