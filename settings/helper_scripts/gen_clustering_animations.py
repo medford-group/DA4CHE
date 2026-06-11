@@ -194,19 +194,25 @@ def agglomerative_gif():
         axL.scatter(X[:, 0], X[:, 1], c=[cmap[clusters[i]] for i in range(n)],
                     s=55, edgecolors='k', zorder=3)
         if active is not None:
-            ca = X[members[active[0]]].mean(0)
-            cb = X[members[active[1]]].mean(0)
-            axL.plot([ca[0], cb[0]], [ca[1], cb[1]], color=CLRS[1], lw=1.8, zorder=1)
+            # connect the actual points of the two merged clusters (anchored on points)
+            for a in members[active[0]]:
+                for b in members[active[1]]:
+                    axL.plot([X[a, 0], X[b, 0]], [X[a, 1], X[b, 1]],
+                             color=CLRS[1], lw=0.7, zorder=1)
         axL.set_xlim(*xlim); axL.set_ylim(*ylim)
         axL.set_title(f'{len(ids)} cluster(s)'); axL.set_xticks([]); axL.set_yticks([])
-        # right: dendrogram links revealed so far; newest highlighted; bar at current height
-        for j in range(step):
+        # right: full dendrogram drawn in gray from the start; links at/below the rising
+        # merge-height bar turn yellow as the bar climbs to the root
+        bar_h = heights[step - 1] if step > 0 else 0.0
+        for j in range(len(order)):
             li = order[j]
-            axR.plot(ic[li], dc[li], color='0.35', lw=1.2)
+            reached = heights[j] <= bar_h + 1e-9
+            axR.plot(ic[li], dc[li],
+                     color=(CLRS[1] if reached else '0.7'),
+                     lw=(2.4 if reached else 1.0),
+                     zorder=(3 if reached else 1))
         if step > 0:
-            li = order[step - 1]
-            axR.plot(ic[li], dc[li], color=CLRS[1], lw=2.6)
-            axR.axhline(heights[step - 1], color=CLRS[1], ls='--', lw=1.3)
+            axR.axhline(bar_h, color=CLRS[1], ls='--', lw=1.3)
         axR.set_xlim(0, xmax); axR.set_ylim(0, hmax)
         axR.set_xticks([]); axR.set_ylabel('Merge distance'); axR.set_title('Dendrogram')
         plt.tight_layout()
