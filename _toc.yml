@@ -26,6 +26,8 @@ chapters:
     sections:
       - file: 4-data_management/Topic4.1-Data_Organization
       - file: 4-data_management/Topic4.2-Online_Data_Access
+      - file: 4-data_management/Topic4.3-Accessing_Data_with_AI_Tools
+      - file: 4-data_management/Topic4.4-Complex_Structured_Data
   - file: 5-exploratory_data_analysis/intro
     sections:
       - file: 5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data

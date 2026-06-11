@@ -283,6 +283,82 @@ Compute the moving average for the Dow impurity series with a window of 24 time 
 
 ---
 
+## Signal Compression and Data Historians
+
+A running plant produces an enormous volume of time-series data: thousands of sensors
+("tags") sampled every few seconds, continuously, for years. Storing every raw reading is
+impractical, so industry relies on **data historians** — specialized time-series databases
+(the AVEVA/OSIsoft *PI System* is the best known; InfluxDB is a popular open-source option)
+that ingest and *compress* these streams as they arrive. The Dow dataset we are using is
+itself a historian export.
+
+Historian compression is *lossy but bounded*: it discards readings that fall within a set
+tolerance of a straight line, keeping only the points needed to reconstruct the signal to
+within that tolerance. The classic method is **swinging-door trending (SDT)**. Picture
+standing at the last stored point and opening two "doors" — an upper slope and a lower
+slope — just wide enough to keep every later point inside a corridor of half-width δ. As
+each new reading arrives the doors may swing only *open*, never shut. The instant the two
+doors cross — meaning no single straight line from the stored point can stay within δ of
+every point seen so far — the previous point is archived and the corridor restarts there.
+
+```{code-cell} ipython3
+def swinging_door(t, y, delta):
+    """Swinging-door (SDT) compression: indices of the points a historian keeps."""
+    keep = [0]
+    t0, y0 = t[0], y[0]
+    s_max, s_min = -np.inf, np.inf          # lower-door / upper-door slopes
+    for i in range(1, len(y)):
+        dt = t[i] - t0
+        s_min = min(s_min, (y[i] + delta - y0) / dt)
+        s_max = max(s_max, (y[i] - delta - y0) / dt)
+        if s_max > s_min:                   # corridor closed: archive previous point
+            keep.append(i - 1)
+            t0, y0 = t[i - 1], y[i - 1]
+            dt = t[i] - t0
+            s_min = (y[i] + delta - y0) / dt
+            s_max = (y[i] - delta - y0) / dt
+    keep.append(len(y) - 1)
+    return np.array(sorted(set(keep)))
+```
+
+```{code-cell} ipython3
+y = dow_df['y:Impurity'].to_numpy()[:800]
+t = np.arange(len(y), dtype=float)          # hourly samples
+
+delta = 0.1 * np.std(y)
+kept = swinging_door(t, y, delta)
+recon = np.interp(t, t[kept], y[kept])
+
+plt.figure(figsize=(10, 3))
+plt.plot(t, y, color='0.75', label=f'original ({len(y)} points)')
+plt.plot(t[kept], y[kept], 'o-', ms=3, label=f'archived ({len(kept)} points)')
+plt.xlabel('Time (hours)'); plt.ylabel('Impurity')
+plt.legend(); plt.title('Swinging-door compression of the Dow impurity signal')
+plt.tight_layout()
+
+print(f'Compression ratio: {len(y) / len(kept):.1f}x')
+print(f'Max reconstruction error: {np.max(np.abs(recon - y)):.4f}  (tolerance δ = {delta:.4f})')
+```
+
+The archived series follows the original closely while storing a fraction of the points,
+and — by construction — never deviates by more than δ. At plant scale, with tens of
+thousands of tags sampled every second, this is the difference between an affordable data
+system and an impossible one — and it means the data you later pull from a historian *has
+already been compressed*, at a resolution someone chose upstream.
+
+:::{exercise}
+:label: ex-eda-ts-historian
+
+Investigate the compression/fidelity trade-off of the swinging-door algorithm.
+
+1. Run `swinging_door` on the Dow impurity series for several tolerances δ (e.g.,
+   0.05σ, 0.1σ, 0.25σ, 0.5σ, where σ is the standard deviation of the signal).
+2. For each, record the compression ratio and the maximum reconstruction error.
+3. Plot compression ratio versus δ, and describe the trade-off you observe.
+:::
+
+---
+
 ## Autocorrelation
 
 ### The Key Idea
