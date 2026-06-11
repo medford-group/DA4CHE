@@ -26,7 +26,7 @@ By the end of this chapter, you will be able to:
 
 ### Problem Statement
 
-Clustering algorithms identify groups of data points that are similar to each other based on a set of descriptive features. Unlike supervised learning, clustering is **unsupervised**: there are no output labels. The goal is to extract insight about the inherent structure of a dataset without any ground-truth class information.
+Clustering algorithms identify groups of data points that are similar to each other based on a set of descriptive features. Unlike classification (which is a form of supervised learning), clustering is **unsupervised**: there are no output labels. The goal is to extract insight about the inherent structure of a dataset without any ground-truth class information.
 
 Common applications include:
 
@@ -100,6 +100,8 @@ Point $p$ has within-cluster average distance $a = 0.4$ and average distance to 
 
 In this chapter we work with the Dow chemical process dataset. Clustering algorithms operate in any dimension, but intuition is much easier to build in 2D. A common EDA strategy is therefore to apply dimensionality reduction first, cluster on the low-dimensional representation to build intuition, and then verify whether the same structure holds in the full feature space.
 
+The following code blocks load and standardize the Dow dataset (the same cleaning steps used in earlier chapters), then subsample it to keep the clustering demonstrations fast.
+
 ```{code-cell} ipython3
 %matplotlib inline
 import numpy as np
@@ -134,6 +136,8 @@ X = (X_dow - X_dow.mean(axis=0)) / X_dow.std(axis=0)
 X = X[::5]
 print(f'Working dataset: {X.shape}')
 ```
+
+Here we apply three different dimensionality reduction options — linear PCA, kernel PCA, and t-SNE — so we can see how the choice of embedding affects the clusters that each algorithm subsequently finds.
 
 ```{code-cell} ipython3
 from sklearn.decomposition import PCA, KernelPCA
@@ -181,7 +185,16 @@ The algorithm uses **expectation-maximization** in two alternating steps:
 1. **Expectation**: assign each point to the nearest centroid
 2. **Maximization**: move each centroid to the mean of its assigned points
 
-These steps are repeated until the centroids no longer move. To make the mechanics concrete, here is a minimal implementation applied to the PCA-reduced Dow dataset:
+These steps are repeated until the centroids no longer move.
+
+:::{figure} images/kmeans.gif
+:name: fig-kmeans-anim
+:width: 55%
+
+k-means on three well-separated synthetic clusters. All three centroids are deliberately initialized inside a single blob; over a few iterations the expectation and maximization steps pull them apart until each settles on its own cluster.
+:::
+
+To make the mechanics concrete, here is a minimal implementation applied to the PCA-reduced Dow dataset:
 
 ```{code-cell} ipython3
 def dist(pt1, pt2):
@@ -200,9 +213,9 @@ def update_centers(clusters, centers):
 ```
 
 ```{code-cell} ipython3
-# Animate four iterations of k-means from a deliberately poor initial guess
+# Show four iterations of k-means from a deliberately poor initial guess
 X_km    = X_pca
-centers = [np.array(c, dtype=float) for c in ([5, 0], [7, 5], [100, 100])]
+centers = [np.array(c, dtype=float) for c in ([-25, -5], [-10, 0], [2, 2])]
 n_k     = len(centers)
 
 fig, axes = plt.subplots(1, 4, figsize=(16, 4))
@@ -225,7 +238,7 @@ for step, ax in enumerate(axes):
 plt.tight_layout()
 ```
 
-The X markers show old centroid positions; stars show updated positions. Even with a very poor initial guess (`[100, 100]`), the centroids converge to the data within a few iterations.
+The X markers show old centroid positions; stars show updated positions. Even though all three centroids start clustered on the left side of the data, they redistribute over the first few iterations until each one settles into a distinct region — including the small isolated group near the right, which becomes its own cluster.
 
 In practice, use the scikit-learn implementation, which is substantially faster and more robust:
 
@@ -264,7 +277,7 @@ The geometrically isolated cluster visible in the PCA scatter may represent an o
 
 **Demonstration: k-means with a convergence criterion**
 
-The scikit-learn implementation runs multiple random restarts and checks for convergence automatically. Below is a standalone implementation illustrating how a tolerance-based stopping criterion works:
+The animation above ran a fixed number of iterations, but in practice we do not know in advance how many are needed. The standard solution is a **tolerance-based stopping criterion**: stop as soon as the centroids move less than some small distance `tol` in an iteration, which signals that the algorithm has effectively converged. The implementation below adds exactly this check (and reports how many iterations it took), starting from the same poor initial guess as before:
 
 ```{code-cell} ipython3
 def kmeans(X, initial_centers, tol=0.01, max_iter=100):
@@ -284,7 +297,7 @@ def kmeans(X, initial_centers, tol=0.01, max_iter=100):
     return np.array(labels), np.array(centers)
 
 labels_custom, centers_custom = kmeans(
-    X_pca, initial_centers=([5, 0], [7, 5], [100, 100]))
+    X_pca, initial_centers=([-25, -5], [-10, 0], [2, 2]))
 
 fig, ax = plt.subplots()
 ax.scatter(X_pca[:, 0], X_pca[:, 1],
@@ -316,6 +329,8 @@ where $\phi_k$ are mixture weights ($\sum_k \phi_k = 1$), $\boldsymbol{\mu}_k$ i
 
 Illustration of the GMM expectation-maximization algorithm. Ellipses show the current Gaussian components; points are colored by their most probable cluster assignment. Over iterations the components shift to better describe the data.
 :::
+
+GMMs are fit with the same expectation-maximization loop as k-means, but expressed in terms of probabilities. Two statistical terms recur. The **posterior probability** $\gamma_{ik}$ is the probability that point $i$ belongs to cluster $k$ *given* the current model — computed with Bayes' rule from the mixture weights and the Gaussian densities. **Maximum likelihood** estimation chooses the parameters (means, covariances, weights) that make the observed data most probable under the model. The two steps alternate: estimate the posteriors with the current parameters, then update the parameters to maximize the likelihood given those posteriors.
 
 **Expectation step** — compute the posterior probability that point $i$ belongs to cluster $k$:
 
@@ -385,9 +400,11 @@ axes[1].set_xticks(n_clusters_list)
 plt.tight_layout()
 ```
 
-Unlike the silhouette score, BIC penalizes model complexity, so it is less prone to selecting too many clusters. The two criteria often disagree — using both in tandem gives a more balanced picture.
+Unlike the silhouette score, BIC explicitly penalizes model complexity by adding a term proportional to the number of parameters. In textbook cases with a few clean Gaussian clusters this keeps BIC from selecting too many components. On this dataset, however, BIC keeps decreasing well past a handful of components and only bottoms out around a dozen — because the Dow process data is not actually a small number of tidy Gaussians. Each extra component improves the likelihood more than the complexity penalty costs, so BIC is effectively using many Gaussians to approximate a continuous density rather than identifying a few "true" clusters. This is a useful reminder that these criteria answer "which model fits best," not "how many real groups are there" — the two questions only coincide when the data genuinely is clustered. The silhouette score, which rewards compact well-separated groups, often prefers far fewer clusters; using both in tandem gives a more balanced picture.
 
 **Demonstration: filtering to well-defined cluster members**
+
+This demonstration puts the GMM's mixed-membership probabilities to practical use. Because each point carries a full probability vector across clusters (not just a hard label), we can keep only the points the model is confident about — those whose highest cluster probability exceeds 0.95 — and discard ambiguous boundary points. This is a common way to extract a "clean core" of each operating regime before further analysis:
 
 ```{code-cell} ipython3
 model  = GaussianMixture(n_components=10, covariance_type='full', random_state=0)
@@ -432,6 +449,13 @@ The mean shift algorithm finds cluster centers by iteratively moving each candid
 $$\mathbf{c}^{(t+1)} = \frac{\sum_{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq r} \mathbf{x}_i}{\left|\{i : \|\mathbf{x}_i - \mathbf{c}^{(t)}\| \leq r\}\right|}$$
 
 A key insight is that every data point can serve as an initial centroid. After convergence, nearby centroids are merged, and the resulting unique centroids define the clusters.
+
+:::{figure} images/meanshift.gif
+:name: fig-meanshift-anim
+:width: 55%
+
+Mean shift on three synthetic clusters. Many candidate centroids (gold) each climb toward the nearest peak of point density; centroids that converge to the same location merge, so the number of clusters emerges from the bandwidth rather than being specified in advance.
+:::
 
 ```{code-cell} ipython3
 def get_new_centroid(centroid, x_list, r):
@@ -497,6 +521,8 @@ plt.tight_layout()
 ```
 
 **Demonstration: silhouette score vs. bandwidth**
+
+The bandwidth is mean shift's single most important hyperparameter, and unlike k-means there is no $k$ to set — the number of clusters is an *output* that depends on the bandwidth. This demonstration sweeps a range of bandwidths and tracks two things at once: how many clusters mean shift finds, and how good those clusters are (silhouette score). Together they show the trade-off — too small a bandwidth fragments the data into many clusters, too large a bandwidth merges everything into one:
 
 ```{code-cell} ipython3
 bandwidths = [5, 10, 15, 20, 30]
@@ -632,6 +658,28 @@ axes[1].set_xlabel('Cluster (count in parentheses)')
 axes[1].set_ylabel('Merge distance')
 plt.tight_layout()
 ```
+
+With 2,060 points and a truncated dendrogram, it is hard to see how an individual point maps onto a dendrogram leaf. The mapping is easiest to grasp on a handful of labeled points: below we sample 15 points, label them in PC space, and show the full (untruncated) dendrogram using the same labels, so each leaf can be traced back to its location.
+
+```{code-cell} ipython3
+idx     = np.random.default_rng(0).choice(len(X_hier), 15, replace=False)
+X_small = X_hier[idx]
+Z_small = linkage(X_small, method='ward')
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+axes[0].scatter(X_small[:, 0], X_small[:, 1], s=70, color=clrs[0], zorder=3)
+for i, (px, py) in enumerate(X_small):
+    axes[0].annotate(str(i), (px, py), textcoords='offset points', xytext=(5, 4))
+axes[0].set_title('15 sampled points (labeled)')
+axes[0].set_xlabel('PC1'); axes[0].set_ylabel('PC2')
+
+dendrogram(Z_small, labels=[str(i) for i in range(len(X_small))], ax=axes[1])
+axes[1].set_title('Full dendrogram (same point labels)')
+axes[1].set_xlabel('Point index'); axes[1].set_ylabel('Merge distance')
+plt.tight_layout()
+```
+
+Tracing the labels between the two panels makes the correspondence concrete: points that join low in the tree (small merge distance) are near neighbors in the scatter, while points joined only near the top are far apart. The same logic scales to the full dataset — there are simply too many leaves to label individually.
 
 ### Agglomerative Clustering
 
