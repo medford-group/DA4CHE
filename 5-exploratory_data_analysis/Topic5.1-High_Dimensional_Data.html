@@ -509,7 +509,7 @@ document.write(`
 <img alt="../_images/c752cba2d31f53e45dac7a8b172ddb703d3d9d8259980187ee80c5039c2f7b17.png" src="../_images/c752cba2d31f53e45dac7a8b172ddb703d3d9d8259980187ee80c5039c2f7b17.png" />
 </div>
 </div>
-<p>Each row of <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> is a 64-element vector. The <code class="docutils literal notranslate"><span class="pre">show_image</span></code> helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — a point we will return to in the Feature Engineering module.</p>
+<p>Each row of <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> is a 64-element vector. The <code class="docutils literal notranslate"><span class="pre">show_image</span></code> helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — structure that informs more advanced models like convolutional neural networks.</p>
 <div class="exercise admonition" id="ex-eda-dataset-shapes">
 
 <p class="admonition-title"><span class="caption-number">Exercise 74 </span></p>
@@ -525,7 +525,7 @@ document.write(`
 <p><strong>The curse of dimensionality</strong> arises because the volume of a high-dimensional space grows exponentially with the number of dimensions. Consider a <span class="math notranslate nohighlight">\(d\)</span>-dimensional hypercube of side length <span class="math notranslate nohighlight">\(L\)</span>: its volume is <span class="math notranslate nohighlight">\(V_d = L^d\)</span>. To sample this space uniformly at resolution <span class="math notranslate nohighlight">\(\Delta L = L/N\)</span> requires <span class="math notranslate nohighlight">\(N^d\)</span> grid points. For a moderate <span class="math notranslate nohighlight">\(N = 10\)</span> and <span class="math notranslate nohighlight">\(d = 100\)</span> (common in process data), that is <span class="math notranslate nohighlight">\(10^{100}\)</span> points — far more than the number of atoms in the observable universe. In practice this means that any finite dataset becomes exponentially sparse as <span class="math notranslate nohighlight">\(d\)</span> grows, making distance-based methods and density estimation unreliable.</p>
 <p><strong>The blessing of dimensionality</strong> is a lesser-known counterpart. Because data becomes sparse in high dimensions, points that might overlap in low dimensions tend to become well-separated as dimensions increase. This can make classification easier: high-dimensional data is often more linearly separable than the same data projected to a lower-dimensional space. Additionally, individual features tend to look more Gaussian in high dimensions due to averaging effects.</p>
 <p>The curse always applies; the blessing is not guaranteed. In general, adding uninformative features makes problems harder.</p>
-<p>The following plots illustrate both effects using two-class data in 2D and 3D:</p>
+<p>The plots below use two-class data to make the <em>blessing</em> concrete: a third feature pulls apart classes that overlap in 2D.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.mplot3d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes3D</span>
@@ -539,29 +539,57 @@ document.write(`
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
                           <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{})</span>
-<span class="c1"># 2-D view</span>
+<span class="c1"># 2D view</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y2</span><span class="p">])</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Feature 1&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Feature 2&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;2-D projection (overlapping classes)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;2D projection (overlapping classes)&#39;</span><span class="p">)</span>
 
-<span class="c1"># 3-D view via a second axes</span>
+<span class="c1"># 3D view via a second axes</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">ax3d</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X3</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">X3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">y2</span><span class="p">])</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Feature 3&#39;</span><span class="p">)</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Feature 1&#39;</span><span class="p">)</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Feature 2&#39;</span><span class="p">)</span>
-<span class="n">ax3d</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;3-D view (classes separate)&#39;</span><span class="p">)</span>
+<span class="n">ax3d</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;3D view (classes separate)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c528cde5c02a5f7f6c81fa94da0db9c92042421cef4218f6707985e4ca1e6617.png" src="../_images/c528cde5c02a5f7f6c81fa94da0db9c92042421cef4218f6707985e4ca1e6617.png" />
+<img alt="../_images/5221c6debdc702881220b49200bf48f7a0f28f610185111176dea44fa8cc8c61.png" src="../_images/5221c6debdc702881220b49200bf48f7a0f28f610185111176dea44fa8cc8c61.png" />
 </div>
 </div>
 <p>Adding the third feature separates the two classes that overlapped in 2D — a concrete illustration of the blessing. However, if Feature 3 were pure noise, the added dimension would only degrade model performance.</p>
+<p>The very same points also reveal the <em>curse</em>. No points were added in the 3D view, yet they now have to fill a larger space. We can quantify this with the <strong>sampling density</strong> (points per unit volume of the data’s bounding box) and the average distance from each point to its nearest neighbor:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sampling_density</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Points per unit volume of the data&#39;s bounding box.&quot;&quot;&quot;</span>
+    <span class="n">ranges</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_nn_distance</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Average distance from each point to its nearest neighbor.&quot;&quot;&quot;</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">D</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">&#39;2D&#39;</span><span class="p">,</span> <span class="n">X3</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span> <span class="n">X3</span><span class="p">)]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1">: sampling density = </span><span class="si">{</span><span class="n">sampling_density</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">:</span><span class="s1">8.4f</span><span class="si">}</span><span class="s1"> points/unit-volume, &#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;mean nearest-neighbor distance = </span><span class="si">{</span><span class="n">mean_nn_distance</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2D: sampling density =   0.4056 points/unit-volume, mean nearest-neighbor distance = 0.72
+3D: sampling density =   0.1172 points/unit-volume, mean nearest-neighbor distance = 0.94
+</pre></div>
+</div>
+</div>
+</div>
+<p>The density drops sharply and the typical nearest-neighbor distance grows, even though no data was added — exactly the sparsity that makes distance- and density-based methods unreliable in high dimensions. Both effects trace back to the same fact, that volume grows with dimension; which one wins depends on whether the extra dimensions carry signal or noise.</p>
 <div class="exercise admonition" id="ex-eda-volume-growth">
 
 <p class="admonition-title"><span class="caption-number">Exercise 75 </span></p>
@@ -572,7 +600,7 @@ document.write(`
 </section>
 <section id="inspecting-high-dimensional-features">
 <h2>Inspecting High-Dimensional Features<a class="headerlink" href="#inspecting-high-dimensional-features" title="Link to this heading">#</a></h2>
-<p>Unlike a 1-D or 2-D dataset, we cannot simply scatter-plot a high-dimensional feature matrix. However, targeted visualizations of individual features and pairs of features remain essential for catching data quality issues, understanding scale and distribution, and identifying informative structure before modeling.</p>
+<p>Unlike a 1D or 2D dataset, we cannot simply scatter-plot a high-dimensional feature matrix. However, targeted visualizations of individual features and pairs of features remain essential for catching data quality issues, understanding scale and distribution, and identifying informative structure before modeling.</p>
 <section id="summary-statistics">
 <h3>Summary Statistics<a class="headerlink" href="#summary-statistics" title="Link to this heading">#</a></h3>
 <p>The most direct starting point is computing per-feature summary statistics: mean, standard deviation, minimum, and maximum. For image data like MNIST, these statistics can be visualized directly as images.</p>
@@ -1292,7 +1320,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c72a2d7f724f2dd9f54a19567bbd0ba32ad4bba87d666d59d138fed1244e0fa6.png" src="../_images/c72a2d7f724f2dd9f54a19567bbd0ba32ad4bba87d666d59d138fed1244e0fa6.png" />
+<img alt="../_images/ed08b519d9ebc3cda208b4aae7ed9ef3c94eca69fe2f18b9f207070e38e28411.png" src="../_images/ed08b519d9ebc3cda208b4aae7ed9ef3c94eca69fe2f18b9f207070e38e28411.png" />
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">kind='reg'</span></code> option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.</p>
@@ -1445,6 +1473,18 @@ Spearman correlation: 0.2359
 </pre></div>
 </div>
 <p>The report includes per-feature histograms and statistics, a full correlation matrix, missing value summaries, and alerts for high cardinality or near-constant features. It is especially useful as a first pass on a new dataset before deciding which manual analyses to pursue. Install with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ydata-profiling</span></code>.</p>
+<div class="exercise admonition" id="ex-eda-autoeda-dow">
+
+<p class="admonition-title"><span class="caption-number">Exercise 79 </span></p>
+<section id="exercise-content">
+<p>Install <code class="docutils literal notranslate"><span class="pre">ydata-profiling</span></code> (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ydata-profiling</span></code>) and generate an automated EDA report for the Dow dataset.</p>
+<ol class="arabic simple">
+<li><p>Build a DataFrame from <code class="docutils literal notranslate"><span class="pre">X_dow</span></code> using <code class="docutils literal notranslate"><span class="pre">feature_names</span></code> as the columns, create a <code class="docutils literal notranslate"><span class="pre">ProfileReport</span></code>, save it to HTML, and open it in a browser.</p></li>
+<li><p>Find two things in the report that would have been tedious to surface with the manual workflow earlier in this chapter — for example a pair of highly correlated features, a feature flagged as near-constant, or a strongly skewed distribution.</p></li>
+<li><p>Based on the report’s alerts, name one feature you might drop or transform before modeling, and explain why in one sentence.</p></li>
+</ol>
+</section>
+</div>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>

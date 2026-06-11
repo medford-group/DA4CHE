@@ -97,7 +97,7 @@ plt.suptitle('Sample MNIST digits', y=1.02)
 plt.tight_layout()
 ```
 
-Each row of `X_mnist` is a 64-element vector. The `show_image` helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — a point we will return to in the Feature Engineering module.
+Each row of `X_mnist` is a 64-element vector. The `show_image` helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — structure that informs more advanced models like convolutional neural networks.
 
 :::{exercise}
 :label: ex-eda-dataset-shapes
@@ -115,7 +115,7 @@ Dimensionality in data science is not the same as the three physical dimensions 
 
 The curse always applies; the blessing is not guaranteed. In general, adding uninformative features makes problems harder.
 
-The following plots illustrate both effects using two-class data in 2D and 3D:
+The plots below use two-class data to make the *blessing* concrete: a third feature pulls apart classes that overlap in 2D.
 
 ```{code-cell} ipython3
 from mpl_toolkits.mplot3d import Axes3D
@@ -129,24 +129,45 @@ X3 = np.column_stack([X2, z])
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5),
                           subplot_kw={})
-# 2-D view
+# 2D view
 axes[0].scatter(X3[:, 0], X3[:, 1], c=clrs[y2])
 axes[0].set_xlabel('Feature 1')
 axes[0].set_ylabel('Feature 2')
-axes[0].set_title('2-D projection (overlapping classes)')
+axes[0].set_title('2D projection (overlapping classes)')
 
-# 3-D view via a second axes
+# 3D view via a second axes
 fig.delaxes(axes[1])
 ax3d = fig.add_subplot(1, 2, 2, projection='3d')
 ax3d.scatter(X3[:, 2], X3[:, 0], X3[:, 1], c=clrs[y2])
 ax3d.set_xlabel('Feature 3')
 ax3d.set_ylabel('Feature 1')
 ax3d.set_zlabel('Feature 2')
-ax3d.set_title('3-D view (classes separate)')
+ax3d.set_title('3D view (classes separate)')
 plt.tight_layout()
 ```
 
 Adding the third feature separates the two classes that overlapped in 2D — a concrete illustration of the blessing. However, if Feature 3 were pure noise, the added dimension would only degrade model performance.
+
+The very same points also reveal the *curse*. No points were added in the 3D view, yet they now have to fill a larger space. We can quantify this with the **sampling density** (points per unit volume of the data's bounding box) and the average distance from each point to its nearest neighbor:
+
+```{code-cell} ipython3
+def sampling_density(X):
+    """Points per unit volume of the data's bounding box."""
+    ranges = X.max(axis=0) - X.min(axis=0)
+    return len(X) / np.prod(ranges)
+
+def mean_nn_distance(X):
+    """Average distance from each point to its nearest neighbor."""
+    D = np.linalg.norm(X[:, None, :] - X[None, :, :], axis=-1)
+    np.fill_diagonal(D, np.inf)
+    return D.min(axis=1).mean()
+
+for label, X in [('2D', X3[:, :2]), ('3D', X3)]:
+    print(f'{label}: sampling density = {sampling_density(X):8.4f} points/unit-volume, '
+          f'mean nearest-neighbor distance = {mean_nn_distance(X):.2f}')
+```
+
+The density drops sharply and the typical nearest-neighbor distance grows, even though no data was added — exactly the sparsity that makes distance- and density-based methods unreliable in high dimensions. Both effects trace back to the same fact, that volume grows with dimension; which one wins depends on whether the extra dimensions carry signal or noise.
 
 :::{exercise}
 :label: ex-eda-volume-growth
@@ -156,7 +177,7 @@ Write a function `grid_points(d, N)` that returns the number of uniform grid poi
 
 ## Inspecting High-Dimensional Features
 
-Unlike a 1-D or 2-D dataset, we cannot simply scatter-plot a high-dimensional feature matrix. However, targeted visualizations of individual features and pairs of features remain essential for catching data quality issues, understanding scale and distribution, and identifying informative structure before modeling.
+Unlike a 1D or 2D dataset, we cannot simply scatter-plot a high-dimensional feature matrix. However, targeted visualizations of individual features and pairs of features remain essential for catching data quality issues, understanding scale and distribution, and identifying informative structure before modeling.
 
 ### Summary Statistics
 
@@ -418,6 +439,16 @@ report.to_file('dow_eda_report.html')
 ```
 
 The report includes per-feature histograms and statistics, a full correlation matrix, missing value summaries, and alerts for high cardinality or near-constant features. It is especially useful as a first pass on a new dataset before deciding which manual analyses to pursue. Install with `pip install ydata-profiling`.
+
+:::{exercise}
+:label: ex-eda-autoeda-dow
+
+Install `ydata-profiling` (`pip install ydata-profiling`) and generate an automated EDA report for the Dow dataset.
+
+1. Build a DataFrame from `X_dow` using `feature_names` as the columns, create a `ProfileReport`, save it to HTML, and open it in a browser.
+2. Find two things in the report that would have been tedious to surface with the manual workflow earlier in this chapter — for example a pair of highly correlated features, a feature flagged as near-constant, or a strongly skewed distribution.
+3. Based on the report's alerts, name one feature you might drop or transform before modeling, and explain why in one sentence.
+:::
 
 ## Summary
 

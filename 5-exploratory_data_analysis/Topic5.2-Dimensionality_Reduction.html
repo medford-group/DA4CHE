@@ -528,7 +528,7 @@ document.write(`
 <p>Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.</p>
 <div class="exercise admonition" id="ex-eda-dim-metrics">
 
-<p class="admonition-title"><span class="caption-number">Exercise 79 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 80 </span></p>
 <section id="exercise-content">
 <p>Using the MNIST dataset and the <code class="docutils literal notranslate"><span class="pre">stress</span></code> function defined above, compute the stress for a random 2D projection (generate a random 64×2 matrix with <code class="docutils literal notranslate"><span class="pre">np.random.default_rng(0).normal(size=(64,</span> <span class="pre">2))</span></code> and project <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> onto it). Compare this to the stress of the PCA 2D projection computed later in this chapter. What does the difference tell you about why PCA is preferred over a random projection?</p>
 </section>
@@ -657,7 +657,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x126e50670&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12e054400&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -665,7 +665,7 @@ Smallest eigenvalue:       0.0000
 </div>
 <div class="exercise admonition" id="ex-eda-pca-scree">
 
-<p class="admonition-title"><span class="caption-number">Exercise 80 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 81 </span></p>
 <section id="exercise-content">
 <p>Using the scree plot data above, determine the minimum number of principal components needed to retain at least <strong>90%</strong> of the total variance in the MNIST dataset. Then load the Dow dataset (<code class="docutils literal notranslate"><span class="pre">data/impurity_dataset-training.xlsx</span></code>) and apply PCA to report the number of components required for 90% retained variance. Which dataset is more compressible, and why?</p>
 </section>
@@ -809,7 +809,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x132e50c10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x139edcc10&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -868,7 +868,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x132e234c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12fae2c20&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -940,7 +940,7 @@ Retained variance: 0.890
 </div>
 <div class="exercise admonition" id="ex-eda-kpca-gamma">
 
-<p class="admonition-title"><span class="caption-number">Exercise 81 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
 <section id="exercise-content">
 <p>Using the moons dataset, fit <code class="docutils literal notranslate"><span class="pre">KernelPCA</span></code> with <code class="docutils literal notranslate"><span class="pre">kernel='rbf'</span></code> for five values of <code class="docutils literal notranslate"><span class="pre">gamma</span></code> spanning a wide range (e.g. 0.1, 1, 10, 100, 1000). For each, plot the 2D transformed data colored by class. Describe what happens to the separation as <code class="docutils literal notranslate"><span class="pre">gamma</span></code> increases. At what value does the transformation appear to overfit to individual points?</p>
 </section>
@@ -986,11 +986,11 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3479
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3381
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/374e17c14236aa053dc938c4af27edaeafd50d16520f1003f871631a9cbb25ad.png" src="../_images/374e17c14236aa053dc938c4af27edaeafd50d16520f1003f871631a9cbb25ad.png" />
+<img alt="../_images/7698f96a07a59fdb61b9c85147829ab0f48e7345d23997ee3f24ed027f724192.png" src="../_images/7698f96a07a59fdb61b9c85147829ab0f48e7345d23997ee3f24ed027f724192.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1020,10 +1020,10 @@ Stress PCA: 0.5405
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7760
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress: 0.7757
 </pre></div>
 </div>
-<img alt="../_images/55243f782f06142aa9ceaa7a3e15d6f626490d6a4b1164eb9355a0dc2a4728ce.png" src="../_images/55243f782f06142aa9ceaa7a3e15d6f626490d6a4b1164eb9355a0dc2a4728ce.png" />
+<img alt="../_images/08eccd88f628a2e276e963dfedd953d402fad1623c86b4f9e5ece938c6616840.png" src="../_images/08eccd88f628a2e276e963dfedd953d402fad1623c86b4f9e5ece938c6616840.png" />
 </div>
 </div>
 <p>t-SNE typically produces better-separated clusters than MDS or PCA on image data, though the axes have no interpretable meaning and results depend on hyperparameters and random initialization.</p>
@@ -1059,7 +1059,7 @@ Stress PCA: 0.5405
 </div>
 <div class="exercise admonition" id="ex-eda-tsne-perp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
 <section id="exercise-content">
 <p>Run t-SNE on the MNIST dataset with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
 </section>
@@ -1137,7 +1137,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <p>Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes. This is the key property that makes UMAP suitable for preprocessing in a supervised pipeline: fit the reducer on training data, then <code class="docutils literal notranslate"><span class="pre">transform</span></code> both train and test sets before passing them to a classifier.</p>
 <div class="exercise admonition" id="ex-eda-umap-params">
 
-<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
 <section id="exercise-content">
 <p>Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) <code class="docutils literal notranslate"><span class="pre">n_neighbors=5,</span> <span class="pre">min_dist=0.01</span></code>, (b) <code class="docutils literal notranslate"><span class="pre">n_neighbors=15,</span> <span class="pre">min_dist=0.1</span></code> (the default above), and (c) <code class="docutils literal notranslate"><span class="pre">n_neighbors=50,</span> <span class="pre">min_dist=0.5</span></code>. Plot the three embeddings side-by-side colored by digit. Describe how increasing <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> changes the structure of the embedding.</p>
 </section>
@@ -1331,9 +1331,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.06641
-Epoch  20  loss = 0.06159
-Epoch  30  loss = 0.05822
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07368
+Epoch  20  loss = 0.06318
+Epoch  30  loss = 0.06031
 </pre></div>
 </div>
 </div>
@@ -1357,7 +1357,7 @@ Epoch  30  loss = 0.05822
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/31f94f592bc786878ab83c042b4a7bc2df129372cb17e8926a1134326823accb.png" src="../_images/31f94f592bc786878ab83c042b4a7bc2df129372cb17e8926a1134326823accb.png" />
+<img alt="../_images/573e8fca3294b8e177a86c0d5d0b46fa9fcfd0dc6fc3dc12f68b1fe207a3bbbf.png" src="../_images/573e8fca3294b8e177a86c0d5d0b46fa9fcfd0dc6fc3dc12f68b1fe207a3bbbf.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1385,7 +1385,7 @@ Epoch  30  loss = 0.05822
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a5bde9a46389fdc368ed009469cc82d5d0db5f890776153d6e438229696b3c93.png" src="../_images/a5bde9a46389fdc368ed009469cc82d5d0db5f890776153d6e438229696b3c93.png" />
+<img alt="../_images/642be47876b4cf80c7b99e30284392db47956e163aba5bb05e13a4ba3aea685b.png" src="../_images/642be47876b4cf80c7b99e30284392db47956e163aba5bb05e13a4ba3aea685b.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -1395,7 +1395,7 @@ Epoch  30  loss = 0.05822
 </div>
 <div class="exercise admonition" id="ex-eda-autoencoder-design">
 
-<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
 <section id="exercise-content">
 <p>Consider a dataset with 100 features. You want to use an autoencoder to compress it to a 5-dimensional latent space. (a) Sketch an encoder architecture with two hidden layers, specifying reasonable layer widths. (b) If you instead used PCA for the same 5-component reduction and found that 5 PCs retain only 40% of variance, would you expect an autoencoder to do better or worse? What assumption does PCA make that the autoencoder does not? (c) Name one practical disadvantage of the autoencoder approach for a dataset with only 500 observations.</p>
 </section>
