@@ -451,26 +451,17 @@ structures), and data augmentation when new experiments are expensive.</p>
 
 <p class="admonition-title"><span class="caption-number">Exercise 94 </span></p>
 <section id="exercise-content">
-<p>The generative model overview mentions <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid \text{features})\)</span>. A closely
-related quantity is the <strong>class-conditional density</strong> <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid y)\)</span>: the
-distribution of inputs given a particular output value. Use <code class="docutils literal notranslate"><span class="pre">scipy.stats.norm</span></code> to explore
-this on the Dow dataset.</p>
-<p>Split the dataset into two subsets — rows where <code class="docutils literal notranslate"><span class="pre">y_dow</span></code> is below its median (“low
-impurity”) and rows where it is above (“high impurity”). For Dow feature column 6, fit a
-separate 1-D Gaussian to each subset and plot the two PDFs on the same axes. Compute and
-print the mean and standard deviation of each distribution.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="n">y_median</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">y_dow</span><span class="p">)</span>
-<span class="n">mask_low</span>  <span class="o">=</span> <span class="p">(</span><span class="n">y_dow</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y_median</span><span class="p">)</span>
-<span class="n">mask_high</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_dow</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span>  <span class="n">y_median</span><span class="p">)</span>
-
-<span class="c1"># fit and plot P(x_6 | y_low) and P(x_6 | y_high) here</span>
-</pre></div>
-</div>
-<p>If the two distributions are clearly separated, what does that tell you about feature 6’s
-usefulness as a predictor of impurity?</p>
+<p>Generative models are built on <strong>conditional probability</strong>, written <span class="math notranslate nohighlight">\(P(A \mid B)\)</span> and read
+“the probability of <span class="math notranslate nohighlight">\(A\)</span> given that <span class="math notranslate nohighlight">\(B\)</span> is true.” Answer the following in words — no code
+required.</p>
+<p>(a) For the Dow dataset, suppose <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is a vector of process sensor readings and <span class="math notranslate nohighlight">\(y\)</span>
+is the product-impurity class. In plain language, what does <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid y = \text{high})\)</span>
+describe?</p>
+<p>(b) Suppose 90% of operating records are “normal” and only 10% are “off-spec,” but a certain
+sensor pattern is twice as likely to appear during off-spec operation as during normal
+operation. Using Bayes’ theorem qualitatively, would observing that pattern once make
+off-spec operation <em>more likely than</em> normal operation, or still less likely? Explain what
+role the <strong>prior</strong> (the 90%/10% split) plays in your reasoning.</p>
 </section>
 </div>
 </section>
@@ -530,7 +521,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/38412e9dfddaa6b2ced634669df7f0eb253b583b44caa20c37264a0254294751.png" src="../_images/38412e9dfddaa6b2ced634669df7f0eb253b583b44caa20c37264a0254294751.png" />
+<img alt="../_images/0ca6ecb18302ab6aa39d2a1cfe4ffbbad9ed5f7bd8f3daa51857eaff47eb386c.png" src="../_images/0ca6ecb18302ab6aa39d2a1cfe4ffbbad9ed5f7bd8f3daa51857eaff47eb386c.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -579,7 +570,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/de9e2266007e91db7bb931f61685a652735eae407a522d63e7fe7791b8575efe.png" src="../_images/de9e2266007e91db7bb931f61685a652735eae407a522d63e7fe7791b8575efe.png" />
+<img alt="../_images/205201f52082b58e313f8146bad7064a9d8e4e8bc79b5db5ec1922fc304a18bf.png" src="../_images/205201f52082b58e313f8146bad7064a9d8e4e8bc79b5db5ec1922fc304a18bf.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -607,6 +598,11 @@ Gaussian Mixture Models (GMMs) address this by representing the full distributio
 <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_k\)</span> are covariance matrices. The model is fit using the
 <strong>Expectation-Maximization (EM)</strong> algorithm, which alternates between assigning points to
 components (E-step) and updating component parameters to maximize the likelihood (M-step).</p>
+<p>We met GMMs and the EM algorithm in <a class="reference internal" href="Topic5.3-Clustering.html"><span class="doc std std-doc">Clustering</span></a>, where the goal was to
+<em>assign</em> each point to a group. Here the emphasis shifts: we treat the fitted GMM as a full
+<strong>probability distribution</strong> <span class="math notranslate nohighlight">\(P(\mathbf{x})\)</span> that we can sample from to create new data and
+evaluate to score how typical a point is. The mechanics of fitting are identical; what changes
+is what we do with the result.</p>
 <p>Let’s visualize two features of the Dow dataset simultaneously:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -667,16 +663,19 @@ provided for visualization purposes — you do not need to understand their inte
                              <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_gmm</span><span class="p">(</span><span class="n">gmm</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scatter X colored by GMM assignment, with component ellipses.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scatter X colored by GMM assignment, with component contour ellipses on top.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">clrs</span><span class="p">[</span><span class="n">labels</span><span class="p">]</span> <span class="k">if</span> <span class="n">label</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="c1"># points faint and underneath so the component outlines remain readable over dense data</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-    <span class="n">w_max</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">weights_</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">covar</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span> <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span><span class="p">,</span> <span class="n">gmm</span><span class="o">.</span><span class="n">weights_</span><span class="p">):</span>
-        <span class="n">draw_ellipse</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">covar</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="n">w_max</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">covar</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span> <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span><span class="p">):</span>
+        <span class="c1"># draw each component as black 1-/2-/3-sigma contour rings (no fill) so every</span>
+        <span class="c1"># component stays visible regardless of its weight or color</span>
+        <span class="n">draw_ellipse</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">covar</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                     <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ax</span>
 </pre></div>
 </div>
@@ -692,7 +691,7 @@ provided for visualization purposes — you do not need to understand their inte
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5c8ddb033da2a2d49b45a644c74582910d9907c2bb20bcb7cbc49ee4cbd02374.png" src="../_images/5c8ddb033da2a2d49b45a644c74582910d9907c2bb20bcb7cbc49ee4cbd02374.png" />
+<img alt="../_images/31f392a198998fb19d2fbabc590baa28804ea406db9cbbcf57a7bb2c58413a47.png" src="../_images/31f392a198998fb19d2fbabc590baa28804ea406db9cbbcf57a7bb2c58413a47.png" />
 </div>
 </div>
 <p>Two Gaussians do not describe the data well. As we increase the number of components the
@@ -708,7 +707,7 @@ fit improves:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3eaf5c5b2acc871defa3f63b47440d73616e699355d2596163ace63c01c08fb5.png" src="../_images/3eaf5c5b2acc871defa3f63b47440d73616e699355d2596163ace63c01c08fb5.png" />
+<img alt="../_images/079d761a9bdd40eab5cc9fe27a85bff3cf70f5e9470d8e8a3add0ffd41f29f3e.png" src="../_images/079d761a9bdd40eab5cc9fe27a85bff3cf70f5e9470d8e8a3add0ffd41f29f3e.png" />
 </div>
 </div>
 <p>Generating synthetic data is built into <code class="docutils literal notranslate"><span class="pre">GaussianMixture</span></code> via the <code class="docutils literal notranslate"><span class="pre">sample</span></code> method, which
@@ -736,8 +735,9 @@ returns a tuple <code class="docutils literal notranslate"><span class="pre">(X_
 number of components.</p>
 <section id="bayesian-information-criterion">
 <h3>Bayesian Information Criterion<a class="headerlink" href="#bayesian-information-criterion" title="Link to this heading">#</a></h3>
-<p>The Bayesian Information Criterion (BIC) provides a principled tradeoff between
-goodness-of-fit and model complexity:</p>
+<p>The Bayesian Information Criterion (BIC), introduced for model selection in
+<a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html"><span class="doc std std-doc">Complexity and Optimization</span></a>, applies
+here too. It provides a principled tradeoff between goodness-of-fit and model complexity:</p>
 <div class="math notranslate nohighlight">
 \[\text{BIC} = \ln(n) \cdot k - 2 \ln(\hat{L})\]</div>
 <p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of data points, <span class="math notranslate nohighlight">\(k\)</span> is the number of free parameters, and <span class="math notranslate nohighlight">\(\hat{L}\)</span>
@@ -771,10 +771,10 @@ accuracy and complexity for this 2-D dataset.</p>
 
 <p class="admonition-title"><span class="caption-number">Exercise 96 </span></p>
 <section id="exercise-content">
-<p>Extend the 2-D GMM analysis to three features by adding Dow feature column index 2 so that
-<code class="docutils literal notranslate"><span class="pre">X_3d</span> <span class="pre">=</span> <span class="pre">X_dow[:,</span> <span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">6]]</span></code>. Fit GMMs with 2 to 30 components using
-<code class="docutils literal notranslate"><span class="pre">covariance_type='full'</span></code> and plot the BIC curve. Does the optimal number of components
-increase compared to the 2-D case? Explain why in one sentence.</p>
+<p>Extend the 2-D GMM analysis to three features so that <code class="docutils literal notranslate"><span class="pre">X_3d</span> <span class="pre">=</span> <span class="pre">X_dow[:,</span> <span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">6]]</span></code>. To keep
+the fits quick, subsample first (e.g. <code class="docutils literal notranslate"><span class="pre">X_3d</span> <span class="pre">=</span> <span class="pre">X_3d[::5]</span></code>, ~2,000 rows). Fit GMMs with 2 to 20
+components using <code class="docutils literal notranslate"><span class="pre">covariance_type='full'</span></code> and plot the BIC curve. Does the optimal number of
+components increase compared to the 2-D case? Explain why in one sentence.</p>
 </section>
 </div>
 </section>
@@ -1033,7 +1033,10 @@ bandwidth parameter:</p>
 </div>
 <p>The KDE curve is smooth and does not depend on arbitrary bin boundaries. The bandwidth <span class="math notranslate nohighlight">\(h\)</span>
 plays a role similar to bin width: too small and the estimate is noisy (overfitting each data
-point), too large and features are washed out (underfitting).</p>
+point), too large and features are washed out (underfitting). One practical advantage over the
+histogram is that the KDE varies <em>continuously</em> with the bandwidth — nudging <span class="math notranslate nohighlight">\(h\)</span> slightly
+shifts the curve smoothly — whereas a histogram changes in discrete jumps as bins are added or
+removed and can look qualitatively different from one bin count to the next.</p>
 <p>Like a GMM, a fitted KDE model can generate new synthetic samples:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1054,7 +1057,7 @@ point), too large and features are washed out (underfitting).</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1ec80155aae06ebcd2fc0d895262eb421ae577458f31e113a9ecd5ba7b26f426.png" src="../_images/1ec80155aae06ebcd2fc0d895262eb421ae577458f31e113a9ecd5ba7b26f426.png" />
+<img alt="../_images/823208093a25b6ba4c77d7cba412d828ea833b1634a896e59efc9518ab370283.png" src="../_images/823208093a25b6ba4c77d7cba412d828ea833b1634a896e59efc9518ab370283.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
@@ -1075,9 +1078,11 @@ estimation.</p>
 <p>Rather than tuning the bandwidth by hand, we can treat it as a hyperparameter and select
 it via cross-validation. <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> maximizes the mean held-out log-likelihood across
 <span class="math notranslate nohighlight">\(k\)</span> folds — a natural scoring criterion for density models.</p>
-<p>The CV signal is clearest when the data has genuine multimodal structure, because a
-bandwidth that merges two real modes loses information that the held-out fold can detect.
-We illustrate with a synthetic bimodal dataset before applying the procedure to real data:</p>
+<p>Cross-validation works best here when the data has more than one distinct peak. If a
+too-large bandwidth blurs two real peaks together, the resulting density assigns low
+probability to the held-out points that fall near those peaks — and cross-validation
+notices, scoring that bandwidth poorly. We illustrate with a synthetic two-peak dataset
+before applying the procedure to real data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
@@ -1234,7 +1239,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/823ece0d363498434c983a84f6d3cbecc2eb9f63fb21df1d4e692eef49a635d6.png" src="../_images/823ece0d363498434c983a84f6d3cbecc2eb9f63fb21df1d4e692eef49a635d6.png" />
+<img alt="../_images/12dd4f0ac5ed50af3277f8f6070a376153ea0ebc037e9704eb2d652c2546cc59.png" src="../_images/12dd4f0ac5ed50af3277f8f6070a376153ea0ebc037e9704eb2d652c2546cc59.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
@@ -1252,13 +1257,23 @@ networks.</p>
 use them to build <strong>probabilistic classifiers</strong> via Bayes’ theorem:</p>
 <div class="math notranslate nohighlight">
 \[P(y = c \mid \mathbf{x}) \propto P(\mathbf{x} \mid y = c) \cdot P(y = c)\]</div>
-<p>The term <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid y = c)\)</span> is the <strong>class-conditional likelihood</strong> — exactly what a
-generative model estimates. The term <span class="math notranslate nohighlight">\(P(y = c)\)</span> is the <strong>prior</strong>, estimated from class
-frequencies in the training set. The predicted class is the one with the highest posterior
-probability.</p>
-<p><strong>Naive Bayes</strong> uses a separate 1-D Gaussian per feature and assumes all features are
-independent. This is often too restrictive for real-world data. The approach below fits a
-<strong>full multivariate KDE</strong> to each class, capturing all feature correlations — hence the name
+<p>Read left to right, this says: the probability that a point <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> belongs to class <span class="math notranslate nohighlight">\(c\)</span>
+(the <strong>posterior</strong>) is proportional to how likely that point is under class <span class="math notranslate nohighlight">\(c\)</span>’s own density
+(the <strong>class-conditional likelihood</strong>) times how common class <span class="math notranslate nohighlight">\(c\)</span> is to begin with (the
+<strong>prior</strong>). The key idea is that we never model the classes jointly — we fit a <em>separate</em>
+generative model to each class, then ask which class makes the observed point most plausible.
+Each piece comes from something we already know how to compute: <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid y = c)\)</span> is
+estimated by fitting a generative model (a KDE or GMM) to only the class-<span class="math notranslate nohighlight">\(c\)</span> training points,
+and <span class="math notranslate nohighlight">\(P(y = c)\)</span> is just the fraction of training points in class <span class="math notranslate nohighlight">\(c\)</span>. The symbol <span class="math notranslate nohighlight">\(\propto\)</span>
+(“proportional to”) lets us drop the denominator <span class="math notranslate nohighlight">\(P(\mathbf{x})\)</span> from the full theorem, because
+it is the same for every class and so does not change which class wins. To classify a new
+point we evaluate the right-hand side for every class and pick the largest.</p>
+<p>This recipe should look familiar: the <strong>Naive Bayes</strong> classifier from
+<a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html"><span class="doc std std-doc">Alternate Classification Models</span></a>
+is exactly this construction, with the simplifying assumption that the features are
+independent so each class density factorizes into a separate 1-D Gaussian per feature. That
+assumption is often too restrictive for real data. The approach below instead fits a <strong>full
+multivariate KDE</strong> to each class, capturing all feature correlations — hence the name
 “not-so-naive Bayes.”</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

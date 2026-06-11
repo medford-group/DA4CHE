@@ -62,29 +62,19 @@ structures), and data augmentation when new experiments are expensive.
 :::{exercise}
 :label: ex-eda-gen-conditional
 
-The generative model overview mentions $P(\mathbf{x} \mid \text{features})$. A closely
-related quantity is the **class-conditional density** $P(\mathbf{x} \mid y)$: the
-distribution of inputs given a particular output value. Use `scipy.stats.norm` to explore
-this on the Dow dataset.
+Generative models are built on **conditional probability**, written $P(A \mid B)$ and read
+"the probability of $A$ given that $B$ is true." Answer the following in words — no code
+required.
 
-Split the dataset into two subsets — rows where `y_dow` is below its median ("low
-impurity") and rows where it is above ("high impurity"). For Dow feature column 6, fit a
-separate 1-D Gaussian to each subset and plot the two PDFs on the same axes. Compute and
-print the mean and standard deviation of each distribution.
+(a) For the Dow dataset, suppose $\mathbf{x}$ is a vector of process sensor readings and $y$
+is the product-impurity class. In plain language, what does $P(\mathbf{x} \mid y = \text{high})$
+describe?
 
-```python
-from scipy.stats import norm
-import numpy as np
-
-y_median = np.median(y_dow)
-mask_low  = (y_dow[:, 0] <= y_median)
-mask_high = (y_dow[:, 0] >  y_median)
-
-# fit and plot P(x_6 | y_low) and P(x_6 | y_high) here
-```
-
-If the two distributions are clearly separated, what does that tell you about feature 6's
-usefulness as a predictor of impurity?
+(b) Suppose 90% of operating records are "normal" and only 10% are "off-spec," but a certain
+sensor pattern is twice as likely to appear during off-spec operation as during normal
+operation. Using Bayes' theorem qualitatively, would observing that pattern once make
+off-spec operation *more likely than* normal operation, or still less likely? Explain what
+role the **prior** (the 90%/10% split) plays in your reasoning.
 :::
 
 ## Normal Distribution
@@ -196,6 +186,12 @@ $\boldsymbol{\Sigma}_k$ are covariance matrices. The model is fit using the
 **Expectation-Maximization (EM)** algorithm, which alternates between assigning points to
 components (E-step) and updating component parameters to maximize the likelihood (M-step).
 
+We met GMMs and the EM algorithm in [Clustering](Topic5.3-Clustering), where the goal was to
+*assign* each point to a group. Here the emphasis shifts: we treat the fitted GMM as a full
+**probability distribution** $P(\mathbf{x})$ that we can sample from to create new data and
+evaluate to score how typical a point is. The mechanics of fitting are identical; what changes
+is what we do with the result.
+
 Let's visualize two features of the Dow dataset simultaneously:
 
 ```{code-cell} ipython3
@@ -246,16 +242,19 @@ def draw_ellipse(position, covariance, ax=None, **kwargs):
                              angle=angle, **kwargs))
 
 def plot_gmm(gmm, X, label=True, ax=None):
-    """Scatter X colored by GMM assignment, with component ellipses."""
+    """Scatter X colored by GMM assignment, with component contour ellipses on top."""
     if ax is None:
         fig, ax = plt.subplots()
     labels = gmm.fit(X).predict(X)
     c = clrs[labels] if label else None
-    ax.scatter(X[:, 0], X[:, 1], c=c, s=20, zorder=0, alpha=0.3)
+    # points faint and underneath so the component outlines remain readable over dense data
+    ax.scatter(X[:, 0], X[:, 1], c=c, s=12, zorder=1, alpha=0.25)
     ax.axis('equal')
-    w_max = gmm.weights_.max()
-    for pos, covar, w in zip(gmm.means_, gmm.covariances_, gmm.weights_):
-        draw_ellipse(pos, covar, ax=ax, alpha=0.3 * w / w_max)
+    for pos, covar in zip(gmm.means_, gmm.covariances_):
+        # draw each component as black 1-/2-/3-sigma contour rings (no fill) so every
+        # component stays visible regardless of its weight or color
+        draw_ellipse(pos, covar, ax=ax, facecolor='none',
+                     edgecolor='k', lw=1.4, alpha=0.8, zorder=3)
     return ax
 ```
 
@@ -298,8 +297,9 @@ number of components.
 
 ### Bayesian Information Criterion
 
-The Bayesian Information Criterion (BIC) provides a principled tradeoff between
-goodness-of-fit and model complexity:
+The Bayesian Information Criterion (BIC), introduced for model selection in
+[Complexity and Optimization](../2-regression/Topic2.3-Complexity_Optimization), applies
+here too. It provides a principled tradeoff between goodness-of-fit and model complexity:
 
 $$\text{BIC} = \ln(n) \cdot k - 2 \ln(\hat{L})$$
 
@@ -329,10 +329,10 @@ accuracy and complexity for this 2-D dataset.
 :::{exercise}
 :label: ex-eda-gmm-bic3d
 
-Extend the 2-D GMM analysis to three features by adding Dow feature column index 2 so that
-`X_3d = X_dow[:, [2, 4, 6]]`. Fit GMMs with 2 to 30 components using
-`covariance_type='full'` and plot the BIC curve. Does the optimal number of components
-increase compared to the 2-D case? Explain why in one sentence.
+Extend the 2-D GMM analysis to three features so that `X_3d = X_dow[:, [2, 4, 6]]`. To keep
+the fits quick, subsample first (e.g. `X_3d = X_3d[::5]`, ~2,000 rows). Fit GMMs with 2 to 20
+components using `covariance_type='full'` and plot the BIC curve. Does the optimal number of
+components increase compared to the 2-D case? Explain why in one sentence.
 :::
 
 ## Generative Models in High Dimensions
@@ -532,7 +532,10 @@ ax.legend();
 
 The KDE curve is smooth and does not depend on arbitrary bin boundaries. The bandwidth $h$
 plays a role similar to bin width: too small and the estimate is noisy (overfitting each data
-point), too large and features are washed out (underfitting).
+point), too large and features are washed out (underfitting). One practical advantage over the
+histogram is that the KDE varies *continuously* with the bandwidth — nudging $h$ slightly
+shifts the curve smoothly — whereas a histogram changes in discrete jumps as bins are added or
+removed and can look qualitatively different from one bin count to the next.
 
 Like a GMM, a fitted KDE model can generate new synthetic samples:
 
@@ -570,9 +573,11 @@ Rather than tuning the bandwidth by hand, we can treat it as a hyperparameter an
 it via cross-validation. `GridSearchCV` maximizes the mean held-out log-likelihood across
 $k$ folds — a natural scoring criterion for density models.
 
-The CV signal is clearest when the data has genuine multimodal structure, because a
-bandwidth that merges two real modes loses information that the held-out fold can detect.
-We illustrate with a synthetic bimodal dataset before applying the procedure to real data:
+Cross-validation works best here when the data has more than one distinct peak. If a
+too-large bandwidth blurs two real peaks together, the resulting density assigns low
+probability to the held-out points that fall near those peaks — and cross-validation
+notices, scoring that bandwidth poorly. We illustrate with a synthetic two-peak dataset
+before applying the procedure to real data:
 
 ```{code-cell} ipython3
 from sklearn.model_selection import GridSearchCV
@@ -717,14 +722,24 @@ use them to build **probabilistic classifiers** via Bayes' theorem:
 
 $$P(y = c \mid \mathbf{x}) \propto P(\mathbf{x} \mid y = c) \cdot P(y = c)$$
 
-The term $P(\mathbf{x} \mid y = c)$ is the **class-conditional likelihood** — exactly what a
-generative model estimates. The term $P(y = c)$ is the **prior**, estimated from class
-frequencies in the training set. The predicted class is the one with the highest posterior
-probability.
+Read left to right, this says: the probability that a point $\mathbf{x}$ belongs to class $c$
+(the **posterior**) is proportional to how likely that point is under class $c$'s own density
+(the **class-conditional likelihood**) times how common class $c$ is to begin with (the
+**prior**). The key idea is that we never model the classes jointly — we fit a *separate*
+generative model to each class, then ask which class makes the observed point most plausible.
+Each piece comes from something we already know how to compute: $P(\mathbf{x} \mid y = c)$ is
+estimated by fitting a generative model (a KDE or GMM) to only the class-$c$ training points,
+and $P(y = c)$ is just the fraction of training points in class $c$. The symbol $\propto$
+("proportional to") lets us drop the denominator $P(\mathbf{x})$ from the full theorem, because
+it is the same for every class and so does not change which class wins. To classify a new
+point we evaluate the right-hand side for every class and pick the largest.
 
-**Naive Bayes** uses a separate 1-D Gaussian per feature and assumes all features are
-independent. This is often too restrictive for real-world data. The approach below fits a
-**full multivariate KDE** to each class, capturing all feature correlations — hence the name
+This recipe should look familiar: the **Naive Bayes** classifier from
+[Alternate Classification Models](../3-classification/Topic3.3-Alternate_Classification_Models)
+is exactly this construction, with the simplifying assumption that the features are
+independent so each class density factorizes into a separate 1-D Gaussian per feature. That
+assumption is often too restrictive for real data. The approach below instead fits a **full
+multivariate KDE** to each class, capturing all feature correlations — hence the name
 "not-so-naive Bayes."
 
 ```{code-cell} ipython3
