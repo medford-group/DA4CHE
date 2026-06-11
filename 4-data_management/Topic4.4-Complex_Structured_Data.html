@@ -636,7 +636,35 @@ and, in Python, the <code class="docutils literal notranslate"><span class="pre"
 <p>Following the responsible-data practice from the previous chapter, we downloaded the
 watershed boundaries for the metro-Atlanta area once from the USGS Watershed Boundary
 Dataset and saved them as a GeoJSON file, so this example is reproducible without hitting a
-live GIS server on every build.</p>
+live GIS server on every build. The one-time download is shown below, commented out so the
+book does not contact the live GIS server each time it is built:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># One-time download that produced data/atl_watersheds.geojson (commented out).</span>
+<span class="c1">#</span>
+<span class="c1"># import requests, json</span>
+<span class="c1">#</span>
+<span class="c1"># # USGS Watershed Boundary Dataset, &quot;Watershed&quot; layer (HUC10), via the ArcGIS REST API.</span>
+<span class="c1"># WBD = &quot;https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/5/query&quot;</span>
+<span class="c1"># bbox = {&quot;xmin&quot;: -84.55, &quot;ymin&quot;: 33.65, &quot;xmax&quot;: -84.25, &quot;ymax&quot;: 33.90,</span>
+<span class="c1">#         &quot;spatialReference&quot;: {&quot;wkid&quot;: 4326}}</span>
+<span class="c1"># params = {</span>
+<span class="c1">#     &quot;where&quot;: &quot;1=1&quot;,</span>
+<span class="c1">#     &quot;geometry&quot;: json.dumps(bbox),</span>
+<span class="c1">#     &quot;geometryType&quot;: &quot;esriGeometryEnvelope&quot;,</span>
+<span class="c1">#     &quot;inSR&quot;: 4326, &quot;outSR&quot;: 4326,</span>
+<span class="c1">#     &quot;spatialRel&quot;: &quot;esriSpatialRelIntersects&quot;,</span>
+<span class="c1">#     &quot;outFields&quot;: &quot;name,huc10,areasqkm,states&quot;,</span>
+<span class="c1">#     &quot;returnGeometry&quot;: &quot;true&quot;,</span>
+<span class="c1">#     &quot;f&quot;: &quot;geojson&quot;,</span>
+<span class="c1"># }</span>
+<span class="c1"># r = requests.get(WBD, params=params); r.raise_for_status()</span>
+<span class="c1"># with open(&quot;data/atl_watersheds.geojson&quot;, &quot;w&quot;) as fh:</span>
+<span class="c1">#     fh.write(r.text)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p><em>Prompt: “Using geopandas, read the cached metro-Atlanta watershed GeoJSON and plot the
 watersheds colored by name, with a legend.”</em></p>

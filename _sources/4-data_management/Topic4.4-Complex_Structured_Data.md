@@ -245,7 +245,32 @@ and, in Python, the `geopandas` library.
 Following the responsible-data practice from the previous chapter, we downloaded the
 watershed boundaries for the metro-Atlanta area once from the USGS Watershed Boundary
 Dataset and saved them as a GeoJSON file, so this example is reproducible without hitting a
-live GIS server on every build.
+live GIS server on every build. The one-time download is shown below, commented out so the
+book does not contact the live GIS server each time it is built:
+
+```{code-cell} ipython3
+# One-time download that produced data/atl_watersheds.geojson (commented out).
+#
+# import requests, json
+#
+# # USGS Watershed Boundary Dataset, "Watershed" layer (HUC10), via the ArcGIS REST API.
+# WBD = "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/5/query"
+# bbox = {"xmin": -84.55, "ymin": 33.65, "xmax": -84.25, "ymax": 33.90,
+#         "spatialReference": {"wkid": 4326}}
+# params = {
+#     "where": "1=1",
+#     "geometry": json.dumps(bbox),
+#     "geometryType": "esriGeometryEnvelope",
+#     "inSR": 4326, "outSR": 4326,
+#     "spatialRel": "esriSpatialRelIntersects",
+#     "outFields": "name,huc10,areasqkm,states",
+#     "returnGeometry": "true",
+#     "f": "geojson",
+# }
+# r = requests.get(WBD, params=params); r.raise_for_status()
+# with open("data/atl_watersheds.geojson", "w") as fh:
+#     fh.write(r.text)
+```
 
 > *Prompt: "Using geopandas, read the cached metro-Atlanta watershed GeoJSON and plot the
 > watersheds colored by name, with a legend."*
