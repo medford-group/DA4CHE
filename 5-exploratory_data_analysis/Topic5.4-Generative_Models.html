@@ -451,17 +451,24 @@ structures), and data augmentation when new experiments are expensive.</p>
 
 <p class="admonition-title"><span class="caption-number">Exercise 94 </span></p>
 <section id="exercise-content">
-<p>Generative models are built on <strong>conditional probability</strong>, written <span class="math notranslate nohighlight">\(P(A \mid B)\)</span> and read
-“the probability of <span class="math notranslate nohighlight">\(A\)</span> given that <span class="math notranslate nohighlight">\(B\)</span> is true.” Answer the following in words — no code
-required.</p>
-<p>(a) For the Dow dataset, suppose <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is a vector of process sensor readings and <span class="math notranslate nohighlight">\(y\)</span>
-is the product-impurity class. In plain language, what does <span class="math notranslate nohighlight">\(P(\mathbf{x} \mid y = \text{high})\)</span>
-describe?</p>
-<p>(b) Suppose 90% of operating records are “normal” and only 10% are “off-spec,” but a certain
-sensor pattern is twice as likely to appear during off-spec operation as during normal
-operation. Using Bayes’ theorem qualitatively, would observing that pattern once make
-off-spec operation <em>more likely than</em> normal operation, or still less likely? Explain what
-role the <strong>prior</strong> (the 90%/10% split) plays in your reasoning.</p>
+<p>Generative models are built on <strong>conditional probability</strong>, <span class="math notranslate nohighlight">\(P(A \mid B)\)</span> — “the probability
+of <span class="math notranslate nohighlight">\(A\)</span> given that <span class="math notranslate nohighlight">\(B\)</span> is true” — combined through Bayes’ theorem. A classic illustration is
+testing for a rare disease.</p>
+<p>Suppose a disease affects <strong>1 in 1,000</strong> people. A test correctly flags <strong>99%</strong> of people who
+have the disease (true-positive rate) but also wrongly flags <strong>5%</strong> of healthy people
+(false-positive rate). A randomly chosen person tests <strong>positive</strong>.</p>
+<p>(a) Before any arithmetic, write down your gut estimate: how likely is it that this person
+actually has the disease?</p>
+<p>(b) Now compute it with Bayes’ theorem,</p>
+<div class="math notranslate nohighlight">
+\[P(\text{disease}\mid +) = \frac{P(+\mid \text{disease})\,P(\text{disease})}
+{P(+\mid \text{disease})\,P(\text{disease}) + P(+\mid \text{healthy})\,P(\text{healthy})}\]</div>
+<p>Plug in the numbers (<span class="math notranslate nohighlight">\(P(\text{disease}) = 0.001\)</span>, <span class="math notranslate nohighlight">\(P(+\mid\text{disease}) = 0.99\)</span>,
+<span class="math notranslate nohighlight">\(P(+\mid\text{healthy}) = 0.05\)</span>) and report <span class="math notranslate nohighlight">\(P(\text{disease}\mid +)\)</span>.</p>
+<p>(c) The result (about 2%) is far below most people’s intuition in part (a). Explain why the
+<strong>base rate</strong> — the 1-in-1,000 prior — dominates the answer, and connect this to generative
+classification: why must a classifier weight each class-conditional density <span class="math notranslate nohighlight">\(P(\mathbf{x}\mid y)\)</span>
+by its prior <span class="math notranslate nohighlight">\(P(y)\)</span> rather than comparing the densities alone?</p>
 </section>
 </div>
 </section>
@@ -521,7 +528,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0ca6ecb18302ab6aa39d2a1cfe4ffbbad9ed5f7bd8f3daa51857eaff47eb386c.png" src="../_images/0ca6ecb18302ab6aa39d2a1cfe4ffbbad9ed5f7bd8f3daa51857eaff47eb386c.png" />
+<img alt="../_images/60cfe5f3f33f3b3aadcb1e2ae5593a46e8af84ecdd1952136ba50dbee45ae2e0.png" src="../_images/60cfe5f3f33f3b3aadcb1e2ae5593a46e8af84ecdd1952136ba50dbee45ae2e0.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -570,7 +577,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/205201f52082b58e313f8146bad7064a9d8e4e8bc79b5db5ec1922fc304a18bf.png" src="../_images/205201f52082b58e313f8146bad7064a9d8e4e8bc79b5db5ec1922fc304a18bf.png" />
+<img alt="../_images/4d206086ac5464b93b492954d1489c3d91c00618f4be79e31e0f45318ffd8942.png" src="../_images/4d206086ac5464b93b492954d1489c3d91c00618f4be79e31e0f45318ffd8942.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -648,8 +655,9 @@ provided for visualization purposes — you do not need to understand their inte
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">draw_ellipse</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">covariance</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw an ellipse representing one GMM component.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_ellipse</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">covariance</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw nested 1-, 2-, 3-sigma ellipses filled with `color`. The translucent layers</span>
+<span class="sd">    stack, so each component is darkest at its center and fades toward its edge.&quot;&quot;&quot;</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span> <span class="ow">or</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">covariance</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
         <span class="n">U</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">covariance</span><span class="p">)</span>
@@ -659,23 +667,20 @@ provided for visualization purposes — you do not need to understand their inte
         <span class="n">angle</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">covariance</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">nsig</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Ellipse</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">nsig</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="n">nsig</span> <span class="o">*</span> <span class="n">height</span><span class="p">,</span>
-                             <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Ellipse</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">nsig</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="n">nsig</span> <span class="o">*</span> <span class="n">height</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_gmm</span><span class="p">(</span><span class="n">gmm</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scatter X colored by GMM assignment, with component contour ellipses on top.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scatter X colored by GMM assignment, with translucent per-class component ellipses.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">clrs</span><span class="p">[</span><span class="n">labels</span><span class="p">]</span> <span class="k">if</span> <span class="n">label</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="c1"># points faint and underneath so the component outlines remain readable over dense data</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">covar</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span> <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span><span class="p">):</span>
-        <span class="c1"># draw each component as black 1-/2-/3-sigma contour rings (no fill) so every</span>
-        <span class="c1"># component stays visible regardless of its weight or color</span>
-        <span class="n">draw_ellipse</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">covar</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-                     <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">covar</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span> <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span><span class="p">)):</span>
+        <span class="c1"># shade each component in its own class color; layered transparency darkens the center</span>
+        <span class="n">draw_ellipse</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">covar</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">clrs</span><span class="p">)],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ax</span>
 </pre></div>
 </div>
@@ -691,7 +696,7 @@ provided for visualization purposes — you do not need to understand their inte
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/31f392a198998fb19d2fbabc590baa28804ea406db9cbbcf57a7bb2c58413a47.png" src="../_images/31f392a198998fb19d2fbabc590baa28804ea406db9cbbcf57a7bb2c58413a47.png" />
+<img alt="../_images/1687480a0bf49930b0a4e7b897ad03d35fa82976030f3eda339541fdfa9ede5d.png" src="../_images/1687480a0bf49930b0a4e7b897ad03d35fa82976030f3eda339541fdfa9ede5d.png" />
 </div>
 </div>
 <p>Two Gaussians do not describe the data well. As we increase the number of components the
@@ -707,7 +712,7 @@ fit improves:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/079d761a9bdd40eab5cc9fe27a85bff3cf70f5e9470d8e8a3add0ffd41f29f3e.png" src="../_images/079d761a9bdd40eab5cc9fe27a85bff3cf70f5e9470d8e8a3add0ffd41f29f3e.png" />
+<img alt="../_images/7c63fc99113e1065a6f21a981772de1f49dfd4d5f0beb11c4033c451e2841222.png" src="../_images/7c63fc99113e1065a6f21a981772de1f49dfd4d5f0beb11c4033c451e2841222.png" />
 </div>
 </div>
 <p>Generating synthetic data is built into <code class="docutils literal notranslate"><span class="pre">GaussianMixture</span></code> via the <code class="docutils literal notranslate"><span class="pre">sample</span></code> method, which
@@ -1057,7 +1062,7 @@ removed and can look qualitatively different from one bin count to the next.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/823208093a25b6ba4c77d7cba412d828ea833b1634a896e59efc9518ab370283.png" src="../_images/823208093a25b6ba4c77d7cba412d828ea833b1634a896e59efc9518ab370283.png" />
+<img alt="../_images/d7893fe1f98dda2a495cf2600ba983267b03611d04ac20abc63c943dc75bade0.png" src="../_images/d7893fe1f98dda2a495cf2600ba983267b03611d04ac20abc63c943dc75bade0.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
@@ -1239,7 +1244,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/12dd4f0ac5ed50af3277f8f6070a376153ea0ebc037e9704eb2d652c2546cc59.png" src="../_images/12dd4f0ac5ed50af3277f8f6070a376153ea0ebc037e9704eb2d652c2546cc59.png" />
+<img alt="../_images/57d1f6dd18d834f32a147502e2358a8b1d26a09ca0fcf782ae253b2274df7d63.png" src="../_images/57d1f6dd18d834f32a147502e2358a8b1d26a09ca0fcf782ae253b2274df7d63.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
@@ -1394,7 +1399,7 @@ Variance retained: 95.5%
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_range_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_range_dow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">131</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="n">bics_dow</span><span class="p">,</span> <span class="n">models_dow</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_range_dow</span><span class="p">:</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span>
@@ -1415,12 +1420,22 @@ Variance retained: 95.5%
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal GMM components: 24
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal GMM components: 85
 </pre></div>
 </div>
-<img alt="../_images/3b06626de95d34fee7f46c23c821d03fe0a4f0c110355fd45bedbf3a44b7ab22.png" src="../_images/3b06626de95d34fee7f46c23c821d03fe0a4f0c110355fd45bedbf3a44b7ab22.png" />
+<img alt="../_images/108b8555f970134e827fae101f168cc76af4c0243c34080313a6d0a4d4f0b2ea.png" src="../_images/108b8555f970134e827fae101f168cc76af4c0243c34080313a6d0a4d4f0b2ea.png" />
 </div>
 </div>
+<p>Unlike the tidy 2-D example earlier in this chapter, the BIC here descends steeply and then
+flattens into a broad, shallow basin: the optimum sits at <em>several dozen</em> components, and its
+exact location wanders with the random initialization. This is the same lesson as in
+<a class="reference internal" href="Topic5.3-Clustering.html"><span class="doc std std-doc">Clustering</span></a> — real process data is not a handful of clean Gaussians, so
+BIC keeps rewarding extra components that help the mixture approximate a continuous density.
+Note that this is why we extended the search well beyond the ~20 components used for the 2-D
+example: stopping too early would have put the “optimum” at the edge of the range rather than
+at a true minimum. For <em>generation</em>, a large number of components is perfectly fine — even
+desirable — because the goal is to reproduce the data distribution, not to identify a few
+meaningful clusters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_synth_k</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">best_dow_gmm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_dow</span><span class="p">))</span>
@@ -1452,7 +1467,7 @@ Variance retained: 95.5%
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/89e6d239a4b3bd3b86288df6133231a290db1d94d86713a643736db752d1f3c7.png" src="../_images/89e6d239a4b3bd3b86288df6133231a290db1d94d86713a643736db752d1f3c7.png" />
+<img alt="../_images/d299235bfa83846df5cd7949f6304e0c055f5183081b4d19fddd450201958910.png" src="../_images/d299235bfa83846df5cd7949f6304e0c055f5183081b4d19fddd450201958910.png" />
 </div>
 </div>
 <p>The marginal distributions of the synthetic data closely mirror the real data. The PCA step
@@ -1492,7 +1507,7 @@ per-sample log-probability <span class="math notranslate nohighlight">\(\ln P(\m
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2c9bbbe74340d9b6cea1cf4e97270019114ca7c5f9ad80f9b8f7b9e9101feefb.png" src="../_images/2c9bbbe74340d9b6cea1cf4e97270019114ca7c5f9ad80f9b8f7b9e9101feefb.png" />
+<img alt="../_images/d53875c119e684ea19583c4e18852a1dff649079f1599c49fc6b5b7a1f7d2a91.png" src="../_images/d53875c119e684ea19583c4e18852a1dff649079f1599c49fc6b5b7a1f7d2a91.png" />
 </div>
 </div>
 <p>We flag the bottom 1% of scores as anomalous:</p>
@@ -1518,7 +1533,7 @@ per-sample log-probability <span class="math notranslate nohighlight">\(\ln P(\m
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Anomalous points flagged: 103 / 10297
 </pre></div>
 </div>
-<img alt="../_images/6932bd625e6609abda172cd0885b48cb2348f9a7acd3415a634c4a39b970e31c.png" src="../_images/6932bd625e6609abda172cd0885b48cb2348f9a7acd3415a634c4a39b970e31c.png" />
+<img alt="../_images/ba8e1bfa004a920fd6586783cc6ea3ea94ef697f34767df7550ce22f02a87806.png" src="../_images/ba8e1bfa004a920fd6586783cc6ea3ea94ef697f34767df7550ce22f02a87806.png" />
 </div>
 </div>
 <p>The flagged points cluster at the edges of the data cloud in PCA space — exactly the sparse,
@@ -1539,7 +1554,7 @@ whether these anomalous time steps correspond to elevated product impurity:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1843b6b57f0692ad80de3f8f7cffc06926067468cbc724ac6b8c6b3143da0bda.png" src="../_images/1843b6b57f0692ad80de3f8f7cffc06926067468cbc724ac6b8c6b3143da0bda.png" />
+<img alt="../_images/ee0ca5a8be904c348733ed3f712676fb5f075161310a3c33d398bda321cd7e8e.png" src="../_images/ee0ca5a8be904c348733ed3f712676fb5f075161310a3c33d398bda321cd7e8e.png" />
 </div>
 </div>
 <div class="admonition note">

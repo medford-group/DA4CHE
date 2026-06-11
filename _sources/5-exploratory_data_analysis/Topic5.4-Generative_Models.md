@@ -62,19 +62,29 @@ structures), and data augmentation when new experiments are expensive.
 :::{exercise}
 :label: ex-eda-gen-conditional
 
-Generative models are built on **conditional probability**, written $P(A \mid B)$ and read
-"the probability of $A$ given that $B$ is true." Answer the following in words — no code
-required.
+Generative models are built on **conditional probability**, $P(A \mid B)$ — "the probability
+of $A$ given that $B$ is true" — combined through Bayes' theorem. A classic illustration is
+testing for a rare disease.
 
-(a) For the Dow dataset, suppose $\mathbf{x}$ is a vector of process sensor readings and $y$
-is the product-impurity class. In plain language, what does $P(\mathbf{x} \mid y = \text{high})$
-describe?
+Suppose a disease affects **1 in 1,000** people. A test correctly flags **99%** of people who
+have the disease (true-positive rate) but also wrongly flags **5%** of healthy people
+(false-positive rate). A randomly chosen person tests **positive**.
 
-(b) Suppose 90% of operating records are "normal" and only 10% are "off-spec," but a certain
-sensor pattern is twice as likely to appear during off-spec operation as during normal
-operation. Using Bayes' theorem qualitatively, would observing that pattern once make
-off-spec operation *more likely than* normal operation, or still less likely? Explain what
-role the **prior** (the 90%/10% split) plays in your reasoning.
+(a) Before any arithmetic, write down your gut estimate: how likely is it that this person
+actually has the disease?
+
+(b) Now compute it with Bayes' theorem,
+
+$$P(\text{disease}\mid +) = \frac{P(+\mid \text{disease})\,P(\text{disease})}
+{P(+\mid \text{disease})\,P(\text{disease}) + P(+\mid \text{healthy})\,P(\text{healthy})}$$
+
+Plug in the numbers ($P(\text{disease}) = 0.001$, $P(+\mid\text{disease}) = 0.99$,
+$P(+\mid\text{healthy}) = 0.05$) and report $P(\text{disease}\mid +)$.
+
+(c) The result (about 2%) is far below most people's intuition in part (a). Explain why the
+**base rate** — the 1-in-1,000 prior — dominates the answer, and connect this to generative
+classification: why must a classifier weight each class-conditional density $P(\mathbf{x}\mid y)$
+by its prior $P(y)$ rather than comparing the densities alone?
 :::
 
 ## Normal Distribution
@@ -227,8 +237,9 @@ provided for visualization purposes — you do not need to understand their inte
 ```{code-cell} ipython3
 from matplotlib.patches import Ellipse
 
-def draw_ellipse(position, covariance, ax=None, **kwargs):
-    """Draw an ellipse representing one GMM component."""
+def draw_ellipse(position, covariance, ax=None, color='gray', **kwargs):
+    """Draw nested 1-, 2-, 3-sigma ellipses filled with `color`. The translucent layers
+    stack, so each component is darkest at its center and fades toward its edge."""
     ax = ax or plt.gca()
     if covariance.shape == (2, 2):
         U, s, Vt = np.linalg.svd(covariance)
@@ -238,23 +249,20 @@ def draw_ellipse(position, covariance, ax=None, **kwargs):
         angle = 0
         width, height = 2 * np.sqrt(covariance)
     for nsig in range(1, 4):
-        ax.add_patch(Ellipse(position, nsig * width, nsig * height,
-                             angle=angle, **kwargs))
+        ax.add_patch(Ellipse(position, nsig * width, nsig * height, angle=angle,
+                             facecolor=color, edgecolor='none', alpha=0.15, **kwargs))
 
 def plot_gmm(gmm, X, label=True, ax=None):
-    """Scatter X colored by GMM assignment, with component contour ellipses on top."""
+    """Scatter X colored by GMM assignment, with translucent per-class component ellipses."""
     if ax is None:
         fig, ax = plt.subplots()
     labels = gmm.fit(X).predict(X)
     c = clrs[labels] if label else None
-    # points faint and underneath so the component outlines remain readable over dense data
-    ax.scatter(X[:, 0], X[:, 1], c=c, s=12, zorder=1, alpha=0.25)
+    ax.scatter(X[:, 0], X[:, 1], c=c, s=14, zorder=1, alpha=0.12)
     ax.axis('equal')
-    for pos, covar in zip(gmm.means_, gmm.covariances_):
-        # draw each component as black 1-/2-/3-sigma contour rings (no fill) so every
-        # component stays visible regardless of its weight or color
-        draw_ellipse(pos, covar, ax=ax, facecolor='none',
-                     edgecolor='k', lw=1.4, alpha=0.8, zorder=3)
+    for k, (pos, covar) in enumerate(zip(gmm.means_, gmm.covariances_)):
+        # shade each component in its own class color; layered transparency darkens the center
+        draw_ellipse(pos, covar, ax=ax, color=clrs[k % len(clrs)], zorder=2)
     return ax
 ```
 
@@ -824,7 +832,7 @@ print(f"Variance retained: {pca_dow.explained_variance_ratio_.sum():.1%}")
 ```
 
 ```{code-cell} ipython3
-n_range_dow = np.arange(2, 25, 2)
+n_range_dow = np.arange(5, 131, 10)
 bics_dow, models_dow = [], []
 for n in n_range_dow:
     g = GaussianMixture(n, covariance_type='full',
@@ -842,6 +850,17 @@ ax.set_xlabel('Number of Components')
 ax.set_ylabel('BIC')
 ax.set_title('BIC — GMM on PCA-reduced Dow data (95% variance)');
 ```
+
+Unlike the tidy 2-D example earlier in this chapter, the BIC here descends steeply and then
+flattens into a broad, shallow basin: the optimum sits at *several dozen* components, and its
+exact location wanders with the random initialization. This is the same lesson as in
+[Clustering](Topic5.3-Clustering) — real process data is not a handful of clean Gaussians, so
+BIC keeps rewarding extra components that help the mixture approximate a continuous density.
+Note that this is why we extended the search well beyond the ~20 components used for the 2-D
+example: stopping too early would have put the "optimum" at the edge of the range rather than
+at a true minimum. For *generation*, a large number of components is perfectly fine — even
+desirable — because the goal is to reproduce the data distribution, not to identify a few
+meaningful clusters.
 
 ```{code-cell} ipython3
 X_synth_k, _ = best_dow_gmm.sample(len(X_dow))
