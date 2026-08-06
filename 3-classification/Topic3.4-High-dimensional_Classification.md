@@ -20,6 +20,7 @@ By the end of this chapter, you will be able to:
 - Implement a kernel-augmented SVM by hand and compare it to sklearn's `SVC`
 - Use `GridSearchCV` to tune SVC hyperparameters on a held-out training set
 - Evaluate classifier performance using accuracy, precision, recall, and confusion matrices
+- Distinguish categorical from ordinal variables and apply one-hot encoding with `pd.get_dummies` and a leakage-safe `OneHotEncoder` + `ColumnTransformer` pipeline
 - Apply and interpret a depth-limited decision tree and read feature importances from the result
 - Derive the five steps of Linear Discriminant Analysis (LDA) and explain why it finds more class-discriminative projections than PCA
 - Apply `sklearn.discriminant_analysis.LinearDiscriminantAnalysis` as both a classifier and a feature extractor, and compare accuracy and speed against SVC on raw features
@@ -364,6 +365,143 @@ accuracy. Compare to the best SVC result above.
 
 ---
 
+## Categorical Variables and One-Hot Encoding
+
+So far every model in this chapter has used only the numeric features — oxidation
+states, ionic radii, and tolerance factors. But the dataset also records *which
+elements* occupy the A, B, and X sites, and element identity is chemical information
+a model might exploit. These are **categorical variables**, and they require special
+treatment before any distance-based classifier can use them.
+
+### Categorical vs. Ordinal Variables
+
+Numerical features can be measured on a continuous scale, but many real datasets contain **discrete variables** that represent categories rather than magnitudes. There are two important types:
+
+- **Ordinal variables**: the order of values carries meaning (e.g., satisfaction rating 1–5, polymer chain length). Converting to a continuous float is often reasonable.
+- **Categorical variables**: the values are labels with no inherent ordering (e.g., element symbol, solvent name, process type). Representing "Ba" as 1 and "Sr" as 2 would mislead any model into thinking Ba is "twice" some quantity relative to Sr.
+
+The standard solution for categorical variables is **one-hot encoding**: replace a column with $k$ unique values by $k$ binary columns (indicators), one per category. For example, a three-level color variable becomes:
+
+| color | color_red | color_blue | color_green |
+|---|---|---|---|
+| red | 1 | 0 | 0 |
+| blue | 0 | 1 | 0 |
+| green | 0 | 0 | 1 |
+
+The Euclidean distance between two one-hot vectors is $0$ if they share the same category and $\sqrt{2}$ otherwise — so distance-based algorithms (k-NN, SVM with RBF kernel, k-means) can now meaningfully compare categorical entries.
+
+### One-Hot Encoding with pandas
+
+The perovskite DataFrame `df` contains string columns for the A, B, and X ion identities. `pd.get_dummies()` converts all non-numeric columns to one-hot automatically:
+
+```{code-cell} ipython3
+# Drop the formula column (compound identity, not a feature)
+df_features = df[df.columns[1:]]
+
+df_onehot = pd.get_dummies(df_features)
+print(f'Original shape: {df_features.shape}')
+print(f'After one-hot encoding: {df_onehot.shape}')
+df_onehot.head(3)
+```
+
+The A, B, and X element columns (each with many unique symbols) expand into indicator columns. The numeric features (`nA`, `nB`, `nX`, `rA (Ang)`, etc.) are left unchanged.
+
+```{code-cell} ipython3
+# How many indicator columns were created per element site?
+onehot_A = [c for c in df_onehot.columns if c.startswith('A_')]
+onehot_B = [c for c in df_onehot.columns if c.startswith('B_')]
+onehot_X = [c for c in df_onehot.columns if c.startswith('X_')]
+
+print(f'A-site indicators: {len(onehot_A)}')
+print(f'B-site indicators: {len(onehot_B)}')
+print(f'X-site indicators: {len(onehot_X)}')
+print(f'Total new dimensions: {len(onehot_A) + len(onehot_B) + len(onehot_X)}')
+```
+
+### Demonstration: Classifier Accuracy With and Without One-Hot Features
+
+We can compare how a support vector classifier performs using only the six raw
+numeric features (oxidation states and radii — the tolerance factors $t$ and $\tau$
+are derived from these, so we exclude them here) vs. the full one-hot-encoded
+feature matrix:
+
+```{code-cell} ipython3
+regular_cols = ['nA', 'nB', 'nX', 'rA (Ang)', 'rB (Ang)', 'rX (Ang)']
+all_cols = onehot_A + onehot_B + onehot_X + regular_cols
+
+X_full = df_onehot[all_cols].values
+
+Xoh_train, Xoh_test, yoh_train, yoh_test = train_test_split(
+    X_full, y_perov, test_size=0.4, random_state=42)
+
+# Numeric-only model
+N_reg = len(regular_cols)
+Xoh_train_reg = Xoh_train[:, -N_reg:]
+Xoh_test_reg = Xoh_test[:, -N_reg:]
+
+C_range = np.logspace(-1, 4, 8)
+gamma_range = np.logspace(-4, 0, 6)
+params = {'C': C_range, 'gamma': gamma_range}
+
+clf_reg = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
+clf_reg.fit(Xoh_train_reg, yoh_train)
+score_reg = clf_reg.best_estimator_.score(Xoh_test_reg, yoh_test)
+
+# Full one-hot model
+clf_full = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
+clf_full.fit(Xoh_train, yoh_train)
+score_full = clf_full.best_estimator_.score(Xoh_test, yoh_test)
+
+print(f'Accuracy (numeric only, 6 features):     {score_reg:.3f}')
+print(f'Accuracy (+ one-hot elements, {len(all_cols)} features): {score_full:.3f}')
+```
+
+Results vary with the random split, but including element identity typically increases or maintains accuracy while exposing the model to richer chemical information.
+
+### sklearn `OneHotEncoder`
+
+`pd.get_dummies` is convenient for exploration, but `sklearn.preprocessing.OneHotEncoder` integrates cleanly into `Pipeline` objects and handles train/test separation correctly (it learns the category list from training data only):
+
+```{code-cell} ipython3
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+cat_cols = ['A', 'B', 'X']
+num_cols = ['nA', 'nB', 'nX', 'rA (Ang)', 'rB (Ang)', 'rX (Ang)']
+
+X_raw = df[cat_cols + num_cols].values
+y_raw = df['exp_label'].values
+
+ct = ColumnTransformer([
+    ('ohe', OneHotEncoder(sparse_output=False, handle_unknown='ignore'), list(range(len(cat_cols)))),
+], remainder='passthrough')
+
+pipe = Pipeline([
+    ('encode', ct),
+    ('clf',    SVC(kernel='rbf', C=10, gamma=0.01)),
+])
+
+Xraw_train, Xraw_test, yraw_train, yraw_test = train_test_split(
+    X_raw, y_raw, test_size=0.4, random_state=42)
+pipe.fit(Xraw_train, yraw_train)
+print(f'Pipeline accuracy: {pipe.score(Xraw_test, yraw_test):.3f}')
+```
+
+The `ColumnTransformer` applies `OneHotEncoder` only to the categorical columns and passes the numeric columns through unchanged. Using a pipeline ensures that the encoder is fit only on training data, preventing category leakage.
+
+:::{exercise}
+:label: ex-cls-ohe-sklearn
+
+Using the `ColumnTransformer` + `Pipeline` pattern above, add `StandardScaler` to the numeric columns (as a second transformer in the `ColumnTransformer`) before passing them to the SVC. Then:
+
+1. Fit the pipeline on `Xraw_train, yraw_train` and report the test accuracy.
+2. Inspect the fitted encoder: print the categories learned from training data for each of the three element columns.
+3. Explain in one sentence why fitting the encoder on training data only (rather than the full dataset) matters for avoiding data leakage.
+:::
+
+---
+
 ## Decision Trees on the Perovskite Dataset
 
 Decision trees work directly on the original feature space — no kernel transformation
@@ -474,8 +612,6 @@ Print the test accuracy and compare it to the depth-3 decision tree above.
 Then plot the feature importances from the random forest alongside those from
 the depth-3 tree and note any differences in the relative ranking of `tau` and `t`.
 :::
-
----
 
 ---
 
@@ -773,6 +909,12 @@ reduction for MNIST digits.
 - **Accuracy** is a misleading metric for imbalanced datasets; **precision** and
   **recall** (and the combined F1 score) give a more complete picture of classifier
   performance.
+
+- **Categorical variables** (like element identity) must not be converted to raw
+  integers; **one-hot encoding** replaces each category with a binary indicator
+  column so that distance-based algorithms can compare categories correctly.
+  `pd.get_dummies` is convenient for exploration; `sklearn.preprocessing.OneHotEncoder`
+  inside a `Pipeline` is the leakage-safe production pattern.
 
 - **Decision trees** on real data are highly prone to overfitting when unconstrained,
   but `max_depth` regularization recovers competitive generalization. Their
