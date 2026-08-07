@@ -81,8 +81,8 @@ Illustrate the danger of a random train/test split on time series data.
 2. For each split, fit a `LinearRegression` that uses the integer row index as the
    only feature (i.e., predict impurity from time step number). Report train and
    test $r^2$ for both splits.
-3. Explain in one or two sentences why the random split produces an optimistic
-   test $r^2$ compared to the chronological split.
+3. Why does the random split produce an optimistic test $r^2$ compared to the
+   chronological split?
 :::
 
 ## Datasets
@@ -204,6 +204,22 @@ Compare interpolation strategies on the Dow impurity series.
 
 ## Smoothing
 
+Real signals carry high-frequency noise — sensor jitter, sampling artifacts, genuine
+but short-lived fluctuations — that can obscure the slower structure (trend,
+seasonality) an analysis usually targets. **Smoothing** suppresses this noise. It is
+used for visualization (seeing the trend through the scatter), as preprocessing for
+methods that assume a smooth underlying signal, and in online monitoring, where an
+unsmoothed dashboard would flicker with every reading.
+
+Smoothing is risky for exactly the same reason it is useful: it *removes information*.
+Over-smoothing can hide real, physically meaningful patterns — a short-lived process
+upset, the onset of an oscillation, or the seasonal cycle itself — and every smoother
+distorts the signal somewhat (a moving average, for instance, lags behind sudden
+changes). Two habits protect you: treat the smoothing parameter as a choice that needs
+justification rather than a default, and always retain and report the unsmoothed data
+alongside any smoothed version, so the provenance of every figure is clear and readers
+can judge for themselves what the smoothing removed.
+
 ### Moving Average
 
 A **moving average** replaces each point with the mean of its $M$ nearest predecessors:
@@ -266,6 +282,29 @@ ax.set_title('Exponential smoothing — CO₂ (1995–2000)')
 plt.tight_layout()
 ```
 
+### Choosing Between Them
+
+The two smoothers suit different situations:
+
+- A **moving average** is the right tool when the window has physical meaning. Setting
+  the window equal to a known period (52 weeks here; 24 hours for a daily cycle)
+  cancels that cycle exactly — which is why the 52-week window isolated the CO₂ trend
+  so cleanly. It is the natural choice for retrospective analysis of a complete
+  series. Its drawbacks: every point in the window counts equally, so a single outlier
+  perturbs the average for a full window; the first $M-1$ points are undefined; and it
+  lags sudden changes by roughly half the window length.
+- **Exponential smoothing** is the right tool when recency matters or data arrive as a
+  stream: it updates from a single stored value (no window buffer to maintain),
+  responds faster to genuine level shifts, and has no "cliff" when a large value
+  enters or leaves a finite window. This is why process dashboards and control systems
+  overwhelmingly use exponential filters. Its drawbacks: the weights never reach zero,
+  so no periodic component is ever removed exactly, and $\alpha$ lacks the direct
+  physical interpretation that a window length has.
+
+A reasonable default: exponential smoothing for live or streaming displays, a moving
+average with a physically motivated window for analysis of historical data — and in
+either case, keep the raw series in the figure.
+
 :::{exercise}
 :label: ex-eda-ts-moving-avg
 
@@ -300,6 +339,71 @@ slope — just wide enough to keep every later point inside a corridor of half-w
 each new reading arrives the doors may swing only *open*, never shut. The instant the two
 doors cross — meaning no single straight line from the stored point can stay within δ of
 every point seen so far — the previous point is archived and the corridor restarts there.
+
+The geometry behind the metaphor can be made precise. Suppose the last archived point
+is $(t_0, y_0)$ and readings $(t_1, y_1), \ldots, (t_k, y_k)$ have arrived since. If
+all of them are eventually replaced by one straight line of slope $s$ through
+$(t_0, y_0)$, reconstruction at time $t_i$ gives $y_0 + s\,(t_i - t_0)$, and the error
+at that point stays within tolerance if and only if
+
+$$\left|\, y_0 + s\,(t_i - t_0) - y_i \,\right| \le \delta
+\quad\Longleftrightarrow\quad
+\frac{y_i - \delta - y_0}{t_i - t_0} \;\le\; s \;\le\; \frac{y_i + \delta - y_0}{t_i - t_0}.$$
+
+Each reading therefore admits an *interval* of acceptable slopes, and one line can
+represent all $k$ readings only if those intervals overlap. The algorithm simply
+tracks their running intersection: the largest lower bound seen so far (the rising
+lower door — `s_max` in the code below) and the smallest upper bound (the dropping
+upper door — `s_min`). Each can only move toward the other, which is why the doors
+"only swing open." The moment `s_max > s_min` the intersection is empty — no line from
+$(t_0, y_0)$ fits every reading within $\pm\delta$ — so the *previous* reading (the
+last one for which a valid line existed) is archived and becomes the new pivot.
+
+We can watch this happen on a toy signal. Each reading is drawn with its $\pm\delta$
+tolerance band, and the shaded wedge shows every line through the pivot that passes
+within $\delta$ of *all* readings so far:
+
+```{code-cell} ipython3
+t_toy = np.arange(7, dtype=float)
+y_toy = np.array([0.0, 0.25, 0.10, 0.35, 0.30, 0.90, 0.20])
+delta_toy = 0.3
+
+def door_slopes(k):
+    """Running door slopes after seeing readings 1..k (pivot at reading 0)."""
+    lo = max((y_toy[i] - delta_toy - y_toy[0]) / t_toy[i] for i in range(1, k + 1))
+    hi = min((y_toy[i] + delta_toy - y_toy[0]) / t_toy[i] for i in range(1, k + 1))
+    return lo, hi
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4), sharey=True)
+for ax, k, title in zip(axes, [2, 6],
+                        ['After 2 readings: doors wide open',
+                         'Reading 6 closes the doors: archive reading 5']):
+    ax.errorbar(t_toy[1:k+1], y_toy[1:k+1], yerr=delta_toy, fmt='o', capsize=4,
+                color=clrs[0], label='readings ± δ')
+    lo, hi = door_slopes(min(k, 5))          # wedge from the readings that still fit
+    tt = np.linspace(0, t_toy[k], 50)
+    ax.fill_between(tt, y_toy[0] + lo*tt, y_toy[0] + hi*tt, color=clrs[1], alpha=0.35,
+                    label='lines that fit all readings')
+    if k == 6:
+        ax.plot(t_toy[5], y_toy[5], 's', ms=13, mfc='none', mec=clrs[3], mew=2,
+                label='archived → new pivot')
+    ax.plot(0, y_toy[0], 'o', ms=10, color=clrs[2], label='pivot (last archived)')
+    ax.set_title(title)
+    ax.set_xlabel('time')
+axes[0].set_ylabel('signal')
+axes[0].legend(fontsize=9)
+plt.tight_layout()
+```
+
+In the left panel two readings still admit a wide wedge of representable lines. By
+reading 5 the wedge has narrowed but survives; reading 6 (whose tolerance band sits
+entirely below the wedge) makes it impossible for any single line to represent all six
+readings, so the algorithm archives reading 5 and restarts the corridor from there.
+Every archived point extends the stored piecewise-linear approximation by one segment,
+and the guarantee $|$reconstruction $-$ signal$| \le \delta$ holds everywhere by
+construction.
+
+The full algorithm is only a few lines:
 
 ```{code-cell} ipython3
 def swinging_door(t, y, delta):
@@ -393,6 +497,63 @@ plt.tight_layout()
 
 The near-perfect linear relationship (slope ≈ 1) tells us that CO₂ 20 weeks ago
 predicts CO₂ now with very high accuracy. This is the essence of autocorrelation.
+
+Nothing stops us from repeating this calculation at every lag. Sweeping the lag from
+1 to 100 and recording $r^2$ each time turns the single scatter plot above into a
+*function of lag*:
+
+```{code-cell} ipython3
+lags = np.arange(1, 101)
+r_manual = np.array([pearsonr(dataset[:-k], dataset[k:])[0] for k in lags])
+
+fig, ax = plt.subplots(figsize=(8, 3))
+ax.plot(lags, r_manual**2, 'o-', ms=3)
+ax.set_xlabel('lag (weeks)'); ax.set_ylabel('$r^2$')
+ax.set_title('Lag correlation of CO₂, one pearsonr at a time')
+plt.tight_layout()
+```
+
+The correlation is high at every lag, but it *oscillates with a one-year period*:
+readings 52 weeks apart sit at the same phase of the seasonal cycle (maximum
+correlation), while readings 26 weeks apart sit at opposite phases (minimum). The lag
+structure of the correlation is itself a fingerprint of the seasonality.
+
+This is essentially the **autocorrelation function** that the next section formalizes.
+The standard ACF differs from our loop in two small ways: it reports the signed
+correlation $r$ rather than $r^2$ (so negative correlations remain visible), and it
+uses the mean and variance of the *whole* series rather than recomputing them for each
+pair of shifted windows:
+
+$$\hat{\rho}_k = \frac{\sum_{t=1}^{n-k} (x_t - \bar{x})(x_{t+k} - \bar{x})}{\sum_{t=1}^{n} (x_t - \bar{x})^2}$$
+
+Implementing that formula directly reproduces statsmodels' `acf` to machine precision:
+
+```{code-cell} ipython3
+from statsmodels.tsa.stattools import acf
+
+n = len(dataset)
+xbar = dataset.mean()
+denom = np.sum((dataset - xbar)**2)
+rho_manual = np.array([np.sum((dataset[:n-k] - xbar) * (dataset[k:] - xbar)) / denom
+                       for k in lags])
+rho_sm = acf(dataset, nlags=100)[1:]
+
+fig, ax = plt.subplots(figsize=(8, 3))
+ax.plot(lags, rho_manual, '-', label='manual ACF formula')
+ax.plot(lags[::5], rho_sm[::5], 'o', ms=5, label='statsmodels acf()')
+ax.plot(lags, r_manual, '--', color='0.6', label='pearsonr loop (above)')
+ax.set_xlabel('lag (weeks)'); ax.set_ylabel('autocorrelation $r$')
+ax.legend()
+ax.set_title(f'max |manual − statsmodels| = {np.abs(rho_manual - rho_sm).max():.1e}')
+plt.tight_layout()
+```
+
+The manual formula and statsmodels agree exactly. Notice, however, that the pearsonr
+loop drifts *above* both at long lags. Using a single global mean and variance quietly
+assumes the series' statistics do not change over time — for the steadily rising CO₂
+signal the shifted windows have different means, so the two estimators separate as the
+lag grows. That assumption has a name — *stationarity* — and we return to it at the
+end of the chapter.
 
 ### ACF and PACF Plots
 
@@ -561,7 +722,9 @@ Apply first-order differencing to the Dow impurity series and test for stationar
 - **Moving averages** (`rolling().mean()`) and **exponential smoothing** (`ewm()`)
   smooth out short-term fluctuations to reveal trend and seasonality. The window size
   or smoothing parameter controls the trade-off between noise reduction and signal
-  preservation.
+  preservation. Prefer a physically motivated moving-average window for retrospective
+  analysis and exponential smoothing for streaming data — and always report the
+  unsmoothed data alongside any smoothed version.
 
 - **ACF** plots the total correlation between $x_t$ and $x_{t-k}$ at each lag $k$.
   **PACF** shows only the direct (partial) correlation, removing indirect effects.
