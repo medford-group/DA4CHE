@@ -168,13 +168,14 @@ Since numerical methods often introduce small round-off error, it's better to us
 np.isclose(yi, yi_vdm)
 ```
 
-```{note}
+:::{note}
 The `.all()` method is commonly used with `np.isclose()` to check if *all* elements of an array are `True`. This is useful when confirming whether two arrays are element-wise equal to within a small tolerance.
 
 ```python
 M = np.isclose(yi, yi_vdm)
 M.all()  # True if every element in M is True
 ```
+:::
 
 ---
 
@@ -657,7 +658,7 @@ Note: For symmetric matrices, the ratio of eigenvalues approximates the conditio
 - Matrix-vector multiplication maps compactly to index/summation notation; the Vandermonde matrix encodes polynomial basis functions as columns.
 - The L₂ norm measures vector magnitude; two vectors are orthogonal when their inner product is zero; Gram-Schmidt converts any linearly independent set into an orthonormal basis.
 - A matrix is invertible only when square and full-rank; prefer `np.linalg.solve()` over explicit inversion for numerical stability.
-- Eigendecomposition applies to square matrices and may yield complex results for non-symmetric matrices; SVD generalises to any matrix and always yields real, non-negative singular values.
+- Eigendecomposition applies to square matrices and may yield complex results for non-symmetric matrices; SVD generalizes to any matrix and always yields real, non-negative singular values.
 - The condition number (ratio of largest to smallest singular value) quantifies sensitivity to small perturbations; a large condition number signals numerical instability.
 
 ## Additional Reading

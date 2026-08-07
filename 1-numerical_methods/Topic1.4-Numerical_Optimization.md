@@ -420,7 +420,7 @@ result
 
 We can see that the fit quality is similar, but now the peak widths are nearly identical. However, they are not exactly the same, since the loss function constraint is "soft" -- the peak widths will deviate if it makes the fit much better.
 
-```{note}
+:::{note}
 Sometimes we want to enforce that all parameters meet physical constraints — for example, that all weights $w_i$ are positive.
 
 One common approach is to modify the loss function to penalize violations of the constraint. For instance, you could add a differentiable penalty term like:
@@ -431,8 +431,8 @@ penalty = np.sqrt(np.sum([max(0, -w)**2 for w in lamda[:m]]))
 
 to the loss function. This discourages negative weights but does not absolutely prevent them. These are known as **soft constraints**.
 
-Alternatively, many optimizers (including `scipy.minimize`) support **bounds** or **constraints** that can enforce this behavior exactly. These are called **hard constraints**.
-```
+Alternatively, many optimizers (including `scipy.minimize`) support **bounds** or **constraints** that can enforce this behavior exactly. These are called **hard constraints**. Hard constraints are outside the scope of this course, but will be covered in 4746/6746 or standard optimization courses.
+:::
 
 :::{exercise}
 :label: ex-nm-soft-pen
