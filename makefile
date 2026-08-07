@@ -181,10 +181,20 @@ PUBLISH_BRANCH ?= gh-pages
 
 .PHONY: publish
 publish:  ## Build the book and publish _build/html to GitHub Pages (gh-pages)
-	@set -e; \
+	@set -eo pipefail; \
 	echo ">> Building site into $(HTMLDIR)"; \
-	( $(MAKE) build ) || ( env $(ENVVARS) jupyter-book build $(DOCS) || env $(ENVVARS) jb build $(DOCS) ); \
+	mkdir -p "$(DOCS)/_build"; \
+	( ( $(MAKE) build ) 2>&1 | tee "$(DOCS)/_build/publish-build.log" ) || \
+	  ( env $(ENVVARS) jupyter-book build $(DOCS) 2>&1 | tee "$(DOCS)/_build/publish-build.log" ) || \
+	  ( env $(ENVVARS) jb build $(DOCS) 2>&1 | tee "$(DOCS)/_build/publish-build.log" ); \
 	test -d "$(HTMLDIR)"; \
+	if grep -qE "Executing notebook failed|CellExecutionError" "$(DOCS)/_build/publish-build.log"; then \
+	  echo ""; \
+	  echo ">> ABORT: notebook execution failed during the build — NOT publishing."; \
+	  grep -E "Executing notebook failed" "$(DOCS)/_build/publish-build.log" || true; \
+	  echo ">> Full log: $(DOCS)/_build/publish-build.log"; \
+	  exit 1; \
+	fi; \
 	echo ">> Ensuring ghp-import is available"; \
 	( $(CONDA_RUN) ghp-import --help >/dev/null 2>&1 ) || $(CONDA_RUN) python -m pip install ghp-import; \
 	echo ">> Ensuring 'origin' git remote exists"; \
