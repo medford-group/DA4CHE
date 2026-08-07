@@ -151,12 +151,9 @@ for name, g in [("caffeine", G), ("aspirin", G_asp)]:
 
 Both ring counts check out against the known structures: caffeine's fused bicyclic core is
 a five-membered imidazole sharing an edge with a six-membered pyrimidinedione ring (2
-rings), while aspirin contains a single six-membered benzene ring. The top-degree atoms are
-a subtler check — because the PubChem record includes hydrogens, the busiest nodes are the
-*methyl* carbons (three C–H bonds plus one bond into the rest of the molecule, degree 4),
-not the ring atoms. A result that surprises you and then makes sense on inspection is
-exactly what checking computed properties against known structure is for. This is the
-pattern to remember:
+rings), while aspirin contains a single six-membered benzene ring. (The top-degree atoms
+in both molecules are the methyl carbons — the PubChem graph includes hydrogens.) This is
+the pattern to remember:
 once connectivity data is in a graph object, structural questions — ring counts, chain
 lengths, which nodes hold the network together — stop being parsing problems and become
 library calls.
