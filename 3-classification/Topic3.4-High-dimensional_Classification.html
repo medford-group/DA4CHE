@@ -399,8 +399,6 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-decision-boundary">Step 5 — Decision Boundary</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lda-on-mnist-digits">LDA on MNIST Digits</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lda-as-a-classifier-and-feature-extractor">LDA as a Classifier and Feature Extractor</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
@@ -430,7 +428,6 @@ document.write(`
 <li><p>Distinguish categorical from ordinal variables and apply one-hot encoding with <code class="docutils literal notranslate"><span class="pre">pd.get_dummies</span></code> and a leakage-safe <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code> + <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> pipeline</p></li>
 <li><p>Apply and interpret a depth-limited decision tree and read feature importances from the result</p></li>
 <li><p>Derive the five steps of Linear Discriminant Analysis (LDA) and explain why it finds more class-discriminative projections than PCA</p></li>
-<li><p>Apply <code class="docutils literal notranslate"><span class="pre">sklearn.discriminant_analysis.LinearDiscriminantAnalysis</span></code> as both a classifier and a feature extractor, and compare accuracy and speed against SVC on raw features</p></li>
 </ul>
 </div>
 <p>The previous chapters introduced classification algorithms on simple two-dimensional
@@ -1555,8 +1552,10 @@ features to at most <span class="math notranslate nohighlight">\(C - 1\)</span> 
 space). The decision boundaries are hyperplanes perpendicular to the LDA axes.</p>
 <section id="the-lda-algorithm-manual-derivation">
 <h3>The LDA Algorithm: Manual Derivation<a class="headerlink" href="#the-lda-algorithm-manual-derivation" title="Link to this heading">#</a></h3>
-<p>We will step through the five-step derivation on a two-class toy dataset, then apply
-the scikit-learn implementation to the MNIST digits dataset.</p>
+<p>We will step through the five-step derivation on a two-class toy dataset. Applying
+the scikit-learn implementation to a real 10-class, high-dimensional dataset is
+deferred to <a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html"><span class="doc std std-doc">Dimensionality Reduction</span></a>
+in Module 5, where LDA reappears as the supervised counterpart of PCA.</p>
 <section id="step-1-class-centroids">
 <h4>Step 1 — Class Centroids<a class="headerlink" href="#step-1-class-centroids" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
@@ -1718,161 +1717,6 @@ by 90° gives the boundary direction:</p>
 <img alt="../_images/92e6391885874633823d9588105e60f90ad78911ecaf9c07d429bde7f890633a.png" src="../_images/92e6391885874633823d9588105e60f90ad78911ecaf9c07d429bde7f890633a.png" />
 </div>
 </div>
-</section>
-</section>
-<section id="lda-on-mnist-digits">
-<h3>LDA on MNIST Digits<a class="headerlink" href="#lda-on-mnist-digits" title="Link to this heading">#</a></h3>
-<p>The scikit-learn <code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis</span></code> scales efficiently to high dimensions.
-For the MNIST digits (10 classes, 64 features per 8×8 image), LDA projects down to at
-most 9 components (<span class="math notranslate nohighlight">\(C - 1\)</span>):</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_digits</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.discriminant_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearDiscriminantAnalysis</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-
-<span class="n">digits</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
-<span class="n">X_mnist</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">y_mnist</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MNIST shape: </span><span class="si">{</span><span class="n">X_mnist</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">,  classes: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_mnist</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MNIST shape: (1797, 64),  classes: [0 1 2 3 4 5 6 7 8 9]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lda</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">()</span>
-<span class="n">lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">,</span> <span class="n">y_mnist</span><span class="p">)</span>
-<span class="n">X_lda</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;LDA projected shape: </span><span class="si">{</span><span class="n">X_lda</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LDA projected shape: (1797, 9)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PCA for comparison (same number of components)</span>
-<span class="n">pca9</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">X_pca9</span> <span class="o">=</span> <span class="n">pca9</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
-
-<span class="c1"># Color by digit label (10 classes — use tab10 colormap)</span>
-<span class="n">tab10</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">tab10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-
-<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">y_mnist</span> <span class="o">==</span> <span class="n">label</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca9</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca9</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                    <span class="n">color</span><span class="o">=</span><span class="n">tab10</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">))</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_lda</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="n">X_lda</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                    <span class="n">color</span><span class="o">=</span><span class="n">tab10</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">))</span>
-
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PCA (components 0 vs 1)&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LDA (components 0 vs 1)&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Component 0&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Component 1&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">markerscale</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/1bdd5a5a761b4b25f976352fece0487af82c85fa21755965c81fd7378e785fc6.png" src="../_images/1bdd5a5a761b4b25f976352fece0487af82c85fa21755965c81fd7378e785fc6.png" />
-</div>
-</div>
-<p>The LDA projection shows substantially better cluster separation than PCA because LDA
-explicitly maximizes the ratio of between-class to within-class variance. PCA simply
-captures directions of maximum total variance in the data, which may mix classes.</p>
-</section>
-<section id="lda-as-a-classifier-and-feature-extractor">
-<h3>LDA as a Classifier and Feature Extractor<a class="headerlink" href="#lda-as-a-classifier-and-feature-extractor" title="Link to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">GridSearchCV</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span>
-
-<span class="n">X_tr</span><span class="p">,</span> <span class="n">X_te</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_te</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">,</span> <span class="n">y_mnist</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="c1"># LDA classifier (built-in)</span>
-<span class="n">lda_clf</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">lda_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
-<span class="n">lda_score</span> <span class="o">=</span> <span class="n">lda_clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span> <span class="n">y_te</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;LDA classifier accuracy: </span><span class="si">{</span><span class="n">lda_score</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LDA classifier accuracy: 0.949
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred_lda</span> <span class="o">=</span> <span class="n">lda_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_te</span><span class="p">)</span>
-<span class="n">cm_lda</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_te</span><span class="p">,</span> <span class="n">y_pred_lda</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_lda</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Predicted&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LDA — MNIST confusion matrix&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/efcefe7143d183f0dafe36d3c76a6202cbc63ad6e4f6fbbd46c3fcc5ea5e025c.png" src="../_images/efcefe7143d183f0dafe36d3c76a6202cbc63ad6e4f6fbbd46c3fcc5ea5e025c.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SVC on LDA features vs. SVC on raw features</span>
-<span class="n">X_tr_lda</span> <span class="o">=</span> <span class="n">lda_clf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_tr</span><span class="p">)</span>
-<span class="n">X_te_lda</span> <span class="o">=</span> <span class="n">lda_clf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_te</span><span class="p">)</span>
-
-<span class="n">C_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-<span class="n">gamma_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">C_range</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">gamma_range</span><span class="p">}</span>
-
-<span class="n">svc_lda</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">svc_lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr_lda</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
-<span class="n">score_svc_lda</span> <span class="o">=</span> <span class="n">svc_lda</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te_lda</span><span class="p">,</span> <span class="n">y_te</span><span class="p">)</span>
-
-<span class="n">svc_full</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">svc_full</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
-<span class="n">score_svc_full</span> <span class="o">=</span> <span class="n">svc_full</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span> <span class="n">y_te</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SVC on LDA features (</span><span class="si">{</span><span class="n">X_tr_lda</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> dims):  accuracy = </span><span class="si">{</span><span class="n">score_svc_lda</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SVC on raw features  (</span><span class="si">{</span><span class="n">X_tr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> dims): accuracy = </span><span class="si">{</span><span class="n">score_svc_full</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SVC on LDA features (9 dims):  accuracy = 0.965
-SVC on raw features  (64 dims): accuracy = 0.990
-</pre></div>
-</div>
-</div>
-</div>
-<p>LDA features achieve comparable accuracy to the full-feature SVM while compressing 64
-dimensions to 9 — a 7× reduction. This speedup scales dramatically as image resolution
-increases: for a 128×128 image (16,384 pixels), LDA would still reduce to at most 9
-components for a 10-class problem.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>LDA vs. PLS: the supervised dimensionality reduction pair</strong>
@@ -1882,26 +1726,26 @@ when the number of features is large relative to the number of samples. The key
 difference is the type of output variable — discrete class labels for LDA, continuous
 values for PLS.</p>
 </div>
-<div class="exercise admonition" id="ex-cls-lda-pca-acc">
+<div class="exercise admonition" id="ex-cls-lda-perov">
 
 <p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
 <section id="exercise-content">
-<p>Compare the classification accuracy of LDA-based and PCA-based dimensionality
-reduction for MNIST digits.</p>
+<p>Apply the five-step manual LDA derivation to the perovskite dataset, using the eight
+numeric features (<code class="docutils literal notranslate"><span class="pre">X_perov</span></code>) and labels (<code class="docutils literal notranslate"><span class="pre">y_perov</span></code>, classes <span class="math notranslate nohighlight">\(-1\)</span>/<span class="math notranslate nohighlight">\(+1\)</span>):</p>
 <ol class="arabic simple">
-<li><p>Using the same train/test split (<code class="docutils literal notranslate"><span class="pre">X_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">X_te</span></code>, <code class="docutils literal notranslate"><span class="pre">y_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">y_te</span></code>) from above,
-project the data to 9 components with both <code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis(n_components=9)</span></code>
-and <code class="docutils literal notranslate"><span class="pre">PCA(n_components=9)</span></code>.</p></li>
-<li><p>For each projection, train a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>-free <em>linear</em> classifier using
-<code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis</span></code> (the built-in classifier mode) on the projected training
-data and evaluate on the projected test data.</p></li>
-<li><p>Then train <code class="docutils literal notranslate"><span class="pre">SVC(kernel='rbf')</span></code> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> on each projected space and
-report the best test accuracy.</p></li>
-<li><p>Make a bar chart comparing the four accuracy values (LDA linear, LDA + SVC, PCA
-linear, PCA + SVC) and comment on the relative ranking.</p></li>
+<li><p>Compute the two class centroids and the pooled intra-class covariance matrix.</p></li>
+<li><p>Compute the inter-class covariance and the eigendecomposition of the composite
+matrix <span class="math notranslate nohighlight">\(C_\text{intra}^{-1} C_\text{inter}\)</span>.</p></li>
+<li><p>Project the data onto the leading LDA eigenvector (with two classes there is only
+one meaningful component) and plot overlapping histograms of the projected values
+for each class.</p></li>
+<li><p>Repeat the projection using the leading eigenvector of the total covariance matrix
+(the first PCA component) and compare the class overlap in the two histograms.
+Which projection separates the classes better, and why?</p></li>
 </ol>
 </section>
 </div>
+</section>
 </section>
 </section>
 <hr class="docutils" />
@@ -1939,7 +1783,8 @@ classification. It reduces <span class="math notranslate nohighlight">\(p\)</spa
 (<span class="math notranslate nohighlight">\(C\)</span> = number of classes) and serves as both a linear classifier and a preprocessing
 step for non-linear classifiers. LDA projections show better class separation than
 PCA projections because they use the class labels; PCA maximizes total variance
-regardless of class identity.</p></li>
+regardless of class identity. LDA is applied to a real 10-class dataset in Module 5
+(Dimensionality Reduction).</p></li>
 </ul>
 </section>
 <section id="additional-reading">
@@ -2053,8 +1898,6 @@ paper for this dataset</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-decision-boundary">Step 5 — Decision Boundary</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lda-on-mnist-digits">LDA on MNIST Digits</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lda-as-a-classifier-and-feature-extractor">LDA as a Classifier and Feature Extractor</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>

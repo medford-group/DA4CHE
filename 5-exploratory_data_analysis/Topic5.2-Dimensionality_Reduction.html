@@ -396,6 +396,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-pca-variants">Other PCA Variants</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-dimensionality-reduction-lda">Supervised Dimensionality Reduction: LDA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lda-as-a-feature-extractor">LDA as a Feature Extractor</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manifold-learning">Manifold Learning</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-dimensional-scaling-mds">Multi-Dimensional Scaling (MDS)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">t-SNE</a></li>
@@ -429,6 +433,7 @@ document.write(`
 <li><p>Use the scree plot and stress curve to choose the number of components</p></li>
 <li><p>Reconstruct and generate data points from a PCA low-dimensional representation</p></li>
 <li><p>Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter</p></li>
+<li><p>Apply Linear Discriminant Analysis (LDA) as a supervised alternative to PCA and use it as a feature extractor for classification</p></li>
 <li><p>Describe the principles of manifold learning (MDS, t-SNE, UMAP, PHATE) and compare them to PCA</p></li>
 <li><p>Apply UMAP for fast, projectable nonlinear dimensionality reduction</p></li>
 <li><p>Apply Incremental PCA for memory-efficient processing of large datasets</p></li>
@@ -622,7 +627,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 </div>
-<p>The rank equals the number of non-zero (or numerically non-negligible) eigenvalues. A rank less than 64 confirms that the 64 pixel features do not span a fully independent 64-dimensional space — the data lives on a lower-dimensional subspace.</p>
+<p>A rank less than 64 confirms that the 64 pixel features do not span a fully independent 64-dimensional space — the data lives on a lower-dimensional subspace.</p>
 </section>
 <section id="dimensionality-reduction-as-low-rank-approximation">
 <h3>Dimensionality Reduction as Low-Rank Approximation<a class="headerlink" href="#dimensionality-reduction-as-low-rank-approximation" title="Link to this heading">#</a></h3>
@@ -667,7 +672,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1496f0ca0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12cfcf670&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -819,13 +824,12 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14cdc65f0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1386ad300&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
 </div>
 </div>
-<p>Full documentation for <code class="docutils literal notranslate"><span class="pre">sklearn.decomposition.PCA</span></code> is available <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">here</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>PCA is one of the most widely used dimensionality reduction techniques because it is unsupervised, projectable (new points can be mapped in), and invertible (low-dimensional points can be mapped back). Its main limitation is linearity: it cannot capture curved or otherwise nonlinear structure in the data.</p>
@@ -878,7 +882,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14cd6d990&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12f56bdc0&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -964,7 +968,118 @@ Retained variance: 0.890
 <li><p><strong>Partial Least Squares (PLS)</strong> — supervised variant that maximizes the covariance between the projected inputs and the target variable, rather than maximizing variance in the inputs alone</p></li>
 <li><p><strong>Linear Discriminant Analysis (LDA)</strong> — supervised variant that maximizes the ratio of between-class to within-class variance, making it directly useful for classification</p></li>
 </ul>
-<p>Both supervised variants have already appeared in this course: PLS was introduced in <a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html"><span class="doc std std-doc">High-Dimensional Regression</span></a> and LDA in <a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html"><span class="doc std std-doc">High-Dimensional Classification</span></a>. It is worth revisiting those sections with fresh eyes now that the eigendecomposition machinery behind PCA is familiar.</p>
+<p>PLS was introduced in <a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html"><span class="doc std std-doc">High-Dimensional Regression</span></a>, and it is worth revisiting that section with fresh eyes now that the eigendecomposition machinery behind PCA is familiar. LDA is the subject of the next section.</p>
+</section>
+</section>
+<section id="supervised-dimensionality-reduction-lda">
+<h2>Supervised Dimensionality Reduction: LDA<a class="headerlink" href="#supervised-dimensionality-reduction-lda" title="Link to this heading">#</a></h2>
+<p>Everything in this chapter so far has been <em>unsupervised</em>: PCA and its variants find directions using the feature matrix alone. But the MNIST dataset comes with labels, and ignoring them leaves information on the table. <strong>Linear Discriminant Analysis (LDA)</strong> uses the labels directly: instead of maximizing total variance, it finds the directions that maximize the spread <em>between</em> class centroids relative to the spread <em>within</em> each class. Mechanically it is the same eigendecomposition machinery as PCA, applied to the composite matrix <span class="math notranslate nohighlight">\(C_\text{intra}^{-1} C_\text{inter}\)</span> instead of the covariance matrix — a step-by-step manual derivation is given in <a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html"><span class="doc std std-doc">High-Dimensional Classification</span></a>.</p>
+<p>Because the LDA directions separate class centroids, there can be at most <span class="math notranslate nohighlight">\(C - 1\)</span> of them for <span class="math notranslate nohighlight">\(C\)</span> classes. For the MNIST digits (10 classes, 64 pixel features), LDA therefore projects down to at most 9 components:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.discriminant_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearDiscriminantAnalysis</span>
+
+<span class="n">lda</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">()</span>
+<span class="n">lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">,</span> <span class="n">y_mnist</span><span class="p">)</span>
+<span class="n">X_lda</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;LDA projected shape: </span><span class="si">{</span><span class="n">X_lda</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LDA projected shape: (1797, 9)
+</pre></div>
+</div>
+</div>
+</div>
+<p>How much does supervision help? We can compare the first two LDA components against the first two components of a 9-component PCA on the same data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca9</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">X_pca9</span> <span class="o">=</span> <span class="n">pca9</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">X_plot</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="n">X_pca9</span><span class="p">,</span> <span class="n">X_lda</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;PCA&#39;</span><span class="p">,</span> <span class="s1">&#39;LDA&#39;</span><span class="p">]):</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_plot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_plot</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y_mnist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Digit&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Component 0&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Component 1&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"> (components 0 vs 1)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/81b0db97d04d863772685301b4de53ddb7240f5b546ee6bbbd454f0de7bfd5ae.png" src="../_images/81b0db97d04d863772685301b4de53ddb7240f5b546ee6bbbd454f0de7bfd5ae.png" />
+</div>
+</div>
+<p>The LDA projection shows substantially better cluster separation than PCA because LDA explicitly maximizes the ratio of between-class to within-class variance. PCA simply captures directions of maximum total variance in the data, which may mix classes.</p>
+<section id="lda-as-a-feature-extractor">
+<h3>LDA as a Feature Extractor<a class="headerlink" href="#lda-as-a-feature-extractor" title="Link to this heading">#</a></h3>
+<p>LDA is projectable — <code class="docutils literal notranslate"><span class="pre">transform</span></code> maps new points into the reduced space — so it can serve as a preprocessing step in a supervised pipeline. This is exactly the accuracy-based quality check described at the start of the chapter: train the same classifier on the original and reduced features and compare. sklearn’s <code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis</span></code> also doubles as a classifier in its own right — as introduced in <a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html"><span class="doc std std-doc">High-Dimensional Classification</span></a>, it assigns each point to the class whose centroid is nearest in the projected space:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+
+<span class="n">X_tr</span><span class="p">,</span> <span class="n">X_te</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_te</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_mnist</span><span class="p">,</span> <span class="n">y_mnist</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># LDA&#39;s built-in classifier mode</span>
+<span class="n">lda_clf</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">lda_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;LDA classifier accuracy: </span><span class="si">{</span><span class="n">lda_clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span><span class="w"> </span><span class="n">y_te</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LDA classifier accuracy: 0.949
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SVC on LDA features vs. SVC on raw features</span>
+<span class="n">X_tr_lda</span> <span class="o">=</span> <span class="n">lda_clf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_tr</span><span class="p">)</span>
+<span class="n">X_te_lda</span> <span class="o">=</span> <span class="n">lda_clf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_te</span><span class="p">)</span>
+
+<span class="n">C_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">gamma_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">C_range</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">gamma_range</span><span class="p">}</span>
+
+<span class="n">svc_lda</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">svc_lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr_lda</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
+<span class="n">score_svc_lda</span> <span class="o">=</span> <span class="n">svc_lda</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te_lda</span><span class="p">,</span> <span class="n">y_te</span><span class="p">)</span>
+
+<span class="n">svc_full</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">svc_full</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
+<span class="n">score_svc_full</span> <span class="o">=</span> <span class="n">svc_full</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_te</span><span class="p">,</span> <span class="n">y_te</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SVC on LDA features (</span><span class="si">{</span><span class="n">X_tr_lda</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> dims):  accuracy = </span><span class="si">{</span><span class="n">score_svc_lda</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SVC on raw features  (</span><span class="si">{</span><span class="n">X_tr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> dims): accuracy = </span><span class="si">{</span><span class="n">score_svc_full</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SVC on LDA features (9 dims):  accuracy = 0.965
+SVC on raw features  (64 dims): accuracy = 0.990
+</pre></div>
+</div>
+</div>
+</div>
+<p>LDA features achieve comparable accuracy to the full-feature SVM while compressing 64 dimensions to 9 — a 7× reduction. This speedup scales dramatically as image resolution increases: for a 128×128 image (16,384 pixels), LDA would still reduce to at most 9 components for a 10-class problem.</p>
+<div class="exercise admonition" id="ex-eda-lda-pca-acc">
+
+<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
+<section id="exercise-content">
+<p>Compare LDA-based and PCA-based dimensionality reduction as preprocessing for classification.</p>
+<ol class="arabic simple">
+<li><p>Using the same train/test split (<code class="docutils literal notranslate"><span class="pre">X_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">X_te</span></code>, <code class="docutils literal notranslate"><span class="pre">y_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">y_te</span></code>) from above, project the data to 9 components with both <code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis(n_components=9)</span></code> and <code class="docutils literal notranslate"><span class="pre">PCA(n_components=9)</span></code>.</p></li>
+<li><p>Train <code class="docutils literal notranslate"><span class="pre">SVC(kernel='rbf')</span></code> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> on each projected training set and evaluate on the corresponding projected test set.</p></li>
+<li><p>Make a bar chart comparing three accuracy values (LDA + SVC, PCA + SVC, and the raw-feature SVC from above) and comment on the ranking.</p></li>
+</ol>
+</section>
+</div>
 </section>
 </section>
 <section id="manifold-learning">
@@ -997,18 +1112,18 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3531
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3542
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/7da3ec86871b4c42d838c17ee29db5cb024a7fbde1c8a301d66b8cbd77bfe6d7.png" src="../_images/7da3ec86871b4c42d838c17ee29db5cb024a7fbde1c8a301d66b8cbd77bfe6d7.png" />
+<img alt="../_images/05f7174ca2f34c289d0516a8dd77a5518faf0959a7d75705cb1e02d85bf085e1.png" src="../_images/05f7174ca2f34c289d0516a8dd77a5518faf0959a7d75705cb1e02d85bf085e1.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
 </section>
 <section id="t-sne">
 <h3>t-SNE<a class="headerlink" href="#t-sne" title="Link to this heading">#</a></h3>
-<p>t-distributed Stochastic Neighbor Embedding (<strong>t-SNE</strong>) uses a probabilistic similarity measure based on the t-distribution: points that are nearby in the original space are given high probability of being neighbors in the embedding, while distant points are pushed apart. For roughly a decade it was the default tool for visualizing high-dimensional data, and you will encounter it constantly in the literature — though for new work it has largely been superseded by UMAP (next section), which is faster and preserves global structure better.</p>
+<p>t-distributed Stochastic Neighbor Embedding (<strong>t-SNE</strong>) uses a probabilistic similarity measure based on the t-distribution: points that are nearby in the original space are given high probability of being neighbors in the embedding, while distant points are pushed apart. For roughly a decade it was the default tool for visualizing high-dimensional data, and you will encounter it constantly in the literature — though for new work it has largely been superseded by UMAP (next section).</p>
 <p>The standard recipe is to first reduce the data to 30–50 components with PCA (retaining most of the variance) and then run t-SNE on the reduced representation — computing pairwise similarities in the full 64-dimensional space is slow and adds little:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1039,11 +1154,11 @@ Stress PCA: 0.5405
 <p>t-SNE produces well-separated clusters on image data, though the axes have no interpretable meaning.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>t-SNE hyperparameters:</strong> t-SNE has many hyperparameters without clear physical meaning, and results depend on all of them. <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> (roughly, the number of effective nearest neighbors; typically 5–50) is the most important to tune; <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> also affect results, and the embedding is not deterministic unless <code class="docutils literal notranslate"><span class="pre">random_state</span></code> is set. PCA pre-reduction to ~30–50 components (as above) is standard practice and should be considered part of the recipe. Use t-SNE for visualization only — global distances between clusters in the embedding are not meaningful.</p>
+<p><strong>t-SNE hyperparameters:</strong> t-SNE has many hyperparameters without clear physical meaning, and results depend on all of them. <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> (roughly, the number of effective nearest neighbors; typically 5–50) is the most important to tune; <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> and <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> also affect results, and the embedding is not deterministic unless <code class="docutils literal notranslate"><span class="pre">random_state</span></code> is set. Use t-SNE for visualization only — global distances between clusters in the embedding are not meaningful.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-tsne-perp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
 <section id="exercise-content">
 <p>Using the PCA-reduced MNIST data (<code class="docutils literal notranslate"><span class="pre">X_pca_pre</span></code> above), run t-SNE with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
 </section>
@@ -1052,7 +1167,7 @@ Stress PCA: 0.5405
 <section id="umap">
 <h3>UMAP<a class="headerlink" href="#umap" title="Link to this heading">#</a></h3>
 <p>Uniform Manifold Approximation and Projection (<strong>UMAP</strong>) is a more recent manifold learning method (McInnes et al., 2018) that has largely replaced t-SNE as the default visualization tool for high-dimensional data. It is based on Riemannian geometry and algebraic topology, but the practical intuition is similar to t-SNE: nearby points in the original space are pulled together in the embedding, while distant points are pushed apart.</p>
-<p>UMAP has two key advantages over t-SNE:</p>
+<p>UMAP has three key advantages over t-SNE:</p>
 <ol class="arabic simple">
 <li><p><strong>Speed</strong> — UMAP scales approximately as <span class="math notranslate nohighlight">\(O(N^{1.14})\)</span> in practice, making it feasible on datasets with millions of points where t-SNE becomes prohibitive.</p></li>
 <li><p><strong>Global structure</strong> — Unlike t-SNE, UMAP better preserves the global relationships between clusters, not just local neighborhood structure.</p></li>
@@ -1118,10 +1233,10 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <img alt="../_images/2ea545f82957d7063eddc5152f811c60b832ea145d2de8a070f14490519582ab.png" src="../_images/2ea545f82957d7063eddc5152f811c60b832ea145d2de8a070f14490519582ab.png" />
 </div>
 </div>
-<p>Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes. This is the key property that makes UMAP suitable for preprocessing in a supervised pipeline: fit the reducer on training data, then <code class="docutils literal notranslate"><span class="pre">transform</span></code> both train and test sets before passing them to a classifier.</p>
+<p>Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes — the same fit-on-train, transform-both pattern used with LDA above.</p>
 <div class="exercise admonition" id="ex-eda-umap-params">
 
-<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
 <section id="exercise-content">
 <p>Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) <code class="docutils literal notranslate"><span class="pre">n_neighbors=5,</span> <span class="pre">min_dist=0.01</span></code>, (b) <code class="docutils literal notranslate"><span class="pre">n_neighbors=15,</span> <span class="pre">min_dist=0.1</span></code> (the default above), and (c) <code class="docutils literal notranslate"><span class="pre">n_neighbors=50,</span> <span class="pre">min_dist=0.5</span></code>. Plot the three embeddings side-by-side colored by digit. Describe how increasing <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> changes the structure of the embedding.</p>
 </section>
@@ -1129,7 +1244,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </section>
 <section id="phate">
 <h3>PHATE<a class="headerlink" href="#phate" title="Link to this heading">#</a></h3>
-<p>PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve <strong>trajectory and branching structure</strong> in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths — reaction trajectories, transient process states, material synthesis routes, or any dataset where intermediate states are physically meaningful.</p>
+<p>PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve <strong>trajectory and branching structure</strong> in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths where intermediate states are physically meaningful.</p>
 <p>The key idea is to compute a <strong>diffusion operator</strong> that models how information spreads through the data manifold, then embed points based on their <em>potential distances</em> under this diffusion. This captures multi-scale structure: fine local neighborhoods and broad global trajectories are both represented faithfully.</p>
 <p>PHATE was developed for single-cell genomics, where cells trace continuous developmental trajectories rather than falling into discrete groups. Analogous trajectory structure plausibly arises in chemical engineering data — plant states evolving through startup, shutdown, or grade transitions; reaction pathways passing through a sequence of intermediate compositions; processing conditions tracing a route through composition space — though published applications in this space are still rare. Treat PHATE as a tool worth trying when your data has a path-like character rather than discrete clusters, not as an established ChE workhorse.</p>
 <div class="cell docutils container">
@@ -1163,6 +1278,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>PCA</p></th>
+<th class="head"><p>LDA</p></th>
 <th class="head"><p>Kernel PCA</p></th>
 <th class="head"><p>MDS</p></th>
 <th class="head"><p>t-SNE</p></th>
@@ -1171,7 +1287,8 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Linear?</p></td>
+<tr class="row-even"><td><p>Supervised?</p></td>
+<td><p>No</p></td>
 <td><p>Yes</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
@@ -1179,7 +1296,17 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>No</p></td>
 <td><p>No</p></td>
 </tr>
-<tr class="row-odd"><td><p>Projectable?</p></td>
+<tr class="row-odd"><td><p>Linear?</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>Projectable?</p></td>
+<td><p>Yes</p></td>
 <td><p>Yes</p></td>
 <td><p>Yes</p></td>
 <td><p>No</p></td>
@@ -1187,15 +1314,17 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>Yes</p></td>
 <td><p>No</p></td>
 </tr>
-<tr class="row-even"><td><p>Invertible?</p></td>
+<tr class="row-odd"><td><p>Invertible?</p></td>
 <td><p>Yes</p></td>
+<td><p>No</p></td>
 <td><p>Yes (approx.)</p></td>
 <td><p>No</p></td>
 <td><p>No</p></td>
 <td><p>Approx.</p></td>
 <td><p>No</p></td>
 </tr>
-<tr class="row-odd"><td><p>Speed</p></td>
+<tr class="row-even"><td><p>Speed</p></td>
+<td><p>Fast</p></td>
 <td><p>Fast</p></td>
 <td><p>Moderate</p></td>
 <td><p>Slow (<span class="math notranslate nohighlight">\(O(N^2)\)</span>)</p></td>
@@ -1203,16 +1332,18 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <td><p>Fast (<span class="math notranslate nohighlight">\(O(N^{1.1})\)</span>)</p></td>
 <td><p>Moderate</p></td>
 </tr>
-<tr class="row-even"><td><p>Global structure</p></td>
+<tr class="row-odd"><td><p>Global structure</p></td>
 <td><p>Yes</p></td>
+<td><p>Class-driven</p></td>
 <td><p>Partial</p></td>
 <td><p>Yes</p></td>
 <td><p>Poor</p></td>
 <td><p>Good</p></td>
 <td><p>Excellent</p></td>
 </tr>
-<tr class="row-odd"><td><p>Best for</p></td>
+<tr class="row-even"><td><p>Best for</p></td>
 <td><p>Linear, compression</p></td>
+<td><p>Labeled data, <span class="math notranslate nohighlight">\(\le C-1\)</span> dims</p></td>
 <td><p>Nonlinear, small</p></td>
 <td><p>Distance</p></td>
 <td><p>Visualization</p></td>
@@ -1310,9 +1441,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07339
-Epoch  20  loss = 0.07182
-Epoch  30  loss = 0.06103
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07323
+Epoch  20  loss = 0.06471
+Epoch  30  loss = 0.06031
 </pre></div>
 </div>
 </div>
@@ -1336,7 +1467,7 @@ Epoch  30  loss = 0.06103
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/080f5047af12b88f75f8bf5fe699932c6555f9eccd9f4a5674bf826e1e04c7b5.png" src="../_images/080f5047af12b88f75f8bf5fe699932c6555f9eccd9f4a5674bf826e1e04c7b5.png" />
+<img alt="../_images/925849bf2ff364ea0c5d3262c79a233859f35a7f5e46d27f64a5a6d68f5be5a9.png" src="../_images/925849bf2ff364ea0c5d3262c79a233859f35a7f5e46d27f64a5a6d68f5be5a9.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1364,7 +1495,7 @@ Epoch  30  loss = 0.06103
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f6e280dcaddf3e117b7e7ca94da019066038b50c94ded9353aacfa4c7647fbb0.png" src="../_images/f6e280dcaddf3e117b7e7ca94da019066038b50c94ded9353aacfa4c7647fbb0.png" />
+<img alt="../_images/13964d36befb03f969167f514291c0a784ec515aea2400fadb026feefb40aa07.png" src="../_images/13964d36befb03f969167f514291c0a784ec515aea2400fadb026feefb40aa07.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -1374,7 +1505,7 @@ Epoch  30  loss = 0.06103
 </div>
 <div class="exercise admonition" id="ex-eda-autoencoder-design">
 
-<p class="admonition-title"><span class="caption-number">Exercise 85 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 86 </span></p>
 <section id="exercise-content">
 <p>Sketch an autoencoder architecture that compresses a 20-dimensional input into a 3-dimensional latent space, specifying the width of each encoder and decoder layer.</p>
 </section>
@@ -1388,6 +1519,7 @@ Epoch  30  loss = 0.06103
 <li><p><strong>PCA</strong> finds orthonormal directions of maximum variance via eigendecomposition of the covariance matrix. It is linear, projectable, invertible, and fast — the default first choice.</p></li>
 <li><p>A <strong>scree plot</strong> of cumulative explained variance guides the choice of the number of components <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
 <li><p><strong>Kernel PCA</strong> extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter <span class="math notranslate nohighlight">\(\gamma\)</span> controls the locality of the similarity measure.</p></li>
+<li><p><strong>LDA</strong> is the supervised counterpart of PCA: it maximizes between-class relative to within-class variance, yields at most <span class="math notranslate nohighlight">\(C - 1\)</span> components for <span class="math notranslate nohighlight">\(C\)</span> classes, and is projectable — making it a highly effective feature extractor when labels are available.</p></li>
 <li><p><strong>Manifold learning</strong> methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as <span class="math notranslate nohighlight">\(O(N^2)\)</span>.</p></li>
 <li><p><strong>t-SNE</strong> produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. PCA pre-reduction (to ~30 components) is part of the standard recipe. For new work it has largely been superseded by UMAP.</p></li>
 <li><p><strong>Incremental PCA</strong> (<code class="docutils literal notranslate"><span class="pre">IncrementalPCA</span></code>) fits PCA in mini-batches and is the go-to choice for datasets too large to fit in memory; results are nearly identical to full SVD-based PCA.</p></li>
@@ -1503,6 +1635,10 @@ Epoch  30  loss = 0.06103
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-pca">Kernel PCA</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-pca-variants">Other PCA Variants</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-dimensionality-reduction-lda">Supervised Dimensionality Reduction: LDA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lda-as-a-feature-extractor">LDA as a Feature Extractor</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manifold-learning">Manifold Learning</a><ul class="nav section-nav flex-column">

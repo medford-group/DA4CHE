@@ -20,6 +20,7 @@ By the end of this chapter, you will be able to:
 - Use the scree plot and stress curve to choose the number of components
 - Reconstruct and generate data points from a PCA low-dimensional representation
 - Apply Kernel PCA to nonlinear datasets and explain the role of the kernel hyperparameter
+- Apply Linear Discriminant Analysis (LDA) as a supervised alternative to PCA and use it as a feature extractor for classification
 - Describe the principles of manifold learning (MDS, t-SNE, UMAP, PHATE) and compare them to PCA
 - Apply UMAP for fast, projectable nonlinear dimensionality reduction
 - Apply Incremental PCA for memory-efficient processing of large datasets
@@ -188,7 +189,7 @@ print(f'Eigenvalues above 1e-10:   {non_zero}')
 print(f'Smallest eigenvalue:       {eig_vals[-1]:.4f}')
 ```
 
-The rank equals the number of non-zero (or numerically non-negligible) eigenvalues. A rank less than 64 confirms that the 64 pixel features do not span a fully independent 64-dimensional space — the data lives on a lower-dimensional subspace.
+A rank less than 64 confirms that the 64 pixel features do not span a fully independent 64-dimensional space — the data lives on a lower-dimensional subspace.
 
 ### Dimensionality Reduction as Low-Rank Approximation
 
@@ -336,8 +337,6 @@ ax.set_title('sklearn PCA — MNIST')
 ax.legend()
 ```
 
-Full documentation for `sklearn.decomposition.PCA` is available [here](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html).
-
 :::{note}
 PCA is one of the most widely used dimensionality reduction techniques because it is unsupervised, projectable (new points can be mapped in), and invertible (low-dimensional points can be mapped back). Its main limitation is linearity: it cannot capture curved or otherwise nonlinear structure in the data.
 :::
@@ -451,7 +450,89 @@ PCA has many variants worth knowing:
 - **Partial Least Squares (PLS)** — supervised variant that maximizes the covariance between the projected inputs and the target variable, rather than maximizing variance in the inputs alone
 - **Linear Discriminant Analysis (LDA)** — supervised variant that maximizes the ratio of between-class to within-class variance, making it directly useful for classification
 
-Both supervised variants have already appeared in this course: PLS was introduced in [High-Dimensional Regression](../2-regression/Topic2.5-High_dimensional_regression) and LDA in [High-Dimensional Classification](../3-classification/Topic3.4-High-dimensional_Classification). It is worth revisiting those sections with fresh eyes now that the eigendecomposition machinery behind PCA is familiar.
+PLS was introduced in [High-Dimensional Regression](../2-regression/Topic2.5-High_dimensional_regression), and it is worth revisiting that section with fresh eyes now that the eigendecomposition machinery behind PCA is familiar. LDA is the subject of the next section.
+
+## Supervised Dimensionality Reduction: LDA
+
+Everything in this chapter so far has been *unsupervised*: PCA and its variants find directions using the feature matrix alone. But the MNIST dataset comes with labels, and ignoring them leaves information on the table. **Linear Discriminant Analysis (LDA)** uses the labels directly: instead of maximizing total variance, it finds the directions that maximize the spread *between* class centroids relative to the spread *within* each class. Mechanically it is the same eigendecomposition machinery as PCA, applied to the composite matrix $C_\text{intra}^{-1} C_\text{inter}$ instead of the covariance matrix — a step-by-step manual derivation is given in [High-Dimensional Classification](../3-classification/Topic3.4-High-dimensional_Classification).
+
+Because the LDA directions separate class centroids, there can be at most $C - 1$ of them for $C$ classes. For the MNIST digits (10 classes, 64 pixel features), LDA therefore projects down to at most 9 components:
+
+```{code-cell} ipython3
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+
+lda = LinearDiscriminantAnalysis()
+lda.fit(X_mnist, y_mnist)
+X_lda = lda.transform(X_mnist)
+print(f'LDA projected shape: {X_lda.shape}')
+```
+
+How much does supervision help? We can compare the first two LDA components against the first two components of a 9-component PCA on the same data:
+
+```{code-cell} ipython3
+pca9 = PCA(n_components=9)
+X_pca9 = pca9.fit_transform(X_mnist)
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+for ax, X_plot, title in zip(axes, [X_pca9, X_lda], ['PCA', 'LDA']):
+    sc = ax.scatter(X_plot[:, 0], X_plot[:, 1], c=y_mnist, cmap='tab10', s=5, alpha=0.7)
+    fig.colorbar(sc, ax=ax, label='Digit')
+    ax.set_xlabel('Component 0')
+    ax.set_ylabel('Component 1')
+    ax.set_title(f'{title} (components 0 vs 1)')
+plt.tight_layout()
+```
+
+The LDA projection shows substantially better cluster separation than PCA because LDA explicitly maximizes the ratio of between-class to within-class variance. PCA simply captures directions of maximum total variance in the data, which may mix classes.
+
+### LDA as a Feature Extractor
+
+LDA is projectable — `transform` maps new points into the reduced space — so it can serve as a preprocessing step in a supervised pipeline. This is exactly the accuracy-based quality check described at the start of the chapter: train the same classifier on the original and reduced features and compare. sklearn's `LinearDiscriminantAnalysis` also doubles as a classifier in its own right — as introduced in [High-Dimensional Classification](../3-classification/Topic3.4-High-dimensional_Classification), it assigns each point to the class whose centroid is nearest in the projected space:
+
+```{code-cell} ipython3
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.svm import SVC
+
+X_tr, X_te, y_tr, y_te = train_test_split(X_mnist, y_mnist, test_size=0.4, random_state=0)
+
+# LDA's built-in classifier mode
+lda_clf = LinearDiscriminantAnalysis(n_components=9)
+lda_clf.fit(X_tr, y_tr)
+print(f'LDA classifier accuracy: {lda_clf.score(X_te, y_te):.3f}')
+```
+
+```{code-cell} ipython3
+# SVC on LDA features vs. SVC on raw features
+X_tr_lda = lda_clf.transform(X_tr)
+X_te_lda = lda_clf.transform(X_te)
+
+C_range = np.logspace(-1, 1, 8)
+gamma_range = np.logspace(-4, -1, 8)
+params = {'C': C_range, 'gamma': gamma_range}
+
+svc_lda = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
+svc_lda.fit(X_tr_lda, y_tr)
+score_svc_lda = svc_lda.best_estimator_.score(X_te_lda, y_te)
+
+svc_full = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
+svc_full.fit(X_tr, y_tr)
+score_svc_full = svc_full.best_estimator_.score(X_te, y_te)
+
+print(f'SVC on LDA features ({X_tr_lda.shape[1]} dims):  accuracy = {score_svc_lda:.3f}')
+print(f'SVC on raw features  ({X_tr.shape[1]} dims): accuracy = {score_svc_full:.3f}')
+```
+
+LDA features achieve comparable accuracy to the full-feature SVM while compressing 64 dimensions to 9 — a 7× reduction. This speedup scales dramatically as image resolution increases: for a 128×128 image (16,384 pixels), LDA would still reduce to at most 9 components for a 10-class problem.
+
+:::{exercise}
+:label: ex-eda-lda-pca-acc
+
+Compare LDA-based and PCA-based dimensionality reduction as preprocessing for classification.
+
+1. Using the same train/test split (`X_tr`, `X_te`, `y_tr`, `y_te`) from above, project the data to 9 components with both `LinearDiscriminantAnalysis(n_components=9)` and `PCA(n_components=9)`.
+2. Train `SVC(kernel='rbf')` with `GridSearchCV` on each projected training set and evaluate on the corresponding projected test set.
+3. Make a bar chart comparing three accuracy values (LDA + SVC, PCA + SVC, and the raw-feature SVC from above) and comment on the ranking.
+:::
 
 ## Manifold Learning
 
@@ -487,7 +568,7 @@ MDS directly optimizes stress and therefore achieves lower stress than PCA, but 
 
 ### t-SNE
 
-t-distributed Stochastic Neighbor Embedding (**t-SNE**) uses a probabilistic similarity measure based on the t-distribution: points that are nearby in the original space are given high probability of being neighbors in the embedding, while distant points are pushed apart. For roughly a decade it was the default tool for visualizing high-dimensional data, and you will encounter it constantly in the literature — though for new work it has largely been superseded by UMAP (next section), which is faster and preserves global structure better.
+t-distributed Stochastic Neighbor Embedding (**t-SNE**) uses a probabilistic similarity measure based on the t-distribution: points that are nearby in the original space are given high probability of being neighbors in the embedding, while distant points are pushed apart. For roughly a decade it was the default tool for visualizing high-dimensional data, and you will encounter it constantly in the literature — though for new work it has largely been superseded by UMAP (next section).
 
 The standard recipe is to first reduce the data to 30–50 components with PCA (retaining most of the variance) and then run t-SNE on the reduced representation — computing pairwise similarities in the full 64-dimensional space is slow and adds little:
 
@@ -511,7 +592,7 @@ ax.set_title('t-SNE on PCA-reduced MNIST (30 components)')
 t-SNE produces well-separated clusters on image data, though the axes have no interpretable meaning.
 
 :::{note}
-**t-SNE hyperparameters:** t-SNE has many hyperparameters without clear physical meaning, and results depend on all of them. `perplexity` (roughly, the number of effective nearest neighbors; typically 5–50) is the most important to tune; `learning_rate` and `max_iter` also affect results, and the embedding is not deterministic unless `random_state` is set. PCA pre-reduction to ~30–50 components (as above) is standard practice and should be considered part of the recipe. Use t-SNE for visualization only — global distances between clusters in the embedding are not meaningful.
+**t-SNE hyperparameters:** t-SNE has many hyperparameters without clear physical meaning, and results depend on all of them. `perplexity` (roughly, the number of effective nearest neighbors; typically 5–50) is the most important to tune; `learning_rate` and `max_iter` also affect results, and the embedding is not deterministic unless `random_state` is set. Use t-SNE for visualization only — global distances between clusters in the embedding are not meaningful.
 :::
 
 :::{exercise}
@@ -524,7 +605,7 @@ Using the PCA-reduced MNIST data (`X_pca_pre` above), run t-SNE with `perplexity
 
 Uniform Manifold Approximation and Projection (**UMAP**) is a more recent manifold learning method (McInnes et al., 2018) that has largely replaced t-SNE as the default visualization tool for high-dimensional data. It is based on Riemannian geometry and algebraic topology, but the practical intuition is similar to t-SNE: nearby points in the original space are pulled together in the embedding, while distant points are pushed apart.
 
-UMAP has two key advantages over t-SNE:
+UMAP has three key advantages over t-SNE:
 
 1. **Speed** — UMAP scales approximately as $O(N^{1.14})$ in practice, making it feasible on datasets with millions of points where t-SNE becomes prohibitive.
 2. **Global structure** — Unlike t-SNE, UMAP better preserves the global relationships between clusters, not just local neighborhood structure.
@@ -568,7 +649,7 @@ for ax, X_plot, y_plot, title in zip(
 plt.tight_layout()
 ```
 
-Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes. This is the key property that makes UMAP suitable for preprocessing in a supervised pipeline: fit the reducer on training data, then `transform` both train and test sets before passing them to a classifier.
+Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes — the same fit-on-train, transform-both pattern used with LDA above.
 
 :::{exercise}
 :label: ex-eda-umap-params
@@ -578,7 +659,7 @@ Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) `n
 
 ### PHATE
 
-PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve **trajectory and branching structure** in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths — reaction trajectories, transient process states, material synthesis routes, or any dataset where intermediate states are physically meaningful.
+PHATE (Potential of Heat-diffusion for Affinity-based Trajectory Embedding; Moon et al., 2019) is a manifold learning method designed to preserve **trajectory and branching structure** in the embedding. While t-SNE and UMAP excel at revealing discrete clusters, PHATE is particularly effective when the data lies along continuous paths where intermediate states are physically meaningful.
 
 The key idea is to compute a **diffusion operator** that models how information spreads through the data manifold, then embed points based on their *potential distances* under this diffusion. This captures multi-scale structure: fine local neighborhoods and broad global trajectories are both represented faithfully.
 
@@ -603,14 +684,15 @@ The key hyperparameters are `knn` (number of nearest neighbors for the affinity 
 
 ### Comparison: Manifold Learning vs. PCA
 
-| Property | PCA | Kernel PCA | MDS | t-SNE | UMAP | PHATE |
-|---|---|---|---|---|---|---|
-| Linear? | Yes | No | No | No | No | No |
-| Projectable? | Yes | Yes | No | No | Yes | No |
-| Invertible? | Yes | Yes (approx.) | No | No | Approx. | No |
-| Speed | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) | Fast ($O(N^{1.1})$) | Moderate |
-| Global structure | Yes | Partial | Yes | Poor | Good | Excellent |
-| Best for | Linear, compression | Nonlinear, small | Distance | Visualization | Visualization + pipelines | Trajectories, branching |
+| Property | PCA | LDA | Kernel PCA | MDS | t-SNE | UMAP | PHATE |
+|---|---|---|---|---|---|---|---|
+| Supervised? | No | Yes | No | No | No | No | No |
+| Linear? | Yes | Yes | No | No | No | No | No |
+| Projectable? | Yes | Yes | Yes | No | No | Yes | No |
+| Invertible? | Yes | No | Yes (approx.) | No | No | Approx. | No |
+| Speed | Fast | Fast | Moderate | Slow ($O(N^2)$) | Slow ($O(N^2)$) | Fast ($O(N^{1.1})$) | Moderate |
+| Global structure | Yes | Class-driven | Partial | Yes | Poor | Good | Excellent |
+| Best for | Linear, compression | Labeled data, $\le C-1$ dims | Nonlinear, small | Distance | Visualization | Visualization + pipelines | Trajectories, branching |
 
 Manifold techniques provide powerful insight into data structure but are generally not projectable and scale poorly compared to PCA. For visualization, UMAP is the current best practice for cluster-structured data; PHATE is preferred when the data has trajectory or branching structure.
 
@@ -755,6 +837,7 @@ Sketch an autoencoder architecture that compresses a 20-dimensional input into a
 - **PCA** finds orthonormal directions of maximum variance via eigendecomposition of the covariance matrix. It is linear, projectable, invertible, and fast — the default first choice.
 - A **scree plot** of cumulative explained variance guides the choice of the number of components $k$.
 - **Kernel PCA** extends PCA to nonlinear data using the kernel trick. The RBF kernel hyperparameter $\gamma$ controls the locality of the similarity measure.
+- **LDA** is the supervised counterpart of PCA: it maximizes between-class relative to within-class variance, yields at most $C - 1$ components for $C$ classes, and is projectable — making it a highly effective feature extractor when labels are available.
 - **Manifold learning** methods (MDS, t-SNE) optimize distance preservation directly and reveal nonlinear structure, but are not projectable, not invertible, and scale as $O(N^2)$.
 - **t-SNE** produces high-quality local cluster visualization but is slow, not projectable, and sensitive to hyperparameters. PCA pre-reduction (to ~30 components) is part of the standard recipe. For new work it has largely been superseded by UMAP.
 - **Incremental PCA** (`IncrementalPCA`) fits PCA in mini-batches and is the go-to choice for datasets too large to fit in memory; results are nearly identical to full SVD-based PCA.

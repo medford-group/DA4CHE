@@ -23,7 +23,6 @@ By the end of this chapter, you will be able to:
 - Distinguish categorical from ordinal variables and apply one-hot encoding with `pd.get_dummies` and a leakage-safe `OneHotEncoder` + `ColumnTransformer` pipeline
 - Apply and interpret a depth-limited decision tree and read feature importances from the result
 - Derive the five steps of Linear Discriminant Analysis (LDA) and explain why it finds more class-discriminative projections than PCA
-- Apply `sklearn.discriminant_analysis.LinearDiscriminantAnalysis` as both a classifier and a feature extractor, and compare accuracy and speed against SVC on raw features
 :::
 
 The previous chapters introduced classification algorithms on simple two-dimensional
@@ -630,8 +629,10 @@ space). The decision boundaries are hyperplanes perpendicular to the LDA axes.
 
 ### The LDA Algorithm: Manual Derivation
 
-We will step through the five-step derivation on a two-class toy dataset, then apply
-the scikit-learn implementation to the MNIST digits dataset.
+We will step through the five-step derivation on a two-class toy dataset. Applying
+the scikit-learn implementation to a real 10-class, high-dimensional dataset is
+deferred to [Dimensionality Reduction](../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction)
+in Module 5, where LDA reappears as the supervised counterpart of PCA.
 
 #### Step 1 — Class Centroids
 
@@ -750,116 +751,6 @@ ax.set_title('LDA decision boundary (perpendicular to axis)')
 plt.tight_layout()
 ```
 
-### LDA on MNIST Digits
-
-The scikit-learn `LinearDiscriminantAnalysis` scales efficiently to high dimensions.
-For the MNIST digits (10 classes, 64 features per 8×8 image), LDA projects down to at
-most 9 components ($C - 1$):
-
-```{code-cell} ipython3
-from sklearn.datasets import load_digits
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.decomposition import PCA
-import seaborn as sns
-
-digits = load_digits()
-X_mnist = digits.data.astype(float)
-y_mnist = digits.target
-
-print(f'MNIST shape: {X_mnist.shape},  classes: {np.unique(y_mnist)}')
-```
-
-```{code-cell} ipython3
-lda = LinearDiscriminantAnalysis()
-lda.fit(X_mnist, y_mnist)
-X_lda = lda.transform(X_mnist)
-print(f'LDA projected shape: {X_lda.shape}')
-```
-
-```{code-cell} ipython3
-# PCA for comparison (same number of components)
-pca9 = PCA(n_components=9)
-X_pca9 = pca9.fit_transform(X_mnist)
-
-# Color by digit label (10 classes — use tab10 colormap)
-tab10 = plt.cm.tab10(np.linspace(0, 1, 10))
-
-fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-
-for label in range(10):
-    mask = y_mnist == label
-    axes[0].scatter(X_pca9[mask, 0], X_pca9[mask, 1],
-                    color=tab10[label], alpha=0.4, s=10, label=str(label))
-    axes[1].scatter(X_lda[mask, 0],  X_lda[mask, 1],
-                    color=tab10[label], alpha=0.4, s=10, label=str(label))
-
-axes[0].set_title('PCA (components 0 vs 1)')
-axes[1].set_title('LDA (components 0 vs 1)')
-for ax in axes:
-    ax.set_xlabel('Component 0')
-    ax.set_ylabel('Component 1')
-    ax.legend(ncol=5, fontsize=7, markerscale=2)
-plt.tight_layout()
-```
-
-The LDA projection shows substantially better cluster separation than PCA because LDA
-explicitly maximizes the ratio of between-class to within-class variance. PCA simply
-captures directions of maximum total variance in the data, which may mix classes.
-
-### LDA as a Classifier and Feature Extractor
-
-```{code-cell} ipython3
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix
-
-X_tr, X_te, y_tr, y_te = train_test_split(X_mnist, y_mnist, test_size=0.4, random_state=0)
-
-# LDA classifier (built-in)
-lda_clf = LinearDiscriminantAnalysis(n_components=9)
-lda_clf.fit(X_tr, y_tr)
-lda_score = lda_clf.score(X_te, y_te)
-print(f'LDA classifier accuracy: {lda_score:.3f}')
-```
-
-```{code-cell} ipython3
-y_pred_lda = lda_clf.predict(X_te)
-cm_lda = confusion_matrix(y_te, y_pred_lda)
-
-fig, ax = plt.subplots(figsize=(7, 6))
-sns.heatmap(cm_lda, annot=True, fmt='d', linewidth=0.5, cbar=False, ax=ax)
-ax.set_xlabel('Predicted')
-ax.set_ylabel('True')
-ax.set_title('LDA — MNIST confusion matrix')
-plt.tight_layout()
-```
-
-```{code-cell} ipython3
-# SVC on LDA features vs. SVC on raw features
-X_tr_lda = lda_clf.transform(X_tr)
-X_te_lda = lda_clf.transform(X_te)
-
-C_range = np.logspace(-1, 1, 8)
-gamma_range = np.logspace(-4, -1, 8)
-params = {'C': C_range, 'gamma': gamma_range}
-
-svc_lda = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
-svc_lda.fit(X_tr_lda, y_tr)
-score_svc_lda = svc_lda.best_estimator_.score(X_te_lda, y_te)
-
-svc_full = GridSearchCV(SVC(kernel='rbf'), params, cv=3)
-svc_full.fit(X_tr, y_tr)
-score_svc_full = svc_full.best_estimator_.score(X_te, y_te)
-
-print(f'SVC on LDA features ({X_tr_lda.shape[1]} dims):  accuracy = {score_svc_lda:.3f}')
-print(f'SVC on raw features  ({X_tr.shape[1]} dims): accuracy = {score_svc_full:.3f}')
-```
-
-LDA features achieve comparable accuracy to the full-feature SVM while compressing 64
-dimensions to 9 — a 7× reduction. This speedup scales dramatically as image resolution
-increases: for a 128×128 image (16,384 pixels), LDA would still reduce to at most 9
-components for a 10-class problem.
-
 :::{note}
 **LDA vs. PLS: the supervised dimensionality reduction pair**
 LDA (for classification) and PLS (for regression) occupy symmetric roles: both find
@@ -870,21 +761,20 @@ values for PLS.
 :::
 
 :::{exercise}
-:label: ex-cls-lda-pca-acc
+:label: ex-cls-lda-perov
 
-Compare the classification accuracy of LDA-based and PCA-based dimensionality
-reduction for MNIST digits.
+Apply the five-step manual LDA derivation to the perovskite dataset, using the eight
+numeric features (`X_perov`) and labels (`y_perov`, classes $-1$/$+1$):
 
-1. Using the same train/test split (`X_tr`, `X_te`, `y_tr`, `y_te`) from above,
-   project the data to 9 components with both `LinearDiscriminantAnalysis(n_components=9)`
-   and `PCA(n_components=9)`.
-2. For each projection, train a `LinearRegression`-free *linear* classifier using
-   `LinearDiscriminantAnalysis` (the built-in classifier mode) on the projected training
-   data and evaluate on the projected test data.
-3. Then train `SVC(kernel='rbf')` with `GridSearchCV` on each projected space and
-   report the best test accuracy.
-4. Make a bar chart comparing the four accuracy values (LDA linear, LDA + SVC, PCA
-   linear, PCA + SVC) and comment on the relative ranking.
+1. Compute the two class centroids and the pooled intra-class covariance matrix.
+2. Compute the inter-class covariance and the eigendecomposition of the composite
+   matrix $C_\text{intra}^{-1} C_\text{inter}$.
+3. Project the data onto the leading LDA eigenvector (with two classes there is only
+   one meaningful component) and plot overlapping histograms of the projected values
+   for each class.
+4. Repeat the projection using the leading eigenvector of the total covariance matrix
+   (the first PCA component) and compare the class overlap in the two histograms.
+   Which projection separates the classes better, and why?
 :::
 
 ---
@@ -928,7 +818,8 @@ reduction for MNIST digits.
   ($C$ = number of classes) and serves as both a linear classifier and a preprocessing
   step for non-linear classifiers. LDA projections show better class separation than
   PCA projections because they use the class labels; PCA maximizes total variance
-  regardless of class identity.
+  regardless of class identity. LDA is applied to a real 10-class dataset in Module 5
+  (Dimensionality Reduction).
 
 ## Additional Reading
 
