@@ -182,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -512,7 +513,7 @@ document.write(`
 <p>Each row of <code class="docutils literal notranslate"><span class="pre">X_mnist</span></code> is a 64-element vector. The <code class="docutils literal notranslate"><span class="pre">show_image</span></code> helper reshapes it back to 8×8 for display. Although the data is stored as a flat vector for modeling purposes, the spatial arrangement of pixels carries meaning — structure that informs more advanced models like convolutional neural networks.</p>
 <div class="exercise admonition" id="ex-eda-dataset-shapes">
 
-<p class="admonition-title"><span class="caption-number">Exercise 74 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 79 </span></p>
 <section id="exercise-content">
 <p>Compute the <strong>samples-to-features ratio</strong> (n/d) for both the Dow and MNIST datasets. If a linear model has roughly one free parameter per feature (plus an intercept), what does a low n/d ratio imply about the risk of overfitting? Which dataset is more at risk?</p>
 </section>
@@ -592,7 +593,7 @@ document.write(`
 <p>The density drops sharply and the typical nearest-neighbor distance grows, even though no data was added — exactly the sparsity that makes distance- and density-based methods unreliable in high dimensions. Both effects trace back to the same fact, that volume grows with dimension; which one wins depends on whether the extra dimensions carry signal or noise.</p>
 <div class="exercise admonition" id="ex-eda-volume-growth">
 
-<p class="admonition-title"><span class="caption-number">Exercise 75 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 80 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">grid_points(d,</span> <span class="pre">N)</span></code> that returns the number of uniform grid points needed to cover a <span class="math notranslate nohighlight">\(d\)</span>-dimensional unit hypercube at resolution <span class="math notranslate nohighlight">\(1/N\)</span> (i.e. <span class="math notranslate nohighlight">\(N^d\)</span>). Plot <span class="math notranslate nohighlight">\(\log_{10}(\text{grid points})\)</span> vs <span class="math notranslate nohighlight">\(d\)</span> for <span class="math notranslate nohighlight">\(N = 10\)</span> and <span class="math notranslate nohighlight">\(d \in \{1, 2, \ldots, 20\}\)</span>. Add a horizontal reference line at <span class="math notranslate nohighlight">\(\log_{10}(10^{83})\)</span> (approximate number of atoms in the observable universe). At what dimension does the required sampling exceed this limit?</p>
 </section>
@@ -1204,7 +1205,7 @@ document.write(`
 </ul>
 <div class="exercise admonition" id="ex-eda-zero-pixels">
 
-<p class="admonition-title"><span class="caption-number">Exercise 76 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 81 </span></p>
 <section id="exercise-content">
 <p>Identify all MNIST pixels (features) with standard deviation less than 0.5. Visualize their positions as an 8×8 binary mask using <code class="docutils literal notranslate"><span class="pre">plt.imshow</span></code> (1 = near-zero variance, 0 = informative). How many such pixels are there, and where are they located in the image grid?</p>
 </section>
@@ -1320,7 +1321,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ea904b5d3c740f4907e9593fe31645f114b7752fccd0a95f598d754094802b58.png" src="../_images/ea904b5d3c740f4907e9593fe31645f114b7752fccd0a95f598d754094802b58.png" />
+<img alt="../_images/a195d6284b713f2c68ea087e0fb3db5627e66750a1e1cd23aa956cf7f153a5ae.png" src="../_images/a195d6284b713f2c68ea087e0fb3db5627e66750a1e1cd23aa956cf7f153a5ae.png" />
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">kind='reg'</span></code> option overlays a linear regression fit with a confidence band, and prints the Pearson correlation coefficient and p-value. For x3 and x4 (two feed flows to the same column), a strong positive correlation is expected physically — both flows tend to increase or decrease together with production rate.</p>
@@ -1424,7 +1425,7 @@ Difference: 2.22e-16
 <p>The two values agree to numerical precision. Intuitively, the correlation matrix is a compact representation of all pairwise linear regressions on standardized data — a useful framing when deciding which features to include or exclude from a model.</p>
 <div class="exercise admonition" id="ex-eda-corr-slope">
 
-<p class="admonition-title"><span class="caption-number">Exercise 77 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 82 </span></p>
 <section id="exercise-content">
 <p>Extend the demonstration above to verify that the <strong>full correlation matrix</strong> of the first four Dow features equals the matrix of pairwise OLS regression slopes on standardized data. For each off-diagonal pair <span class="math notranslate nohighlight">\((i, j)\)</span>: standardize both features, fit <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>, and compare <code class="docutils literal notranslate"><span class="pre">.coef_[0]</span></code> to the corresponding entry in <code class="docutils literal notranslate"><span class="pre">corr_dow</span></code>. Display the maximum absolute difference across all pairs.</p>
 </section>
@@ -1457,7 +1458,7 @@ Spearman correlation: 0.2359
 <p>When Pearson and Spearman values agree closely, the relationship is approximately linear. A large discrepancy suggests nonlinearity or outlier influence, and warrants further investigation before assuming linear models are appropriate.</p>
 <div class="exercise admonition" id="ex-eda-spearman-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 78 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 83 </span></p>
 <section id="exercise-content">
 <p>Compute both the Pearson and Spearman correlation matrices for all 40 Dow features. Calculate the element-wise absolute difference between the two matrices (excluding the diagonal). Which feature pair shows the largest discrepancy between Pearson and Spearman correlation? Plot a scatter plot of that pair and describe what you observe.</p>
 </section>
@@ -1475,7 +1476,7 @@ Spearman correlation: 0.2359
 <p>The report includes per-feature histograms and statistics, a full correlation matrix, missing value summaries, and alerts for high cardinality or near-constant features. It is especially useful as a first pass on a new dataset before deciding which manual analyses to pursue. Install with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ydata-profiling</span></code>.</p>
 <div class="exercise admonition" id="ex-eda-autoeda-dow">
 
-<p class="admonition-title"><span class="caption-number">Exercise 79 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 84 </span></p>
 <section id="exercise-content">
 <p>Install <code class="docutils literal notranslate"><span class="pre">ydata-profiling</span></code> (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ydata-profiling</span></code>) and generate an automated EDA report for the Dow dataset.</p>
 <ol class="arabic simple">

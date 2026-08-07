@@ -182,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -783,7 +784,7 @@ together may define boundaries that are invisible in any pairwise projection but
 readily learned by a kernel SVM or decision tree operating on the full feature matrix.</p>
 <div class="exercise admonition" id="ex-cls-perov-scatter">
 
-<p class="admonition-title"><span class="caption-number">Exercise 52 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 57 </span></p>
 <section id="exercise-content">
 <p>Using the perovskite feature matrix <code class="docutils literal notranslate"><span class="pre">X_perov</span></code> and labels <code class="docutils literal notranslate"><span class="pre">y_perov</span></code>, produce scatter
 plots for all pairs among the four features <code class="docutils literal notranslate"><span class="pre">rA</span> <span class="pre">(Ang)</span></code>, <code class="docutils literal notranslate"><span class="pre">rB</span> <span class="pre">(Ang)</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, and <code class="docutils literal notranslate"><span class="pre">tau</span></code>.
@@ -1078,7 +1079,7 @@ F1 score:  0.938
 </div>
 <div class="exercise admonition" id="ex-cls-perov-knn">
 
-<p class="admonition-title"><span class="caption-number">Exercise 53 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 58 </span></p>
 <section id="exercise-content">
 <p>Apply <code class="docutils literal notranslate"><span class="pre">KNeighborsClassifier</span></code> (from sklearn) to the full perovskite feature matrix
 using the same train/test split (<code class="docutils literal notranslate"><span class="pre">X_train</span></code>, <code class="docutils literal notranslate"><span class="pre">X_test</span></code>, <code class="docutils literal notranslate"><span class="pre">y_train</span></code>, <code class="docutils literal notranslate"><span class="pre">y_test</span></code>).
@@ -1386,7 +1387,7 @@ Accuracy (+ one-hot elements, 127 features): 0.857
 <p>The <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> applies <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code> only to the categorical columns and passes the numeric columns through unchanged. Using a pipeline ensures that the encoder is fit only on training data, preventing category leakage.</p>
 <div class="exercise admonition" id="ex-cls-ohe-sklearn">
 
-<p class="admonition-title"><span class="caption-number">Exercise 54 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 59 </span></p>
 <section id="exercise-content">
 <p>Using the <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> + <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> pattern above, add <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> to the numeric columns (as a second transformer in the <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code>) before passing them to the SVC. Then:</p>
 <ol class="arabic simple">
@@ -1527,7 +1528,7 @@ science and chemical engineering applications.</p>
 </div>
 <div class="exercise admonition" id="ex-cls-tree-rf">
 
-<p class="admonition-title"><span class="caption-number">Exercise 55 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 60 </span></p>
 <section id="exercise-content">
 <p>Import <code class="docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.ensemble</span></code> and train it on the
 perovskite training set with <code class="docutils literal notranslate"><span class="pre">n_estimators=100</span></code> and <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>.
@@ -1728,7 +1729,7 @@ values for PLS.</p>
 </div>
 <div class="exercise admonition" id="ex-cls-lda-perov">
 
-<p class="admonition-title"><span class="caption-number">Exercise 56 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 61 </span></p>
 <section id="exercise-content">
 <p>Apply the five-step manual LDA derivation to the perovskite dataset, using the eight
 numeric features (<code class="docutils literal notranslate"><span class="pre">X_perov</span></code>) and labels (<code class="docutils literal notranslate"><span class="pre">y_perov</span></code>, classes <span class="math notranslate nohighlight">\(-1\)</span>/<span class="math notranslate nohighlight">\(+1\)</span>):</p>

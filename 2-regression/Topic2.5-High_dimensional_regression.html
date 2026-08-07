@@ -182,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -611,7 +612,7 @@ A baseline is the <strong>simplest reasonable model</strong> you can implement q
 <p>Kernel-based methods are very commonly used for high-dimensional spaces because they account for non-linear interactions, but the number of features does not exceed the number of data points. In your homework you will explore the application of KRR to this dataset.</p>
 <div class="exercise admonition" id="ex-reg-raw-vs-scale">
 
-<p class="admonition-title"><span class="caption-number">Exercise 33 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 38 </span></p>
 <section id="exercise-content">
 <p>Compare linear regression on the <strong>original</strong> features and on <strong>rescaled</strong> features.</p>
 <ol class="arabic simple">
@@ -891,7 +892,7 @@ Components needed for ≥90% variance: 8
 </ul>
 <div class="exercise admonition" id="ex-reg-pca-verify">
 
-<p class="admonition-title"><span class="caption-number">Exercise 34 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 39 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">sklearn.decomposition.PCA</span></code>, verify that scikit-learn’s results match the manual PCA above.</p>
 <ol class="arabic simple">
@@ -1160,7 +1161,7 @@ x_rotations_ and W_star agree: True
 <p>The crossover behavior (PLS saturates earlier) is also typical: because PLS components are already chosen to be predictive, adding more components yields diminishing returns faster than PCR, where many early components may carry little signal about <span class="math notranslate nohighlight">\(y\)</span>.</p>
 <div class="exercise admonition" id="ex-reg-pcr-pls">
 
-<p class="admonition-title"><span class="caption-number">Exercise 35 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 40 </span></p>
 <section id="exercise-content">
 <p>Here you will use pipelines to compare some of the models above:</p>
 <ol class="arabic simple">

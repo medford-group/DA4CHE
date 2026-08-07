@@ -182,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -501,7 +502,7 @@ regression model, we must <strong>create the nonlinear features explicitly</stro
 systematic way to generate them and a regularization strategy to select the useful ones.</p>
 <div class="exercise admonition" id="ex-reg-nonlin-motive">
 
-<p class="admonition-title"><span class="caption-number">Exercise 36 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 41 </span></p>
 <section id="exercise-content">
 <p>Verify the linear-model ceiling on the Dow dataset.</p>
 <ol class="arabic simple">
@@ -685,7 +686,7 @@ engineering problems, a feature like <code class="docutils literal notranslate">
 interpretation (e.g., a quadratic temperature effect or a cross-flow interaction).</p>
 <div class="exercise admonition" id="ex-reg-lasso-poly">
 
-<p class="admonition-title"><span class="caption-number">Exercise 37 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 42 </span></p>
 <section id="exercise-content">
 <p>Compare the test <span class="math notranslate nohighlight">\(r^2\)</span> of LASSO polynomial regression against plain linear regression
 as a function of the LASSO regularization strength <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
@@ -908,7 +909,7 @@ different selected features. Always run a few different splits and check whether
 same features appear consistently before drawing conclusions about physical importance.</p>
 <div class="exercise admonition" id="ex-reg-autofeat-units">
 
-<p class="admonition-title"><span class="caption-number">Exercise 38 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 43 </span></p>
 <section id="exercise-content">
 <p>Apply units-aware <code class="docutils literal notranslate"><span class="pre">AutoFeatRegressor</span></code> to the Dow dataset.</p>
 <ol class="arabic simple">

@@ -180,6 +180,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -821,7 +822,7 @@ document.write(`
 <p>In this section, the goal is to predict the output, impurity, as a function of all the input variables. Notably, in reality this data comes from a time series, which means that there are internal correlations as we will discuss more in the “time series” topic. However, for now we will (incorrectly) assume that the data are “independent”, meaning that we can shuffle the data points and treat them as random samples.</p>
 <div class="exercise admonition" id="ex-reg-feat-extract">
 
-<p class="admonition-title"><span class="caption-number">Exercise 30 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 35 </span></p>
 <section id="exercise-content">
 <p>Write a function that takes three arguments: a desired feature name (a string), a list of feature names (e.g. <code class="docutils literal notranslate"><span class="pre">x_names</span></code>), and a data matrix (e.g. <code class="docutils literal notranslate"><span class="pre">X</span></code>). The function should select the desired feature name from the data matrix and return it as a 1-dimensional <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array.</p>
 </section>
@@ -978,7 +979,7 @@ Covariance(x3:Input to Primary Column Bed 3 Flow, x4:Input to Primary Column Bed
 <p>We will see how these two matrices are related shortly.</p>
 <div class="exercise admonition" id="ex-reg-bivar-corr">
 
-<p class="admonition-title"><span class="caption-number">Exercise 31 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 36 </span></p>
 <section id="exercise-content">
 <ol class="arabic simple">
 <li><p>Programmatically find the top 5 <strong>absolute</strong> correlations among <strong>distinct</strong> feature pairs (ignore the diagonal).</p></li>
@@ -1137,7 +1138,7 @@ Minimum scaled: -8.12009681442378, Maximum scaled: 38.10583689480496
 <p>We will discuss the covariance/correlation matrix much more later, but when dealing with multi-dimensional data it is always good to check.</p>
 <div class="exercise admonition" id="ex-reg-scale-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 32 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 37 </span></p>
 <section id="exercise-content">
 <ol class="arabic simple">
 <li><p>Split <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> into train/test (80/20) with <code class="docutils literal notranslate"><span class="pre">random_state=0</span></code>.</p></li>

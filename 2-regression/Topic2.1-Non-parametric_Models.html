@@ -182,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -451,7 +452,7 @@ y_i = \sum_j w_j X_{ij} + \epsilon_i
 <p>Machine learning differs from regular regression in that it seeks to optimize <span class="math notranslate nohighlight">\(\vec{\lambda}\)</span> (parameter optimization), <span class="math notranslate nohighlight">\(\vec{\eta}\)</span> (complexity optimization) in order to <strong>obtain a model that generalizes to new input data</strong>. Machine learning also sometimes involves selecting <span class="math notranslate nohighlight">\(\vec{x}\)</span> (feature selection) or generating <span class="math notranslate nohighlight">\(\vec{x}\)</span> from non-vectorized data such as text or images (feature generation).</p>
 <div class="exercise admonition" id="ex-reg-feat-params">
 
-<p class="admonition-title"><span class="caption-number">Exercise 18 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 23 </span></p>
 <section id="exercise-content">
 <p><strong>Identify the features, parameters, and hyperparameters in a common regression model.</strong></p>
 <p>Consider a polynomial regression model of the form:</p>
@@ -692,7 +693,7 @@ X_{ij}=\max(0,\,x_i-x_j),
 <p>We see that the model successful at interpolating between the points. This is an example of a <strong>non-parametric</strong> model. The number of parameters, <span class="math notranslate nohighlight">\(\vec{w}\)</span> is equal to the number of <strong>training</strong> data points, and the number of columns in the linear design matrix. The number of rows is equal to the number of data points that the model will predict. These numbers do not need to be equal, and it is not necessary that the training points are included in the prediction.</p>
 <div class="exercise admonition" id="ex-reg-lin-interp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 19 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 24 </span></p>
 <section id="exercise-content">
 <p>Use every third data point of the spectra dataset to train a linear interpolation model and explore the predictions.</p>
 <ol class="arabic simple">
@@ -840,7 +841,7 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 <hr class="docutils" />
 <div class="exercise admonition" id="ex-reg-kern-density">
 
-<p class="admonition-title"><span class="caption-number">Exercise 20 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 25 </span></p>
 <section id="exercise-content">
 <p>Explore how the <strong>number of training points</strong> affects the model fit.</p>
 <ul class="simple">
@@ -912,7 +913,7 @@ G(x_i) = \exp\left(-\frac{(x_i - \mu)^2}{2\sigma^2}\right)
 <hr class="docutils" />
 <div class="exercise admonition" id="ex-reg-spline-hyper">
 
-<p class="admonition-title"><span class="caption-number">Exercise 21 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 26 </span></p>
 <section id="exercise-content">
 <p>Explore the effect of <strong>spline hyperparameters</strong> on model flexibility:</p>
 <ul class="simple">

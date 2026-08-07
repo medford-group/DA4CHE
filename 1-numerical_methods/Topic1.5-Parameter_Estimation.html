@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Nonlinear Parameter Estimation &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '1-numerical_methods/Topic1.5-Parameter_Estimation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Regression" href="../2-regression/intro.html" />
+    <link rel="prev" title="Numerical Optimization" href="Topic1.4-Numerical_Optimization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Numerical Methods</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/1-numerical_methods/Topic1.5-Parameter_Estimation.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Nonlinear Parameter Estimation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-is-maximum-likelihood">Least Squares is Maximum Likelihood</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curvature-sets-confidence-the-hessian">Curvature Sets Confidence: the Hessian</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-correlations">Parameter Correlations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sloppiness-grows-with-model-complexity">Sloppiness Grows with Model Complexity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-checks-and-practical-tools">Cross-checks and Practical Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="nonlinear-parameter-estimation">
+<h1>Nonlinear Parameter Estimation<a class="headerlink" href="#nonlinear-parameter-estimation" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Learning Objectives</p>
+<p>By the end of this chapter, you will be able to:</p>
+<ul class="simple">
+<li><p>Explain why least-squares fitting is maximum likelihood estimation under Gaussian noise, and estimate the noise level from the residuals</p></li>
+<li><p>Compute the Hessian of a loss function with <code class="docutils literal notranslate"><span class="pre">autograd</span></code> and use its inverse to construct confidence intervals for fitted parameters</p></li>
+<li><p>Interpret differences in parameter sensitivity and scale (e.g., peak positions vs. peak widths) in terms of the curvature of the loss surface</p></li>
+<li><p>Compute and interpret a parameter correlation matrix and a two-parameter confidence ellipse</p></li>
+<li><p>Use the Hessian eigenvalue spectrum to diagnose “sloppy” (poorly identified) parameter combinations, and explain why adding model complexity inflates uncertainty</p></li>
+<li><p>Cross-check Hessian-based uncertainties against <code class="docutils literal notranslate"><span class="pre">scipy.optimize.curve_fit</span></code>, and explain why the <code class="docutils literal notranslate"><span class="pre">hess_inv</span></code> returned by BFGS should not be trusted for confidence intervals</p></li>
+</ul>
+</div>
+<p>In <a class="reference internal" href="Topic1.4-Numerical_Optimization.html"><span class="doc std std-doc">Numerical Optimization</span></a> we fit a sum of two
+Gaussian peaks to a region of the ethanol IR spectrum and declared victory when the
+curve passed through the data. But a fitted parameter is a <em>number computed from noisy
+measurements</em> — repeat the experiment and you would get a slightly different spectrum,
+a slightly different fit, and slightly different parameters. Classical <strong>parameter
+estimation</strong> asks the follow-up question that every report of a fitted rate constant,
+peak position, or activation energy should answer: <em>how uncertain are the fitted
+parameters?</em></p>
+<p>This chapter develops the classical answer, which connects three ideas that we have
+already met separately: least-squares loss functions (Topic 1.3–1.4), derivatives via
+automatic differentiation (Topic 1.4), and eigendecomposition (Topic 1.2). The punchline
+is that the <strong>curvature of the loss surface at the minimum</strong> — its Hessian matrix —
+determines how well the data pin down each parameter.</p>
+<p>We begin by reproducing the setup from the previous chapter so this notebook runs on its
+own: the C–H stretch region of the ethanol IR spectrum, the multi-Gaussian model, and
+the least-squares fit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">autograd.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>   <span class="c1"># autograd&#39;s numpy, as in the previous chapter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">hessian</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
+<span class="n">clrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/ethanol_IR.csv&#39;</span><span class="p">)</span>
+<span class="n">x_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;wavenumber [cm^-1]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;absorbance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">x_peak</span> <span class="o">=</span> <span class="n">x_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">y_peak</span> <span class="o">=</span> <span class="n">y_all</span><span class="p">[</span><span class="mi">475</span><span class="p">:</span><span class="mi">575</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">multi_gaussian</span><span class="p">(</span><span class="n">lamda</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum of m Gaussians; lamda = [w_0..w_m, mu_0..mu_m, sigma_0..sigma_m].&quot;&quot;&quot;</span>
+    <span class="n">yhat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="n">yhat</span> <span class="o">=</span> <span class="n">yhat</span> <span class="o">+</span> <span class="n">lamda</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">lamda</span><span class="p">[</span><span class="n">m</span><span class="o">+</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">lamda</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">yhat</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sse</span><span class="p">(</span><span class="n">lamda</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_peak</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum of squared errors (not divided by n).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">multi_gaussian</span><span class="p">(</span><span class="n">lamda</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.545</span><span class="p">,</span> <span class="mf">0.675</span><span class="p">,</span> <span class="mf">2900.</span><span class="p">,</span> <span class="mf">2980.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">])</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">sse</span><span class="p">,</span> <span class="n">guess</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;BFGS&#39;</span><span class="p">)</span>
+<span class="n">lam_fit</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">multi_gaussian</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">,</span> <span class="n">x_peak</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;2-Gaussian fit&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [cm$^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fitted parameters:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fitted parameters: [4.760000e-01 5.650000e-01 2.905485e+03 2.985079e+03 3.881100e+01
+ 2.539000e+01]
+</pre></div>
+</div>
+<img alt="../_images/a10eac0bf018ae68b5b1b408d98d0f2abd33bba2c75a7d6956739abbfbd96e21.png" src="../_images/a10eac0bf018ae68b5b1b408d98d0f2abd33bba2c75a7d6956739abbfbd96e21.png" />
+</div>
+</div>
+<p>Note one small bookkeeping change from the previous chapter: <code class="docutils literal notranslate"><span class="pre">gaussian_loss</span></code> there
+divided the squared error by the number of points, which is convenient for optimization
+but adds a factor of <span class="math notranslate nohighlight">\(n\)</span> to every statistical formula below. Here we work directly with
+the plain <strong>sum of squared errors (SSE)</strong> — the same minimum, cleaner statistics.</p>
+<section id="least-squares-is-maximum-likelihood">
+<h2>Least Squares is Maximum Likelihood<a class="headerlink" href="#least-squares-is-maximum-likelihood" title="Link to this heading">#</a></h2>
+<p>Why minimize squared errors in the first place, rather than absolute errors or something
+else? The classical justification comes from a noise model. Assume each measurement is
+the model prediction plus independent Gaussian noise:</p>
+<p><span class="math notranslate nohighlight">\(y_i = f(x_i; \vec{\lambda}) + \epsilon_i, \qquad \epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span></p>
+<p>Under this assumption, the probability density of observing the dataset given the
+parameters — the <strong>likelihood</strong> — is a product of Gaussians:</p>
+<p><span class="math notranslate nohighlight">\(L(\vec{\lambda}) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - f(x_i; \vec{\lambda}))^2}{2\sigma^2}\right)\)</span></p>
+<p>Products of exponentials are awkward, so we take the logarithm and negate it (turning
+maximization into the minimization we know how to do). Dropping terms that do not depend
+on <span class="math notranslate nohighlight">\(\vec{\lambda}\)</span>:</p>
+<p><span class="math notranslate nohighlight">\(-\ln L(\vec{\lambda}) = \frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - f(x_i; \vec{\lambda}))^2 + \text{const} = \frac{\mathrm{SSE}(\vec{\lambda})}{2\sigma^2} + \text{const}\)</span></p>
+<p>The parameters that minimize the SSE are exactly the parameters that maximize the
+likelihood: <strong>least squares is maximum likelihood estimation (MLE) for Gaussian noise</strong>.
+This is more than a philosophical point — it is what entitles us to the uncertainty
+machinery in the rest of this chapter.</p>
+<p>The noise level <span class="math notranslate nohighlight">\(\sigma\)</span> is usually unknown, but the residuals of the fit estimate it.
+With <span class="math notranslate nohighlight">\(n\)</span> data points and <span class="math notranslate nohighlight">\(p\)</span> fitted parameters,</p>
+<p><span class="math notranslate nohighlight">\(\hat{\sigma}^2 = \frac{\mathrm{SSE}(\vec{\lambda}^*)}{n - p}\)</span></p>
+<p>(the <span class="math notranslate nohighlight">\(n - p\)</span> instead of <span class="math notranslate nohighlight">\(n\)</span> accounts for the degrees of freedom “used up” by fitting,
+just as in the sample variance):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_peak</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">)</span>
+<span class="n">sse_min</span> <span class="o">=</span> <span class="n">sse</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">)</span>
+<span class="n">sigma_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sse_min</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SSE at minimum: </span><span class="si">{</span><span class="n">sse_min</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Estimated noise level: </span><span class="si">{</span><span class="n">sigma_hat</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> absorbance units&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SSE at minimum: 0.0347
+Estimated noise level: 0.0192 absorbance units
+</pre></div>
+</div>
+</div>
+</div>
+<p>The estimated noise, about 0.02 absorbance units, is our model’s claim about the
+measurement scatter — everything the data cannot explain with two Gaussians.</p>
+<div class="exercise admonition" id="ex-nm-mle-loglik">
+
+<p class="admonition-title"><span class="caption-number">Exercise 18 </span></p>
+<section id="exercise-content">
+<p>Implement the negative log-likelihood directly (including the <span class="math notranslate nohighlight">\(\frac{n}{2}\ln(2\pi\sigma^2)\)</span>
+term) as a function of <span class="math notranslate nohighlight">\(\vec{\lambda}\)</span> with <span class="math notranslate nohighlight">\(\sigma\)</span> fixed at <code class="docutils literal notranslate"><span class="pre">sigma_hat</span></code>, and minimize it
+with <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> starting from <code class="docutils literal notranslate"><span class="pre">guess</span></code>. Verify that the optimal parameters
+agree with the least-squares result <code class="docutils literal notranslate"><span class="pre">lam_fit</span></code>. Why does the value of <span class="math notranslate nohighlight">\(\sigma\)</span> not affect
+the location of the optimum?</p>
+</section>
+</div>
+</section>
+<section id="curvature-sets-confidence-the-hessian">
+<h2>Curvature Sets Confidence: the Hessian<a class="headerlink" href="#curvature-sets-confidence-the-hessian" title="Link to this heading">#</a></h2>
+<p>Two loss surfaces can share the same minimum but differ completely in what they say
+about uncertainty. If the loss rises steeply as a parameter moves away from its optimal
+value, the data are very informative about that parameter: even a small change makes the
+fit visibly worse. If the loss is nearly flat, wide ranges of the parameter fit almost
+equally well, and quoting the bottom of the valley alone would be misleading.</p>
+<p>We can see both behaviors in our own loss surface by perturbing one parameter at a time
+by the same <em>fractional</em> amount:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;$w_0$&#39;</span><span class="p">,</span> <span class="s1">&#39;$w_1$&#39;</span><span class="p">,</span> <span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">mu_0$&#39;</span><span class="p">,</span> <span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">mu_1$&#39;</span><span class="p">,</span> <span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sigma_0$&#39;</span><span class="p">,</span> <span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sigma_1$&#39;</span><span class="p">]</span>
+<span class="n">fracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span>   <span class="c1"># +/- 2% perturbations</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>   <span class="c1"># mu_0 vs sigma_0</span>
+    <span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fracs</span><span class="p">:</span>
+        <span class="n">lam_pert</span> <span class="o">=</span> <span class="n">lam_fit</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">lam_pert</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">lam_fit</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sse</span><span class="p">(</span><span class="n">lam_pert</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fracs</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">losses</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="n">j</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">clrs</span><span class="p">)])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">sse_min</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.8&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;parameter perturbation [%]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;SSE&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;The loss is far more sensitive to peak position than width&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;The loss is far more sensitive to peak position than width&#39;)
+</pre></div>
+</div>
+<img alt="../_images/459083c859092335bc53cf73e23c818440258e4d4a0d9e8cc5abad47c68d3bcc.png" src="../_images/459083c859092335bc53cf73e23c818440258e4d4a0d9e8cc5abad47c68d3bcc.png" />
+</div>
+</div>
+<p>A 2% error in the peak position <span class="math notranslate nohighlight">\(\mu_0\)</span> is catastrophic for the fit, while a 2% error in
+the width <span class="math notranslate nohighlight">\(\sigma_0\)</span> barely registers — the data “grip” the two parameters with very
+different strength. This is a general feature of spectral fitting: positions are sharply
+determined, shapes much less so.</p>
+<p>The <strong>Hessian matrix</strong> <span class="math notranslate nohighlight">\(H_{jk} = \partial^2 \mathrm{SSE} / \partial\lambda_j \partial\lambda_k\)</span>
+evaluated at the minimum captures all of these curvatures (and their interactions) at
+once. Writing it out by hand for six parameters would be painful, but <code class="docutils literal notranslate"><span class="pre">autograd</span></code>, which
+gave us gradients in the previous chapter, provides Hessians just as easily:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">hessian</span><span class="p">(</span><span class="n">sse</span><span class="p">)(</span><span class="n">lam_fit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hessian shape:&#39;</span><span class="p">,</span> <span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hessian shape: (6, 6)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The classical result — derived by expanding the log-likelihood to second order around
+its maximum, and closely related to the <em>Fisher information</em> — is that the parameter
+<strong>covariance matrix</strong> is proportional to the inverse Hessian:</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{Cov}(\vec{\lambda}^*) \approx 2\hat{\sigma}^2 H^{-1}\)</span></p>
+<p>(The factor of 2 comes from <span class="math notranslate nohighlight">\(-\ln L = \mathrm{SSE}/2\sigma^2\)</span>: the curvature of the
+log-likelihood is <span class="math notranslate nohighlight">\(H/2\hat{\sigma}^2\)</span>, and the covariance is its inverse.) The square
+roots of the diagonal are the <strong>standard errors</strong> of each parameter, and multiplying by
+1.96 gives (approximate) 95% confidence intervals:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cov</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma_hat</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
+
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;w0&#39;</span><span class="p">,</span> <span class="s1">&#39;w1&#39;</span><span class="p">,</span> <span class="s1">&#39;mu0&#39;</span><span class="p">,</span> <span class="s1">&#39;mu1&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma0&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma1&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot;param&quot;</span><span class="si">:</span><span class="s1">8s</span><span class="si">}{</span><span class="s2">&quot;value&quot;</span><span class="si">:</span><span class="s1">&gt;12s</span><span class="si">}{</span><span class="s2">&quot;std err&quot;</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}{</span><span class="s2">&quot;95% CI&quot;</span><span class="si">:</span><span class="s1">&gt;22s</span><span class="si">}{</span><span class="s2">&quot;rel. err&quot;</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">nm</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">lam_fit</span><span class="p">,</span> <span class="n">se</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nm</span><span class="si">:</span><span class="s1">8s</span><span class="si">}{</span><span class="n">v</span><span class="si">:</span><span class="s1">12.3f</span><span class="si">}{</span><span class="n">s</span><span class="si">:</span><span class="s1">10.3f</span><span class="si">}</span><span class="s1">   [</span><span class="si">{</span><span class="n">v</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1.96</span><span class="o">*</span><span class="n">s</span><span class="si">:</span><span class="s1">9.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1.96</span><span class="o">*</span><span class="n">s</span><span class="si">:</span><span class="s1">9.3f</span><span class="si">}</span><span class="s1">]&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">s</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">:</span><span class="s1">9.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>param          value   std err                95% CI  rel. err
+w0             0.476     0.007   [    0.463,     0.490]     1.42%
+w1             0.565     0.015   [    0.536,     0.594]     2.64%
+mu0         2905.485     1.573   [ 2902.403,  2908.567]     0.05%
+mu1         2985.079     0.884   [ 2983.347,  2986.811]     0.03%
+sigma0        38.811     1.499   [   35.873,    41.748]     3.86%
+sigma1        25.390     0.663   [   24.091,    26.688]     2.61%
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For small datasets the 1.96 multiplier (from the normal distribution) should be replaced
+by the corresponding value of Student’s t-distribution with <span class="math notranslate nohighlight">\(n - p\)</span> degrees of freedom.
+With <span class="math notranslate nohighlight">\(n - p = 94\)</span> here the difference is negligible (<span class="math notranslate nohighlight">\(t \approx 1.99\)</span>); Himmelblau’s
+<em>Process Analysis by Statistical Methods</em> treats the small-sample case carefully.</p>
+</div>
+<p>Look at the relative errors, because the parameters live on wildly different scales
+(absorbances near 0.5, wavenumbers near 2900, widths near 30): the peak <em>positions</em> are
+determined to about 0.03–0.05% — a fraction of a wavenumber — while the <em>weights</em> and
+<em>widths</em> are only known to a few percent. The confidence intervals turn the curvature
+picture above into concrete error bars, and they inherit its message: the same dataset
+determines different parameters with very different precision.</p>
+<div class="exercise admonition" id="ex-nm-hess-ci">
+
+<p class="admonition-title"><span class="caption-number">Exercise 19 </span></p>
+<section id="exercise-content">
+<p>The previous chapter’s <code class="docutils literal notranslate"><span class="pre">g_simwidth</span></code> added a soft penalty that pulls the two peak widths
+together. Refit with that penalized loss, then compute Hessian-based standard errors <em>of
+the penalized loss</em> at its optimum. Compare the standard error of each width to the
+unpenalized values above. Does coupling the widths make them more or less certain? Why?</p>
+</section>
+</div>
+</section>
+<section id="parameter-correlations">
+<h2>Parameter Correlations<a class="headerlink" href="#parameter-correlations" title="Link to this heading">#</a></h2>
+<p>The off-diagonal entries of the covariance matrix say how estimation errors in different
+parameters move <em>together</em>, and are easiest to read after normalizing to a
+<strong>correlation matrix</strong>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">cov</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">se</span><span class="p">,</span> <span class="n">se</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">));</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">));</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">corr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">corr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.6</span> <span class="k">else</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;correlation&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Parameter correlation matrix (2-Gaussian fit)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Parameter correlation matrix (2-Gaussian fit)&#39;)
+</pre></div>
+</div>
+<img alt="../_images/920e60484d34b17e8d05be32dadde18dd8f676c838e877eeb3cf7deabcc66c13.png" src="../_images/920e60484d34b17e8d05be32dadde18dd8f676c838e877eeb3cf7deabcc66c13.png" />
+</div>
+</div>
+<p>The structure is striking: the strongest correlations are not within a single peak but
+<strong>between the two peaks</strong>. The two centers move together
+(<span class="math notranslate nohighlight">\(\mathrm{corr}(\mu_0, \mu_1) \approx +0.87\)</span>), and the second peak’s weight trades off
+against the first peak’s width (<span class="math notranslate nohighlight">\(\mathrm{corr}(w_1, \sigma_0) \approx -0.85\)</span>). The
+physical reason is that the peaks overlap: absorbance in the shoulder region between
+them can be explained by either peak, so the fit can shift intensity from one to the
+other with little penalty. Overlapping features entangle each other’s parameters — a
+fact worth remembering whenever a deconvolution is reported.</p>
+<p>A two-parameter slice of the covariance can be drawn as a <strong>confidence ellipse</strong>. Its
+principal axes are the eigenvectors of the corresponding <span class="math notranslate nohighlight">\(2\times 2\)</span> covariance block —
+the eigendecomposition machinery from <a class="reference internal" href="Topic1.2-Linear_Algebra.html"><span class="doc std std-doc">Linear Algebra</span></a> — and
+strong correlation shows up as a long, tilted ellipse:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">chi2</span>
+
+<span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>   <span class="c1"># (w_1, sigma_0): the strongly anti-correlated pair</span>
+<span class="n">sub</span> <span class="o">=</span> <span class="n">cov</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">)]</span>
+<span class="n">evals</span><span class="p">,</span> <span class="n">evecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">evecs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">evecs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">conf</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="p">[(</span><span class="mf">0.68</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)]:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Ellipse</span><span class="p">((</span><span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                         <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">evals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                         <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">se</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">se</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">se</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">lam_fit</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">se</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$w_1$ [absorbance]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sigma_0$ [cm$^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;68</span><span class="si">% a</span><span class="s1">nd 95</span><span class="si">% c</span><span class="s1">onfidence ellipses for $(w_1, </span><span class="se">\\</span><span class="s1">sigma_0)$&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;68% and 95% confidence ellipses for $(w_1, \\sigma_0)$&#39;)
+</pre></div>
+</div>
+<img alt="../_images/2cca819cb9b233f1399bf74bf3e4bfac8e2846d84d5683b8fbbc26f736bec61e.png" src="../_images/2cca819cb9b233f1399bf74bf3e4bfac8e2846d84d5683b8fbbc26f736bec61e.png" />
+</div>
+</div>
+<p>The tilt encodes the correlation: if new data pushed <span class="math notranslate nohighlight">\(w_1\)</span> up, our best estimate of
+<span class="math notranslate nohighlight">\(\sigma_0\)</span> would move down in a predictable way. Quoting the two 1-D confidence
+intervals alone would miss this — the ellipse contains combinations of parameters that
+the intervals individually allow but the data jointly rule out.</p>
+<p>The same eigendecomposition applied to the full <span class="math notranslate nohighlight">\(6\times 6\)</span> Hessian reveals the global
+structure of the problem: each eigenvector is a <em>combination</em> of parameters, and its
+eigenvalue is the curvature of the loss along that combination. In fitting problems
+these eigenvalues typically span many orders of magnitude — a few <strong>stiff</strong> directions
+the data determine sharply, and softer, <strong>sloppy</strong> directions the data barely see:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eigvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hessian eigenvalues:&#39;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">eigvals</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Condition number: </span><span class="si">{</span><span class="n">eigvals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">eigvals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hessian eigenvalues: [&#39;1.42e-04&#39;, &#39;1.73e-03&#39;, &#39;4.71e-03&#39;, &#39;4.98e-03&#39;, &#39;1.70e+01&#39;, &#39;3.16e+01&#39;]
+Condition number: 2.2e+05
+</pre></div>
+</div>
+</div>
+</div>
+<p>Five orders of magnitude separate the stiffest direction from the sloppiest — and this
+is with a model that fits <em>well</em>. (Part of the spread simply reflects units: wavenumbers
+and absorbances have very different magnitudes, which is why the unit-free relative
+errors and correlations above are often more interpretable than raw eigenvalues.)</p>
+<div class="exercise admonition" id="ex-nm-corr-pairs">
+
+<p class="admonition-title"><span class="caption-number">Exercise 20 </span></p>
+<section id="exercise-content">
+<p>From the correlation matrix, identify (a) the most strongly correlated parameter pair
+and (b) the pair closest to uncorrelated. For each, give a one-sentence physical
+explanation in terms of the two overlapping peaks. Then re-draw the confidence ellipse
+for the pair from (b) and describe how its shape differs.</p>
+</section>
+</div>
+</section>
+<section id="sloppiness-grows-with-model-complexity">
+<h2>Sloppiness Grows with Model Complexity<a class="headerlink" href="#sloppiness-grows-with-model-complexity" title="Link to this heading">#</a></h2>
+<p>What happens if we add a third Gaussian? The fit can only improve — more parameters
+never increase the minimum SSE — but parameter estimation tells a different story than
+the loss value alone:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">guess3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">2900.</span><span class="p">,</span> <span class="mf">2980.</span><span class="p">,</span> <span class="mf">2940.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sse3</span><span class="p">(</span><span class="n">lamda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">sse</span><span class="p">(</span><span class="n">lamda</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">result3</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">sse3</span><span class="p">,</span> <span class="n">guess3</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;BFGS&#39;</span><span class="p">)</span>
+<span class="n">lam3</span> <span class="o">=</span> <span class="n">result3</span><span class="o">.</span><span class="n">x</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;3-Gaussian parameters:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">lam3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SSE: </span><span class="si">{</span><span class="n">sse</span><span class="p">(</span><span class="n">lam_fit</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> (m=2)  -&gt;  </span><span class="si">{</span><span class="n">sse3</span><span class="p">(</span><span class="n">lam3</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> (m=3)&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">multi_gaussian</span><span class="p">(</span><span class="n">lam3</span><span class="p">,</span> <span class="n">x_peak</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;3-Gaussian fit&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">lam3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x_peak</span> <span class="o">-</span> <span class="n">lam3</span><span class="p">[</span><span class="mi">3</span><span class="o">+</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">lam3</span><span class="p">[</span><span class="mi">6</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_peak</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;component </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [cm$^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3-Gaussian parameters: [ 6.10000e-01  3.40000e-01 -1.90000e-01  2.92715e+03  2.99171e+03
+  2.93149e+03  4.83100e+01  1.98700e+01  1.70300e+01]
+SSE: 0.0347 (m=2)  -&gt;  0.0266 (m=3)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x134887a30&gt;
+</pre></div>
+</div>
+<img alt="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" src="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" />
+</div>
+</div>
+<p>The SSE drops by about 17% — but look at the components: the third Gaussian has fit a
+<strong>negative</strong> weight, carving a dip out of the other two peaks rather than describing any
+physical absorption. The optimizer is using the extra flexibility to chase noise and
+baseline structure, not chemistry.</p>
+<p>The Hessian makes the diagnosis quantitative:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H3</span> <span class="o">=</span> <span class="n">hessian</span><span class="p">(</span><span class="n">sse3</span><span class="p">)(</span><span class="n">lam3</span><span class="p">)</span>
+<span class="n">eig3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H3</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m = 2&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eig3</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;s-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m = 3&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;eigenvalue rank&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;|Hessian eigenvalue|&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Adding a Gaussian adds sloppy directions&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;smallest m=3 eigenvalues:&#39;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">eig3</span><span class="p">[:</span><span class="mi">3</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>smallest m=3 eigenvalues: [&#39;4.7e-05&#39;, &#39;1.9e-04&#39;, &#39;3.4e-04&#39;]
+</pre></div>
+</div>
+<img alt="../_images/147c8972facf5497800796b5902609345d682c7a03840438ac2e8db3d348839c.png" src="../_images/147c8972facf5497800796b5902609345d682c7a03840438ac2e8db3d348839c.png" />
+</div>
+</div>
+<p>The three-Gaussian Hessian’s smallest eigenvalue is not just small — it is <em>slightly
+negative</em> (about <span class="math notranslate nohighlight">\(-2\times 10^{-5}\)</span>, i.e. zero to within numerical precision). Along
+that direction the loss surface is flat: the data contain essentially no information
+about that combination of parameters, so the optimizer stopped somewhere on a plateau
+rather than in a true bowl. The covariance formula <span class="math notranslate nohighlight">\(2\hat{\sigma}^2 H^{-1}\)</span> breaks down
+entirely for such directions (a non-positive-definite Hessian implies infinite or
+undefined variances), which is the mathematics telling us the model is
+<strong>unidentifiable</strong>: the data cannot support nine parameters.</p>
+<p>Even the parameters we could estimate before have suffered. Repeating the standard-error
+calculation for the parameters shared with the two-Gaussian model shows the first peak’s
+weight uncertainty growing about six-fold and the position uncertainties roughly
+doubling — the extra peak’s flexibility “steals” information from every other parameter.
+This is the parameter-estimation view of <strong>overfitting</strong>, and we will meet the same
+phenomenon through the lens of model complexity and validation in Module 2.</p>
+<div class="exercise admonition" id="ex-nm-sloppy-m">
+
+<p class="admonition-title"><span class="caption-number">Exercise 21 </span></p>
+<section id="exercise-content">
+<p>Fit the peak window with <span class="math notranslate nohighlight">\(m = 1, 2, 3,\)</span> and <span class="math notranslate nohighlight">\(4\)</span> Gaussians (choose reasonable initial
+guesses). For each fit, record the SSE, the smallest and largest Hessian eigenvalue
+magnitudes, and the condition number <span class="math notranslate nohighlight">\(|\lambda_\max / \lambda_\min|\)</span>. Present the
+results as a table. At what <span class="math notranslate nohighlight">\(m\)</span> does the problem become effectively unidentifiable, and
+how does the SSE improvement compare to the loss of identifiability?</p>
+</section>
+</div>
+</section>
+<section id="cross-checks-and-practical-tools">
+<h2>Cross-checks and Practical Tools<a class="headerlink" href="#cross-checks-and-practical-tools" title="Link to this heading">#</a></h2>
+<p>The machinery above is standard enough that scipy packages it:
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize.curve_fit</span></code> performs the nonlinear least-squares fit <em>and</em> returns a
+parameter covariance matrix <code class="docutils literal notranslate"><span class="pre">pcov</span></code> in one call. It is a good independent check on our
+autograd-based calculation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_2g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">lamda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">multi_gaussian</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lamda</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">model_2g</span><span class="p">,</span> <span class="n">x_peak</span><span class="p">,</span> <span class="n">y_peak</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">guess</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot;param&quot;</span><span class="si">:</span><span class="s1">8s</span><span class="si">}{</span><span class="s2">&quot;curve_fit se&quot;</span><span class="si">:</span><span class="s1">&gt;14s</span><span class="si">}{</span><span class="s2">&quot;autograd se&quot;</span><span class="si">:</span><span class="s1">&gt;14s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">nm</span><span class="p">,</span> <span class="n">s_cf</span><span class="p">,</span> <span class="n">s_ag</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">)),</span> <span class="n">se</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nm</span><span class="si">:</span><span class="s1">8s</span><span class="si">}{</span><span class="n">s_cf</span><span class="si">:</span><span class="s1">14.4f</span><span class="si">}{</span><span class="n">s_ag</span><span class="si">:</span><span class="s1">14.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>param     curve_fit se   autograd se
+w0              0.0067        0.0067
+w1              0.0134        0.0149
+mu0             1.4931        1.5725
+mu1             0.8270        0.8837
+sigma0          1.2682        1.4988
+sigma1          0.6535        0.6626
+</pre></div>
+</div>
+</div>
+</div>
+<p>The two agree to within a few percent. They are not identical because <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code>
+estimates the curvature from the model’s Jacobian (the <em>Gauss–Newton</em> approximation,
+which drops a term involving the residuals), while <code class="docutils literal notranslate"><span class="pre">autograd</span></code> computes the exact
+Hessian; near a good fit with small residuals the difference is minor.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize(...,</span> <span class="pre">method='BFGS')</span></code> returns an attribute called <code class="docutils literal notranslate"><span class="pre">hess_inv</span></code>
+that looks temptingly like exactly what we need. <strong>Do not use it for confidence
+intervals.</strong> BFGS builds up its inverse-Hessian estimate iteratively as a by-product of
+the search, and the result depends on the starting point and path taken — it is a search
+tool, not a converged curvature calculation. In this problem it happens to land within
+~10% of the true values; in general there is no such guarantee. Compute the Hessian
+properly (automatic differentiation, <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code>’s Jacobian-based <code class="docutils literal notranslate"><span class="pre">pcov</span></code>, or finite
+differences at the optimum).</p>
+</div>
+<p>Finally, the classical intervals rest on assumptions worth restating: Gaussian,
+independent noise with constant variance; a model flexible enough that the remaining
+residuals are actually noise; and enough data that the quadratic (second-order)
+expansion of the likelihood is accurate. When these fail — strongly non-Gaussian errors,
+parameters at physical bounds, or the unidentifiable regime we just saw — the honest
+alternatives are computational: the <strong>bootstrap</strong> (refitting on resampled data), which
+we develop in Module 2’s <a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html"><span class="doc std std-doc">Model Validation</span></a>
+chapter, makes far weaker assumptions at the cost of many repeated fits.</p>
+<div class="exercise admonition" id="ex-nm-pcov-check">
+
+<p class="admonition-title"><span class="caption-number">Exercise 22 </span></p>
+<section id="exercise-content">
+<p>Use <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> to fit the three-Gaussian model from the previous section (pass
+<code class="docutils literal notranslate"><span class="pre">p0=guess3</span></code> and <code class="docutils literal notranslate"><span class="pre">maxfev=10000</span></code> if needed). Compare the standard errors from <code class="docutils literal notranslate"><span class="pre">pcov</span></code> to
+the two-Gaussian values, and check whether <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> warns about the covariance
+estimate. Do the two approaches (exact Hessian vs. Jacobian-based) agree about which
+parameters are poorly determined?</p>
+</section>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Least-squares fitting is <strong>maximum likelihood estimation</strong> under independent Gaussian
+noise; the residuals estimate the noise level via <span class="math notranslate nohighlight">\(\hat{\sigma}^2 = \mathrm{SSE}/(n-p)\)</span>.</p></li>
+<li><p>The <strong>Hessian of the loss at the minimum</strong> measures how sharply the data determine
+each parameter; <code class="docutils literal notranslate"><span class="pre">autograd</span></code>’s <code class="docutils literal notranslate"><span class="pre">hessian</span></code> computes it in one line.</p></li>
+<li><p>The parameter covariance is <span class="math notranslate nohighlight">\(\mathrm{Cov} \approx 2\hat{\sigma}^2 H^{-1}\)</span>; square roots
+of its diagonal give standard errors and confidence intervals. Relative errors are the
+fair comparison when parameters live on different scales — for the ethanol spectrum,
+peak positions are known to ~0.05% but widths only to a few percent.</p></li>
+<li><p>Off-diagonal covariance entries reveal <strong>parameter correlations</strong>; overlapping peaks
+entangle each other’s parameters, and confidence ellipses (eigenvectors of the
+covariance) show the joint uncertainty that 1-D intervals miss.</p></li>
+<li><p>Hessian <strong>eigenvalue spectra</strong> expose stiff and sloppy parameter combinations. Adding
+model complexity beyond what the data support drives eigenvalues to zero (an
+unidentifiable model), produces unphysical compensating parameters, and inflates the
+uncertainty of <em>every</em> parameter — overfitting, seen through curvature.</p></li>
+<li><p>Cross-check with <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code>’s <code class="docutils literal notranslate"><span class="pre">pcov</span></code>; never use BFGS’s iterative <code class="docutils literal notranslate"><span class="pre">hess_inv</span></code> for
+confidence intervals.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2>Additional Reading<a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Himmelblau, D. M., <em>Process Analysis by Statistical Methods</em> (Wiley, 1970) — the
+classical chemical engineering treatment of parameter estimation and experimental
+statistics</p></li>
+<li><p>Bard, Y., <em>Nonlinear Parameter Estimation</em> (Academic Press, 1974) — the standard
+reference for the theory of nonlinear estimation, including likelihood methods and
+confidence regions</p></li>
+<li><p>Seber, G. A. F. and Wild, C. J., <em>Nonlinear Regression</em> (Wiley, 2003) — a modern and
+comprehensive treatment</p></li>
+<li><p>Transtrum, M. K., Machta, B. B., and Sethna, J. P. (2011),
+<a class="reference external" href="https://doi.org/10.1103/PhysRevE.83.036701">“Geometry of nonlinear least squares with applications to sloppy models and optimization”</a>,
+<em>Phys. Rev. E</em> 83, 036701 — where the “sloppy model” perspective comes from</p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html">scipy.optimize.curve_fit documentation</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./1-numerical_methods"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic1.4-Numerical_Optimization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Numerical Optimization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../2-regression/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Regression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-is-maximum-likelihood">Least Squares is Maximum Likelihood</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curvature-sets-confidence-the-hessian">Curvature Sets Confidence: the Hessian</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-correlations">Parameter Correlations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sloppiness-grows-with-model-complexity">Sloppiness Grows with Model Complexity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-checks-and-practical-tools">Cross-checks and Practical Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

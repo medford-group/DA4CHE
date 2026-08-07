@@ -27,3 +27,8 @@ fitting) illustrate each concept throughout.
 - **Topic 1.4 — Numerical Optimization**: Gradient descent, quasi-Newton
   methods (L-BFGS-B), and constrained optimization via `scipy.optimize`.
   Explores loss surfaces, convergence behavior, and regularization penalties.
+
+- **Topic 1.5 — Nonlinear Parameter Estimation**: Least squares as maximum
+  likelihood, Hessian-based confidence intervals via `autograd`, parameter
+  correlations and confidence ellipses, and sloppy (unidentifiable) parameters
+  when model complexity outruns the data.

@@ -182,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -472,7 +473,7 @@ column and a single <code class="docutils literal notranslate"><span class="pre"
 instead of three separate code paths.</p>
 <div class="exercise admonition" id="ex-dm-tidy-check">
 
-<p class="admonition-title"><span class="caption-number">Exercise 57 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 62 </span></p>
 <section id="exercise-content">
 <p>After loading <code class="docutils literal notranslate"><span class="pre">df</span></code>, print <code class="docutils literal notranslate"><span class="pre">df.dtypes</span></code> and <code class="docutils literal notranslate"><span class="pre">df.isnull().sum()</span></code> to perform a basic
 data validation check. Then answer: does the Dow DataFrame satisfy all three tidy
@@ -1507,7 +1508,7 @@ keeping only the 12 sensor features (x1–x12):</p>
 </div>
 <div class="exercise admonition" id="ex-dm-dow-filter">
 
-<p class="admonition-title"><span class="caption-number">Exercise 58 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 63 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">df_shortnames</span></code>, create a filtered DataFrame that satisfies <strong>all three</strong>
 conditions simultaneously:</p>
@@ -1819,7 +1820,7 @@ only on training data.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-mean-impute">
 
-<p class="admonition-title"><span class="caption-number">Exercise 59 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 64 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">df_dropped</span></code>, create a copy of the DataFrame where any <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or non-numeric
 value (after converting to float with <code class="docutils literal notranslate"><span class="pre">pd.to_numeric(...,</span> <span class="pre">errors='coerce')</span></code>) is
@@ -1944,7 +1945,7 @@ each feature independently. For variables with discrete or heavily skewed
 distributions, IQR-based filtering is more robust.</p>
 <div class="exercise admonition" id="ex-dm-iqr-outlier">
 
-<p class="admonition-title"><span class="caption-number">Exercise 60 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 65 </span></p>
 <section id="exercise-content">
 <p>Implement an <strong>IQR-based</strong> outlier filter as an alternative to z-score.
 For a single column <code class="docutils literal notranslate"><span class="pre">x1:Primary</span> <span class="pre">Column</span> <span class="pre">Reflux</span> <span class="pre">Flow</span></code>:</p>
@@ -2048,7 +2049,7 @@ Agreement (both flag as outlier): 245
 </div>
 <div class="exercise admonition" id="ex-dm-multivar-outlier">
 
-<p class="admonition-title"><span class="caption-number">Exercise 61 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 66 </span></p>
 <section id="exercise-content">
 <p>Apply <code class="docutils literal notranslate"><span class="pre">IsolationForest</span></code> to the <strong>full numeric feature matrix</strong> of <code class="docutils literal notranslate"><span class="pre">df_no_outliers</span></code>
 (all columns except <code class="docutils literal notranslate"><span class="pre">Date</span></code>) with <code class="docutils literal notranslate"><span class="pre">contamination=0.05</span></code>.</p>
@@ -2087,7 +2088,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.74 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.62 s
 </pre></div>
 </div>
 </div>
@@ -2191,9 +2192,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0006 s
-HDF5 one column:  0.0003 s
-In-memory slice:  0.000231 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0005 s
+HDF5 one column:  0.0004 s
+In-memory slice:  0.000132 s
 </pre></div>
 </div>
 </div>
@@ -2238,8 +2239,10 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0570 s
-Parquet read:  0.0653 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0491 s
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet read:  0.0643 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
@@ -2284,7 +2287,7 @@ Name: count, dtype: int64
 </div>
 <div class="exercise admonition" id="ex-dm-parquet">
 
-<p class="admonition-title"><span class="caption-number">Exercise 62 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 67 </span></p>
 <section id="exercise-content">
 <p>Compare the file sizes of <code class="docutils literal notranslate"><span class="pre">impurity_data.hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">impurity_clean.parquet</span></code>
 using <code class="docutils literal notranslate"><span class="pre">Path('data/...').stat().st_size</span></code>. Then use <code class="docutils literal notranslate"><span class="pre">pd.read_parquet()</span></code> to load
