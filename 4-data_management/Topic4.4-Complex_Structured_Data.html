@@ -58,6 +58,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '4-data_management/Topic4.4-Complex_Structured_Data';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -510,6 +512,47 @@ chemical behavior, and they are invisible in a flat list of atoms. An entire fam
 machine-learning methods, <em>graph neural networks</em>, operates directly on this connectivity
 to predict properties such as solubility or reactivity, and the very same models apply to
 any networked system, from power grids to metabolic pathways.</p>
+<p>Because the molecule now <em>is</em> a graph object, those structural questions become one-line
+computations. <code class="docutils literal notranslate"><span class="pre">networkx</span></code> can count the independent rings in a molecule directly (via
+<code class="docutils literal notranslate"><span class="pre">cycle_basis</span></code> — for a connected graph the count is simply <span class="math notranslate nohighlight">\(E - N + 1\)</span>, the number of bonds
+beyond what a ring-free tree would need), and the node degrees tell us which atoms are the
+connective hubs:</p>
+<blockquote>
+<div><p><em>Prompt: “Using the molecular_graph function, compare caffeine and aspirin: count each
+molecule’s rings and their sizes, and report the most highly connected atoms.”</em></p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G_asp</span> <span class="o">=</span> <span class="n">molecular_graph</span><span class="p">(</span><span class="s2">&quot;aspirin&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;caffeine&quot;</span><span class="p">,</span> <span class="n">G</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;aspirin&quot;</span><span class="p">,</span> <span class="n">G_asp</span><span class="p">)]:</span>
+    <span class="n">rings</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">cycle_basis</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">ring_sizes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rings</span><span class="p">)</span>
+    <span class="n">els</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">&quot;element&quot;</span><span class="p">)</span>
+    <span class="n">hubs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">els</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">kv</span><span class="p">:</span> <span class="o">-</span><span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">])[:</span><span class="mi">3</span><span class="p">]]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2"> atoms, </span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2"> bonds, &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rings</span><span class="p">)</span><span class="si">}</span><span class="s2"> rings (sizes </span><span class="si">{</span><span class="n">ring_sizes</span><span class="si">}</span><span class="s2">), top-degree atoms </span><span class="si">{</span><span class="n">hubs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>caffeine: 24 atoms, 25 bonds, 2 rings (sizes [5, 6]), top-degree atoms [(&#39;C&#39;, 4), (&#39;C&#39;, 4), (&#39;C&#39;, 4)]
+aspirin: 21 atoms, 21 bonds, 1 rings (sizes [6]), top-degree atoms [(&#39;C&#39;, 4), (&#39;C&#39;, 3), (&#39;C&#39;, 3)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Both ring counts check out against the known structures: caffeine’s fused bicyclic core is
+a five-membered imidazole sharing an edge with a six-membered pyrimidinedione ring (2
+rings), while aspirin contains a single six-membered benzene ring. The top-degree atoms are
+a subtler check — because the PubChem record includes hydrogens, the busiest nodes are the
+<em>methyl</em> carbons (three C–H bonds plus one bond into the rest of the molecule, degree 4),
+not the ring atoms. A result that surprises you and then makes sense on inspection is
+exactly what checking computed properties against known structure is for. This is the
+pattern to remember:
+once connectivity data is in a graph object, structural questions — ring counts, chain
+lengths, which nodes hold the network together — stop being parsing problems and become
+library calls.</p>
 <p>The reason this kind of work used to be slow is that every graph data source stores its
 connectivity in its own idiosyncratic format — PubChem’s atom/bond record looks nothing
 like a social-network export or a flowsheet file. Translating each one into a common graph
@@ -521,8 +564,10 @@ makes casually exploring a new graph data source realistic.</p>
 <p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
 <section id="exercise-content">
 <p>Work with an LLM of your choice to build the molecular graph for a different molecule
-(for example aspirin), then ask it to compute a simple graph property — the degree of each
-atom, or the number of rings — and check the result against the molecule’s known structure.</p>
+(for example ibuprofen or glucose), then ask it to compute a graph property <em>not</em> shown
+above — the graph diameter (the longest shortest-path between any two atoms), or the
+number of terminal (degree-1) heavy atoms — and check the result against the molecule’s
+known structure.</p>
 </section>
 </div>
 </section>
@@ -613,6 +658,55 @@ so understanding the storage layer is part of understanding the data. The swingi
 method endures precisely because it is cheap enough to run in real time on a live stream
 while still giving a hard guarantee that the stored signal never strays beyond the chosen
 tolerance.</p>
+<p>In industry you will rarely implement this layer yourself — you will pull data <em>out</em> of an
+existing historian. The commercial products dominate operating plants because they speak
+industrial protocols (OPC UA, DCS-native connections) and implement compression natively,
+while general-purpose open-source time-series databases are increasingly common for lab
+equipment, pilot plants, and IoT-style projects. Options worth knowing:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Software</p></th>
+<th class="head"><p>Category</p></th>
+<th class="head"><p>Strengths</p></th>
+<th class="head"><p>Weaknesses</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AVEVA PI System (formerly OSIsoft PI)</p></td>
+<td><p>Commercial historian</p></td>
+<td><p>De-facto industry standard; huge installed base; rich tooling and asset framework; mature Python/Excel access</p></td>
+<td><p>Expensive licensing; proprietary stack; can be heavyweight for small projects</p></td>
+</tr>
+<tr class="row-odd"><td><p>AspenTech InfoPlus.21</p></td>
+<td><p>Commercial historian</p></td>
+<td><p>Deep integration with Aspen process simulation and APC tools; strong in chemicals/refining</p></td>
+<td><p>Costly; steeper administration; smaller community than PI</p></td>
+</tr>
+<tr class="row-even"><td><p>Honeywell Uniformance PHD</p></td>
+<td><p>Commercial historian</p></td>
+<td><p>Tight coupling to Honeywell DCS environments; proven at refinery scale</p></td>
+<td><p>Mostly encountered in Honeywell shops; limited ecosystem outside them</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ignition (+ Canary/SQL historian)</p></td>
+<td><p>Commercial SCADA + historian</p></td>
+<td><p>Affordable, unlimited-tag licensing; modern web tooling; Python (Jython) scripting built in</p></td>
+<td><p>Historian features thinner than dedicated products; analytics mostly DIY</p></td>
+</tr>
+<tr class="row-even"><td><p>InfluxDB</p></td>
+<td><p>Open-source time-series database</p></td>
+<td><p>Free to start; purpose-built for high-ingest time series; good dashboards (Grafana)</p></td>
+<td><p>Not a process historian: no native OPC connectivity or swinging-door-style compression; OT integration is DIY</p></td>
+</tr>
+<tr class="row-odd"><td><p>TimescaleDB</p></td>
+<td><p>Open-source (PostgreSQL extension)</p></td>
+<td><p>Full SQL; joins time series with relational plant data; compression built in</p></td>
+<td><p>Same OT-integration gap as InfluxDB; requires database administration comfort</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The names change, but the interface pattern does not: every historian exposes tag-based
+queries over a time range, and the compression caveats above apply to all of them.</p>
 <div class="exercise admonition" id="ex-dm-historian-tol">
 
 <p class="admonition-title"><span class="caption-number">Exercise 72 </span></p>
@@ -703,6 +797,40 @@ Flint and South Rivers. With the geometries loaded as a <code class="docutils li
 toolkit of spatial analysis is available: computing areas, finding which watershed contains
 a given point, overlaying monitoring stations or discharge points, and so on — none of
 which would be quick to write from scratch without the specialized library.</p>
+<p>Areas are a one-line example — with one wrinkle. The geometries are stored in
+latitude/longitude coordinates, where “area” would come out in meaningless square degrees,
+so the layer must first be reprojected onto an equal-area coordinate system measured in
+meters:</p>
+<blockquote>
+<div><p><em>Prompt: “Compute the area of each watershed in km² from the geometries and compare to
+the dataset’s areasqkm attribute.”</em></p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ws_albers</span> <span class="o">=</span> <span class="n">watersheds</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">5070</span><span class="p">)</span>   <span class="c1"># NAD83 / Conus Albers (equal-area, meters)</span>
+<span class="n">computed</span> <span class="o">=</span> <span class="n">ws_albers</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="mf">1e6</span>   <span class="c1"># m² → km²</span>
+
+<span class="n">comparison</span> <span class="o">=</span> <span class="n">watersheds</span><span class="p">[[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;areasqkm&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">computed_sqkm</span><span class="o">=</span><span class="n">computed</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">comparison</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                          name  areasqkm  computed_sqkm
+Sope Creek-Chattahoochee River    315.72          315.7
+               Peachtree Creek    338.49          338.5
+Utoy Creek-Chattahoochee River    305.91          305.9
+ Dog River-Chattahoochee River   1008.94         1008.9
+     Morning Creek-Flint River    791.74          791.7
+             Upper South River    644.06          644.1
+</pre></div>
+</div>
+</div>
+</div>
+<p>The computed values agree with the <code class="docutils literal notranslate"><span class="pre">areasqkm</span></code> attribute reported by the USGS — a
+reassuring check that the geometries survived the download-and-cache round trip intact,
+and a reminder that a spatial dataset’s attributes can be recomputed from its geometry
+whenever provenance is in doubt.</p>
 <p>Two ideas make geospatial data a discipline of its own. The first is the <em>coordinate
 reference system</em>: because the Earth is curved and maps are flat, every dataset specifies
 how its coordinates project onto the globe, and silently mixing two systems lands features
@@ -722,7 +850,8 @@ demand changes what is worth attempting.</p>
 <section id="exercise-content">
 <p>Work with an LLM of your choice to overlay a single point on the watershed map — for
 example the Georgia Tech campus at (33.776, −84.398) — and determine which watershed it
-falls within. Alternatively, have it compute and rank the watersheds by area.</p>
+falls within. Alternatively, have it compute each watershed’s boundary length (perimeter)
+in km, being careful about the coordinate reference system as shown above.</p>
 </section>
 </div>
 </section>
