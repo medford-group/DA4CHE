@@ -171,9 +171,9 @@ An **Application Programming Interface (API)** is a defined contract that lets o
 
 **REST** (Representational State Transfer) is a widely adopted protocol for web APIs. In a RESTful system, a request is encoded entirely within a URL: the resource you want and the format you want it in are specified as path segments. Because the entire query is a URL, RESTful APIs can be called with a plain `requests.get()` — no special client is required.
 
-:::{figure} images/RESTful.png
+:::{figure} images/restful_url_anatomy.png
 :name: fig-dm-restful
-:width: 70%
+:width: 95%
 
 Structure of a RESTful API query. The URL is composed of a base endpoint (prolog), a resource specifier (input), an operation, and the desired output format.
 :::
