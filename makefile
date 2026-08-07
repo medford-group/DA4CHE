@@ -53,7 +53,7 @@ env: ## Create or update the conda environment if needed
 # ---------- ToC autogeneration ----------
 $(TOC): $(TOCGEN)
 	@echo ">> Generating $(TOC) ..."
-	@python $(TOCGEN)
+	@$(CONDA_RUN) python $(TOCGEN)
 
 retoc: ## Force-regenerate _toc.yml without a full clean
 	rm -f $(TOC)
@@ -186,7 +186,7 @@ publish:  ## Build the book and publish _build/html to GitHub Pages (gh-pages)
 	( $(MAKE) build ) || ( env $(ENVVARS) jupyter-book build $(DOCS) || env $(ENVVARS) jb build $(DOCS) ); \
 	test -d "$(HTMLDIR)"; \
 	echo ">> Ensuring ghp-import is available"; \
-	( command -v ghp-import >/dev/null 2>&1 ) || python -m pip install --user ghp-import; \
+	( $(CONDA_RUN) ghp-import --help >/dev/null 2>&1 ) || $(CONDA_RUN) python -m pip install ghp-import; \
 	echo ">> Ensuring 'origin' git remote exists"; \
 	current="$$(git remote get-url origin 2>/dev/null || true)"; \
 	if [ -z "$$current" ]; then \
@@ -198,5 +198,5 @@ publish:  ## Build the book and publish _build/html to GitHub Pages (gh-pages)
 	  fi; \
 	fi; \
 	echo ">> Publishing to $(PUBLISH_BRANCH) via ghp-import"; \
-	ghp-import -n -p -f -b $(PUBLISH_BRANCH) "$(HTMLDIR)"; \
+	$(CONDA_RUN) ghp-import -n -p -f -b $(PUBLISH_BRANCH) "$(HTMLDIR)"; \
 	echo ">> Done. Your site will be available at: https://medford-group.github.io/da4che/"
