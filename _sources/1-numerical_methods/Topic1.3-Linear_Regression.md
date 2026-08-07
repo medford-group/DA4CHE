@@ -547,7 +547,7 @@ Try increasing the number of Gaussian features `m` from 12 to 20 and observe how
 
 ## Summary
 
-- Linear regression minimises the sum of squared errors; the closed-form solution satisfies the normal equations $\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}$.
+- Linear regression minimizes the sum of squared errors; the closed-form solution satisfies the normal equations $\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}$.
 - Polynomial regression uses the same framework with a higher-order Vandermonde matrix — no new mathematics is required.
 - General linear regression allows any set of basis functions (e.g., Gaussians) as columns of $\bar{\bar{X}}$, as long as the model is linear in its parameters $\vec{w}$.
 - `scikit-learn`'s `LinearRegression` provides a concise interface: `.fit()` solves the normal equations and `.predict()` evaluates the model.

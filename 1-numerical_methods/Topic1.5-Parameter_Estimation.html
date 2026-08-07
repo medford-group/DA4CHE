@@ -516,7 +516,7 @@ Estimated noise level: 0.0192 absorbance units
 measurement scatter — everything the data cannot explain with two Gaussians.</p>
 <div class="exercise admonition" id="ex-nm-mle-loglik">
 
-<p class="admonition-title"><span class="caption-number">Exercise 18 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 19 </span></p>
 <section id="exercise-content">
 <p>Implement the negative log-likelihood directly (including the <span class="math notranslate nohighlight">\(\frac{n}{2}\ln(2\pi\sigma^2)\)</span>
 term) as a function of <span class="math notranslate nohighlight">\(\vec{\lambda}\)</span> with <span class="math notranslate nohighlight">\(\sigma\)</span> fixed at <code class="docutils literal notranslate"><span class="pre">sigma_hat</span></code>, and minimize it
@@ -643,7 +643,7 @@ centered in the wrong place. The exercise below makes this concrete.</p>
 </div>
 <div class="exercise admonition" id="ex-nm-hess-ci">
 
-<p class="admonition-title"><span class="caption-number">Exercise 19 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 20 </span></p>
 <section id="exercise-content">
 <p>The previous chapter’s <code class="docutils literal notranslate"><span class="pre">g_simwidth</span></code> loss added a soft constraint pulling the two peak
 widths together. Here, use a <em>quadratic</em> version of that idea: minimize
@@ -766,7 +766,7 @@ and absorbances have very different magnitudes, which is why the unit-free relat
 errors and correlations above are often more interpretable than raw eigenvalues.)</p>
 <div class="exercise admonition" id="ex-nm-corr-pairs">
 
-<p class="admonition-title"><span class="caption-number">Exercise 20 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 21 </span></p>
 <section id="exercise-content">
 <p>From the correlation matrix, identify (a) the most strongly correlated parameter pair
 and (b) the pair closest to uncorrelated. For each, give a one-sentence physical
@@ -809,7 +809,7 @@ the loss value alone:</p>
 SSE: 0.0347 (m=2)  -&gt;  0.0266 (m=3)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x13be81e70&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x133953a30&gt;
 </pre></div>
 </div>
 <img alt="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" src="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" />
@@ -860,7 +860,7 @@ This is the parameter-estimation view of <strong>overfitting</strong>, and we wi
 phenomenon through the lens of model complexity and validation in Module 2.</p>
 <div class="exercise admonition" id="ex-nm-sloppy-m">
 
-<p class="admonition-title"><span class="caption-number">Exercise 21 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 22 </span></p>
 <section id="exercise-content">
 <p>Fit the peak window with <span class="math notranslate nohighlight">\(m = 1, 2, 3,\)</span> and <span class="math notranslate nohighlight">\(4\)</span> Gaussians (choose reasonable initial
 guesses). For each fit, record the SSE, the smallest and largest Hessian eigenvalue
@@ -927,7 +927,7 @@ we develop in Module 2’s <a class="reference internal" href="../2-regression/T
 chapter, makes far weaker assumptions at the cost of many repeated fits.</p>
 <div class="exercise admonition" id="ex-nm-pcov-check">
 
-<p class="admonition-title"><span class="caption-number">Exercise 22 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 23 </span></p>
 <section id="exercise-content">
 <p>Use <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> to fit the three-Gaussian model from the previous section (pass
 <code class="docutils literal notranslate"><span class="pre">p0=guess3</span></code> and <code class="docutils literal notranslate"><span class="pre">maxfev=10000</span></code> if needed). Compare the standard errors from <code class="docutils literal notranslate"><span class="pre">pcov</span></code> to

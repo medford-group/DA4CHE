@@ -377,6 +377,8 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-with-scipy">Optimization with Scipy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
             </nav>
         </div>
@@ -396,6 +398,8 @@ document.write(`
 <li><p><a class="reference internal" href="#automatic-differentiation" id="id3">Automatic Differentiation</a></p></li>
 <li><p><a class="reference internal" href="#gradient-descent" id="id4">Gradient Descent</a></p></li>
 <li><p><a class="reference internal" href="#optimization-with-scipy" id="id5">Optimization with Scipy</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id6">Summary</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id7">Additional Reading</a></p></li>
 </ul>
 </li>
 </ul>
@@ -968,34 +972,36 @@ Regression Result: [0.3, 0.7, 0.2, 0.5, 0.5, 0.1]
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">penalty</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">lamda</span><span class="p">[:</span><span class="n">m</span><span class="p">]]))</span>
 </pre></div>
 </div>
-</div>
 <p>to the loss function. This discourages negative weights but does not absolutely prevent them. These are known as <strong>soft constraints</strong>.</p>
-<p>Alternatively, many optimizers (including <code class="docutils literal notranslate"><span class="pre">scipy.minimize</span></code>) support <strong>bounds</strong> or <strong>constraints</strong> that can enforce this behavior exactly. These are called <strong>hard constraints</strong>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-:::{exercise}
-:label: ex-nm-soft-pen
-
-Modify the Gaussian loss function to include a soft constraint that penalizes negative weights using a root-mean-square penalty. What happens to the fit when the initial guess includes a negative weight? Try different values of the penalty term’s weight to control the strength of the constraint.
-:::
-
-
-## Summary
-
-- Non-linear regression arises when model parameters appear nonlinearly (e.g., Gaussian peak positions and widths); the least-squares loss function still applies but cannot be solved in closed form.
-- Automatic differentiation (`autograd`) computes exact numerical gradients without manual derivation; all inputs must be floats, not integers.
-- Gradient descent iteratively updates parameters by stepping opposite the gradient; step size and stopping criteria (fixed iterations, parameter tolerance, or loss tolerance) strongly affect convergence.
-- `scipy.optimize.minimize` with BFGS is a reliable default for smooth, unconstrained problems and handles gradient estimation internally.
-- Soft constraints are added as penalty terms in the loss function; hard constraints (parameter bounds) are supported via `scipy.minimize`&#39;s `bounds` argument.
-- Vanishing gradients occur when Gaussians are far from the data, making a reasonable initial guess essential.
-
-## Additional Reading
-
-- [SciPy Optimize Documentation](https://docs.scipy.org/doc/scipy/reference/optimize.html)
-- [Automatic Differentiation – Wikipedia](https://en.wikipedia.org/wiki/Automatic_differentiation)
-- [Nocedal and Wright, *Numerical Optimization*](https://link.springer.com/book/10.1007/978-0-387-40065-5)
-- [Understanding the Adam Optimizer](https://arxiv.org/abs/1412.6980)
-</pre></div>
+<p>Alternatively, many optimizers (including <code class="docutils literal notranslate"><span class="pre">scipy.minimize</span></code>) support <strong>bounds</strong> or <strong>constraints</strong> that can enforce this behavior exactly. These are called <strong>hard constraints</strong>. Hard constraints are outside the scope of this course, but will be covered in 4746/6746 or standard optimization courses.</p>
 </div>
+<div class="exercise admonition" id="ex-nm-soft-pen">
+
+<p class="admonition-title"><span class="caption-number">Exercise 18 </span></p>
+<section id="exercise-content">
+<p>Modify the Gaussian loss function to include a soft constraint that penalizes negative weights using a root-mean-square penalty. What happens to the fit when the initial guess includes a negative weight? Try different values of the penalty term’s weight to control the strength of the constraint.</p>
+</section>
+</div>
+</section>
+<section id="summary">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Non-linear regression arises when model parameters appear nonlinearly (e.g., Gaussian peak positions and widths); the least-squares loss function still applies but cannot be solved in closed form.</p></li>
+<li><p>Automatic differentiation (<code class="docutils literal notranslate"><span class="pre">autograd</span></code>) computes exact numerical gradients without manual derivation; all inputs must be floats, not integers.</p></li>
+<li><p>Gradient descent iteratively updates parameters by stepping opposite the gradient; step size and stopping criteria (fixed iterations, parameter tolerance, or loss tolerance) strongly affect convergence.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> with BFGS is a reliable default for smooth, unconstrained problems and handles gradient estimation internally.</p></li>
+<li><p>Soft constraints are added as penalty terms in the loss function; hard constraints (parameter bounds) are supported via <code class="docutils literal notranslate"><span class="pre">scipy.minimize</span></code>’s <code class="docutils literal notranslate"><span class="pre">bounds</span></code> argument.</p></li>
+<li><p>Vanishing gradients occur when Gaussians are far from the data, making a reasonable initial guess essential.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/optimize.html">SciPy Optimize Documentation</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Automatic_differentiation">Automatic Differentiation – Wikipedia</a></p></li>
+<li><p><a class="reference external" href="https://link.springer.com/book/10.1007/978-0-387-40065-5">Nocedal and Wright, <em>Numerical Optimization</em></a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1412.6980">Understanding the Adam Optimizer</a></p></li>
+</ul>
 </section>
 </section>
 
@@ -1070,6 +1076,8 @@ Modify the Gaussian loss function to include a soft constraint that penalizes ne
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-with-scipy">Optimization with Scipy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
   </nav></div>
 

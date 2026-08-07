@@ -612,7 +612,7 @@ A baseline is the <strong>simplest reasonable model</strong> you can implement q
 <p>Kernel-based methods are very commonly used for high-dimensional spaces because they account for non-linear interactions, but the number of features does not exceed the number of data points. In your homework you will explore the application of KRR to this dataset.</p>
 <div class="exercise admonition" id="ex-reg-raw-vs-scale">
 
-<p class="admonition-title"><span class="caption-number">Exercise 38 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 39 </span></p>
 <section id="exercise-content">
 <p>Compare linear regression on the <strong>original</strong> features and on <strong>rescaled</strong> features.</p>
 <ol class="arabic simple">
@@ -892,7 +892,7 @@ Components needed for ≥90% variance: 8
 </ul>
 <div class="exercise admonition" id="ex-reg-pca-verify">
 
-<p class="admonition-title"><span class="caption-number">Exercise 39 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 40 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">sklearn.decomposition.PCA</span></code>, verify that scikit-learn’s results match the manual PCA above.</p>
 <ol class="arabic simple">
@@ -991,9 +991,7 @@ PCA orders directions by <strong>variance in X</strong>, not by how well they <s
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PC01 : r^2 = 0.207
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PC00 : r^2 = 0.174
+PC00 : r^2 = 0.174
 PC06 : r^2 = 0.061
 PC07 : r^2 = 0.060
 PC04 : r^2 = 0.044
@@ -1163,7 +1161,7 @@ x_rotations_ and W_star agree: True
 <p>The crossover behavior (PLS saturates earlier) is also typical: because PLS components are already chosen to be predictive, adding more components yields diminishing returns faster than PCR, where many early components may carry little signal about <span class="math notranslate nohighlight">\(y\)</span>.</p>
 <div class="exercise admonition" id="ex-reg-pcr-pls">
 
-<p class="admonition-title"><span class="caption-number">Exercise 40 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 41 </span></p>
 <section id="exercise-content">
 <p>Here you will use pipelines to compare some of the models above:</p>
 <ol class="arabic simple">

@@ -661,7 +661,7 @@ For the same dataset, RMSE <span class="math notranslate nohighlight">\(\geq\)</
 <p>A <em>roughly Gaussian</em> residual histogram centered at zero indicates that errors are random and homoscedastic, supporting the use of aggregate metrics such as RMSE.  Skewed or heavy‑tailed residuals (as seen for Dataset IV) warn that single‑number metrics can hide important structure in the errors.</p>
 <div class="exercise admonition" id="ex-reg-outlier-sens">
 
-<p class="admonition-title"><span class="caption-number">Exercise 27 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 28 </span></p>
 <section id="exercise-content">
 <p>Compute the MAE, RMSE, and maximum error for dataset III in Anscombe’s quartet with and without the outlier, and determine which metric is most sensitive to the outlier.</p>
 </section>
@@ -870,7 +870,7 @@ r^2 all data  = 0.949
 <p>When the end‑points land in the test fold, the model must <strong>extrapolate</strong> and often fails catastrophically.  k‑fold CV lowers the risk of an <strong>overly lucky</strong> (or unlucky) split—but at the computational cost of <em>k</em> separate model fits.</p>
 <div class="exercise admonition" id="ex-reg-kfold-shuffle">
 
-<p class="admonition-title"><span class="caption-number">Exercise 28 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 29 </span></p>
 <section id="exercise-content">
 <p>In the code block above, note that we used <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> when performing k-fold cross validation. This ensures that the data is shuffled before the folds are taken, so that each fold is effectively random rather than sequential.</p>
 <p>Re-make the plot with <code class="docutils literal notranslate"><span class="pre">shuffle=False</span></code> and visualize the result. Compare the MAE of each fold, and consider whether this is a meaningful way to do cross validation for this dataset.</p>
@@ -924,7 +924,7 @@ std  RMSE (LOO) = 3.727e-01
 <p>Because each LOO model is trained on nearly the entire dataset, the variation in the models and predictions will be low.  However, the variation of the <strong>error estimate</strong> can be high: a single anomalous observation can strongly influence one iteration’s score.  Computationally, LOO requires <em>N</em> model fits, which is feasible for small‑to‑medium data but prohibitive for very large datasets.</p>
 <div class="exercise admonition" id="ex-reg-split-stab">
 
-<p class="admonition-title"><span class="caption-number">Exercise 29 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 30 </span></p>
 <section id="exercise-content">
 <p>Investigate how the <strong>test‑set fraction</strong> influences the stability of performance estimates for the RBF model at <span class="math notranslate nohighlight">\(\sigma = 10\)</span>.</p>
 <ol class="arabic simple">
@@ -1134,7 +1134,7 @@ std  RMSE (LOO) = 3.727e-01
 <p>For a candid discussion of the strengths and pitfalls of Bayesian model selection, especially Gaussian processes, see the blog post <a class="reference external" href="https://kitchingroup.cheme.cmu.edu/blog/2025/06/22/Lies-damn-lies-statistics-and-Bayesian-statistics/">“Lies, damn lies, statistics, and <strong>Bayesian</strong> statistics”</a>. The post is actually written by a chemical engineer (Prof. John Kitchin), and uses an example that is relevant to chemical engineers who work with atomic-scale models.</p>
 <div class="exercise admonition" id="ex-reg-bootstrap">
 
-<p class="admonition-title"><span class="caption-number">Exercise 30 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 31 </span></p>
 <section id="exercise-content">
 <p>Use the <code class="docutils literal notranslate"><span class="pre">bootstrap_linregress</span></code> function to quantify parameter uncertainty for Dataset 2 of Anscombe’s quartet.</p>
 <ol class="arabic simple">

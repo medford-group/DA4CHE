@@ -492,7 +492,7 @@ document.write(`
 </ul>
 <div class="exercise admonition" id="ex-cls-toy-noisiness">
 
-<p class="admonition-title"><span class="caption-number">Exercise 44 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 45 </span></p>
 <section id="exercise-content">
 <p>Explore how <code class="docutils literal notranslate"><span class="pre">noisiness</span></code> affects the toy datasets. Set <code class="docutils literal notranslate"><span class="pre">noisiness</span></code> to <code class="docutils literal notranslate"><span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">3</span></code> and regenerate the four scatter plots. For which value does the 2-class blobs dataset become approximately linearly separable? At what value do the moons dataset classes begin to overlap significantly?</p>
 </section>
@@ -702,7 +702,7 @@ document.write(`
 <p>As the proportion of class-1 examples decreases, the trivial “always guess 0” model achieves higher and higher accuracy — approaching 100% as class 1 becomes vanishingly rare. This is why accuracy alone is an unreliable metric for imbalanced problems.</p>
 <div class="exercise admonition" id="ex-cls-f1-compute">
 
-<p class="admonition-title"><span class="caption-number">Exercise 45 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 46 </span></p>
 <section id="exercise-content">
 <p>Using the <code class="docutils literal notranslate"><span class="pre">acc_prec_recall</span></code> function above, compute the accuracy, precision, recall, and F1 score for a classifier on the <code class="docutils literal notranslate"><span class="pre">y_moons</span></code> dataset. First, train a <code class="docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.ensemble</span></code> on the full (balanced) <code class="docutils literal notranslate"><span class="pre">X_moons</span></code>, <code class="docutils literal notranslate"><span class="pre">y_moons</span></code> data and evaluate its metrics. Then repeat on the imbalanced version <code class="docutils literal notranslate"><span class="pre">y_imbalanced</span></code> (using the corresponding subset of <code class="docutils literal notranslate"><span class="pre">X_moons</span></code>). Compare the F1 scores and explain the difference.</p>
 </section>
@@ -802,7 +802,7 @@ document.write(`
 </figure>
 <div class="exercise admonition" id="ex-cls-stratified-cv">
 
-<p class="admonition-title"><span class="caption-number">Exercise 46 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 47 </span></p>
 <section id="exercise-content">
 <p>Implement 5-fold cross-validation on the imbalanced moons dataset constructed earlier. Use <code class="docutils literal notranslate"><span class="pre">StratifiedKFold</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code> with a <code class="docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code>. For each fold, compute and print the accuracy and F1 score. Compare the mean F1 score across folds to the F1 score obtained when training and testing on the full imbalanced dataset without cross-validation. What does this comparison reveal about overfitting?</p>
 </section>
@@ -851,7 +851,7 @@ document.write(`
 <p>The SVM above uses the one-vs-rest strategy: three binary classifiers are trained, and the class with the highest decision function value is selected. The shaded regions show the three decision regions learned by the model.</p>
 <div class="exercise admonition" id="ex-cls-multiclass-metrics">
 
-<p class="admonition-title"><span class="caption-number">Exercise 47 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 48 </span></p>
 <section id="exercise-content">
 <p>Evaluate the multi-class SVM trained above using a confusion matrix. Import <code class="docutils literal notranslate"><span class="pre">confusion_matrix</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>, compute it from <code class="docutils literal notranslate"><span class="pre">y_mc3</span></code> (true labels) and <code class="docutils literal notranslate"><span class="pre">y_mc_hat</span></code> (predicted labels), and display it. Which pair of classes, if any, has the most confusion? Explain why based on the scatter plot.</p>
 </section>
@@ -996,7 +996,7 @@ document.write(`
 </div>
 <div class="exercise admonition" id="ex-cls-loss-surface">
 
-<p class="admonition-title"><span class="caption-number">Exercise 48 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 49 </span></p>
 <section id="exercise-content">
 <p>Compute and plot the max-cost loss <span class="math notranslate nohighlight">\(g(\vec{w})\)</span> as a function of the slope parameter <span class="math notranslate nohighlight">\(w_1\)</span> for the 2-class blobs dataset, holding <span class="math notranslate nohighlight">\(w_0 = -10\)</span> and <span class="math notranslate nohighlight">\(w_2 = -10\)</span> fixed. Vary <span class="math notranslate nohighlight">\(w_1\)</span> over the range <span class="math notranslate nohighlight">\([-20, 5]\)</span> using <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code>. At what value of <span class="math notranslate nohighlight">\(w_1\)</span> is the loss minimized? How does this compare to the value found by <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code>?</p>
 </section>

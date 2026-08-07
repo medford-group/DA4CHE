@@ -586,7 +586,7 @@ Molecular Weight: 46.07
 <p>The set-based check <code class="docutils literal notranslate"><span class="pre">{6,</span> <span class="pre">1}</span></code> handles both bond orientations (C→H and H→C) without a separate conditional branch. Ethanol has two carbons bearing a total of five hydrogens (CH₃–CH₂–), so the expected count is 5.</p>
 <div class="exercise admonition" id="ex-dm-json-molform">
 
-<p class="admonition-title"><span class="caption-number">Exercise 68 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 69 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">ethanol_simple.json</span></code>, write a function <code class="docutils literal notranslate"><span class="pre">get_formula(compound_json)</span></code> that returns the molecular formula string (e.g. <code class="docutils literal notranslate"><span class="pre">'C2H6O'</span></code>) by searching the <code class="docutils literal notranslate"><span class="pre">props</span></code> list by its <code class="docutils literal notranslate"><span class="pre">'Molecular</span> <span class="pre">Formula'</span></code> label rather than using a hardcoded index. Test it on the loaded ethanol data.</p>
 </section>
@@ -617,7 +617,7 @@ Molecular Weight: 46.07
 <p><code class="docutils literal notranslate"><span class="pre">pd.read_html(url)</span></code> scrapes all HTML <code class="docutils literal notranslate"><span class="pre">&lt;table&gt;</span></code> elements from a page and returns them as a list of DataFrames. This is useful for data published in formatted web tables (e.g. Wikipedia property tables, NIST tabular outputs) but inherits the same fragility as other HTML-based approaches: the scraper will break if the page layout changes.</p>
 <div class="exercise admonition" id="ex-dm-pandas-csv">
 
-<p class="admonition-title"><span class="caption-number">Exercise 69 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 70 </span></p>
 <section id="exercise-content">
 <p>Extend the multi-compound CSV query above to retrieve <code class="docutils literal notranslate"><span class="pre">XLogP</span></code>, <code class="docutils literal notranslate"><span class="pre">HBondDonorCount</span></code>, and <code class="docutils literal notranslate"><span class="pre">HBondAcceptorCount</span></code> for the ten amino acids: alanine, glycine, valine, leucine, isoleucine, proline, phenylalanine, tryptophan, methionine, and cysteine. Store the result as a DataFrame sorted by <code class="docutils literal notranslate"><span class="pre">XLogP</span></code> in descending order.</p>
 </section>
@@ -763,7 +763,7 @@ Detail: No CID found that matches the given name
 </div>
 <div class="exercise admonition" id="ex-dm-rest-multi-prop">
 
-<p class="admonition-title"><span class="caption-number">Exercise 70 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">get_properties(identifier,</span> <span class="pre">labels)</span></code> that takes a compound name or CAS number and a list of property label strings (e.g. <code class="docutils literal notranslate"><span class="pre">['Molecular</span> <span class="pre">Weight',</span> <span class="pre">'Molecular</span> <span class="pre">Formula']</span></code>) and returns a dictionary mapping each label to its extracted value. Use <code class="docutils literal notranslate"><span class="pre">get_compound_json</span></code> and <code class="docutils literal notranslate"><span class="pre">get_prop</span></code> as building blocks. Test your function on aspirin (CAS 50-78-4).</p>
 </section>
@@ -892,7 +892,7 @@ not-a-real-compound       None
 </div>
 <div class="exercise admonition" id="ex-dm-auth-pattern">
 
-<p class="admonition-title"><span class="caption-number">Exercise 71 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 72 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">authenticated_get(url,</span> <span class="pre">api_key,</span> <span class="pre">auth_method='header')</span></code> that wraps <code class="docutils literal notranslate"><span class="pre">requests.get</span></code> and injects the key either as an <code class="docutils literal notranslate"><span class="pre">Authorization:</span> <span class="pre">Bearer</span></code> header (when <code class="docutils literal notranslate"><span class="pre">auth_method='header'</span></code>) or as an <code class="docutils literal notranslate"><span class="pre">api_key</span></code> query parameter (when <code class="docutils literal notranslate"><span class="pre">auth_method='query'</span></code>). Call the function with <code class="docutils literal notranslate"><span class="pre">url='https://httpbin.org/get'</span></code> and <code class="docutils literal notranslate"><span class="pre">api_key='test-key'</span></code> for both methods, and use <code class="docutils literal notranslate"><span class="pre">r.json()</span></code> to verify that the key appears in the response in the expected location (<code class="docutils literal notranslate"><span class="pre">headers</span></code> or <code class="docutils literal notranslate"><span class="pre">args</span></code> respectively).</p>
 </section>
@@ -931,7 +931,7 @@ Formula:  C2H6O
 IUPAC:    ethanol
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_68736/1066236847.py:4: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_69395/1066236847.py:4: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
   print(f&#39;SMILES:   {etoh.canonical_smiles}&#39;)
 </pre></div>
 </div>
@@ -997,7 +997,7 @@ IUPAC:    ethanol
 </ul>
 <div class="exercise admonition" id="ex-dm-pcpy-batch-props">
 
-<p class="admonition-title"><span class="caption-number">Exercise 72 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 73 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">batch_properties(names)</span></code> that accepts a list of compound names and returns a <code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame with columns <code class="docutils literal notranslate"><span class="pre">Name</span></code>, <code class="docutils literal notranslate"><span class="pre">MolecularFormula</span></code>, <code class="docutils literal notranslate"><span class="pre">MolecularWeight</span></code>, and <code class="docutils literal notranslate"><span class="pre">CanonicalSMILES</span></code>. Use <code class="docutils literal notranslate"><span class="pre">pcp.get_properties</span></code> to minimize the number of API calls. Test it on ethanol, acetone, and benzene.</p>
 </section>
