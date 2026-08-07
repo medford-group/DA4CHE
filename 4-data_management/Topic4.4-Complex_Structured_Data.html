@@ -544,12 +544,9 @@ aspirin: 21 atoms, 21 bonds, 1 rings (sizes [6]), top-degree atoms [(&#39;C&#39;
 </div>
 <p>Both ring counts check out against the known structures: caffeine’s fused bicyclic core is
 a five-membered imidazole sharing an edge with a six-membered pyrimidinedione ring (2
-rings), while aspirin contains a single six-membered benzene ring. The top-degree atoms are
-a subtler check — because the PubChem record includes hydrogens, the busiest nodes are the
-<em>methyl</em> carbons (three C–H bonds plus one bond into the rest of the molecule, degree 4),
-not the ring atoms. A result that surprises you and then makes sense on inspection is
-exactly what checking computed properties against known structure is for. This is the
-pattern to remember:
+rings), while aspirin contains a single six-membered benzene ring. (The top-degree atoms
+in both molecules are the methyl carbons — the PubChem graph includes hydrogens.) This is
+the pattern to remember:
 once connectivity data is in a graph object, structural questions — ring counts, chain
 lengths, which nodes hold the network together — stop being parsing problems and become
 library calls.</p>
@@ -786,6 +783,9 @@ Utoy Creek-Chattahoochee River    305.91
  Dog River-Chattahoochee River   1008.94
      Morning Creek-Flint River    791.74
              Upper South River    644.06
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 <img alt="../_images/302f4e51e5140fe4ed3d643a0b755b6ae2855db3abcf949469653bb16654dcfe.png" src="../_images/302f4e51e5140fe4ed3d643a0b755b6ae2855db3abcf949469653bb16654dcfe.png" />
