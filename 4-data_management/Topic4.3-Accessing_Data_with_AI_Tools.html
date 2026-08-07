@@ -735,7 +735,35 @@ not a sign that something went wrong.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/6b72e259b3e741e14dd446e87bc5122ac6d938a3702dcf943a0938757a169394.png" src="../_images/6b72e259b3e741e14dd446e87bc5122ac6d938a3702dcf943a0938757a169394.png" />
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">HTTPError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">4</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;inline&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="ne">----&gt; </span><span class="mi">4</span> <span class="n">T</span><span class="p">,</span> <span class="n">Cp</span> <span class="o">=</span> <span class="n">nist_gas_cp</span><span class="p">(</span><span class="s2">&quot;methane&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">Cp</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Temperature (K)&quot;</span><span class="p">)</span>
+
+<span class="nn">Cell In[4], line 18,</span> in <span class="ni">nist_gas_cp</span><span class="nt">(name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="k">def</span><span class="w"> </span><span class="nf">nist_gas_cp</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="c1"># Step 1: resolve the compound name to a NIST ID (a &quot;C&quot; number). The species page</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span>     <span class="c1"># cites other compounds too, so we take the ID that appears most often — the page&#39;s</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span>     <span class="c1"># own compound dominates.</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span>     <span class="n">search</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">NIST</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Units&quot;</span><span class="p">:</span> <span class="s2">&quot;SI&quot;</span><span class="p">})</span>
+<span class="ne">---&gt; </span><span class="mi">18</span>     <span class="n">search</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span>     <span class="n">ids</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;ID=(C\d+)&quot;</span><span class="p">,</span> <span class="n">search</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">ids</span><span class="p">:</span>
+
+<span class="nn">File /opt/homebrew/Caskroom/miniforge/base/envs/DA4CHE/lib/python3.10/site-packages/requests/models.py:1026,</span> in <span class="ni">Response.raise_for_status</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1021</span>     <span class="n">http_error_msg</span> <span class="o">=</span> <span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1022</span>         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> Server Error: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2"> for url: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">   </span><span class="mi">1023</span>     <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1025</span> <span class="k">if</span> <span class="n">http_error_msg</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1026</span>     <span class="k">raise</span> <span class="n">HTTPError</span><span class="p">(</span><span class="n">http_error_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="ne">HTTPError</span>: 504 Server Error: Gateway Timeout for url: https://webbook.nist.gov/cgi/cbook.cgi?Name=methane&amp;Units=SI
+</pre></div>
+</div>
 </div>
 </div>
 <p>The curve rises smoothly with temperature, as we expect for a polyatomic gas — a quick

@@ -217,18 +217,39 @@ With $n - p = 94$ here the difference is negligible ($t \approx 1.99$); Himmelbl
 
 Look at the relative errors, because the parameters live on wildly different scales
 (absorbances near 0.5, wavenumbers near 2900, widths near 30): the peak *positions* are
-determined to about 0.03–0.05% — a fraction of a wavenumber — while the *weights* and
-*widths* are only known to a few percent. The confidence intervals turn the curvature
+determined to about 0.03–0.05% — 95% confidence intervals spanning only a few
+wavenumbers out of ~2900 — while the *weights* and *widths* are only known to a few
+percent. The confidence intervals turn the curvature
 picture above into concrete error bars, and they inherit its message: the same dataset
 determines different parameters with very different precision.
+
+:::{note}
+**Penalties change what the error bars mean.** A penalty term added to the loss — like
+the soft width constraint in the previous chapter — is extra information supplied by
+*you*, not by the data. It steepens the loss surface, so the Hessian-based error bars
+get smaller; but the intervals now describe uncertainty given the data *plus your
+assumption*, and the fitted parameters are pulled away from the values the data alone
+prefer. If the assumption is wrong, the result is an interval that is tighter but
+centered in the wrong place. The exercise below makes this concrete.
+:::
 
 :::{exercise}
 :label: ex-nm-hess-ci
 
-The previous chapter's `g_simwidth` added a soft penalty that pulls the two peak widths
-together. Refit with that penalized loss, then compute Hessian-based standard errors *of
-the penalized loss* at its optimum. Compare the standard error of each width to the
-unpenalized values above. Does coupling the widths make them more or less certain? Why?
+The previous chapter's `g_simwidth` loss added a soft constraint pulling the two peak
+widths together. Here, use a *quadratic* version of that idea: minimize
+$\mathrm{SSE}(\vec{\lambda}) + \alpha(\sigma_0 - \sigma_1)^2$ for
+$\alpha \in \{0.001, 0.01, 1\}$.
+
+1. For each $\alpha$, compute Hessian-based standard errors for the two widths and the
+   correlation between them. How do the error bars and $\mathrm{corr}(\sigma_0, \sigma_1)$
+   change as $\alpha$ grows?
+2. The error bars *shrink* — but the extra certainty did not come from the spectrum.
+   Compare the fitted widths to the unconstrained values and explain, in plain terms,
+   what the tighter intervals represent and when they could be misleading.
+3. Repeat part 1 using the previous chapter's absolute-value penalty
+   $|\sigma_0 - \sigma_1|$ instead. What goes wrong with the Hessian calculation, and
+   why? (Think about the second derivative of $|x|$ near $x = 0$.)
 :::
 
 ## Parameter Correlations

@@ -626,18 +626,40 @@ With <span class="math notranslate nohighlight">\(n - p = 94\)</span> here the d
 </div>
 <p>Look at the relative errors, because the parameters live on wildly different scales
 (absorbances near 0.5, wavenumbers near 2900, widths near 30): the peak <em>positions</em> are
-determined to about 0.03–0.05% — a fraction of a wavenumber — while the <em>weights</em> and
-<em>widths</em> are only known to a few percent. The confidence intervals turn the curvature
+determined to about 0.03–0.05% — 95% confidence intervals spanning only a few
+wavenumbers out of ~2900 — while the <em>weights</em> and <em>widths</em> are only known to a few
+percent. The confidence intervals turn the curvature
 picture above into concrete error bars, and they inherit its message: the same dataset
 determines different parameters with very different precision.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Penalties change what the error bars mean.</strong> A penalty term added to the loss — like
+the soft width constraint in the previous chapter — is extra information supplied by
+<em>you</em>, not by the data. It steepens the loss surface, so the Hessian-based error bars
+get smaller; but the intervals now describe uncertainty given the data <em>plus your
+assumption</em>, and the fitted parameters are pulled away from the values the data alone
+prefer. If the assumption is wrong, the result is an interval that is tighter but
+centered in the wrong place. The exercise below makes this concrete.</p>
+</div>
 <div class="exercise admonition" id="ex-nm-hess-ci">
 
 <p class="admonition-title"><span class="caption-number">Exercise 19 </span></p>
 <section id="exercise-content">
-<p>The previous chapter’s <code class="docutils literal notranslate"><span class="pre">g_simwidth</span></code> added a soft penalty that pulls the two peak widths
-together. Refit with that penalized loss, then compute Hessian-based standard errors <em>of
-the penalized loss</em> at its optimum. Compare the standard error of each width to the
-unpenalized values above. Does coupling the widths make them more or less certain? Why?</p>
+<p>The previous chapter’s <code class="docutils literal notranslate"><span class="pre">g_simwidth</span></code> loss added a soft constraint pulling the two peak
+widths together. Here, use a <em>quadratic</em> version of that idea: minimize
+<span class="math notranslate nohighlight">\(\mathrm{SSE}(\vec{\lambda}) + \alpha(\sigma_0 - \sigma_1)^2\)</span> for
+<span class="math notranslate nohighlight">\(\alpha \in \{0.001, 0.01, 1\}\)</span>.</p>
+<ol class="arabic simple">
+<li><p>For each <span class="math notranslate nohighlight">\(\alpha\)</span>, compute Hessian-based standard errors for the two widths and the
+correlation between them. How do the error bars and <span class="math notranslate nohighlight">\(\mathrm{corr}(\sigma_0, \sigma_1)\)</span>
+change as <span class="math notranslate nohighlight">\(\alpha\)</span> grows?</p></li>
+<li><p>The error bars <em>shrink</em> — but the extra certainty did not come from the spectrum.
+Compare the fitted widths to the unconstrained values and explain, in plain terms,
+what the tighter intervals represent and when they could be misleading.</p></li>
+<li><p>Repeat part 1 using the previous chapter’s absolute-value penalty
+<span class="math notranslate nohighlight">\(|\sigma_0 - \sigma_1|\)</span> instead. What goes wrong with the Hessian calculation, and
+why? (Think about the second derivative of <span class="math notranslate nohighlight">\(|x|\)</span> near <span class="math notranslate nohighlight">\(x = 0\)</span>.)</p></li>
+</ol>
 </section>
 </div>
 </section>
@@ -787,7 +809,7 @@ the loss value alone:</p>
 SSE: 0.0347 (m=2)  -&gt;  0.0266 (m=3)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x134887a30&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x145913a30&gt;
 </pre></div>
 </div>
 <img alt="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" src="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" />
