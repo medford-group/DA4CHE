@@ -8,6 +8,7 @@ chapters:
       - file: 1-numerical_methods/Topic1.2-Linear_Algebra
       - file: 1-numerical_methods/Topic1.3-Linear_Regression
       - file: 1-numerical_methods/Topic1.4-Numerical_Optimization
+      - file: 1-numerical_methods/Topic1.5-Parameter_Estimation
   - file: 2-regression/intro
     sections:
       - file: 2-regression/Topic2.1-Non-parametric_Models
