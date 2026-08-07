@@ -128,6 +128,39 @@ machine-learning methods, *graph neural networks*, operates directly on this con
 to predict properties such as solubility or reactivity, and the very same models apply to
 any networked system, from power grids to metabolic pathways.
 
+Because the molecule now *is* a graph object, those structural questions become one-line
+computations. `networkx` can count the independent rings in a molecule directly (via
+`cycle_basis` — for a connected graph the count is simply $E - N + 1$, the number of bonds
+beyond what a ring-free tree would need), and the node degrees tell us which atoms are the
+connective hubs:
+
+> *Prompt: "Using the molecular_graph function, compare caffeine and aspirin: count each
+> molecule's rings and their sizes, and report the most highly connected atoms."*
+
+```{code-cell} ipython3
+G_asp = molecular_graph("aspirin")
+
+for name, g in [("caffeine", G), ("aspirin", G_asp)]:
+    rings = nx.cycle_basis(g)
+    ring_sizes = sorted(len(r) for r in rings)
+    els = nx.get_node_attributes(g, "element")
+    hubs = [(els[a], d) for a, d in sorted(g.degree, key=lambda kv: -kv[1])[:3]]
+    print(f"{name}: {g.number_of_nodes()} atoms, {g.number_of_edges()} bonds, "
+          f"{len(rings)} rings (sizes {ring_sizes}), top-degree atoms {hubs}")
+```
+
+Both ring counts check out against the known structures: caffeine's fused bicyclic core is
+a five-membered imidazole sharing an edge with a six-membered pyrimidinedione ring (2
+rings), while aspirin contains a single six-membered benzene ring. The top-degree atoms are
+a subtler check — because the PubChem record includes hydrogens, the busiest nodes are the
+*methyl* carbons (three C–H bonds plus one bond into the rest of the molecule, degree 4),
+not the ring atoms. A result that surprises you and then makes sense on inspection is
+exactly what checking computed properties against known structure is for. This is the
+pattern to remember:
+once connectivity data is in a graph object, structural questions — ring counts, chain
+lengths, which nodes hold the network together — stop being parsing problems and become
+library calls.
+
 The reason this kind of work used to be slow is that every graph data source stores its
 connectivity in its own idiosyncratic format — PubChem's atom/bond record looks nothing
 like a social-network export or a flowsheet file. Translating each one into a common graph
@@ -139,8 +172,10 @@ makes casually exploring a new graph data source realistic.
 :label: ex-dm-graph-network
 
 Work with an LLM of your choice to build the molecular graph for a different molecule
-(for example aspirin), then ask it to compute a simple graph property — the degree of each
-atom, or the number of rings — and check the result against the molecule's known structure.
+(for example ibuprofen or glucose), then ask it to compute a graph property *not* shown
+above — the graph diameter (the longest shortest-path between any two atoms), or the
+number of terminal (degree-1) heavy atoms — and check the result against the molecule's
+known structure.
 :::
 
 ## Time Series and Data Historians
@@ -223,6 +258,24 @@ method endures precisely because it is cheap enough to run in real time on a liv
 while still giving a hard guarantee that the stored signal never strays beyond the chosen
 tolerance.
 
+In industry you will rarely implement this layer yourself — you will pull data *out* of an
+existing historian. The commercial products dominate operating plants because they speak
+industrial protocols (OPC UA, DCS-native connections) and implement compression natively,
+while general-purpose open-source time-series databases are increasingly common for lab
+equipment, pilot plants, and IoT-style projects. Options worth knowing:
+
+| Software | Category | Strengths | Weaknesses |
+|---|---|---|---|
+| AVEVA PI System (formerly OSIsoft PI) | Commercial historian | De-facto industry standard; huge installed base; rich tooling and asset framework; mature Python/Excel access | Expensive licensing; proprietary stack; can be heavyweight for small projects |
+| AspenTech InfoPlus.21 | Commercial historian | Deep integration with Aspen process simulation and APC tools; strong in chemicals/refining | Costly; steeper administration; smaller community than PI |
+| Honeywell Uniformance PHD | Commercial historian | Tight coupling to Honeywell DCS environments; proven at refinery scale | Mostly encountered in Honeywell shops; limited ecosystem outside them |
+| Ignition (+ Canary/SQL historian) | Commercial SCADA + historian | Affordable, unlimited-tag licensing; modern web tooling; Python (Jython) scripting built in | Historian features thinner than dedicated products; analytics mostly DIY |
+| InfluxDB | Open-source time-series database | Free to start; purpose-built for high-ingest time series; good dashboards (Grafana) | Not a process historian: no native OPC connectivity or swinging-door-style compression; OT integration is DIY |
+| TimescaleDB | Open-source (PostgreSQL extension) | Full SQL; joins time series with relational plant data; compression built in | Same OT-integration gap as InfluxDB; requires database administration comfort |
+
+The names change, but the interface pattern does not: every historian exposes tag-based
+queries over a time range, and the compression caveats above apply to all of them.
+
 :::{exercise}
 :label: ex-dm-historian-tol
 
@@ -295,6 +348,27 @@ toolkit of spatial analysis is available: computing areas, finding which watersh
 a given point, overlaying monitoring stations or discharge points, and so on — none of
 which would be quick to write from scratch without the specialized library.
 
+Areas are a one-line example — with one wrinkle. The geometries are stored in
+latitude/longitude coordinates, where "area" would come out in meaningless square degrees,
+so the layer must first be reprojected onto an equal-area coordinate system measured in
+meters:
+
+> *Prompt: "Compute the area of each watershed in km² from the geometries and compare to
+> the dataset's areasqkm attribute."*
+
+```{code-cell} ipython3
+ws_albers = watersheds.to_crs(epsg=5070)   # NAD83 / Conus Albers (equal-area, meters)
+computed = ws_albers.geometry.area / 1e6   # m² → km²
+
+comparison = watersheds[["name", "areasqkm"]].assign(computed_sqkm=computed.round(1))
+print(comparison.to_string(index=False))
+```
+
+The computed values agree with the `areasqkm` attribute reported by the USGS — a
+reassuring check that the geometries survived the download-and-cache round trip intact,
+and a reminder that a spatial dataset's attributes can be recomputed from its geometry
+whenever provenance is in doubt.
+
 Two ideas make geospatial data a discipline of its own. The first is the *coordinate
 reference system*: because the Earth is curved and maps are flat, every dataset specifies
 how its coordinates project onto the globe, and silently mixing two systems lands features
@@ -315,7 +389,8 @@ demand changes what is worth attempting.
 
 Work with an LLM of your choice to overlay a single point on the watershed map — for
 example the Georgia Tech campus at (33.776, −84.398) — and determine which watershed it
-falls within. Alternatively, have it compute and rank the watersheds by area.
+falls within. Alternatively, have it compute each watershed's boundary length (perimeter)
+in km, being careful about the coordinate reference system as shown above.
 :::
 
 ## Summary
