@@ -33,10 +33,34 @@ A large amount of scientific data is only available through the internet. In thi
 
 The primary Python package for making HTTP requests is `requests`. It sends the same kind of request your browser makes when you load a page, and returns whatever the server responds with. For the PubChem page for ethanol, that response is HTML:
 
+:::{admonition} A note on the code in this chapter
+:class: important
+
+Every request in this chapter is made with `safe_get` rather than `requests.get` directly.
+It is a thin wrapper, defined in `api_cache.py` next to this notebook, that tries the
+network first and falls back to a stored copy of the response if the service is down or
+rate-limiting:
+
+```python
+try:
+    response = requests.get(url, params=params, timeout=timeout)
+    ...
+except Exception:
+    ...   # return the copy saved the last time this call succeeded
+```
+
+This is not incidental housekeeping — it is the habit this chapter is arguing for. Code
+that depends on somebody else's server is code that will fail at some point, and the
+question is only whether it fails loudly in the middle of your analysis or degrades to
+something usable. Note also what the wrapper does *not* do: a `404` is passed straight
+through, because "no such compound" is a real answer from the server, not a failure of it.
+:::
+
 ```{code-cell} ipython3
 import requests
+from api_cache import safe_get
 
-page = requests.get('https://pubchem.ncbi.nlm.nih.gov/compound/Ethanol')
+page = safe_get('https://pubchem.ncbi.nlm.nih.gov/compound/Ethanol')
 print(page.status_code)      # 200 means success
 print(page.text[:500])       # first 500 characters of the HTML
 ```
@@ -149,9 +173,15 @@ Many data sources publish data as plain CSV files or HTML tables accessible via 
 ```{code-cell} ipython3
 import pandas as pd
 
+import io
+
 # PubChem's REST API can return CSV output directly — use the /CSV output format
 url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV'
-df = pd.read_csv(url)
+
+# `pd.read_csv(url)` works and is the idiom worth remembering. It is written here as a
+# fetch followed by a parse so the cached fallback still applies — pandas downloads with
+# urllib internally, which has no such safety net.
+df = pd.read_csv(io.StringIO(safe_get(url).text))
 print(df)
 ```
 
@@ -188,7 +218,7 @@ The [PubChem PUG REST API](https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest) follow
 | Output | `/TXT` | Format as plain text |
 
 ```{code-cell} ipython3
-r = requests.get('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/cids/TXT')
+r = safe_get('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/cids/TXT')
 r.raise_for_status()
 print(r.text)
 ```
@@ -197,7 +227,7 @@ The name field is flexible enough to accept CAS numbers directly:
 
 ```{code-cell} ipython3
 # CAS number for ethanol is 64-17-5
-r = requests.get('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/64-17-5/cids/TXT')
+r = safe_get('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/64-17-5/cids/TXT')
 r.raise_for_status()
 print(r.text)
 ```
@@ -205,7 +235,7 @@ print(r.text)
 If the compound is not found, PubChem returns a structured error response rather than silently returning empty content:
 
 ```{code-cell} ipython3
-r = requests.get('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/whiskey/cids/TXT')
+r = safe_get('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/whiskey/cids/TXT')
 print(r.text)
 ```
 
@@ -226,7 +256,7 @@ The REST API can return the full compound JSON record for any compound by name o
 def get_compound_json(identifier):
     """Fetch the PubChem compound JSON record for a name or CAS number."""
     url = f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{identifier}/record/json'
-    r = requests.get(url)
+    r = safe_get(url)
     r.raise_for_status()
     return json.loads(r.text)
 
@@ -268,7 +298,7 @@ def batch_smiles(identifiers, delay=0.21):
     results = {}
     for ident in identifiers:
         try:
-            r = requests.get(
+            r = safe_get(
                 f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{ident}/property/CanonicalSMILES/JSON'
             )
             r.raise_for_status()
@@ -297,14 +327,14 @@ import io
 names = ['ethanol', 'acetone', 'benzene']
 cids = []
 for name in names:
-    r = requests.get(f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{name}/cids/TXT')
+    r = safe_get(f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{name}/cids/TXT')
     r.raise_for_status()
     cids.append(r.text.strip())
     time.sleep(0.21)
 
 # Step 2: fetch all properties in one request using the CID list
 cids_str = ','.join(cids)
-r = requests.get(
+r = safe_get(
     f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cids_str}/property/CanonicalSMILES,MolecularFormula/CSV'
 )
 r.raise_for_status()
@@ -318,11 +348,11 @@ Most production APIs require a **key** or **token** to identify the caller, enfo
 
 ```{code-cell} ipython3
 # Pattern 1: key as a query parameter (appended to the URL)
-# r = requests.get('https://api.example.com/data',
+# r = safe_get('https://api.example.com/data',
 #                  params={'api_key': api_key, 'name': 'ethanol'})
 
 # Pattern 2: key as an Authorization header (more secure — key not in URL)
-# r = requests.get('https://api.example.com/data',
+# r = safe_get('https://api.example.com/data',
 #                  headers={'Authorization': f'Bearer {api_key}'},
 #                  params={'name': 'ethanol'})
 
@@ -357,8 +387,16 @@ import pubchempy as pcp
 PubChemPy returns `Compound` objects whose attributes map directly to PubChem properties, with no URL construction or JSON parsing required:
 
 ```{code-cell} ipython3
-compounds = pcp.get_compounds('Ethanol', 'name')
-etoh = compounds[0]
+from api_cache import cached_record
+
+# pubchempy returns a Compound object, which cannot be stored on disk — but the
+# attributes we read from it can, so `cached_record` keeps those and hands back
+# something with the same attribute names.
+etoh = cached_record(
+    'pcp_ethanol',
+    lambda: pcp.get_compounds('Ethanol', 'name')[0],
+    ['canonical_smiles', 'molecular_weight', 'molecular_formula', 'iupac_name'],
+)
 
 print(f'SMILES:   {etoh.canonical_smiles}')
 print(f'MW:       {etoh.molecular_weight}')
@@ -369,11 +407,13 @@ print(f'IUPAC:    {etoh.iupac_name}')
 For targeted queries that return only specific properties — minimizing data transfer — `get_properties` accepts a list of attribute names:
 
 ```{code-cell} ipython3
-props = pcp.get_properties(
+from api_cache import cached_json
+
+props = cached_json('pcp_ethanol_properties', lambda: pcp.get_properties(
     ['CanonicalSMILES', 'MolecularWeight', 'MolecularFormula'],
     'ethanol',
     'name'
-)
+))
 print(props)
 ```
 
@@ -392,9 +432,16 @@ def count_ch_bonds(name):
     )
     return count
 
-print(f"ethanol:  {count_ch_bonds('ethanol')}")    # expected: 5
-print(f"methane:  {count_ch_bonds('methane')}")    # expected: 4
-print(f"benzene:  {count_ch_bonds('benzene')}")    # expected: 6
+# The function walks the full atom/bond record, which is far too large to keep on
+# disk — so here it is the answers that are cached, not the records.
+counts = cached_json(
+    'ch_bond_counts',
+    lambda: {name: count_ch_bonds(name) for name in ['ethanol', 'methane', 'benzene']},
+)
+
+print(f"ethanol:  {counts['ethanol']}")    # expected: 5
+print(f"methane:  {counts['methane']}")    # expected: 4
+print(f"benzene:  {counts['benzene']}")    # expected: 6
 ```
 
 The set-based check `{'C', 'H'}` handles both bond orientations without separate branches, and testing on three compounds with known answers verifies the function is correct.

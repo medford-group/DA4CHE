@@ -474,6 +474,7 @@ Then draw the graph for caffeine, coloring atoms by element.”</em></p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">api_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_get</span>   <span class="c1"># requests.get with a cached fallback; see Topic 4.2</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="c1"># Atomic numbers -&gt; symbols (enough for common organic elements)</span>
@@ -484,7 +485,7 @@ Then draw the graph for caffeine, coloring atoms by element.”</em></p>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">molecular_graph</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/JSON&quot;</span>
-    <span class="n">record</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;PC_Compounds&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">record</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;PC_Compounds&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">atoms</span><span class="p">,</span> <span class="n">bonds</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;atoms&quot;</span><span class="p">],</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;bonds&quot;</span><span class="p">]</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">aid</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">atoms</span><span class="p">[</span><span class="s2">&quot;aid&quot;</span><span class="p">],</span> <span class="n">atoms</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">]):</span>

@@ -69,6 +69,7 @@ Here is the code that Claude Sonnet 4.x generated:
 ```{code-cell} ipython3
 import requests
 import pandas as pd
+from api_cache import safe_get   # requests.get with a cached fallback; see Topic 4.2
 
 PUBCHEM = "https://pubchem.ncbi.nlm.nih.gov/rest/pug"
 
@@ -77,7 +78,7 @@ def fetch_properties(names):
     records = []
     for name in names:
         url = f"{PUBCHEM}/compound/name/{name}/property/MolecularWeight,XLogP/JSON"
-        r = requests.get(url)
+        r = safe_get(url)
         if r.status_code != 200:                       # name not found, etc.
             records.append({"name": name, "MolecularWeight": None, "XLogP": None})
             continue
@@ -108,8 +109,12 @@ already have one: the `pubchempy` library from Topic 4.2.
 
 ```{code-cell} ipython3
 import pubchempy as pcp
+from api_cache import cached_json
 
-ground_truth = {m: float(pcp.get_compounds(m, "name")[0].molecular_weight) for m in molecules}
+ground_truth = cached_json(
+    "pcp_ground_truth_mw",
+    lambda: {m: float(pcp.get_compounds(m, "name")[0].molecular_weight) for m in molecules},
+)
 comparison = df.assign(pubchempy_MW=df["name"].map(ground_truth))
 comparison[["name", "MolecularWeight", "pubchempy_MW"]]
 ```
@@ -174,7 +179,7 @@ def nist_gas_cp(name):
     # Step 1: resolve the compound name to a NIST ID (a "C" number). The species page
     # cites other compounds too, so we take the ID that appears most often — the page's
     # own compound dominates.
-    search = requests.get(NIST, params={"Name": name, "Units": "SI"})
+    search = safe_get(NIST, params={"Name": name, "Units": "SI"})
     search.raise_for_status()
     ids = re.findall(r"ID=(C\d+)", search.text)
     if not ids:
@@ -182,7 +187,7 @@ def nist_gas_cp(name):
     cid = Counter(ids).most_common(1)[0][0]
 
     # Step 2: fetch the gas-phase thermochemistry page (Mask=1)
-    page = requests.get(NIST, params={"ID": cid, "Units": "SI", "Mask": 1})
+    page = safe_get(NIST, params={"ID": cid, "Units": "SI", "Mask": 1})
     page.raise_for_status()
     soup = BeautifulSoup(page.text, "html.parser")
 

@@ -438,11 +438,31 @@ document.write(`
 <section id="the-requests-package">
 <h3>The <code class="docutils literal notranslate"><span class="pre">requests</span></code> Package<a class="headerlink" href="#the-requests-package" title="Link to this heading">#</a></h3>
 <p>The primary Python package for making HTTP requests is <code class="docutils literal notranslate"><span class="pre">requests</span></code>. It sends the same kind of request your browser makes when you load a page, and returns whatever the server responds with. For the PubChem page for ethanol, that response is HTML:</p>
+<div class="important admonition">
+<p class="admonition-title">A note on the code in this chapter</p>
+<p>Every request in this chapter is made with <code class="docutils literal notranslate"><span class="pre">safe_get</span></code> rather than <code class="docutils literal notranslate"><span class="pre">requests.get</span></code> directly.
+It is a thin wrapper, defined in <code class="docutils literal notranslate"><span class="pre">api_cache.py</span></code> next to this notebook, that tries the
+network first and falls back to a stored copy of the response if the service is down or
+rate-limiting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="o">...</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="o">...</span>   <span class="c1"># return the copy saved the last time this call succeeded</span>
+</pre></div>
+</div>
+<p>This is not incidental housekeeping — it is the habit this chapter is arguing for. Code
+that depends on somebody else’s server is code that will fail at some point, and the
+question is only whether it fails loudly in the middle of your analysis or degrades to
+something usable. Note also what the wrapper does <em>not</em> do: a <code class="docutils literal notranslate"><span class="pre">404</span></code> is passed straight
+through, because “no such compound” is a real answer from the server, not a failure of it.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">api_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_get</span>
 
-<span class="n">page</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/compound/Ethanol&#39;</span><span class="p">)</span>
+<span class="n">page</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/compound/Ethanol&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>      <span class="c1"># 200 means success</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">500</span><span class="p">])</span>       <span class="c1"># first 500 characters of the HTML</span>
 </pre></div>
@@ -623,9 +643,15 @@ Molecular Weight: 46.07
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
 <span class="c1"># PubChem&#39;s REST API can return CSV output directly — use the /CSV output format</span>
 <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV&#39;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="c1"># `pd.read_csv(url)` works and is the idiom worth remembering. It is written here as a</span>
+<span class="c1"># fetch followed by a parse so the cached fallback still applies — pandas downloads with</span>
+<span class="c1"># urllib internally, which has no such safety net.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">safe_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -690,7 +716,7 @@ Molecular Weight: 46.07
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/cids/TXT&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/cids/TXT&#39;</span><span class="p">)</span>
 <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
@@ -706,7 +732,7 @@ Molecular Weight: 46.07
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># CAS number for ethanol is 64-17-5</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/64-17-5/cids/TXT&#39;</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/64-17-5/cids/TXT&#39;</span><span class="p">)</span>
 <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
@@ -721,7 +747,7 @@ Molecular Weight: 46.07
 <p>If the compound is not found, PubChem returns a structured error response rather than silently returning empty content:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/whiskey/cids/TXT&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/whiskey/cids/TXT&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -752,7 +778,7 @@ Detail: No CID found that matches the given name
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_compound_json</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch the PubChem compound JSON record for a name or CAS number.&quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s1">/record/json&#39;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
@@ -769,9 +795,7 @@ Detail: No CID found that matches the given name
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCO
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCO
+CCO
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CC(=O)C
@@ -806,7 +830,7 @@ Detail: No CID found that matches the given name
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">ident</span> <span class="ow">in</span> <span class="n">identifiers</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">ident</span><span class="si">}</span><span class="s1">/property/CanonicalSMILES/JSON&#39;</span>
             <span class="p">)</span>
             <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
@@ -856,14 +880,14 @@ not-a-real-compound       None
 <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;acetone&#39;</span><span class="p">,</span> <span class="s1">&#39;benzene&#39;</span><span class="p">]</span>
 <span class="n">cids</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">/cids/TXT&#39;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">/cids/TXT&#39;</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
     <span class="n">cids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.21</span><span class="p">)</span>
 
 <span class="c1"># Step 2: fetch all properties in one request using the CID list</span>
 <span class="n">cids_str</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cids</span><span class="p">)</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">safe_get</span><span class="p">(</span>
     <span class="sa">f</span><span class="s1">&#39;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/</span><span class="si">{</span><span class="n">cids_str</span><span class="si">}</span><span class="s1">/property/CanonicalSMILES,MolecularFormula/CSV&#39;</span>
 <span class="p">)</span>
 <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
@@ -888,11 +912,11 @@ not-a-real-compound       None
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pattern 1: key as a query parameter (appended to the URL)</span>
-<span class="c1"># r = requests.get(&#39;https://api.example.com/data&#39;,</span>
+<span class="c1"># r = safe_get(&#39;https://api.example.com/data&#39;,</span>
 <span class="c1">#                  params={&#39;api_key&#39;: api_key, &#39;name&#39;: &#39;ethanol&#39;})</span>
 
 <span class="c1"># Pattern 2: key as an Authorization header (more secure — key not in URL)</span>
-<span class="c1"># r = requests.get(&#39;https://api.example.com/data&#39;,</span>
+<span class="c1"># r = safe_get(&#39;https://api.example.com/data&#39;,</span>
 <span class="c1">#                  headers={&#39;Authorization&#39;: f&#39;Bearer {api_key}&#39;},</span>
 <span class="c1">#                  params={&#39;name&#39;: &#39;ethanol&#39;})</span>
 
@@ -937,8 +961,16 @@ not-a-real-compound       None
 <p>PubChemPy returns <code class="docutils literal notranslate"><span class="pre">Compound</span></code> objects whose attributes map directly to PubChem properties, with no URL construction or JSON parsing required:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compounds</span> <span class="o">=</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_compounds</span><span class="p">(</span><span class="s1">&#39;Ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
-<span class="n">etoh</span> <span class="o">=</span> <span class="n">compounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">api_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_record</span>
+
+<span class="c1"># pubchempy returns a Compound object, which cannot be stored on disk — but the</span>
+<span class="c1"># attributes we read from it can, so `cached_record` keeps those and hands back</span>
+<span class="c1"># something with the same attribute names.</span>
+<span class="n">etoh</span> <span class="o">=</span> <span class="n">cached_record</span><span class="p">(</span>
+    <span class="s1">&#39;pcp_ethanol&#39;</span><span class="p">,</span>
+    <span class="k">lambda</span><span class="p">:</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_compounds</span><span class="p">(</span><span class="s1">&#39;Ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;canonical_smiles&#39;</span><span class="p">,</span> <span class="s1">&#39;molecular_weight&#39;</span><span class="p">,</span> <span class="s1">&#39;molecular_formula&#39;</span><span class="p">,</span> <span class="s1">&#39;iupac_name&#39;</span><span class="p">],</span>
+<span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SMILES:   </span><span class="si">{</span><span class="n">etoh</span><span class="o">.</span><span class="n">canonical_smiles</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MW:       </span><span class="si">{</span><span class="n">etoh</span><span class="o">.</span><span class="n">molecular_weight</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -954,8 +986,8 @@ Formula:  C2H6O
 IUPAC:    ethanol
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_3759/1066236847.py:4: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
-  print(f&#39;SMILES:   {etoh.canonical_smiles}&#39;)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/ajm/Library/CloudStorage/Dropbox-GaTech/Andrew Medford/amedford6-admin/products/books/DA4CHE/4-data_management/api_cache.py:148: PubChemPyDeprecationWarning: canonical_smiles is deprecated: Use connectivity_smiles instead
+  return {f: getattr(obj, f) for f in fields}
 </pre></div>
 </div>
 </div>
@@ -963,11 +995,13 @@ IUPAC:    ethanol
 <p>For targeted queries that return only specific properties — minimizing data transfer — <code class="docutils literal notranslate"><span class="pre">get_properties</span></code> accepts a list of attribute names:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">props</span> <span class="o">=</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">api_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_json</span>
+
+<span class="n">props</span> <span class="o">=</span> <span class="n">cached_json</span><span class="p">(</span><span class="s1">&#39;pcp_ethanol_properties&#39;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">pcp</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span>
     <span class="p">[</span><span class="s1">&#39;CanonicalSMILES&#39;</span><span class="p">,</span> <span class="s1">&#39;MolecularWeight&#39;</span><span class="p">,</span> <span class="s1">&#39;MolecularFormula&#39;</span><span class="p">],</span>
     <span class="s1">&#39;ethanol&#39;</span><span class="p">,</span>
     <span class="s1">&#39;name&#39;</span>
-<span class="p">)</span>
+<span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -992,20 +1026,23 @@ IUPAC:    ethanol
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">count</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ethanol:  </span><span class="si">{</span><span class="n">count_ch_bonds</span><span class="p">(</span><span class="s1">&#39;ethanol&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 5</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;methane:  </span><span class="si">{</span><span class="n">count_ch_bonds</span><span class="p">(</span><span class="s1">&#39;methane&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 4</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;benzene:  </span><span class="si">{</span><span class="n">count_ch_bonds</span><span class="p">(</span><span class="s1">&#39;benzene&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 6</span>
+<span class="c1"># The function walks the full atom/bond record, which is far too large to keep on</span>
+<span class="c1"># disk — so here it is the answers that are cached, not the records.</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">cached_json</span><span class="p">(</span>
+    <span class="s1">&#39;ch_bond_counts&#39;</span><span class="p">,</span>
+    <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">count_ch_bonds</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ethanol&#39;</span><span class="p">,</span> <span class="s1">&#39;methane&#39;</span><span class="p">,</span> <span class="s1">&#39;benzene&#39;</span><span class="p">]},</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ethanol:  </span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;ethanol&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;methane:  </span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;methane&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 4</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;benzene:  </span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="s1">&#39;benzene&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># expected: 6</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ethanol:  5
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>methane:  4
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>benzene:  6
+methane:  4
+benzene:  6
 </pre></div>
 </div>
 </div>
