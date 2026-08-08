@@ -107,8 +107,10 @@ Restrict the spectrum to the window $950 \le \tilde\nu \le 1120$ cm⁻¹, which 
 region every part of this problem set works in. Find the wavenumber at which absorbance is
 largest in that window.
 
-`np.argmax` returns the *index* of the largest element of an array, which you can then use
-to look up the corresponding wavenumber.
+Two NumPy tools you need here. A **boolean array** built by comparing an array against a
+value can be used to index it, so `band = (x_all >= 950) & (x_all <= 1120)` and then
+`x_all[band]` selects the window. And `np.argmax` returns the *index* of the largest
+element, which you can use to look up the corresponding wavenumber.
 
 Assign the wavenumber in cm⁻¹ to `peak_wavenumber`.
 :::
