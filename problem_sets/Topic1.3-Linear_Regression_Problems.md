@@ -187,27 +187,41 @@ grader.check("q3")
 
 ---
 
+
 ## Part B — Visualization (35 pts)
 
 :::{exercise}
-:label: pr-nm-meoh-ch-basis
+:label: pr-nm-meoh-basis-tune
 
-A single Gaussian was not enough. Now work on the **C–H stretch region**,
-$2800 \le \tilde\nu \le 3050$ cm⁻¹, and let the number of basis functions vary.
+One Gaussian recovered only $r^2 = 0.65$. Stay in the **same 950–1120 cm⁻¹ window** and
+find out what it actually takes to describe this band, using the two basis families from
+the chapter.
 
-Reuse the chapter's `gaussian_features(x, N, sigma=25)` idea: place `N` Gaussian centers
-evenly across the region, append a column of ones for the baseline, and solve the normal
-equations exactly as you did in A2.
+**1. Polynomials.** Fit `np.vander(x_band - x_band.mean(), order + 1)` by least squares for
+`order = 2, 4, 6, 8, 10, 12`. For each, record $r^2$ **and** the condition number of
+$\bar{\bar{X}}^T\bar{\bar{X}}$ (`np.linalg.cond`). Plot the data with the best two fits
+overlaid.
 
-1. For `N = 1, 2, 4, 6`, fit the region and plot the data with all four fits overlaid on
-   one set of axes. Label each curve with its `N`.
-2. Below that, plot the **residuals** ($y - \hat{y}$) for `N = 1` and `N = 6` against
-   wavenumber, on shared x-axes with the panel above.
-3. Compute $r^2$ for each `N` and report the four values.
-4. In **3–5 sentences**: the jump in $r^2$ between `N = 2` and `N = 4` is much larger than
-   the jump between `N = 2` and `N = 3`. Explain what feature of the underlying
-   spectroscopy that pattern reflects, and say what the `N = 1` residuals show that the
-   $r^2$ value alone does not.
+**2. Gaussians, tuned by hand.** Build a design matrix whose columns are Gaussians plus a
+column of ones, as in A2 — but now *you* choose each center $c_j$ and width $\sigma_j$.
+Only the amplitudes come from least squares, so this is still a linear fit; the centers
+and widths are yours to place.
+
+Work up from `N = 1` to `N = 6` components. For each `N`, position and widen the Gaussians
+by eye until the fit tracks the data as well as you can get it, then record $r^2$ and the
+condition number. Say in one line what you were trying to do with each new component.
+
+**3. Plot.** Data with your `N = 1`, `N = 3` and `N = 6` fits overlaid, and beneath it, on
+shared x-axes, the residuals for those three.
+
+**4. Interpret**, in **4–6 sentences**:
+
+- The polynomial $r^2$ rises and then collapses, eventually going *negative*. Explain what
+  causes that, using your condition numbers. It is not overfitting.
+- The Gaussian condition numbers stay small no matter how many components you add. Why is
+  this basis so much better behaved for this band?
+- Your Gaussian $r^2$ should jump sharply somewhere and then nearly flatten. Where, and
+  what feature of the spectrum does that tell you about?
 
 Label your axes with units.
 :::
@@ -224,35 +238,65 @@ fig, ax = plt.subplots()
 
 ## Part C — Open Ended (35 pts)
 
+Real absorption lines are not Gaussian. Two broadening mechanisms act at once:
+
+- **Doppler and instrumental broadening** are the sum of many small independent effects, so
+  by the central limit theorem they give a **Gaussian** profile of width $\sigma$.
+- **Collisional (pressure) broadening and finite excited-state lifetime** give a
+  **Lorentzian** profile of half-width $\gamma$, which has far heavier wings than a Gaussian.
+
+Both act, so the true line shape is their convolution — the **Voigt profile**:
+
+$$
+V(\tilde\nu;\sigma,\gamma) \;=\; \int_{-\infty}^{\infty}
+G(\tilde\nu';\sigma)\, L(\tilde\nu-\tilde\nu';\gamma)\, \mathrm{d}\tilde\nu'
+$$
+
+It has no closed form in elementary functions, but `scipy.special.voigt_profile(x, sigma,
+gamma)` evaluates it directly. Setting $\gamma = 0$ recovers a Gaussian and $\sigma \to 0$
+recovers a Lorentzian, so the Voigt profile contains both of Part B's shapes as limits.
+
+One thing changes about the fitting. A Gaussian's amplitude is linear in the model, so
+Part B's amplitudes came from `np.linalg.solve`. A Voigt's $\sigma$ and $\gamma$ are **not**
+linear, so a least-squares solve cannot find them — you need a nonlinear optimizer such as
+`scipy.optimize.curve_fit`, which needs starting guesses and can converge to nonsense if
+they are poor. Give it bounds and sensible starting values.
+
 :::{exercise}
-:label: pr-nm-meoh-basis-cond
+:label: pr-nm-meoh-voigt-peaks
 
-The chapter presented two ways to build a design matrix: **polynomial** (Vandermonde)
-features and **Gaussian** features. Part B used Gaussians. Decide which basis you would
-actually recommend for fitting the C–H region, and defend it with evidence.
+Fit sums of $N$ Voigt profiles to the same 950–1120 cm⁻¹ window with `curve_fit`, for
+`N = 1, 2, 3` and at least one larger `N`. Each component contributes
+$A_j\,V(\tilde\nu - c_j;\sigma_j,\gamma_j)$, so there are four parameters per component.
+Seed the centers from the maxima you already know and bound them so they cannot wander.
 
-Your answer should include:
+Then answer the question this whole problem set has been building toward:
 
-1. Polynomial fits of the same $2800$–$3050$ cm⁻¹ region at several orders (go at least
-   as high as order 10), with $r^2$ for each.
-2. For every model you fit — polynomial and Gaussian — the condition number of
-   $\bar{\bar{X}}^T\bar{\bar{X}}$, reported alongside its $r^2$. Recall from
-   {doc}`Linear Algebra </1-numerical_methods/Topic1.2-Linear_Algebra>` what a large condition number implies about solving a
-   linear system.
-3. A short written argument (**one paragraph**) for which basis you would use and why,
-   citing your own numbers.
+**How many distinct peaks are in this window?**
 
-Something surprising happens to the high-order polynomial fits. Do not just report the
-$r^2$ — explain it.
+Support your answer with:
 
-There is more than one defensible recommendation here. You are graded on the reasoning
-and the evidence, not on reaching a particular verdict.
+1. $r^2$ versus $N$ for the Voigt fits, compared against your Part B Gaussian results at
+   the same $N$.
+2. The fitted parameters of your best model — center, width and area of each component.
+   Look at them carefully; they are not all alike.
+3. Evidence that your chosen $N$ is not just the largest one you tried: show what the next
+   component buys, and check the fit is stable when you change the starting guesses.
+4. A short written argument (**one paragraph**). Does "number of peaks" mean the number of
+   resolved maxima, the number of components a model needs, or the number of distinct
+   molecular vibrations? They need not be the same number, and saying so with evidence is a
+   better answer than picking one.
+
+There is more than one defensible answer here. You are graded on the reasoning and the
+evidence.
 :::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
 # YOUR CODE HERE
+from scipy.special import voigt_profile
+from scipy.optimize import curve_fit
 ```
 
 
@@ -260,21 +304,22 @@ and the evidence, not on reaching a particular verdict.
 
 ## Summary
 
-- Part A built a one-column Gaussian design matrix and solved the normal equations by
-  hand, reproducing the chapter's workflow on a new spectrum. A single Gaussian recovers
-  only $r^2 = 0.65$ on the C–O band.
-- Part B let the basis size vary across the C–H stretch region and showed that fit quality
-  improves sharply once the number of basis functions matches the number of physical
-  sub-bands — and that residual *structure* diagnoses a wrong model form in a way a
-  scalar $r^2$ cannot.
-- Part C set the Gaussian basis against a polynomial one and asked you to weigh fit
-  quality against numerical conditioning, connecting this chapter back to the condition
-  number from {doc}`Linear Algebra </1-numerical_methods/Topic1.2-Linear_Algebra>`.
+- Part A fit a single Gaussian to the C–O stretch band by solving the normal equations
+  directly, and scored $r^2 = 0.65$ — enough to show the method works, not enough to
+  describe the band.
+- Part B set two basis families against each other on that same band. Polynomials fail
+  numerically before they fit well, their condition number crossing the limit of double
+  precision by order 6; a Gaussian basis stays well conditioned however many components are
+  added, and its $r^2$ saturates once there is one component per resolved maximum.
+- Part C replaced the line shape with a Voigt profile, which needs a nonlinear fit but
+  reaches $r^2 = 0.994$ with three components — and whose fitted parameters say more about
+  the molecule than the fit quality does.
 
 ## Additional Reading
 
 1. NIST Chemistry WebBook, SRD 69 — [methanol IR spectrum](https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&Type=IR-SPEC),
    Coblentz Society collection no. 8791.
-2. [`numpy.linalg.cond`](https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html)
-   and [`numpy.polynomial`](https://numpy.org/doc/stable/reference/routines.polynomials.html)
-   for well-conditioned polynomial bases.
+2. [`scipy.special.voigt_profile`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.voigt_profile.html)
+   and [`scipy.optimize.curve_fit`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html).
+3. [`numpy.linalg.cond`](https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html)
+   — the diagnostic that explains Part B's polynomial collapse.
