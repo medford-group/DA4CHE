@@ -535,7 +535,7 @@ this series fails to converge: with four AR *and* four MA terms the model is
 over-parameterized, and near-cancelling AR/MA roots leave the likelihood surface too
 flat for the optimizer (statsmodels raises a `ConvergenceWarning`, and estimates from
 a non-converged fit should not be trusted — the same lesson as checking
-`result.success` in [Numerical Optimization](Topic1.4-Numerical_Optimization)).
+`result.success` in [Numerical Optimization](../1-numerical_methods/Topic1.4-Numerical_Optimization.md)).
 Trimming the MA order to $q = 2$ resolves it. Two other settings matter:
 
 - **Drift.** With $d \ge 1$, statsmodels excludes a constant term by default, so the

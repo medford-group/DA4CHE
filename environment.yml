@@ -1,3 +1,22 @@
+# DA4CHE build environment.
+#
+# Versions are pinned to the set this book is known to build cleanly with (verified
+# 2026-08-08: full build from an empty _build/, all 30 pages executing, 0 warnings).
+# Pins use `>=x.y,<x.(y+1)` or `<next-major` rather than `==` so that patch fixes are
+# still picked up while a breaking minor/major release cannot silently break the book.
+#
+# The three pins that are load-bearing rather than merely tidy:
+#
+#   jupyter-book <2   2.x replaced the Sphinx pipeline with myst-cli and does not read
+#                     this _config.yml / _toc.yml at all.
+#   myst-nb    >=1.3  the `skip-execution` cell tag is what lets *_Problems.md pages
+#                     carry student scaffolds that render but never execute. Without it
+#                     `allow_errors: false` takes the whole build down.
+#   jupytext   >=1.19 must round-trip that same tag into the downloaded .ipynb, or
+#                     students receive markdown where they need an editable code cell.
+#
+# After editing, run `make env` to update, then `make build` to confirm.
+
 name: DA4CHE
 channels:
   - conda-forge
@@ -5,26 +24,43 @@ channels:
 
 dependencies:
   - python=3.10
+
+  # --- Book toolchain -------------------------------------------------------
   - pip
+  - jupyter-book>=1.0.4,<2      # see note above: 2.x is incompatible, not just newer
+  - myst-nb>=1.4,<2             # skip-execution tag support
+  - myst-parser>=3.0,<4
+  - sphinx>=7.4,<8              # jupyter-book 1.x does not support Sphinx 8
+  - sphinx-exercise>=1.2,<2     # provides :::{exercise} (and :::{solution}, unused)
+  - jupytext>=1.19,<2           # MyST <-> .ipynb round-trip, preserving cell tags
+  - jupyter-cache>=1.0,<2       # backs execute_notebooks caching
   - jupyter
   - jupyterlab
-  - jupyter-book<2  # pin to Sphinx-based 1.x; 2.x uses myst-cli and is incompatible with _config.yml/_toc.yml
-  - sphinx-exercise  # provides the :::{exercise} directive
-  - jupytext
-  - myst-parser
-  - ipykernel
-  - nbconvert
-  - matplotlib  # Optional: include any common packages your lectures use
-  - numpy
-  - pandas
-  - autograd
-  - scikit-learn
-  - statsmodels
-  - seaborn
-  - pandas
-  - openpyxl
-  - pytest
-  - nbmake
-  - pip:
-      - ghp-import  # for manual GitHub Pages deployment
+  - ipykernel>=7.0,<8
+  - nbformat>=5.10,<6
+  - nbconvert>=7.17,<8
 
+  # --- Scientific stack used by the lectures --------------------------------
+  - numpy>=2.2,<3
+  - pandas>=2.3,<3
+  - scipy>=1.15,<2
+  - scikit-learn>=1.7,<2
+  - matplotlib>=3.10,<4
+  - statsmodels>=0.14,<0.15
+  - seaborn>=0.13,<0.14
+  - autograd>=1.8,<2            # Topic1.4 automatic differentiation
+  - openpyxl>=3.1,<4            # reads the .xlsx impurity dataset
+  - pyyaml>=6.0,<7              # read by the manager-side scripts
+
+  # --- Chapter-specific dependencies ---------------------------------------
+  - geopandas>=1.1,<2           # Topic4.4 Complex Structured Data
+  - pytorch>=2.0                # Topic6.3 / 6.4 Neural Networks
+
+  # --- Testing --------------------------------------------------------------
+  - pytest>=9.0,<10
+  - nbmake>=1.5,<2              # `make test` executes a single page
+
+  - pip:
+      - ghp-import>=2.1,<3      # `make publish` pushes _build/html to gh-pages
+      - otter-grader>=7.0,<8    # autogrades the Part A skill checks in *_Problems.md
+      - pubchempy>=1.0,<2       # Topic4.3 PubChem ground-truth cross-check
