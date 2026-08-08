@@ -222,6 +222,12 @@
 <li class="toctree-l2"><a class="reference internal" href="Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../problem_sets/intro.html">Problem Sets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -1091,7 +1097,7 @@ this series fails to converge: with four AR <em>and</em> four MA terms the model
 over-parameterized, and near-cancelling AR/MA roots leave the likelihood surface too
 flat for the optimizer (statsmodels raises a <code class="docutils literal notranslate"><span class="pre">ConvergenceWarning</span></code>, and estimates from
 a non-converged fit should not be trusted — the same lesson as checking
-<code class="docutils literal notranslate"><span class="pre">result.success</span></code> in <a class="reference internal" href="#Topic1.4-Numerical_Optimization"><span class="xref myst">Numerical Optimization</span></a>).
+<code class="docutils literal notranslate"><span class="pre">result.success</span></code> in <a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="std std-doc">Numerical Optimization</span></a>).
 Trimming the MA order to <span class="math notranslate nohighlight">\(q = 2\)</span> resolves it. Two other settings matter:</p>
 <ul class="simple">
 <li><p><strong>Drift.</strong> With <span class="math notranslate nohighlight">\(d \ge 1\)</span>, statsmodels excludes a constant term by default, so the
@@ -1125,8 +1131,8 @@ average historical rate.</p></li>
 ==============================================================================
 Dep. Variable:             co2_interp   No. Observations:                 1713
 Model:                 ARIMA(4, 1, 2)   Log Likelihood                -953.605
-Date:                Fri, 07 Aug 2026   AIC                           1923.209
-Time:                        16:58:25   BIC                           1966.772
+Date:                Sat, 08 Aug 2026   AIC                           1923.209
+Time:                        08:44:50   BIC                           1966.772
 Sample:                    03-29-1958   HQIC                          1939.331
                          - 01-19-1991                                         
 Covariance Type:                  opg                                         

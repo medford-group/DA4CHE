@@ -1,0 +1,831 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Linear Regression &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic1.3-Linear_Regression_Problems';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Problems: Model Validation" href="Topic2.2-Model_Validation_Problems.html" />
+    <link rel="prev" title="Problem Sets" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Problems: Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic1.3-Linear_Regression_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Linear Regression</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-locate-the-co-stretch-10-pts">A1. Locate the C–O stretch (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-fit-one-gaussian-to-the-band-10-pts">A2. Fit one Gaussian to the band (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-score-the-fit-10-pts">A3. Score the fit (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic1.3-Linear_Regression/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-linear-regression" id="id1">Problems: Linear Regression</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id6">Summary</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id7">Additional Reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-linear-regression">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Linear Regression</a><a class="headerlink" href="#problems-linear-regression" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<ul class="simple">
+<li><p><a class="reference download internal" download="" href="../_downloads/99d5a926f40d5fc0b12fe5e73b2717ca/Topic1.3-Linear_Regression_Problems.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">the</span> <span class="pre">notebook</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/77e2eca35346114a94b81e831633ba62/methanol_IR.csv"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">methanol_IR.csv</span></code></a></p></li>
+</ul>
+<p>Keep the notebook and a <code class="docutils literal notranslate"><span class="pre">data/</span></code> folder side by side — the notebook reads its data from
+<code class="docutils literal notranslate"><span class="pre">data/&lt;filename&gt;</span></code>, so put the downloaded file inside a folder called <code class="docutils literal notranslate"><span class="pre">data</span></code> next to the
+notebook. On Vocareum both are provided for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html"><span class="doc">Linear Regression</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, auto-graded, resubmit as often as
+you like until they pass.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation, peer graded.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem, peer graded.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>The chapter fit basis functions to an <strong>ethanol</strong> infrared spectrum. Here you will work
+with a <strong>methanol</strong> spectrum measured under different conditions: gas phase, 70 mmHg of
+methanol in nitrogen to 600 mmHg total, 5 cm path length, 2 cm⁻¹ resolution. It comes
+from the Coblentz Society collection in the NIST Chemistry WebBook (spectrum 8791,
+measured at Dow Chemical in 1964), converted from transmittance to absorbance by
+<span class="math notranslate nohighlight">\(A = -\log_{10} T\)</span>.</p>
+<p>Methanol is the simplest alcohol, so its spectrum is a stripped-down version of
+ethanol’s: a strong C–O stretch near 1030 cm⁻¹ and a cluster of C–H stretches between
+2800 and 3050 cm⁻¹, without ethanol’s extra methylene modes. That makes it a good place
+to ask how many basis functions a band actually needs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/methanol_IR.csv&#39;</span><span class="p">)</span>
+<span class="n">x_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;wavenumber [cm^-1]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;absorbance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">)</span><span class="si">}</span><span class="s2"> points, </span><span class="si">{</span><span class="n">x_all</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">x_all</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm^-1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3567 points, 463.4-3806.6 cm^-1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber [cm$^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b7ed81a9f1302bca2efcdad2245d163459124f5fc2e401ead755eabd9744d903.png" src="../_images/b7ed81a9f1302bca2efcdad2245d163459124f5fc2e401ead755eabd9744d903.png" />
+</div>
+</div>
+<p>Run this once to load the autograder. It will not run inside the book — use the
+downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">otter</span>
+<span class="n">grader</span> <span class="o">=</span> <span class="n">otter</span><span class="o">.</span><span class="n">Notebook</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Three questions, 10 points each. Each asks you to assign a single number to a named
+variable. Run the check cell after each one; there is no limit on attempts.</p>
+<section id="a1-locate-the-co-stretch-10-pts">
+<h3>A1. Locate the C–O stretch (10 pts)<a class="headerlink" href="#a1-locate-the-co-stretch-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-meoh-co-peak">
+
+<p class="admonition-title"><span class="caption-number">Exercise 135 </span></p>
+<section id="exercise-content">
+<p>Restrict the spectrum to the window <span class="math notranslate nohighlight">\(950 \le \tilde\nu \le 1120\)</span> cm⁻¹, which contains the
+C–O stretch and its two shoulders. Find the wavenumber at which absorbance is largest in
+that window.</p>
+<p>Assign the wavenumber in cm⁻¹ to <code class="docutils literal notranslate"><span class="pre">peak_wavenumber</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">peak_wavenumber</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-fit-one-gaussian-to-the-band-10-pts">
+<h3>A2. Fit one Gaussian to the band (10 pts)<a class="headerlink" href="#a2-fit-one-gaussian-to-the-band-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-meoh-gauss-fit">
+
+<p class="admonition-title"><span class="caption-number">Exercise 136 </span></p>
+<section id="exercise-content">
+<p>Model the same window as a single Gaussian sitting on a flat baseline:</p>
+<div class="math notranslate nohighlight">
+\[
+A(\tilde\nu) \;=\; w_0 \exp\!\left[-\frac{(\tilde\nu - c)^2}{2\sigma^2}\right] + w_1
+\]</div>
+<p>with the center <span class="math notranslate nohighlight">\(c\)</span> fixed at your answer from A1 and <span class="math notranslate nohighlight">\(\sigma = 25\)</span> cm⁻¹ (the same width
+the chapter used). Build the two-column design matrix <span class="math notranslate nohighlight">\(\bar{\bar{X}}\)</span> — one column for the
+Gaussian, one of ones for the baseline — and solve the normal equations
+<span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}\)</span> with <code class="docutils literal notranslate"><span class="pre">np.linalg.solve</span></code>.</p>
+<p>Assign the Gaussian coefficient <span class="math notranslate nohighlight">\(w_0\)</span> to <code class="docutils literal notranslate"><span class="pre">w_gauss</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">w_gauss</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-score-the-fit-10-pts">
+<h3>A3. Score the fit (10 pts)<a class="headerlink" href="#a3-score-the-fit-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-meoh-fit-r2">
+
+<p class="admonition-title"><span class="caption-number">Exercise 137 </span></p>
+<section id="exercise-content">
+<p>Compute the coefficient of determination for the A2 fit <strong>over the same window</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+r^2 = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
+\]</div>
+<p>Assign it to <code class="docutils literal notranslate"><span class="pre">r2_single</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">r2_single</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<div class="exercise admonition" id="pr-nm-meoh-ch-basis">
+
+<p class="admonition-title"><span class="caption-number">Exercise 138 </span></p>
+<section id="exercise-content">
+<p>A single Gaussian was not enough. Now work on the <strong>C–H stretch region</strong>,
+<span class="math notranslate nohighlight">\(2800 \le \tilde\nu \le 3050\)</span> cm⁻¹, and let the number of basis functions vary.</p>
+<p>Reuse the chapter’s <code class="docutils literal notranslate"><span class="pre">gaussian_features(x,</span> <span class="pre">N,</span> <span class="pre">sigma=25)</span></code> idea: place <code class="docutils literal notranslate"><span class="pre">N</span></code> Gaussian centers
+evenly across the region, append a column of ones for the baseline, and solve the normal
+equations exactly as you did in A2.</p>
+<ol class="arabic simple">
+<li><p>For <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">6</span></code>, fit the region and plot the data with all four fits overlaid on
+one set of axes. Label each curve with its <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
+<li><p>Below that, plot the <strong>residuals</strong> (<span class="math notranslate nohighlight">\(y - \hat{y}\)</span>) for <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code> against
+wavenumber, on shared x-axes with the panel above.</p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(r^2\)</span> for each <code class="docutils literal notranslate"><span class="pre">N</span></code> and report the four values.</p></li>
+<li><p>In <strong>3–5 sentences</strong>: the jump in <span class="math notranslate nohighlight">\(r^2\)</span> between <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">4</span></code> is much larger than
+the jump between <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">3</span></code>. Explain what feature of the underlying
+spectroscopy that pattern reflects, and say what the <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> residuals show that the
+<span class="math notranslate nohighlight">\(r^2\)</span> value alone does not.</p></li>
+</ol>
+<p>Label your axes with units.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<div class="exercise admonition" id="pr-nm-meoh-basis-cond">
+
+<p class="admonition-title"><span class="caption-number">Exercise 139 </span></p>
+<section id="exercise-content">
+<p>The chapter presented two ways to build a design matrix: <strong>polynomial</strong> (Vandermonde)
+features and <strong>Gaussian</strong> features. Part B used Gaussians. Decide which basis you would
+actually recommend for fitting the C–H region, and defend it with evidence.</p>
+<p>Your answer should include:</p>
+<ol class="arabic simple">
+<li><p>Polynomial fits of the same <span class="math notranslate nohighlight">\(2800\)</span>–<span class="math notranslate nohighlight">\(3050\)</span> cm⁻¹ region at several orders (go at least
+as high as order 10), with <span class="math notranslate nohighlight">\(r^2\)</span> for each.</p></li>
+<li><p>For every model you fit — polynomial and Gaussian — the condition number of
+<span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\)</span>, reported alongside its <span class="math notranslate nohighlight">\(r^2\)</span>. Recall from
+<a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a> what a large condition number implies about solving a
+linear system.</p></li>
+<li><p>A short written argument (<strong>one paragraph</strong>) for which basis you would use and why,
+citing your own numbers.</p></li>
+</ol>
+<p>Something surprising happens to the high-order polynomial fits. Do not just report the
+<span class="math notranslate nohighlight">\(r^2\)</span> — explain it.</p>
+<p>There is more than one defensible recommendation here. You are graded on the reasoning
+and the evidence, not on reaching a particular verdict.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="summary">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Part A built a one-column Gaussian design matrix and solved the normal equations by
+hand, reproducing the chapter’s workflow on a new spectrum. A single Gaussian recovers
+only <span class="math notranslate nohighlight">\(r^2 = 0.65\)</span> on the C–O band.</p></li>
+<li><p>Part B let the basis size vary across the C–H stretch region and showed that fit quality
+improves sharply once the number of basis functions matches the number of physical
+sub-bands — and that residual <em>structure</em> diagnoses a wrong model form in a way a
+scalar <span class="math notranslate nohighlight">\(r^2\)</span> cannot.</p></li>
+<li><p>Part C set the Gaussian basis against a polynomial one and asked you to weigh fit
+quality against numerical conditioning, connecting this chapter back to the condition
+number from <a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a>.</p></li>
+</ul>
+</section>
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>NIST Chemistry WebBook, SRD 69 — <a class="reference external" href="https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&amp;amp;Type=IR-SPEC">methanol IR spectrum</a>,
+Coblentz Society collection no. 8791.</p></li>
+<li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html"><code class="docutils literal notranslate"><span class="pre">numpy.linalg.cond</span></code></a>
+and <a class="reference external" href="https://numpy.org/doc/stable/reference/routines.polynomials.html"><code class="docutils literal notranslate"><span class="pre">numpy.polynomial</span></code></a>
+for well-conditioned polynomial bases.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Problem Sets</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic2.2-Model_Validation_Problems.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Problems: Model Validation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-locate-the-co-stretch-10-pts">A1. Locate the C–O stretch (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-fit-one-gaussian-to-the-band-10-pts">A2. Fit one Gaussian to the band (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-score-the-fit-10-pts">A3. Score the fit (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
