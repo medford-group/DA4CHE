@@ -615,26 +615,35 @@ r^2 = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
 <hr class="docutils" />
 <section id="part-b-visualization-35-pts">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
-<div class="exercise admonition" id="pr-nm-meoh-ch-basis">
+<div class="exercise admonition" id="pr-nm-meoh-basis-tune">
 
 <p class="admonition-title"><span class="caption-number">Exercise 138 </span></p>
 <section id="exercise-content">
-<p>A single Gaussian was not enough. Now work on the <strong>C–H stretch region</strong>,
-<span class="math notranslate nohighlight">\(2800 \le \tilde\nu \le 3050\)</span> cm⁻¹, and let the number of basis functions vary.</p>
-<p>Reuse the chapter’s <code class="docutils literal notranslate"><span class="pre">gaussian_features(x,</span> <span class="pre">N,</span> <span class="pre">sigma=25)</span></code> idea: place <code class="docutils literal notranslate"><span class="pre">N</span></code> Gaussian centers
-evenly across the region, append a column of ones for the baseline, and solve the normal
-equations exactly as you did in A2.</p>
-<ol class="arabic simple">
-<li><p>For <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">6</span></code>, fit the region and plot the data with all four fits overlaid on
-one set of axes. Label each curve with its <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
-<li><p>Below that, plot the <strong>residuals</strong> (<span class="math notranslate nohighlight">\(y - \hat{y}\)</span>) for <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code> against
-wavenumber, on shared x-axes with the panel above.</p></li>
-<li><p>Compute <span class="math notranslate nohighlight">\(r^2\)</span> for each <code class="docutils literal notranslate"><span class="pre">N</span></code> and report the four values.</p></li>
-<li><p>In <strong>3–5 sentences</strong>: the jump in <span class="math notranslate nohighlight">\(r^2\)</span> between <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">4</span></code> is much larger than
-the jump between <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">3</span></code>. Explain what feature of the underlying
-spectroscopy that pattern reflects, and say what the <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> residuals show that the
-<span class="math notranslate nohighlight">\(r^2\)</span> value alone does not.</p></li>
-</ol>
+<p>One Gaussian recovered only <span class="math notranslate nohighlight">\(r^2 = 0.65\)</span>. Stay in the <strong>same 950–1120 cm⁻¹ window</strong> and
+find out what it actually takes to describe this band, using the two basis families from
+the chapter.</p>
+<p><strong>1. Polynomials.</strong> Fit <code class="docutils literal notranslate"><span class="pre">np.vander(x_band</span> <span class="pre">-</span> <span class="pre">x_band.mean(),</span> <span class="pre">order</span> <span class="pre">+</span> <span class="pre">1)</span></code> by least squares for
+<code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">=</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">6,</span> <span class="pre">8,</span> <span class="pre">10,</span> <span class="pre">12</span></code>. For each, record <span class="math notranslate nohighlight">\(r^2\)</span> <strong>and</strong> the condition number of
+<span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\)</span> (<code class="docutils literal notranslate"><span class="pre">np.linalg.cond</span></code>). Plot the data with the best two fits
+overlaid.</p>
+<p><strong>2. Gaussians, tuned by hand.</strong> Build a design matrix whose columns are Gaussians plus a
+column of ones, as in A2 — but now <em>you</em> choose each center <span class="math notranslate nohighlight">\(c_j\)</span> and width <span class="math notranslate nohighlight">\(\sigma_j\)</span>.
+Only the amplitudes come from least squares, so this is still a linear fit; the centers
+and widths are yours to place.</p>
+<p>Work up from <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> to <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code> components. For each <code class="docutils literal notranslate"><span class="pre">N</span></code>, position and widen the Gaussians
+by eye until the fit tracks the data as well as you can get it, then record <span class="math notranslate nohighlight">\(r^2\)</span> and the
+condition number. Say in one line what you were trying to do with each new component.</p>
+<p><strong>3. Plot.</strong> Data with your <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code> fits overlaid, and beneath it, on
+shared x-axes, the residuals for those three.</p>
+<p><strong>4. Interpret</strong>, in <strong>4–6 sentences</strong>:</p>
+<ul class="simple">
+<li><p>The polynomial <span class="math notranslate nohighlight">\(r^2\)</span> rises and then collapses, eventually going <em>negative</em>. Explain what
+causes that, using your condition numbers. It is not overfitting.</p></li>
+<li><p>The Gaussian condition numbers stay small no matter how many components you add. Why is
+this basis so much better behaved for this band?</p></li>
+<li><p>Your Gaussian <span class="math notranslate nohighlight">\(r^2\)</span> should jump sharply somewhere and then nearly flatten. Where, and
+what feature of the spectrum does that tell you about?</p></li>
+</ul>
 <p>Label your axes with units.</p>
 </section>
 </div>
@@ -650,33 +659,58 @@ spectroscopy that pattern reflects, and say what the <code class="docutils liter
 <hr class="docutils" />
 <section id="part-c-open-ended-35-pts">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
-<div class="exercise admonition" id="pr-nm-meoh-basis-cond">
+<p>Real absorption lines are not Gaussian. Two broadening mechanisms act at once:</p>
+<ul class="simple">
+<li><p><strong>Doppler and instrumental broadening</strong> are the sum of many small independent effects, so
+by the central limit theorem they give a <strong>Gaussian</strong> profile of width <span class="math notranslate nohighlight">\(\sigma\)</span>.</p></li>
+<li><p><strong>Collisional (pressure) broadening and finite excited-state lifetime</strong> give a
+<strong>Lorentzian</strong> profile of half-width <span class="math notranslate nohighlight">\(\gamma\)</span>, which has far heavier wings than a Gaussian.</p></li>
+</ul>
+<p>Both act, so the true line shape is their convolution — the <strong>Voigt profile</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+V(\tilde\nu;\sigma,\gamma) \;=\; \int_{-\infty}^{\infty}
+G(\tilde\nu';\sigma)\, L(\tilde\nu-\tilde\nu';\gamma)\, \mathrm{d}\tilde\nu'
+\]</div>
+<p>It has no closed form in elementary functions, but <code class="docutils literal notranslate"><span class="pre">scipy.special.voigt_profile(x,</span> <span class="pre">sigma,</span> <span class="pre">gamma)</span></code> evaluates it directly. Setting <span class="math notranslate nohighlight">\(\gamma = 0\)</span> recovers a Gaussian and <span class="math notranslate nohighlight">\(\sigma \to 0\)</span>
+recovers a Lorentzian, so the Voigt profile contains both of Part B’s shapes as limits.</p>
+<p>One thing changes about the fitting. A Gaussian’s amplitude is linear in the model, so
+Part B’s amplitudes came from <code class="docutils literal notranslate"><span class="pre">np.linalg.solve</span></code>. A Voigt’s <span class="math notranslate nohighlight">\(\sigma\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> are <strong>not</strong>
+linear, so a least-squares solve cannot find them — you need a nonlinear optimizer such as
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize.curve_fit</span></code>, which needs starting guesses and can converge to nonsense if
+they are poor. Give it bounds and sensible starting values.</p>
+<div class="exercise admonition" id="pr-nm-meoh-voigt-peaks">
 
 <p class="admonition-title"><span class="caption-number">Exercise 139 </span></p>
 <section id="exercise-content">
-<p>The chapter presented two ways to build a design matrix: <strong>polynomial</strong> (Vandermonde)
-features and <strong>Gaussian</strong> features. Part B used Gaussians. Decide which basis you would
-actually recommend for fitting the C–H region, and defend it with evidence.</p>
-<p>Your answer should include:</p>
+<p>Fit sums of <span class="math notranslate nohighlight">\(N\)</span> Voigt profiles to the same 950–1120 cm⁻¹ window with <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code>, for
+<code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3</span></code> and at least one larger <code class="docutils literal notranslate"><span class="pre">N</span></code>. Each component contributes
+<span class="math notranslate nohighlight">\(A_j\,V(\tilde\nu - c_j;\sigma_j,\gamma_j)\)</span>, so there are four parameters per component.
+Seed the centers from the maxima you already know and bound them so they cannot wander.</p>
+<p>Then answer the question this whole problem set has been building toward:</p>
+<p><strong>How many distinct peaks are in this window?</strong></p>
+<p>Support your answer with:</p>
 <ol class="arabic simple">
-<li><p>Polynomial fits of the same <span class="math notranslate nohighlight">\(2800\)</span>–<span class="math notranslate nohighlight">\(3050\)</span> cm⁻¹ region at several orders (go at least
-as high as order 10), with <span class="math notranslate nohighlight">\(r^2\)</span> for each.</p></li>
-<li><p>For every model you fit — polynomial and Gaussian — the condition number of
-<span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\)</span>, reported alongside its <span class="math notranslate nohighlight">\(r^2\)</span>. Recall from
-<a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a> what a large condition number implies about solving a
-linear system.</p></li>
-<li><p>A short written argument (<strong>one paragraph</strong>) for which basis you would use and why,
-citing your own numbers.</p></li>
+<li><p><span class="math notranslate nohighlight">\(r^2\)</span> versus <span class="math notranslate nohighlight">\(N\)</span> for the Voigt fits, compared against your Part B Gaussian results at
+the same <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
+<li><p>The fitted parameters of your best model — center, width and area of each component.
+Look at them carefully; they are not all alike.</p></li>
+<li><p>Evidence that your chosen <span class="math notranslate nohighlight">\(N\)</span> is not just the largest one you tried: show what the next
+component buys, and check the fit is stable when you change the starting guesses.</p></li>
+<li><p>A short written argument (<strong>one paragraph</strong>). Does “number of peaks” mean the number of
+resolved maxima, the number of components a model needs, or the number of distinct
+molecular vibrations? They need not be the same number, and saying so with evidence is a
+better answer than picking one.</p></li>
 </ol>
-<p>Something surprising happens to the high-order polynomial fits. Do not just report the
-<span class="math notranslate nohighlight">\(r^2\)</span> — explain it.</p>
-<p>There is more than one defensible recommendation here. You are graded on the reasoning
-and the evidence, not on reaching a particular verdict.</p>
+<p>There is more than one defensible answer here. You are graded on the reasoning and the
+evidence.</p>
 </section>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">voigt_profile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
 </pre></div>
 </div>
 </div>
@@ -686,16 +720,16 @@ and the evidence, not on reaching a particular verdict.</p>
 <section id="summary">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Part A built a one-column Gaussian design matrix and solved the normal equations by
-hand, reproducing the chapter’s workflow on a new spectrum. A single Gaussian recovers
-only <span class="math notranslate nohighlight">\(r^2 = 0.65\)</span> on the C–O band.</p></li>
-<li><p>Part B let the basis size vary across the C–H stretch region and showed that fit quality
-improves sharply once the number of basis functions matches the number of physical
-sub-bands — and that residual <em>structure</em> diagnoses a wrong model form in a way a
-scalar <span class="math notranslate nohighlight">\(r^2\)</span> cannot.</p></li>
-<li><p>Part C set the Gaussian basis against a polynomial one and asked you to weigh fit
-quality against numerical conditioning, connecting this chapter back to the condition
-number from <a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a>.</p></li>
+<li><p>Part A fit a single Gaussian to the C–O stretch band by solving the normal equations
+directly, and scored <span class="math notranslate nohighlight">\(r^2 = 0.65\)</span> — enough to show the method works, not enough to
+describe the band.</p></li>
+<li><p>Part B set two basis families against each other on that same band. Polynomials fail
+numerically before they fit well, their condition number crossing the limit of double
+precision by order 6; a Gaussian basis stays well conditioned however many components are
+added, and its <span class="math notranslate nohighlight">\(r^2\)</span> saturates once there is one component per resolved maximum.</p></li>
+<li><p>Part C replaced the line shape with a Voigt profile, which needs a nonlinear fit but
+reaches <span class="math notranslate nohighlight">\(r^2 = 0.994\)</span> with three components — and whose fitted parameters say more about
+the molecule than the fit quality does.</p></li>
 </ul>
 </section>
 <section id="additional-reading">
@@ -703,9 +737,10 @@ number from <a class="reference internal" href="../1-numerical_methods/Topic1.2-
 <ol class="arabic simple">
 <li><p>NIST Chemistry WebBook, SRD 69 — <a class="reference external" href="https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&amp;amp;Type=IR-SPEC">methanol IR spectrum</a>,
 Coblentz Society collection no. 8791.</p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.voigt_profile.html"><code class="docutils literal notranslate"><span class="pre">scipy.special.voigt_profile</span></code></a>
+and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html"><code class="docutils literal notranslate"><span class="pre">scipy.optimize.curve_fit</span></code></a>.</p></li>
 <li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html"><code class="docutils literal notranslate"><span class="pre">numpy.linalg.cond</span></code></a>
-and <a class="reference external" href="https://numpy.org/doc/stable/reference/routines.polynomials.html"><code class="docutils literal notranslate"><span class="pre">numpy.polynomial</span></code></a>
-for well-conditioned polynomial bases.</p></li>
+— the diagnostic that explains Part B’s polynomial collapse.</p></li>
 </ol>
 </section>
 </section>
