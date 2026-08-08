@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/702,180,241/property/CanonicalSMILES,MolecularFormula/CSV",
+ "status_code": 200,
+ "text": "\"CID\",\"ConnectivitySMILES\",\"MolecularFormula\"\n702,\"CCO\",\"C2H6O\"\n180,\"CC(=O)C\",\"C3H6O\"\n241,\"C1=CC=CC=C1\",\"C6H6\"\n"
+}

@@ -1,0 +1,8 @@
+{
+ "key": "ch_bond_counts",
+ "value": {
+  "ethanol": 5,
+  "methane": 4,
+  "benzene": 6
+ }
+}

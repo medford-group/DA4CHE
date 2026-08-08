@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/MolecularWeight,XLogP/JSON",
+ "status_code": 200,
+ "text": "{\n  \"PropertyTable\": {\n    \"Properties\": [\n      {\n        \"CID\": 702,\n        \"MolecularWeight\": \"46.07\",\n        \"XLogP\": -0.1\n      }\n    ]\n  }\n}\n"
+}

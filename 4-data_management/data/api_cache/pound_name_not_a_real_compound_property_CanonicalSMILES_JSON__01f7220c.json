@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/not-a-real-compound/property/CanonicalSMILES/JSON",
+ "status_code": 404,
+ "text": "{\n  \"Fault\": {\n    \"Code\": \"PUGREST.NotFound\",\n    \"Message\": \"No CID found\",\n    \"Details\": [\n      \"No CID found that matches the given name\"\n    ]\n  }\n}\n"
+}

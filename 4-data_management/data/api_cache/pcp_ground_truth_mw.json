@@ -1,0 +1,9 @@
+{
+ "key": "pcp_ground_truth_mw",
+ "value": {
+  "ethanol": 46.07,
+  "toluene": 92.14,
+  "acetone": 58.08,
+  "benzene": 78.11
+ }
+}

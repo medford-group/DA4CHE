@@ -77,6 +77,7 @@ translation step that an assistant handles well.
 %matplotlib inline
 import requests
 import networkx as nx
+from api_cache import safe_get   # requests.get with a cached fallback; see Topic 4.2
 import matplotlib.pyplot as plt
 
 # Atomic numbers -> symbols (enough for common organic elements)
@@ -87,7 +88,7 @@ ELEMENT_COLORS = {"H": "#dddddd", "C": "#404040", "N": "#3050f8",
 
 def molecular_graph(name):
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{name}/JSON"
-    record = requests.get(url).json()["PC_Compounds"][0]
+    record = safe_get(url).json()["PC_Compounds"][0]
     atoms, bonds = record["atoms"], record["bonds"]
     G = nx.Graph()
     for aid, z in zip(atoms["aid"], atoms["element"]):

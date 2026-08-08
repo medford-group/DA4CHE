@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/whiskey/cids/TXT",
+ "status_code": 404,
+ "text": "Status: 404\nCode: PUGREST.NotFound\nMessage: No CID found\nDetail: No CID found that matches the given name\n"
+}

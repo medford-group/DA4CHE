@@ -1,0 +1,9 @@
+{
+ "key": "pcp_ethanol",
+ "value": {
+  "canonical_smiles": "CCO",
+  "molecular_weight": 46.07,
+  "molecular_formula": "C2H6O",
+  "iupac_name": "ethanol"
+ }
+}

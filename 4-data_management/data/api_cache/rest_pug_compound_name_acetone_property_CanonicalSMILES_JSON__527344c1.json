@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/acetone/property/CanonicalSMILES/JSON",
+ "status_code": 200,
+ "text": "{\n  \"PropertyTable\": {\n    \"Properties\": [\n      {\n        \"CID\": 180,\n        \"ConnectivitySMILES\": \"CC(=O)C\"\n      }\n    ]\n  }\n}\n"
+}

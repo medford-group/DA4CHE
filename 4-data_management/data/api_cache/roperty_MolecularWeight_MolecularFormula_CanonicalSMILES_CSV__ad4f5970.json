@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/MolecularWeight,MolecularFormula,CanonicalSMILES/CSV",
+ "status_code": 200,
+ "text": "\"CID\",\"MolecularWeight\",\"MolecularFormula\",\"ConnectivitySMILES\"\n702,46.07,\"C2H6O\",\"CCO\"\n"
+}

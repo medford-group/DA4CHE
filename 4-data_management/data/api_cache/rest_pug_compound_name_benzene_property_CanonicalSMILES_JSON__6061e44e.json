@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/benzene/property/CanonicalSMILES/JSON",
+ "status_code": 200,
+ "text": "{\n  \"PropertyTable\": {\n    \"Properties\": [\n      {\n        \"CID\": 241,\n        \"ConnectivitySMILES\": \"C1=CC=CC=C1\"\n      }\n    ]\n  }\n}\n"
+}

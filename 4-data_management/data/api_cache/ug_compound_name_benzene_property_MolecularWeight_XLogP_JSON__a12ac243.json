@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/benzene/property/MolecularWeight,XLogP/JSON",
+ "status_code": 200,
+ "text": "{\n  \"PropertyTable\": {\n    \"Properties\": [\n      {\n        \"CID\": 241,\n        \"MolecularWeight\": \"78.11\",\n        \"XLogP\": 2.1\n      }\n    ]\n  }\n}\n"
+}

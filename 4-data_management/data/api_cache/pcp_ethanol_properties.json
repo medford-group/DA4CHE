@@ -1,0 +1,11 @@
+{
+ "key": "pcp_ethanol_properties",
+ "value": [
+  {
+   "CID": 702,
+   "MolecularFormula": "C2H6O",
+   "MolecularWeight": "46.07",
+   "ConnectivitySMILES": "CCO"
+  }
+ ]
+}

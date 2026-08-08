@@ -1,0 +1,5 @@
+{
+ "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/CanonicalSMILES/JSON",
+ "status_code": 200,
+ "text": "{\n  \"PropertyTable\": {\n    \"Properties\": [\n      {\n        \"CID\": 702,\n        \"ConnectivitySMILES\": \"CCO\"\n      }\n    ]\n  }\n}\n"
+}
