@@ -52,6 +52,11 @@ html:
 sphinx:
   extra_extensions:
     - sphinx_exercise  # enables :::{exercise} directive
+  local_extensions:
+    # Adds a `.ipynb` entry to each page's Download badge. sphinx-book-theme supports
+    # this natively but only sets it up inside its Binder/Colab launch-button code, so a
+    # book without launch buttons never offers the notebook. See _ext/ipynb_download.py.
+    ipynb_download: _ext/
 
 # Add custom CSS or JS if needed
 #extra_css:
