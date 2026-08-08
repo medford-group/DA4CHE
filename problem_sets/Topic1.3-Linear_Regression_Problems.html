@@ -528,8 +528,10 @@ variable. Run the check cell after each one; there is no limit on attempts.</p>
 <p>Restrict the spectrum to the window <span class="math notranslate nohighlight">\(950 \le \tilde\nu \le 1120\)</span> cm⁻¹, which is the
 region every part of this problem set works in. Find the wavenumber at which absorbance is
 largest in that window.</p>
-<p><code class="docutils literal notranslate"><span class="pre">np.argmax</span></code> returns the <em>index</em> of the largest element of an array, which you can then use
-to look up the corresponding wavenumber.</p>
+<p>Two NumPy tools you need here. A <strong>boolean array</strong> built by comparing an array against a
+value can be used to index it, so <code class="docutils literal notranslate"><span class="pre">band</span> <span class="pre">=</span> <span class="pre">(x_all</span> <span class="pre">&gt;=</span> <span class="pre">950)</span> <span class="pre">&amp;</span> <span class="pre">(x_all</span> <span class="pre">&lt;=</span> <span class="pre">1120)</span></code> and then
+<code class="docutils literal notranslate"><span class="pre">x_all[band]</span></code> selects the window. And <code class="docutils literal notranslate"><span class="pre">np.argmax</span></code> returns the <em>index</em> of the largest
+element, which you can use to look up the corresponding wavenumber.</p>
 <p>Assign the wavenumber in cm⁻¹ to <code class="docutils literal notranslate"><span class="pre">peak_wavenumber</span></code>.</p>
 </section>
 </div>

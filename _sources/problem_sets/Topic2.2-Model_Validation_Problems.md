@@ -74,7 +74,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import KFold, cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.metrics import r2_score, mean_absolute_error, root_mean_squared_error
 try:
     plt.style.use('../settings/plot_style.mplstyle')   # available inside the book
 except OSError:
@@ -85,11 +86,18 @@ print(f"{len(df)} rows, {df.species.nunique()} species, {df.ref.nunique()} refer
 df.head()
 ```
 
+Because that repetition matters later, here is what it looks like. To pull out every row
+for one species, build a **boolean array** by comparing the species column against a name,
+then use it to index — the same trick works on any array of the same length:
+
 ```{code-cell} ipython3
-counts = df.groupby('species').size()
-print(f"species reported by >= 3 independent references: {(counts >= 3).sum()}")
-print(df.htype.value_counts().to_string())
+sel = (df['species'].values == 'carbon dioxide')      # a True/False array, one per row
+print(f"{sel.sum()} entries for carbon dioxide, from {df['ref'].values[sel].size} references")
+print(df['lnH'].values[sel][:8].round(4))
 ```
+
+Those are the first eight of twenty-nine independent reports of the same constant, and
+they do not all agree. Keep that in mind — Part C is about exactly this.
 
 Run this once to load the autograder. It will not run inside the book — use the
 downloaded notebook.
@@ -140,16 +148,17 @@ grader.check("q1")
 :label: pr-reg-henry-cv
 
 The A1 number is optimistic — it scores the model on the data used to fit it. Redo the
-evaluation with 5-fold cross-validation, using exactly
+evaluation with **5-fold cross-validation**, built the way the chapter builds it: create
 
 ```
-KFold(n_splits=5, shuffle=True, random_state=0)
+kf = KFold(n_splits=5, shuffle=True, random_state=0)
 ```
 
-Report the **mean** of the five fold $r^2$ values and assign it to `r2_cv`.
+and loop over `kf.split(X)`, fitting on the training indices and scoring on the test
+indices each time. Report the **mean** of the five fold $r^2$ values as `r2_cv`.
 
-The seed matters. Do not change it — part of the point is that a shuffled split is a
-random quantity, and a reported CV score is meaningless unless the split is reproducible.
+Do not change the seed. A shuffled split is a random quantity, so a reported
+cross-validation score means nothing unless the split is reproducible.
 :::
 
 ```{code-cell} ipython3
@@ -166,33 +175,25 @@ grader.check("q2")
 ```
 
 
-### A3. Measure the noise floor (10 pts)
+### A3. Put the error in physical units (10 pts)
 
 :::{exercise}
-:label: pr-reg-henry-floor
+:label: pr-reg-henry-rmse
 
-When several references report the same species, they disagree. That disagreement is
-measurement noise, and **no model can predict it** — it sets a floor on the error any
-model can achieve.
+An $r^2$ of 0.59 does not say how wrong a prediction typically is. Collect the
+**out-of-fold predictions** — inside the same loop as A2, store each fold's predictions in
+the right positions of a full-length array, so that every row ends up predicted by a model
+that never saw it. Then report the root-mean-squared error of those predictions against
+`lnH`, using `root_mean_squared_error`.
 
-Estimate it. Restrict to species with **at least 3** independent reports, compute the
-sample standard deviation of `lnH` within each species, and pool them:
-
-$$
-\sigma_\text{floor} \;=\; \sqrt{\frac{\sum_s (n_s - 1)\,s_s^2}{\sum_s (n_s - 1)}}
-$$
-
-where $n_s$ and $s_s$ are the count and standard deviation for species $s$. Use the
-sample standard deviation (`ddof=1`, which is pandas' default).
-
-Assign the result to `sigma_floor`.
+Assign it to `rmse_cv`. The units are ln units of $H$.
 :::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
 # YOUR CODE HERE
-sigma_floor = ...
+rmse_cv = ...
 ```
 
 ```{code-cell} ipython3
@@ -207,24 +208,29 @@ grader.check("q3")
 ## Part B — Visualization (35 pts)
 
 :::{exercise}
-:label: pr-reg-henry-diag
+:label: pr-reg-henry-diagnostics
 
-Build a three-panel figure using the model and quantities from Part A.
+Three panels, using the three diagnostics from the chapter.
 
-1. **Predicted vs. actual.** Use `cross_val_predict` with the same `KFold` from A2 to get
-   an out-of-fold prediction for every row, and scatter predicted against actual `lnH`.
-   Draw the 1:1 line. Color the points by whether `htype` is `'Q'` (a QSAR estimate) or
-   anything else (an experimental or literature value).
-2. **How stable is the CV score?** Recompute the mean CV $r^2$ for `n_splits` in
-   $\{2, 5, 10, 20\}$, each for at least 10 different `random_state` values, and show the
-   spread — a boxplot per `n_splits`.
-3. **The noise floor.** Histogram the per-species standard deviation of `lnH` for the 362
-   species with ≥3 reports, and mark $\sigma_\text{floor}$ from A3 with a vertical line.
+1. **Parity plot.** Out-of-fold prediction against actual `lnH`, with the 1:1 line drawn.
+   Color the points by whether `htype` is `'Q'` (a QSAR estimate — a value produced by a
+   correlation rather than measured) or anything else. You can select rows of a NumPy array
+   with a boolean array, e.g. `is_q = (df['htype'].values == 'Q')` and then `y[is_q]`.
+2. **Error histogram.** The out-of-fold errors $y - \hat{y}$. Mark the mean and, using
+   `np.percentile`, the 5th and 95th percentiles.
+3. **How stable is the estimate?** Recompute the mean cross-validated $r^2$ for
+   `n_splits` in $\{2, 5, 10, 20\}$, each for at least 10 different `random_state` values,
+   and show the spread as a boxplot per `n_splits`.
 
-Then, in **3–5 sentences**: panel 1 shows the `'Q'` points hugging the 1:1 line more
-tightly than the experimental ones. Explain why that is expected, and say what it implies
-about using $r^2$ on this dataset as evidence that the linear free-energy relationship is
-physically real.
+Then, in **4–6 sentences**:
+
+- The `'Q'` points sit closer to the 1:1 line than the rest. Explain why that is expected,
+  given how a QSAR value is produced, and say what it implies about using this pooled
+  dataset as evidence that the relationship is physically real.
+- Is the error histogram centered and symmetric? Say what its shape and width add that
+  $r^2$ alone does not.
+- Does the choice of `n_splits` matter much here? Say why, referring to the model's size
+  relative to the dataset.
 
 Label all axes with units.
 :::
@@ -244,30 +250,39 @@ fig, axes = plt.subplots(1, 3, figsize=(14, 4))
 :::{exercise}
 :label: pr-reg-henry-headroom
 
-You now have two numbers that measure very different things: the cross-validated error of
-your model, and $\sigma_\text{floor}$, the error that measurement disagreement alone would
-produce even for a perfect model.
+An RMSE of 3.68 ln units sounds terrible. But no model can do better than the data it is
+checked against, and this dataset has something unusual that lets you find out how good
+"perfect" would even be: **many species were measured independently by several different
+groups**, so the disagreement among those repeated values is measurement scatter that no
+model could ever predict.
 
 Decide whether this model is worth improving, and defend it with evidence.
 
 Your answer should include:
 
-1. The cross-validated **RMSE** in ln units (not $r^2$), compared directly against
-   $\sigma_\text{floor}$ from A3.
-2. An estimate of the best $r^2$ any model could reach on this dataset if the only
-   remaining error were measurement noise. State your assumptions.
-3. At least one concrete attempt to close the gap — a second feature, a nonlinear model
-   from {doc}`Non-parametric Models </2-regression/Topic2.1-Non-parametric_Models>`, restricting to a subset of `htype`, or
-   anything else you can justify — evaluated with the same cross-validation procedure.
-4. A short written argument (**one paragraph**) about whether the effort is warranted,
+1. For **at least four** species that appear many times, the standard deviation of `lnH`
+   across their repeated entries. Select a species' rows with a boolean array, e.g.
+   `sel = (df['species'].values == 'carbon dioxide')`, then use `np.std(..., ddof=1)`.
+   Some species with many entries: carbon dioxide, methane, benzene, ammonia, oxygen,
+   trichloromethane, methylbenzene.
+2. A comparison of your `rmse_cv` from A3 against those spreads. How many times larger is
+   the model's error than the disagreement between laboratories?
+3. A statement of how much of the model's error could *in principle* be removed, with your
+   assumptions stated. Note that your four species will not agree with each other — say
+   what that does to the argument.
+4. At least one concrete attempt to improve things, evaluated with the **same**
+   cross-validation procedure as A2. A second feature, a different model from
+   {doc}`Non-parametric Models </2-regression/Topic2.1-Non-parametric_Models>`, or a
+   restriction of the dataset are all fair game.
+5. A short written argument (**one paragraph**) about whether the effort is warranted,
    citing your own numbers.
 
-Be careful with step 3: at least one obvious-looking move makes the reported score *worse*
-for a reason that is a feature of the data rather than a failure of the model. If you hit
+Be careful with step 4: at least one obvious-looking move makes the reported score *worse*,
+for a reason that is a property of the data rather than a failure of the model. If you hit
 it, explain it.
 
 There is more than one defensible conclusion. You are graded on the reasoning and the
-evidence.
+evidence, not on reaching a particular verdict.
 :::
 
 ```{code-cell} ipython3
@@ -282,18 +297,19 @@ evidence.
 ## Summary
 
 - Part A produced three numbers that answer three different questions: how well the model
-  fits the data it saw (0.602), how well it predicts data it did not (0.594), and how much
-  disagreement exists between independent measurements of the same quantity (0.53 ln units).
-- Part B showed that the CV estimate is stable across fold counts and seeds, and that part
-  of the apparent fit quality comes from QSAR-estimated rows that are model output rather
-  than independent observations.
-- Part C set the model's error against the measurement floor. A cross-validated score is
-  only interpretable once you know what error would remain even if the model were perfect.
+  fits data it has already seen (0.602), how well it predicts data it has not (0.594), and
+  how large a typical prediction error actually is (3.68 ln units, a factor of about 40 in
+  $H$ itself).
+- Part B looked at the same model three ways the chapter recommends — a parity plot, an
+  error histogram, and the spread of the cross-validated score — and found that part of the
+  apparent fit quality comes from rows that are model output rather than measurement.
+- Part C set the model's error against the disagreement between independent laboratories,
+  and found both that the headroom is large and that the floor itself is not a single
+  number.
 
 ## Additional Reading
 
 1. R. Sander, [Compilation of Henry's law constants (version 5.0.0) for water as solvent](https://doi.org/10.5194/acp-23-10901-2023),
    *Atmos. Chem. Phys.* **23**, 10901–12440 (2023).
-2. [`sklearn.model_selection.cross_val_predict`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_predict.html)
-   — and the note in its documentation on why its output is not appropriate for computing
-   a generalization metric in general.
+2. [`sklearn.model_selection.KFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html)
+   and [`sklearn.metrics.root_mean_squared_error`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.root_mean_squared_error.html).
