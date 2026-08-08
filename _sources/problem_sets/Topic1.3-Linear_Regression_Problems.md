@@ -103,9 +103,12 @@ variable. Run the check cell after each one; there is no limit on attempts.
 :::{exercise}
 :label: pr-nm-meoh-co-peak
 
-Restrict the spectrum to the window $950 \le \tilde\nu \le 1120$ cm⁻¹, which contains the
-C–O stretch and its two shoulders. Find the wavenumber at which absorbance is largest in
-that window.
+Restrict the spectrum to the window $950 \le \tilde\nu \le 1120$ cm⁻¹, which is the
+region every part of this problem set works in. Find the wavenumber at which absorbance is
+largest in that window.
+
+`np.argmax` returns the *index* of the largest element of an array, which you can then use
+to look up the corresponding wavenumber.
 
 Assign the wavenumber in cm⁻¹ to `peak_wavenumber`.
 :::
@@ -160,22 +163,27 @@ grader.check("q2")
 ### A3. Score the fit (10 pts)
 
 :::{exercise}
-:label: pr-nm-meoh-fit-r2
+:label: pr-nm-meoh-fit-sse
 
-Compute the coefficient of determination for the A2 fit **over the same window**:
+Score the A2 fit **over the same window** with the sum of squared errors the chapter uses:
 
 $$
-r^2 = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
+\mathrm{SSE} \;=\; \sum_i \left(y_i - \hat{y}_i\right)^2
+\qquad\text{where}\qquad
+\hat{y} = \bar{\bar{X}}\vec{w}
 $$
 
-Assign it to `r2_single`.
+Assign it to `sse_single`.
+
+For scale: predicting nothing but the mean absorbance gives SSE = 33.35, so that is the
+number to beat.
 :::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
 # YOUR CODE HERE
-r2_single = ...
+sse_single = ...
 ```
 
 ```{code-cell} ipython3
@@ -187,41 +195,48 @@ grader.check("q3")
 
 ---
 
-
 ## Part B — Visualization (35 pts)
 
 :::{exercise}
 :label: pr-nm-meoh-basis-tune
 
-One Gaussian recovered only $r^2 = 0.65$. Stay in the **same 950–1120 cm⁻¹ window** and
-find out what it actually takes to describe this band, using the two basis families from
-the chapter.
+One Gaussian left SSE at 11.8. Stay in the **same 950–1120 cm⁻¹ window** and find out what
+it takes to do better, using the two basis families from the chapter. Everything here is an
+ordinary linear least-squares fit: build $\bar{\bar{X}}$, then solve
+$\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}$ with `np.linalg.solve`.
 
-**1. Polynomials.** Fit `np.vander(x_band - x_band.mean(), order + 1)` by least squares for
-`order = 2, 4, 6, 8, 10, 12`. For each, record $r^2$ **and** the condition number of
-$\bar{\bar{X}}^T\bar{\bar{X}}$ (`np.linalg.cond`). Plot the data with the best two fits
-overlaid.
+**1. Polynomials, and why the origin matters.** Use the chapter's `vandermonde(x, order)`
+for `order = 3, 5, 7, 9, 11, 13` columns, twice over:
 
-**2. Gaussians, tuned by hand.** Build a design matrix whose columns are Gaussians plus a
-column of ones, as in A2 — but now *you* choose each center $c_j$ and width $\sigma_j$.
-Only the amplitudes come from least squares, so this is still a linear fit; the centers
-and widths are yours to place.
+- once on the raw wavenumbers, and
+- once on **centered** wavenumbers, `x_band - x_band.mean()`.
 
-Work up from `N = 1` to `N = 6` components. For each `N`, position and widen the Gaussians
-by eye until the fit tracks the data as well as you can get it, then record $r^2$ and the
-condition number. Say in one line what you were trying to do with each new component.
+For each fit record the SSE **and** the condition number of $\bar{\bar{X}}^T\bar{\bar{X}}$
+(`np.linalg.cond`, from {doc}`Linear Algebra </1-numerical_methods/Topic1.2-Linear_Algebra>`).
+The two versions describe the same family of curves — centering only moves the origin — so
+any difference between them is not about the model.
 
-**3. Plot.** Data with your `N = 1`, `N = 3` and `N = 6` fits overlaid, and beneath it, on
-shared x-axes, the residuals for those three.
+**2. Gaussians, placed by hand.** Extend the chapter's two-column construction: allocate
+`np.zeros((len(x_band), N + 1))`, fill column $j$ with a Gaussian of your chosen center
+$c_j$ and width $\sigma_j$, and make the last column ones for the baseline. Only the
+amplitudes come from the solve — the centers and widths are yours to choose.
+
+Work from `N = 1` to `N = 6`. For each `N`, move and widen the Gaussians by eye until the
+fit tracks the data as well as you can get it, then record SSE and the condition number.
+Say in one line what you were trying to capture with each new component.
+
+**3. Plot.** The data with your `N = 1`, `N = 3` and `N = 6` fits overlaid, and beneath it,
+on shared x-axes, the differences $y - \hat{y}$ for those three.
 
 **4. Interpret**, in **4–6 sentences**:
 
-- The polynomial $r^2$ rises and then collapses, eventually going *negative*. Explain what
-  causes that, using your condition numbers. It is not overfitting.
-- The Gaussian condition numbers stay small no matter how many components you add. Why is
-  this basis so much better behaved for this band?
-- Your Gaussian $r^2$ should jump sharply somewhere and then nearly flatten. Where, and
-  what feature of the spectrum does that tell you about?
+- Raw-wavenumber polynomials stop improving past about 7 columns, while centered ones keep
+  improving. Explain this using your condition numbers. What is a condition number of
+  $10^{40}$ telling you about the weights that came back?
+- The Gaussian condition numbers stay below about 40 no matter how many components you add,
+  which is some thirty orders of magnitude better. What is different about those columns?
+- Your Gaussian SSE should drop sharply somewhere and then nearly stop. Where, and what does
+  that say about the band?
 
 Label your axes with units.
 :::
@@ -238,65 +253,64 @@ fig, ax = plt.subplots()
 
 ## Part C — Open Ended (35 pts)
 
-Real absorption lines are not Gaussian. Two broadening mechanisms act at once:
+So far every basis function has been a Gaussian. That was a choice, not a necessity — the
+general linear model works with any fixed set of columns, and a different column shape may
+describe the same data with fewer of them.
 
-- **Doppler and instrumental broadening** are the sum of many small independent effects, so
-  by the central limit theorem they give a **Gaussian** profile of width $\sigma$.
-- **Collisional (pressure) broadening and finite excited-state lifetime** give a
-  **Lorentzian** profile of half-width $\gamma$, which has far heavier wings than a Gaussian.
+A widely used alternative is the **Voigt profile**. Where a Gaussian falls off as
+$e^{-x^2}$, the Voigt profile decays much more slowly away from its center, so it has
+noticeably heavier tails for the same central width. It is controlled by two width
+parameters instead of one: $\sigma$ sets the Gaussian-like core and $\gamma$ sets how heavy
+the tails are, with $\gamma = 0$ recovering a Gaussian exactly. Use this helper:
 
-Both act, so the true line shape is their convolution — the **Voigt profile**:
+```{code-cell} ipython3
+from scipy.special import voigt_profile
 
-$$
-V(\tilde\nu;\sigma,\gamma) \;=\; \int_{-\infty}^{\infty}
-G(\tilde\nu';\sigma)\, L(\tilde\nu-\tilde\nu';\gamma)\, \mathrm{d}\tilde\nu'
-$$
+def voigt(x, center, sigma, gamma):
+    """One Voigt profile. gamma = 0 gives a Gaussian; larger gamma gives heavier tails."""
+    return voigt_profile(x - center, sigma, gamma)
+```
 
-It has no closed form in elementary functions, but `scipy.special.voigt_profile(x, sigma,
-gamma)` evaluates it directly. Setting $\gamma = 0$ recovers a Gaussian and $\sigma \to 0$
-recovers a Lorentzian, so the Voigt profile contains both of Part B's shapes as limits.
+The important point for this course is that **nothing about the fitting changes.** Fix each
+center, $\sigma$ and $\gamma$ by hand as you did in Part B, put one profile in each column of
+$\bar{\bar{X}}$, and the amplitudes are still the solution of the same normal equations. The
+shape parameters are chosen, not fitted.
 
-One thing changes about the fitting. A Gaussian's amplitude is linear in the model, so
-Part B's amplitudes came from `np.linalg.solve`. A Voigt's $\sigma$ and $\gamma$ are **not**
-linear, so a least-squares solve cannot find them — you need a nonlinear optimizer such as
-`scipy.optimize.curve_fit`, which needs starting guesses and can converge to nonsense if
-they are poor. Give it bounds and sensible starting values.
+::::{exercise}
+:label: pr-nm-meoh-count-components
 
-:::{exercise}
-:label: pr-nm-meoh-voigt-peaks
+Use a Voigt basis on the same 950–1120 cm⁻¹ window to answer the question this problem set
+has been building toward:
 
-Fit sums of $N$ Voigt profiles to the same 950–1120 cm⁻¹ window with `curve_fit`, for
-`N = 1, 2, 3` and at least one larger `N`. Each component contributes
-$A_j\,V(\tilde\nu - c_j;\sigma_j,\gamma_j)$, so there are four parameters per component.
-Seed the centers from the maxima you already know and bound them so they cannot wander.
-
-Then answer the question this whole problem set has been building toward:
-
-**How many distinct peaks are in this window?**
+**How many distinct components does this band contain?**
 
 Support your answer with:
 
-1. $r^2$ versus $N$ for the Voigt fits, compared against your Part B Gaussian results at
-   the same $N$.
-2. The fitted parameters of your best model — center, width and area of each component.
-   Look at them carefully; they are not all alike.
-3. Evidence that your chosen $N$ is not just the largest one you tried: show what the next
-   component buys, and check the fit is stable when you change the starting guesses.
-4. A short written argument (**one paragraph**). Does "number of peaks" mean the number of
-   resolved maxima, the number of components a model needs, or the number of distinct
-   molecular vibrations? They need not be the same number, and saying so with evidence is a
-   better answer than picking one.
+1. Voigt fits for `N = 1, 2, 3` and at least one larger `N`, each with hand-chosen centers,
+   $\sigma$ and $\gamma$, reporting SSE and the condition number. Compare against your Part B
+   Gaussian results at the same `N`.
+2. The fitted amplitudes of your best model. They are not all alike, and the pattern matters
+   more than the individual values.
+3. Evidence that your chosen `N` is not merely the largest you tried: show what one more
+   component buys, and show the difference plot $y - \hat{y}$ has no obvious structure left.
+4. A short written argument (**one paragraph**). "Number of components" can mean the number
+   of visible maxima, or the number of columns the data actually justifies, or the number of
+   underlying physical features. These need not be the same number, and saying so with
+   evidence is a better answer than picking one.
 
-There is more than one defensible answer here. You are graded on the reasoning and the
-evidence.
+:::{note}
+Domain knowledge of spectroscopy may be helpful here, but it is **not required** — the
+question can be answered entirely from the fits, the SSE and the difference plots. If you do
+know some spectroscopy, say what it adds; if you do not, do not go looking for it.
 :::
+
+There is more than one defensible answer. You are graded on the reasoning and the evidence.
+::::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
 # YOUR CODE HERE
-from scipy.special import voigt_profile
-from scipy.optimize import curve_fit
 ```
 
 
@@ -304,22 +318,23 @@ from scipy.optimize import curve_fit
 
 ## Summary
 
-- Part A fit a single Gaussian to the C–O stretch band by solving the normal equations
-  directly, and scored $r^2 = 0.65$ — enough to show the method works, not enough to
-  describe the band.
-- Part B set two basis families against each other on that same band. Polynomials fail
-  numerically before they fit well, their condition number crossing the limit of double
-  precision by order 6; a Gaussian basis stays well conditioned however many components are
-  added, and its $r^2$ saturates once there is one component per resolved maximum.
-- Part C replaced the line shape with a Voigt profile, which needs a nonlinear fit but
-  reaches $r^2 = 0.994$ with three components — and whose fitted parameters say more about
-  the molecule than the fit quality does.
+- Part A built a two-column design matrix by hand and solved the normal equations, exactly as
+  the chapter does, and scored the result with the sum of squared errors: 11.8 against a
+  mean-only baseline of 33.3.
+- Part B set polynomial and Gaussian bases against each other on the same band. Polynomials
+  on raw wavenumbers stall once the condition number passes what double precision can carry;
+  centering the same model recovers thirty orders of magnitude of conditioning. A localized
+  Gaussian basis stays well conditioned at any size, and its SSE stops improving once there is
+  one component per resolved maximum.
+- Part C changed the shape of the basis functions rather than their number, and found that
+  three Voigt profiles describe the band better than thirteen polynomial columns or six
+  Gaussians — then asked what "three components" actually means.
 
 ## Additional Reading
 
 1. NIST Chemistry WebBook, SRD 69 — [methanol IR spectrum](https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&Type=IR-SPEC),
    Coblentz Society collection no. 8791.
-2. [`scipy.special.voigt_profile`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.voigt_profile.html)
-   and [`scipy.optimize.curve_fit`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html).
-3. [`numpy.linalg.cond`](https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html)
-   — the diagnostic that explains Part B's polynomial collapse.
+2. [`numpy.linalg.cond`](https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html)
+   — the diagnostic behind Part B's raw-versus-centered comparison.
+3. [`scipy.special.voigt_profile`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.voigt_profile.html),
+   used here only to evaluate a fixed shape.
