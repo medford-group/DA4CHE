@@ -23,12 +23,11 @@ kernelspec:
 :::{admonition} Get this problem set
 :class: seealso
 
-- {download}`Download the notebook <notebooks/Topic2.2-Model_Validation_Problems.ipynb>`
-- {download}`Download henry_law.csv <data/henry_law.csv>`
+{download}`Download everything (Topic2.2-Model_Validation_Problems.zip) <archives/Topic2.2-Model_Validation_Problems.zip>` — the notebook and
+`henry_law.csv`, in a folder that is ready to run as-is.
 
-Keep the notebook and a `data/` folder side by side — the notebook reads its data from
-`data/<filename>`, so put the downloaded file inside a folder called `data` next to the
-notebook. On Vocareum both are provided for you.
+The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.
 :::
 
 :::{admonition} Before you start
