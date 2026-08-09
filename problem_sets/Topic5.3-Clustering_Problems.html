@@ -594,7 +594,7 @@ that can be checked automatically.</p>
 <h3>A1. Cluster and score it without labels (10 pts)<a class="headerlink" href="#a1-cluster-and-score-it-without-labels-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-eda-xps-silh">
 
-<p class="admonition-title"><span class="caption-number">Exercise 145 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 146 </span></p>
 <section id="exercise-content">
 <p>Run k-means on <code class="docutils literal notranslate"><span class="pre">X</span></code> with</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -626,73 +626,24 @@ sits from its nearest neighbor, so it can be computed on data you have no labels
 <section id="a2-score-it-against-the-known-chemistry-10-pts">
 <h3>A2. Score it against the known chemistry (10 pts)<a class="headerlink" href="#a2-score-it-against-the-known-chemistry-10-pts" title="Link to this heading">#</a></h3>
 <p>Silhouette says how <em>tidy</em> the clusters are, not whether they are the <strong>right</strong> clusters.
-You have the true chemistry for every spectrum, so you can ask the second question too.</p>
-<p>The chapter’s guidance is that “classification metrics (confusion matrix, precision,
-recall) can be applied when true labels are available”. That is the right instinct, but it
-cannot be taken literally. Here are two labelings of the <em>same six points</em>, differing only
-in what the groups happen to be called:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span>
-
-<span class="n">truth</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="n">grouping</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>   <span class="c1"># identical partition, different cluster numbers</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;accuracy_score:&quot;</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">truth</span><span class="p">,</span> <span class="n">grouping</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>accuracy_score: 0.0
-</pre></div>
-</div>
-</div>
-</div>
-<p>Zero — yet the grouping is perfect. Accuracy compares cluster <em>numbers</em>, which are
-arbitrary, against class numbers, which are not. A clustering algorithm has no way to know
-that its cluster 2 is your class 0, and no reason to care.</p>
-<p>The repair is to stop assuming cluster <span class="math notranslate nohighlight">\(j\)</span> means class <span class="math notranslate nohighlight">\(j\)</span>, and let each cluster vote for
-itself:</p>
-<blockquote>
-<div><p>Give every cluster the true class that is most common inside it, then count how many
-spectra that gets right.</p>
-</div></blockquote>
-<p>The confusion matrix already holds what you need. <code class="docutils literal notranslate"><span class="pre">confusion_matrix(y_true,</span> <span class="pre">labels)</span></code>
-returns a table <span class="math notranslate nohighlight">\(C\)</span> whose rows are true classes and whose columns are clusters, so
-<span class="math notranslate nohighlight">\(\max_i C_{ij}\)</span> is the size of cluster <span class="math notranslate nohighlight">\(j\)</span>’s majority class, and</p>
+You have the true chemistry for every spectrum, so you can ask the second question too —
+using <strong>purity</strong>, from the chapter’s Accuracy and Distance Metrics section:</p>
 <div class="math notranslate nohighlight">
 \[
-\text{score} \;=\; \frac{1}{n}\sum_{\text{clusters } j} \; \max_{i} \; C_{ij}
+\text{purity}(\Omega, C) \;=\; \frac{1}{N} \sum_{k=1}^{K} \max_{j} \; |\omega_k \cap c_j|
 \]</div>
-<p>Renaming clusters permutes the columns of <span class="math notranslate nohighlight">\(C\)</span>, and a sum over columns does not care about
-their order — so unlike accuracy this score is unchanged, which is exactly why it can be
-graded automatically. On the six points above it gives 1.0, as it should:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">truth</span><span class="p">,</span> <span class="n">grouping</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;score:&quot;</span><span class="p">,</span> <span class="n">cm</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">cm</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0 0 2]
- [2 0 0]
- [0 2 0]]
-score: 1.0
-</pre></div>
-</div>
-</div>
-</div>
-<p>Two anchors for reading it on the real data. Four classes of 100 spectra each means a
-clustering carrying no information at all scores about <strong>0.25</strong>, and a perfect one scores
-<strong>1.0</strong>. The quantity is standard and is called <strong>cluster purity</strong> in the literature; the
-chapter does not cover it, so everything needed to compute it is above.</p>
+<p>Each cluster is given the class most common inside it, and the score is the fraction of
+points that gets right. Read off a confusion matrix with true classes as rows and clusters
+as columns, it is the sum of the <strong>column maxima</strong> divided by <span class="math notranslate nohighlight">\(N\)</span> — which is what makes it
+independent of how the clusters happen to be numbered, and therefore checkable here.</p>
+<p>Two anchors for reading it on this data. Four classes of 100 spectra each means a
+clustering carrying no information scores about <span class="math notranslate nohighlight">\(1/J = 0.25\)</span>, and a perfect one scores 1.0.</p>
 <div class="exercise admonition" id="pr-eda-xps-purity">
 
-<p class="admonition-title"><span class="caption-number">Exercise 146 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 147 </span></p>
 <section id="exercise-content">
-<p>Compute the purity of your A1 clustering against <code class="docutils literal notranslate"><span class="pre">y_true</span></code> and assign it to <code class="docutils literal notranslate"><span class="pre">purity_k4</span></code>.</p>
+<p>Compute the purity of your A1 clustering against <code class="docutils literal notranslate"><span class="pre">y_true</span></code> using
+<code class="docutils literal notranslate"><span class="pre">sklearn.metrics.confusion_matrix</span></code>, and assign it to <code class="docutils literal notranslate"><span class="pre">purity_k4</span></code>.</p>
 </section>
 </div>
 <div class="cell tag_skip-execution docutils container">
@@ -715,7 +666,7 @@ chapter does not cover it, so everything needed to compute it is above.</p>
 <h3>A3. How many dimensions does the data really have? (10 pts)<a class="headerlink" href="#a3-how-many-dimensions-does-the-data-really-have-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-eda-xps-pcadim">
 
-<p class="admonition-title"><span class="caption-number">Exercise 147 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 148 </span></p>
 <section id="exercise-content">
 <p>Fit <code class="docutils literal notranslate"><span class="pre">PCA(random_state=0)</span></code> to <code class="docutils literal notranslate"><span class="pre">X</span></code> and find the <strong>smallest number of principal components
 whose cumulative explained variance ratio reaches 0.95</strong>.</p>
@@ -744,7 +695,7 @@ whose cumulative explained variance ratio reaches 0.95</strong>.</p>
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-eda-xps-kcurve">
 
-<p class="admonition-title"><span class="caption-number">Exercise 148 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 149 </span></p>
 <section id="exercise-content">
 <p>Two panels.</p>
 <ol class="arabic simple">
@@ -782,7 +733,7 @@ why purity stalls near 0.72 rather than approaching 1.</p></li>
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-eda-xps-continuum">
 
-<p class="admonition-title"><span class="caption-number">Exercise 149 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 150 </span></p>
 <section id="exercise-content">
 <p>k-means found the right number of clusters and still recovered the chemistry only partly.
 Work out why, and say what — if anything — would do better.</p>

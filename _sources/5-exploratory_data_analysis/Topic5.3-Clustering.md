@@ -77,7 +77,17 @@ The average silhouette score over all points provides an overall quality measure
 
 **Bayesian information criterion (BIC)** applies to models with an underlying probability distribution (such as GMMs). It trades off model fit (log-likelihood) against model complexity (number of parameters). Lower BIC indicates a better model.
 
-**Classification metrics** (confusion matrix, precision, recall) can be applied when true labels are available — for instance, when using clustering as a proxy for classification to evaluate whether the cluster structure aligns with known categories.
+**Classification metrics** (confusion matrix, precision, recall) can be applied when true labels are available — but not directly, because cluster numbers are arbitrary. There is no reason a clustering's cluster 2 should be your class 2, so accuracy computed against raw cluster labels is meaningless: a perfect clustering can score zero simply because the numbering does not line up.
+
+**Purity** is the standard repair. Each cluster takes the class most common within it, and the score is the fraction of points that gets right. With clusters $\Omega = \{\omega_1, \dots, \omega_K\}$ and classes $C = \{c_1, \dots, c_J\}$,
+
+$$
+\text{purity}(\Omega, C) \;=\; \frac{1}{N} \sum_{k=1}^{K} \max_{j} \; |\omega_k \cap c_j|
+$$
+
+On a confusion matrix with classes as rows and clusters as columns, that is the sum of the **column maxima** over $N$. Taking maxima down columns rather than across rows is what makes purity independent of the numbering: relabeling permutes the columns, and a sum ignores their order.
+
+Purity runs from about $1/J$ for an uninformative clustering (balanced classes) to $1$ for a perfect one. Its weakness is that it **increases monotonically with $K$** — splitting a cluster can never lower a majority vote, and one point per cluster gives purity $1$ while saying nothing. So purity reports on a clustering whose $K$ was chosen some other way; it cannot choose $K$, and purities at different $K$ are not comparable. Normalized mutual information and the adjusted Rand index correct for this, and both are in `sklearn.metrics`.
 
 All clustering algorithms depend on a **distance metric**. Common choices:
 
@@ -94,6 +104,20 @@ The Mahalanobis distance implicitly standardizes using the covariance matrix $\m
 :label: ex-eda-silhouette-calc
 
 Point $p$ has within-cluster average distance $a = 0.4$ and average distance to the nearest other cluster $b = 1.2$. (a) Compute the silhouette score for $p$. (b) If $b$ were reduced to $0.5$ (clusters move closer together), recompute the silhouette score and explain what this change implies about cluster quality.
+:::
+
+:::{exercise}
+:label: ex-eda-purity-calc
+
+A clustering of $N = 100$ points into $K = 3$ clusters is compared against $J = 3$ true classes, giving the confusion matrix below (rows are true classes, columns are clusters):
+
+| | $\omega_1$ | $\omega_2$ | $\omega_3$ |
+|---|---|---|---|
+| $c_1$ | 30 | 4 | 1 |
+| $c_2$ | 5 | 22 | 8 |
+| $c_3$ | 3 | 7 | 20 |
+
+(a) Compute the purity. (b) Now suppose $\omega_2$ is split into two clusters of 16 and 17 points, whose majority classes contribute 14 and 11 correct points respectively. Recompute the purity and state whether the clustering has genuinely improved. (c) What purity would you get by placing each of the 100 points in its own cluster, and what does that tell you about using purity to select $K$?
 :::
 
 ## Dataset Preparation
@@ -750,6 +774,7 @@ Fit agglomerative hierarchical clustering models on the PCA-reduced Dow dataset 
 
 - **Clustering** is unsupervised: it identifies structure in data without labels. The three main families are expectation-maximization (k-means, GMM), density-based (mean shift, DBSCAN), and hierarchical.
 - **Silhouette score** ($-1$ to $1$) and **Calinski-Harabász score** measure cluster compactness and separation without labels. **BIC** is available for probability-based models (GMMs) and penalizes model complexity.
+- When true labels *are* available, cluster numbering is arbitrary, so accuracy cannot be used directly. **Purity** — the sum of the confusion-matrix column maxima divided by $N$ — assigns each cluster its majority class and is unaffected by relabeling. It rises monotonically with $K$, so it can report on a clustering but cannot be used to choose $K$.
 - **k-means** is fast and often effective, but requires $k$ upfront and assumes spherical clusters. Elbow plots and silhouette scores help choose $k$.
 - **Gaussian mixture models** extend k-means with flexible covariance shapes and mixed membership probabilities. BIC provides a principled way to select the number of components.
 - **Mean shift** infers the number of clusters from the bandwidth parameter. The scikit-learn implementation is efficient and includes a bandwidth estimation utility.
@@ -761,3 +786,4 @@ Fit agglomerative hierarchical clustering models on the PCA-reduced Dow dataset 
 
 - [scikit-learn Clustering Guide](https://scikit-learn.org/stable/modules/clustering.html) — comprehensive reference and algorithm comparison
 - Hastie, Tibshirani & Friedman, *The Elements of Statistical Learning*, Chapter 14 — unsupervised learning including clustering and mixture models
+- Manning, Raghavan & Schütze, [*Introduction to Information Retrieval*](https://nlp.stanford.edu/IR-book/), Chapter 16 — the standard reference for purity and the other external evaluation measures for clustering

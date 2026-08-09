@@ -520,7 +520,14 @@ document.write(`
 <p>The average silhouette score over all points provides an overall quality measure. It works well for compact, well-separated clusters but is less reliable for density-based clusters (e.g., DBSCAN).</p>
 <p><strong>Calinski-Harabász score</strong> (variance ratio criterion) is related to the ratio of between-cluster variance to within-cluster variance. Higher values indicate denser and better-separated clusters. It is not bounded, which makes absolute interpretation difficult.</p>
 <p><strong>Bayesian information criterion (BIC)</strong> applies to models with an underlying probability distribution (such as GMMs). It trades off model fit (log-likelihood) against model complexity (number of parameters). Lower BIC indicates a better model.</p>
-<p><strong>Classification metrics</strong> (confusion matrix, precision, recall) can be applied when true labels are available — for instance, when using clustering as a proxy for classification to evaluate whether the cluster structure aligns with known categories.</p>
+<p><strong>Classification metrics</strong> (confusion matrix, precision, recall) can be applied when true labels are available — but not directly, because cluster numbers are arbitrary. There is no reason a clustering’s cluster 2 should be your class 2, so accuracy computed against raw cluster labels is meaningless: a perfect clustering can score zero simply because the numbering does not line up.</p>
+<p><strong>Purity</strong> is the standard repair. Each cluster takes the class most common within it, and the score is the fraction of points that gets right. With clusters <span class="math notranslate nohighlight">\(\Omega = \{\omega_1, \dots, \omega_K\}\)</span> and classes <span class="math notranslate nohighlight">\(C = \{c_1, \dots, c_J\}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\text{purity}(\Omega, C) \;=\; \frac{1}{N} \sum_{k=1}^{K} \max_{j} \; |\omega_k \cap c_j|
+\]</div>
+<p>On a confusion matrix with classes as rows and clusters as columns, that is the sum of the <strong>column maxima</strong> over <span class="math notranslate nohighlight">\(N\)</span>. Taking maxima down columns rather than across rows is what makes purity independent of the numbering: relabeling permutes the columns, and a sum ignores their order.</p>
+<p>Purity runs from about <span class="math notranslate nohighlight">\(1/J\)</span> for an uninformative clustering (balanced classes) to <span class="math notranslate nohighlight">\(1\)</span> for a perfect one. Its weakness is that it <strong>increases monotonically with <span class="math notranslate nohighlight">\(K\)</span></strong> — splitting a cluster can never lower a majority vote, and one point per cluster gives purity <span class="math notranslate nohighlight">\(1\)</span> while saying nothing. So purity reports on a clustering whose <span class="math notranslate nohighlight">\(K\)</span> was chosen some other way; it cannot choose <span class="math notranslate nohighlight">\(K\)</span>, and purities at different <span class="math notranslate nohighlight">\(K\)</span> are not comparable. Normalized mutual information and the adjusted Rand index correct for this, and both are in <code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>.</p>
 <p>All clustering algorithms depend on a <strong>distance metric</strong>. Common choices:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -550,6 +557,41 @@ document.write(`
 <p class="admonition-title"><span class="caption-number">Exercise 94 </span></p>
 <section id="exercise-content">
 <p>Point <span class="math notranslate nohighlight">\(p\)</span> has within-cluster average distance <span class="math notranslate nohighlight">\(a = 0.4\)</span> and average distance to the nearest other cluster <span class="math notranslate nohighlight">\(b = 1.2\)</span>. (a) Compute the silhouette score for <span class="math notranslate nohighlight">\(p\)</span>. (b) If <span class="math notranslate nohighlight">\(b\)</span> were reduced to <span class="math notranslate nohighlight">\(0.5\)</span> (clusters move closer together), recompute the silhouette score and explain what this change implies about cluster quality.</p>
+</section>
+</div>
+<div class="exercise admonition" id="ex-eda-purity-calc">
+
+<p class="admonition-title"><span class="caption-number">Exercise 95 </span></p>
+<section id="exercise-content">
+<p>A clustering of <span class="math notranslate nohighlight">\(N = 100\)</span> points into <span class="math notranslate nohighlight">\(K = 3\)</span> clusters is compared against <span class="math notranslate nohighlight">\(J = 3\)</span> true classes, giving the confusion matrix below (rows are true classes, columns are clusters):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\omega_1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\omega_2\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\omega_3\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(c_1\)</span></p></td>
+<td><p>30</p></td>
+<td><p>4</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(c_2\)</span></p></td>
+<td><p>5</p></td>
+<td><p>22</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(c_3\)</span></p></td>
+<td><p>3</p></td>
+<td><p>7</p></td>
+<td><p>20</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>(a) Compute the purity. (b) Now suppose <span class="math notranslate nohighlight">\(\omega_2\)</span> is split into two clusters of 16 and 17 points, whose majority classes contribute 14 and 11 correct points respectively. Recompute the purity and state whether the clustering has genuinely improved. (c) What purity would you get by placing each of the 100 points in its own cluster, and what does that tell you about using purity to select <span class="math notranslate nohighlight">\(K\)</span>?</p>
 </section>
 </div>
 </section>
@@ -649,7 +691,7 @@ document.write(`
 <p>The structure of the low-dimensional representations differs markedly across techniques. Throughout this chapter we use all three embeddings to illustrate how the same clustering algorithm can yield different groupings depending on how the data were reduced.</p>
 <div class="exercise admonition" id="ex-eda-cluster-prep">
 
-<p class="admonition-title"><span class="caption-number">Exercise 95 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 96 </span></p>
 <section id="exercise-content">
 <p>Re-run the dimensionality reduction above but use <code class="docutils literal notranslate"><span class="pre">n_components=3</span></code> instead of 2. Then create a 3D scatter plot of the PCA result using <code class="docutils literal notranslate"><span class="pre">ax</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(projection='3d')</span></code> and <code class="docutils literal notranslate"><span class="pre">ax.scatter(X_pca3[:,</span> <span class="pre">0],</span> <span class="pre">X_pca3[:,</span> <span class="pre">1],</span> <span class="pre">X_pca3[:,</span> <span class="pre">2],</span> <span class="pre">alpha=0.3,</span> <span class="pre">s=10)</span></code>. Does the third principal component reveal additional structure that is not visible in the 2D projection?</p>
 </section>
@@ -820,7 +862,7 @@ document.write(`
 </div>
 <div class="exercise admonition" id="ex-eda-kmeans-elbow">
 
-<p class="admonition-title"><span class="caption-number">Exercise 96 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 97 </span></p>
 <section id="exercise-content">
 <p>The <strong>elbow method</strong> selects the number of clusters by plotting within-cluster inertia (<code class="docutils literal notranslate"><span class="pre">model.inertia_</span></code> after fitting <code class="docutils literal notranslate"><span class="pre">KMeans</span></code>) against <span class="math notranslate nohighlight">\(k\)</span> and identifying the point where adding more clusters yields diminishing returns. Using the PCA-reduced Dow dataset, plot both inertia and silhouette score for <span class="math notranslate nohighlight">\(k \in [2, 12]\)</span>. Do the two criteria suggest the same optimal <span class="math notranslate nohighlight">\(k\)</span>?</p>
 </section>
@@ -970,7 +1012,7 @@ Silhouette (well-defined): 0.638
 <p>Restricting to high-confidence assignments substantially improves the silhouette score, confirming that ambiguous boundary points are responsible for much of the cluster overlap.</p>
 <div class="exercise admonition" id="ex-eda-gmm-bic">
 
-<p class="admonition-title"><span class="caption-number">Exercise 97 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 98 </span></p>
 <section id="exercise-content">
 <p>Using the BIC curve above as a guide, identify the optimal number of GMM components for the PCA-reduced Dow dataset. Refit a GMM with that number of components and plot the cluster assignments. Then refit a k-means model with the same <span class="math notranslate nohighlight">\(k\)</span> and compare silhouette scores for the two methods. Which better separates the data, and why might that be?</p>
 </section>
@@ -1104,7 +1146,7 @@ Silhouette (well-defined): 0.638
 </div>
 <div class="exercise admonition" id="ex-eda-meanshift-bw">
 
-<p class="admonition-title"><span class="caption-number">Exercise 98 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 99 </span></p>
 <section id="exercise-content">
 <p>Extend the bandwidth sweep above to include <code class="docutils literal notranslate"><span class="pre">bandwidth=3</span></code> and <code class="docutils literal notranslate"><span class="pre">bandwidth=50</span></code>. For each bandwidth, also report the Calinski-Harabász score (<code class="docutils literal notranslate"><span class="pre">calinski_harabasz_score</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>). Does the Calinski-Harabász score agree with the silhouette score on the best bandwidth?</p>
 </section>
@@ -1163,7 +1205,7 @@ Silhouette (well-defined): 0.638
 </div>
 <div class="exercise admonition" id="ex-eda-dbscan-eps">
 
-<p class="admonition-title"><span class="caption-number">Exercise 99 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 100 </span></p>
 <section id="exercise-content">
 <p>Using <code class="docutils literal notranslate"><span class="pre">DBSCAN</span></code> on the PCA-reduced Dow dataset, vary <code class="docutils literal notranslate"><span class="pre">eps</span></code> over <code class="docutils literal notranslate"><span class="pre">[0.5,</span> <span class="pre">1.0,</span> <span class="pre">2.0,</span> <span class="pre">3.0,</span> <span class="pre">5.0]</span></code> with <code class="docutils literal notranslate"><span class="pre">min_samples=5</span></code>. For each value, record the number of clusters found and the fraction of points labeled as noise. Plot a 1×5 panel of scatter plots and comment on how the cluster structure changes with <code class="docutils literal notranslate"><span class="pre">eps</span></code>.</p>
 </section>
@@ -1354,7 +1396,7 @@ ward        cophenetic = 0.8213
 </div>
 <div class="exercise admonition" id="ex-eda-linkage-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 100 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 101 </span></p>
 <section id="exercise-content">
 <p>Fit agglomerative hierarchical clustering models on the PCA-reduced Dow dataset using linkage methods <code class="docutils literal notranslate"><span class="pre">single</span></code>, <code class="docutils literal notranslate"><span class="pre">complete</span></code>, <code class="docutils literal notranslate"><span class="pre">average</span></code>, and <code class="docutils literal notranslate"><span class="pre">ward</span></code>, each extracting <code class="docutils literal notranslate"><span class="pre">k=4</span></code> clusters via <code class="docutils literal notranslate"><span class="pre">criterion='maxclust'</span></code>. Plot the four cluster assignments side-by-side and compute the silhouette score for each method. Which linkage produces the most compact, well-separated clusters?</p>
 </section>
@@ -1366,6 +1408,7 @@ ward        cophenetic = 0.8213
 <ul class="simple">
 <li><p><strong>Clustering</strong> is unsupervised: it identifies structure in data without labels. The three main families are expectation-maximization (k-means, GMM), density-based (mean shift, DBSCAN), and hierarchical.</p></li>
 <li><p><strong>Silhouette score</strong> (<span class="math notranslate nohighlight">\(-1\)</span> to <span class="math notranslate nohighlight">\(1\)</span>) and <strong>Calinski-Harabász score</strong> measure cluster compactness and separation without labels. <strong>BIC</strong> is available for probability-based models (GMMs) and penalizes model complexity.</p></li>
+<li><p>When true labels <em>are</em> available, cluster numbering is arbitrary, so accuracy cannot be used directly. <strong>Purity</strong> — the sum of the confusion-matrix column maxima divided by <span class="math notranslate nohighlight">\(N\)</span> — assigns each cluster its majority class and is unaffected by relabeling. It rises monotonically with <span class="math notranslate nohighlight">\(K\)</span>, so it can report on a clustering but cannot be used to choose <span class="math notranslate nohighlight">\(K\)</span>.</p></li>
 <li><p><strong>k-means</strong> is fast and often effective, but requires <span class="math notranslate nohighlight">\(k\)</span> upfront and assumes spherical clusters. Elbow plots and silhouette scores help choose <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
 <li><p><strong>Gaussian mixture models</strong> extend k-means with flexible covariance shapes and mixed membership probabilities. BIC provides a principled way to select the number of components.</p></li>
 <li><p><strong>Mean shift</strong> infers the number of clusters from the bandwidth parameter. The scikit-learn implementation is efficient and includes a bandwidth estimation utility.</p></li>
@@ -1379,6 +1422,7 @@ ward        cophenetic = 0.8213
 <ul class="simple">
 <li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn Clustering Guide</a> — comprehensive reference and algorithm comparison</p></li>
 <li><p>Hastie, Tibshirani &amp; Friedman, <em>The Elements of Statistical Learning</em>, Chapter 14 — unsupervised learning including clustering and mixture models</p></li>
+<li><p>Manning, Raghavan &amp; Schütze, <a class="reference external" href="https://nlp.stanford.edu/IR-book/"><em>Introduction to Information Retrieval</em></a>, Chapter 16 — the standard reference for purity and the other external evaluation measures for clustering</p></li>
 </ul>
 </section>
 </section>
