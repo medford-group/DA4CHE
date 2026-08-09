@@ -181,59 +181,26 @@ grader.check("q1")
 ### A2. Score it against the known chemistry (10 pts)
 
 Silhouette says how *tidy* the clusters are, not whether they are the **right** clusters.
-You have the true chemistry for every spectrum, so you can ask the second question too.
-
-The chapter's guidance is that "classification metrics (confusion matrix, precision,
-recall) can be applied when true labels are available". That is the right instinct, but it
-cannot be taken literally. Here are two labelings of the *same six points*, differing only
-in what the groups happen to be called:
-
-```{code-cell} ipython3
-from sklearn.metrics import accuracy_score, confusion_matrix
-
-truth    = np.array([0, 0, 1, 1, 2, 2])
-grouping = np.array([2, 2, 0, 0, 1, 1])   # identical partition, different cluster numbers
-
-print("accuracy_score:", accuracy_score(truth, grouping))
-```
-
-Zero — yet the grouping is perfect. Accuracy compares cluster *numbers*, which are
-arbitrary, against class numbers, which are not. A clustering algorithm has no way to know
-that its cluster 2 is your class 0, and no reason to care.
-
-The repair is to stop assuming cluster $j$ means class $j$, and let each cluster vote for
-itself:
-
-> Give every cluster the true class that is most common inside it, then count how many
-> spectra that gets right.
-
-The confusion matrix already holds what you need. `confusion_matrix(y_true, labels)`
-returns a table $C$ whose rows are true classes and whose columns are clusters, so
-$\max_i C_{ij}$ is the size of cluster $j$'s majority class, and
+You have the true chemistry for every spectrum, so you can ask the second question too —
+using **purity**, from the chapter's Accuracy and Distance Metrics section:
 
 $$
-\text{score} \;=\; \frac{1}{n}\sum_{\text{clusters } j} \; \max_{i} \; C_{ij}
+\text{purity}(\Omega, C) \;=\; \frac{1}{N} \sum_{k=1}^{K} \max_{j} \; |\omega_k \cap c_j|
 $$
 
-Renaming clusters permutes the columns of $C$, and a sum over columns does not care about
-their order — so unlike accuracy this score is unchanged, which is exactly why it can be
-graded automatically. On the six points above it gives 1.0, as it should:
+Each cluster is given the class most common inside it, and the score is the fraction of
+points that gets right. Read off a confusion matrix with true classes as rows and clusters
+as columns, it is the sum of the **column maxima** divided by $N$ — which is what makes it
+independent of how the clusters happen to be numbered, and therefore checkable here.
 
-```{code-cell} ipython3
-cm = confusion_matrix(truth, grouping)
-print(cm)
-print("score:", cm.max(axis=0).sum() / cm.sum())
-```
-
-Two anchors for reading it on the real data. Four classes of 100 spectra each means a
-clustering carrying no information at all scores about **0.25**, and a perfect one scores
-**1.0**. The quantity is standard and is called **cluster purity** in the literature; the
-chapter does not cover it, so everything needed to compute it is above.
+Two anchors for reading it on this data. Four classes of 100 spectra each means a
+clustering carrying no information scores about $1/J = 0.25$, and a perfect one scores 1.0.
 
 :::{exercise}
 :label: pr-eda-xps-purity
 
-Compute the purity of your A1 clustering against `y_true` and assign it to `purity_k4`.
+Compute the purity of your A1 clustering against `y_true` using
+`sklearn.metrics.confusion_matrix`, and assign it to `purity_k4`.
 :::
 
 ```{code-cell} ipython3
