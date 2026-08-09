@@ -77,7 +77,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-from sklearn.metrics import silhouette_score, adjusted_rand_score
+from sklearn.metrics import silhouette_score
 try:
     plt.style.use('../settings/plot_style.mplstyle')   # available inside the book
 except OSError:
@@ -115,14 +115,15 @@ grader = otter.Notebook()
 
 ### Preprocessing — use exactly this
 
-Raw XPS intensities carry an inelastic background and an arbitrary overall scale, so
-spectra must be put on a common footing before any distance is computed. Use precisely
-this recipe, or your numbers will not match:
+Raw XPS intensities sit on an inelastic background and have an arbitrary overall scale, so
+spectra must be put on a common footing before any distance is computed. Use precisely this
+recipe, or your numbers will not match:
 
-1. **Background**: for each spectrum, linearly interpolate between the mean of the first
-   20 channels and the mean of the last 20 channels; subtract it.
-2. **Clip** any resulting negative values to zero.
-3. **Normalize** each spectrum to unit area by dividing by `np.trapezoid(spectrum, energy)`.
+1. **Background**: for each spectrum, linearly interpolate between the mean of the first 20
+   channels and the mean of the last 20, and subtract it. `np.linspace` interpolates
+   between two arrays if you give it arrays.
+2. **Normalize**: divide each spectrum by its own total and multiply by 100, so every
+   spectrum sums to 100 — each channel is then a percentage of that sample's total signal.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
@@ -138,10 +139,10 @@ X = ...
 
 Three questions, 10 points each.
 
-A clustering has no canonical labeling — relabeling every cluster changes nothing about
-the partition. So none of these questions ask *which* cluster a spectrum landed in. Each
-asks for a quantity that is unchanged when clusters are renumbered, which is the only
-kind of answer that can be checked automatically.
+A clustering has no canonical labeling — renumbering every cluster changes nothing about
+the partition. So none of these ask *which* cluster a spectrum landed in. Each asks for a
+quantity that is unchanged when clusters are renumbered, which is the only kind of answer
+that can be checked automatically.
 
 ### A1. Cluster and score it without labels (10 pts)
 
@@ -151,14 +152,14 @@ kind of answer that can be checked automatically.
 Run k-means on `X` with
 
 ```
-KMeans(n_clusters=4, n_init=10, random_state=0)
+KMeans(n_clusters=4, n_init=50, random_state=0)
 ```
 
-and compute the **silhouette score** of the resulting partition using
+and compute the **silhouette score** of the resulting partition with
 `sklearn.metrics.silhouette_score`.
 
-Silhouette needs no ground truth — it measures only how much tighter each cluster is
-than its distance to the nearest other cluster.
+Silhouette needs no ground truth — it compares how tight each cluster is against how far it
+sits from its nearest neighbor, so it can be computed on data you have no labels for at all.
 
 Assign the score to `sil_k4`.
 :::
@@ -177,26 +178,69 @@ grader.check("q1")
 ```
 
 
-### A2. Score it against the truth (10 pts)
+### A2. Score it against the known chemistry (10 pts)
+
+Silhouette says how *tidy* the clusters are, not whether they are the **right** clusters.
+You have the true chemistry for every spectrum, so you can ask the second question too.
+
+The chapter's guidance is that "classification metrics (confusion matrix, precision,
+recall) can be applied when true labels are available". That is the right instinct, but it
+cannot be taken literally. Here are two labelings of the *same six points*, differing only
+in what the groups happen to be called:
+
+```{code-cell} ipython3
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+truth    = np.array([0, 0, 1, 1, 2, 2])
+grouping = np.array([2, 2, 0, 0, 1, 1])   # identical partition, different cluster numbers
+
+print("accuracy_score:", accuracy_score(truth, grouping))
+```
+
+Zero — yet the grouping is perfect. Accuracy compares cluster *numbers*, which are
+arbitrary, against class numbers, which are not. A clustering algorithm has no way to know
+that its cluster 2 is your class 0, and no reason to care.
+
+The repair is to stop assuming cluster $j$ means class $j$, and let each cluster vote for
+itself:
+
+> Give every cluster the true class that is most common inside it, then count how many
+> spectra that gets right.
+
+The confusion matrix already holds what you need. `confusion_matrix(y_true, labels)`
+returns a table $C$ whose rows are true classes and whose columns are clusters, so
+$\max_i C_{ij}$ is the size of cluster $j$'s majority class, and
+
+$$
+\text{score} \;=\; \frac{1}{n}\sum_{\text{clusters } j} \; \max_{i} \; C_{ij}
+$$
+
+Renaming clusters permutes the columns of $C$, and a sum over columns does not care about
+their order — so unlike accuracy this score is unchanged, which is exactly why it can be
+graded automatically. On the six points above it gives 1.0, as it should:
+
+```{code-cell} ipython3
+cm = confusion_matrix(truth, grouping)
+print(cm)
+print("score:", cm.max(axis=0).sum() / cm.sum())
+```
+
+Two anchors for reading it on the real data. Four classes of 100 spectra each means a
+clustering carrying no information at all scores about **0.25**, and a perfect one scores
+**1.0**. The quantity is standard and is called **cluster purity** in the literature; the
+chapter does not cover it, so everything needed to compute it is above.
 
 :::{exercise}
-:label: pr-eda-xps-ari
+:label: pr-eda-xps-purity
 
-Now use the labels. Compute the **adjusted Rand index** between `y_true` and your
-k-means assignment with `sklearn.metrics.adjusted_rand_score`.
-
-ARI compares two partitions by asking, over all pairs of points, how often the two
-agree about whether the pair belongs together. Because it only ever looks at pairs, it
-does not care what the clusters are named — which is exactly why it can be graded.
-
-Assign it to `ari_k4`.
+Compute the purity of your A1 clustering against `y_true` and assign it to `purity_k4`.
 :::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
 # YOUR CODE HERE
-ari_k4 = ...
+purity_k4 = ...
 ```
 
 ```{code-cell} ipython3
@@ -240,18 +284,22 @@ grader.check("q3")
 
 Two panels.
 
-1. **Choosing k.** For `k = 2, 3, 4, 5, 6, 7, 8`, run the same k-means configuration and
-   compute both the silhouette score and the ARI against `y_true`. Plot both against `k`
-   on one set of axes (use a second y-axis if the scales make that clearer). Mark the `k`
-   that maximizes silhouette.
-2. **What the clusters actually are.** Project `X` onto its first two principal
-   components and draw two scatter plots side by side: the same points colored first by
-   k-means cluster, then by true `chemistry`.
+1. **Choosing k.** For `k = 2 … 8`, run the same k-means configuration and compute both the
+   silhouette score and the purity against `y_true`. Plot both against `k` on one set of
+   axes and mark the `k` that maximizes silhouette.
+2. **What the clusters are.** Project `X` onto its first two principal components and draw
+   two scatter plots side by side: the same points colored first by k-means cluster, then
+   by true `chemistry`.
 
-Then, in **3–5 sentences**: silhouette picks the correct number of clusters, yet ARI at
-that `k` is only about 0.39. Explain how both can be true at once, using what the PC1–PC2
-scatter shows. Say what a silhouette score would have to look like for the clusters to
-correspond to genuinely distinct chemistries.
+Then, in **3–5 sentences**:
+
+- Silhouette picks a clear winner. Purity does not — look at what it does at `k = 7` and
+  `k = 8` compared with `k = 4`. Explain why purity behaves that way, and what would happen
+  to it if you allowed one cluster per spectrum.
+- Given that, which of the two metrics can be used to *choose* `k`, and which can only be
+  used to *report* on a choice already made?
+- The PC1–PC2 scatter shows the same points twice. Say what the comparison tells you about
+  why purity stalls near 0.72 rather than approaching 1.
 
 Label all axes with units.
 :::
@@ -260,7 +308,7 @@ Label all axes with units.
 :tags: [skip-execution]
 
 # YOUR CODE HERE
-fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 ```
 
 
@@ -268,29 +316,35 @@ fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
 
 ## Part C — Open Ended (35 pts)
 
-:::{exercise}
+::::{exercise}
 :label: pr-eda-xps-continuum
 
-k-means found the right number of clusters and still failed to recover the chemistry.
+k-means found the right number of clusters and still recovered the chemistry only partly.
 Work out why, and say what — if anything — would do better.
 
 Your answer should include:
 
-1. At least **three** clustering algorithms from {doc}`Clustering </5-exploratory_data_analysis/Topic5.3-Clustering>` besides
-   k-means — a Gaussian mixture, an agglomerative method, and a density-based method are
-   the obvious choices — each scored by ARI against `y_true`.
-2. An explanation of the result from A3: four chemical components, three principal
-   components. What constraint links them, and what shape does that force the data into?
+1. At least **three** clustering algorithms from this chapter besides k-means, each scored
+   by purity against `y_true` at a comparable number of clusters. Gaussian mixtures, a
+   density-based method, and hierarchical clustering via `scipy.cluster.hierarchy.linkage`
+   with `fcluster` are the obvious choices.
+2. An explanation of the A3 result: four chemical components, three principal components.
+   What constraint links them, and what shape does that force the data into?
 3. A short written argument (**one paragraph**) about whether *any* clustering algorithm
    should be expected to recover these four chemistries, citing your own numbers.
 
-One of the algorithms will fail dramatically — labeling most of the dataset as noise or
-finding no clusters at all. Do not treat that as a bug to be tuned away. Explain what its
-failure tells you about the shape of the data.
+One of the methods will behave strangely — either labeling most of the dataset as noise, or
+returning far more clusters than there are chemistries. Do not tune that away and move on.
+Explain what its behavior tells you about the shape of the data, and be careful comparing
+its purity against the others if it produced a different number of clusters.
 
-There is more than one defensible conclusion. You are graded on the reasoning and the
-evidence.
+:::{note}
+Domain knowledge of spectroscopy may be helpful here, but it is **not required** — the
+question can be answered entirely from the scores, the projections and the cluster counts.
 :::
+
+There is more than one defensible answer. You are graded on the reasoning and the evidence.
+::::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
@@ -303,19 +357,21 @@ evidence.
 
 ## Summary
 
-- Part A scored a clustering two ways — silhouette, which needs no labels, and the
-  adjusted Rand index, which uses them. Both are invariant to how clusters are numbered,
-  which is what makes an unsupervised result checkable at all.
-- Part B showed silhouette selecting the correct k while ARI stayed near 0.39, and the
-  PC1–PC2 projection revealed the reason: one connected cloud, not four islands.
-- Part C traced that back to the closure constraint on compositional data, and used a
-  density-based method's failure as positive evidence about the shape of the dataset.
+- Part A scored one clustering two ways: silhouette, which needs no labels, and purity,
+  which uses them but only through a per-cluster majority vote. Both are unchanged by
+  renumbering the clusters, which is what makes an unsupervised result checkable at all.
+- Part B showed the two metrics disagreeing on purpose. Silhouette peaks at the true number
+  of chemistries; purity keeps climbing as clusters are split, so it can report on a choice
+  but cannot make one.
+- Part C traced the stubborn gap between 0.72 and 1 back to the closure constraint on
+  compositional data, and used a density-based method's failure as positive evidence about
+  the shape of the dataset.
 
 ## Additional Reading
 
 1. NIST X-ray Photoelectron Spectroscopy Database, [SRD 20 Version 5.0](https://srdata.nist.gov/xps/)
    — the source of the C 1s chemical shifts used to build this dataset.
-2. [`sklearn.metrics.adjusted_rand_score`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.adjusted_rand_score.html)
-   — and the surrounding discussion of why unadjusted agreement measures are misleading.
+2. [`scipy.cluster.hierarchy.fcluster`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.fcluster.html)
+   — turning the linkage tree from the chapter into flat clusters.
 3. J. Aitchison, *The Statistical Analysis of Compositional Data*, J. R. Stat. Soc. B
    **44**, 139–177 (1982) — the origin of the simplex view of closed data.
