@@ -24,10 +24,14 @@ is the problem.
 
 Keeping the cache fresh
 -----------------------
-The cache is written opportunistically: whenever a call succeeds, its response is stored,
-so an ordinary online build refreshes everything it touched. Nothing is ever written from
-a failed or 5xx response, so a bad day cannot poison the cache. Delete
-`data/api_cache/` to force a full refresh.
+A response is stored the first time a call succeeds, and then left alone. It is deliberately
+*not* refreshed on every successful build: the pages here carry rotating Cloudflare tokens
+that change between requests, so re-storing them would dirty the working tree on every
+build without changing a single value anyone reads.
+
+The cache is a fallback, not a mirror — it only matters on the days the service is
+unreachable. To refresh it after an API genuinely changes, delete the file (or the whole
+`data/api_cache/` directory) and run the chapter once while online.
 """
 
 from __future__ import annotations
@@ -100,8 +104,9 @@ def safe_get(url, params=None, timeout=20, **kwargs):
         response = requests.get(url, params=params, timeout=timeout, **kwargs)
         if response.status_code < 500:
             # A 4xx is a genuine answer worth caching and worth showing the reader.
-            _store(path, {"url": url, "status_code": response.status_code,
-                          "text": response.text})
+            if not path.exists():
+                _store(path, {"url": url, "status_code": response.status_code,
+                              "text": response.text})
             return response
         reason = f"HTTP {response.status_code}"
     except Exception as exc:                      # noqa: BLE001 — any network trouble
@@ -127,7 +132,8 @@ def cached_json(key: str, producer):
     path = CACHE_DIR / f"{key}.json"
     try:
         value = producer()
-        _store(path, {"key": key, "value": value})
+        if not path.exists():
+            _store(path, {"key": key, "value": value})
         return value
     except Exception as exc:                      # noqa: BLE001
         if path.exists():
