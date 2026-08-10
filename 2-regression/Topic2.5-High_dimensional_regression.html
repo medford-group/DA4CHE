@@ -624,7 +624,7 @@ A baseline is the <strong>simplest reasonable model</strong> you can implement q
 <li><p><strong>Evaluated fairly</strong> with proper splitting/CV, the same metrics, and fixed randomness.</p></li>
 <li><p><strong>Reproducible</strong> with recorded settings and code.</p></li>
 </ul>
-<p>If a new approach cannot <strong>beat the baseline on held‑out data</strong>, revisit your data, features, or evaluation before adding complexity.</p>
+<p>If a new approach cannot <strong>beat the baseline on held-out data</strong>, revisit your data, features, or evaluation before adding complexity.</p>
 </div>
 <p>We see that the performance of the model is not great, and to improve things we will need to add some non-linearity. In 1-dimensional space we achieved this by adding transforms of the features as new features. However, this is more challenging in a high-dimensional space since the number of features will scale with the number of dimensions.</p>
 <div class="admonition note">
@@ -799,7 +799,7 @@ r^2 on full data using selected subset: 0.6055868410819657
 </div>
 </div>
 </div>
-<p>Note that the features selected with this more sophisticated approach differ from the naive approach, and that we are able to reach <span class="math notranslate nohighlight">\(r^2 &gt; 0.6\)</span> with just 10 features, instead of the 17 required above. This is because many of the features are highly correlated (as we already saw with the correlation matrix above), so some of the features selected in the naive univariate ranking were partially redundant. The <code class="docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code> approach above is much less tranparent, and uses some more advanced <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> features, but it also yields good results with relatively little code. Don’t worry if you don’t understand all the details: the main point is that there are different ways to do feature selection, and each strategy can yield different results.</p>
+<p>Note that the features selected with this more sophisticated approach differ from the naive approach, and that we are able to reach <span class="math notranslate nohighlight">\(r^2 &gt; 0.6\)</span> with just 10 features, instead of the 17 required above. This is because many of the features are highly correlated (as we already saw with the correlation matrix above), so some of the features selected in the naive univariate ranking were partially redundant. The <code class="docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code> approach above is much less transparent, and uses some more advanced <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> features, but it also yields good results with relatively little code. Don’t worry if you don’t understand all the details: the main point is that there are different ways to do feature selection, and each strategy can yield different results.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Choosing <code class="docutils literal notranslate"><span class="pre">n_features_to_select</span></code></strong><br />
@@ -847,7 +847,7 @@ dot(PC1, PC2) = 2.0827687919277988e-16
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>PCA coordinates vs. Cartesian coordinates</strong><br />
-Think of the usual x–y axes as a fixed Cartesian frame. PCA rotates this frame to a new set of perpendicular axes (the principal components) that align with the directions of greatest variance in the data—similar to choosing an origin and x- and y-axis when solving an engineering problem. The new axes are orthonormal (like the unit vectors i, j, k), and projecting data onto them is just taking dot products with these unit vectors. In this rotated frame, covariances vanish (the off‑diagonals go to ~0), so variability is concentrated along a few axes, making analysis and modeling simpler, but the underlying data is not really changed.</p>
+Think of the usual x–y axes as a fixed Cartesian frame. PCA rotates this frame to a new set of perpendicular axes (the principal components) that align with the directions of greatest variance in the data—similar to choosing an origin and x- and y-axis when solving an engineering problem. The new axes are orthonormal (like the unit vectors i, j, k), and projecting data onto them is just taking dot products with these unit vectors. In this rotated frame, covariances vanish (the off-diagonals go to ~0), so variability is concentrated along a few axes, making analysis and modeling simpler, but the underlying data is not really changed.</p>
 </div>
 <p>The eigenvalues provide the variance in each direction, and we can use this to determine how much variance each principal component contributes:</p>
 <div class="cell docutils container">
@@ -994,9 +994,9 @@ r^2 regular = 0.476
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Why is a PCR model not always better than direct linear regression?</strong><br />
-PCA orders directions by <strong>variance in X</strong>, not by how well they <strong>predict y</strong>. A high‑variance component can be weakly related (or unrelated) to the target, while a lower‑variance component might carry most of the predictive signal. PCR is unsupervised in its dimensionality reduction; it ignores <code class="docutils literal notranslate"><span class="pre">y</span></code> when choosing components.</p>
+PCA orders directions by <strong>variance in X</strong>, not by how well they <strong>predict y</strong>. A high-variance component can be weakly related (or unrelated) to the target, while a lower-variance component might carry most of the predictive signal. PCR is unsupervised in its dimensionality reduction; it ignores <code class="docutils literal notranslate"><span class="pre">y</span></code> when choosing components.</p>
 </div>
-<p>The PCA projection collects as much information as possible in each feature and orders components by variance. We can also check them one‑by‑one to see how they correlate:</p>
+<p>The PCA projection collects as much information as possible in each feature and orders components by variance. We can also check them one-by-one to see how they correlate:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">score_list</span> <span class="o">=</span> <span class="p">[]</span>
