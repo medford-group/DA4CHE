@@ -8,6 +8,11 @@ only_build_toc_files: true
 exclude_patterns:
   - "_build"
   - "_trash"
+  # `make test` copies the book into build/nbtest/work to execute it, and the pytest
+  # cache left behind there is otherwise read as an orphan page. Without this, any build
+  # run after a test run reports a warning that has nothing to do with the book.
+  - "build"
+  - "build/**"
   - "**/.ipynb_checkpoints"
   - ".venv"
   - ".venv/**"

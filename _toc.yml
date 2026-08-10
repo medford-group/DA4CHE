@@ -43,6 +43,7 @@ chapters:
       - file: 6-advanced_topics/Topic6.4-Neural_Network_Architectures
   - file: problem_sets/intro
     sections:
+      - file: problem_sets/Topic1.1-Python_Basics_Problems
       - file: problem_sets/Topic1.3-Linear_Regression_Problems
       - file: problem_sets/Topic2.2-Model_Validation_Problems
       - file: problem_sets/Topic5.3-Clustering_Problems

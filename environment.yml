@@ -53,6 +53,12 @@ dependencies:
   - pyyaml>=6.0,<7              # read by the manager-side scripts
 
   # --- Chapter-specific dependencies ---------------------------------------
+  # h5py, pyarrow and requests are imported directly by chapters but were only
+  # ever present transitively (pulled in by pandas/geopandas). Listed explicitly
+  # so a future solve cannot drop them and quietly break module 4.
+  - h5py>=3.10                  # Topic4.1 HDF5
+  - pyarrow>=17                 # Topic4.1 parquet
+  - requests>=2.32,<3           # Topic4.2 / 4.3 web APIs
   - geopandas>=1.1,<2           # Topic4.4 Complex Structured Data
   - pytorch>=2.0                # Topic6.3 / 6.4 Neural Networks
 
