@@ -144,23 +144,29 @@ A single neuron with a step or sigmoid activation places a **linear** decision b
 in the input space — exactly the same as logistic regression:
 
 ```{code-cell} ipython3
-xx, yy = np.meshgrid(np.linspace(-3, 3, 200), np.linspace(-3, 3, 200))
+xx, yy = np.meshgrid(np.linspace(-1.5, 2.5, 200), np.linspace(-1.5, 2.5, 200))
 Z = np.dot(np.column_stack([xx.ravel(), yy.ravel()]),
            np.array([1.0, -1.0])) + 0.0   # z = x1 - x2
 Z_sig = sigmoid(Z).reshape(xx.shape)
 
-fig, ax = plt.subplots(figsize=(5, 4))
+fig, ax = plt.subplots(figsize=(5.5, 4.5))
 c = ax.contourf(xx, yy, Z_sig, levels=20, cmap='RdBu_r', alpha=0.7)
 ax.contour(xx, yy, Z_sig, levels=[0.5], colors='k', linewidths=1.5)
 fig.colorbar(c, ax=ax, label='σ(z)')
-ax.set_title('Single neuron: sigmoid output surface')
+ax.scatter(X_xor[:, 0], X_xor[:, 1], c=[clrs[yi] for yi in y_xor],
+           edgecolors='k', s=120, zorder=5)
+ax.set_title('Single neuron: sigmoid output surface (XOR points overlaid)')
 ax.set_xlabel('$x_1$')
 ax.set_ylabel('$x_2$')
 plt.tight_layout()
 ```
 
 The straight black line is the decision boundary $z = 0$ (i.e., $x_1 - x_2 = 0$).
-A single neuron can only separate data with a straight line — it cannot solve XOR.
+The four XOR points are overlaid, colored by class — and the problem is immediately
+visible: this particular boundary even puts the two *same-class* gold points on
+opposite sides, and no rotation or shift of a single straight line can ever isolate
+the two gold corners from the two navy ones. A single neuron can only draw one
+straight line, so it cannot solve XOR.
 
 :::{exercise}
 :label: ex-eda-nn-neuron-impl
@@ -226,6 +232,46 @@ In practice, **ReLU** is the default for hidden layers in most modern networks.
 Sigmoid and softmax are used in output layers for binary and multi-class classification
 respectively.
 
+### ReLU Is a Hinge Function
+
+Look closely at the ReLU: $\max(0, z)$ is exactly the piecewise-linear **hinge
+function** from [Non-parametric Models](../2-regression/Topic2.1-Non-parametric_Models).
+There, we built a basis of hinges $\max(0, x - x_j)$ with a knot at every data point
+and fit their coefficients by least squares, turning ordinary linear regression into a
+linear interpolator. A ReLU neuron computes $\max(0, wx + b)$ — the same hinge, but
+with a slope $w$ and a knot located at $-b/w$. A sum of ReLU neurons is therefore a
+piecewise-linear function whose breakpoints and segment slopes we control. Using the
+Topic 2.1 machinery (fixed knots, least-squares coefficients):
+
+```{code-cell} ipython3
+x_demo = np.linspace(0, 2*np.pi, 200)
+y_true = np.sin(x_demo)
+
+knots = np.linspace(0, 2*np.pi, 8, endpoint=False)
+H = np.maximum(0, x_demo[:, None] - knots[None, :])   # one ReLU hinge per knot
+H = np.column_stack([np.ones_like(x_demo), H])        # plus an intercept
+
+coefs, *_ = np.linalg.lstsq(H, y_true, rcond=None)
+y_hinge = H @ coefs
+
+fig, ax = plt.subplots(figsize=(7, 3.5))
+ax.plot(x_demo, y_true, label='sin(x)', color=clrs[0], alpha=0.5, linewidth=3)
+ax.plot(x_demo, y_hinge, label='sum of 8 ReLU hinges', color=clrs[1])
+ax.plot(knots, np.interp(knots, x_demo, y_hinge), 'o', color=clrs[1], ms=5)
+ax.set_xlabel('x'); ax.set_ylabel('y')
+ax.legend()
+ax.set_title('A sum of ReLUs is a piecewise-linear interpolator')
+plt.tight_layout()
+```
+
+Eight hinges already trace the sine curve as eight straight segments, and adding knots
+makes the approximation arbitrarily good: **a sum of ReLUs with different offsets and
+slopes is an arbitrary piecewise-linear interpolator**, and piecewise-linear functions
+can track any continuous curve as closely as desired. The only thing a neural network
+adds to the Topic 2.1 picture is that the knots and slopes are not fixed in advance —
+they are *learned* by gradient descent. Keep this in mind for the next section: it is
+the intuition that makes the universal approximation theorem believable.
+
 :::{exercise}
 :label: ex-eda-nn-activation-plot
 
@@ -246,8 +292,13 @@ Compare the gradient properties of activation functions.
 ### Stacking Layers
 
 A **multi-layer perceptron (MLP)** (also called a fully-connected or dense network)
-stacks multiple layers of neurons. Each layer takes the activations of the previous
-layer as input:
+places many neurons side by side in a **hidden layer**: each neuron receives the same
+inputs, applies its own weights and activation, and the layer's outputs are combined
+by the layer after it. The "multi-layer" in the name counts the input, hidden, and
+output layers — a single hidden layer of many neurons already qualifies, and it is the
+width of that layer (not depth) that gives the simplest MLPs their flexibility. Deeper
+networks chain several hidden layers, each taking the previous layer's activations as
+input; with two hidden layers, for example:
 
 $$\mathbf{h}^{(1)} = \sigma(W^{(1)} \mathbf{x} + \mathbf{b}^{(1)})$$
 $$\mathbf{h}^{(2)} = \sigma(W^{(2)} \mathbf{h}^{(1)} + \mathbf{b}^{(2)})$$
@@ -255,37 +306,48 @@ $$\hat{y} = W^{(3)} \mathbf{h}^{(2)} + b^{(3)}$$
 
 (For regression, the output layer is typically linear; for classification, softmax.)
 
-**The Universal Approximation Theorem** states that a single hidden layer with enough
-neurons can approximate any continuous function on a compact domain — but this says
-nothing about how many neurons are needed or how easily the model can be trained.
-In practice, **depth** (more layers) is often more efficient than **width** (more
-neurons per layer): each added layer can represent exponentially more functions for
-the same number of parameters.
+**The Universal Approximation Theorem** states that a *single* hidden layer with
+enough neurons can approximate any continuous function on a compact domain. For ReLU
+activations you have already seen why this is plausible: one hidden layer of ReLU
+neurons is a sum of hinges — an arbitrary piecewise-linear interpolator that can track
+any continuous curve given enough knots. The theorem says nothing, however, about how
+many neurons are needed or how easily the model can be trained. In practice, **depth**
+(more layers) is often more efficient than **width** (more neurons per layer): each
+added layer can represent exponentially more functions for the same number of
+parameters.
 
-### Visualization: What Two-Layer XOR Looks Like
+### Visualization: What the MLP's XOR Solution Looks Like
 
 ```{code-cell} ipython3
-# Fit a two-layer MLP to XOR and visualize the decision surface
-from sklearn.neural_network import MLPClassifier
-from sklearn.inspection import DecisionBoundaryDisplay
-
-mlp_xor = MLPClassifier(hidden_layer_sizes=(4, 2), activation='relu',
-                         max_iter=5000, random_state=42)
+# Fit an MLP with one hidden layer of 4 neurons to XOR and visualize its output
+# surface. On a four-point dataset the full-batch quasi-Newton 'lbfgs' solver (the
+# BFGS method from Numerical Optimization) is far more reliable than stochastic
+# gradient descent, which frequently stalls in a flat region and never solves XOR.
+mlp_xor = MLPClassifier(hidden_layer_sizes=(4,), activation='tanh',
+                        solver='lbfgs', max_iter=5000, random_state=0)
 mlp_xor.fit(X_xor, y_xor)
+print(f'MLP accuracy on XOR: {mlp_xor.score(X_xor, y_xor):.2f}')
 
-fig, ax = plt.subplots(figsize=(5, 4))
-DecisionBoundaryDisplay.from_estimator(mlp_xor, X_xor, response_method='predict',
-                                        cmap='RdBu', alpha=0.4, ax=ax)
+xx, yy = np.meshgrid(np.linspace(-0.5, 1.5, 300), np.linspace(-0.5, 1.5, 300))
+P = mlp_xor.predict_proba(np.column_stack([xx.ravel(), yy.ravel()]))[:, 1].reshape(xx.shape)
+
+fig, ax = plt.subplots(figsize=(5.5, 4.5))
+c = ax.contourf(xx, yy, P, levels=20, cmap='RdBu_r', alpha=0.7)
+ax.contour(xx, yy, P, levels=[0.5], colors='k', linewidths=2)
+fig.colorbar(c, ax=ax, label='P(class 1)')
 ax.scatter(X_xor[:, 0], X_xor[:, 1], c=[clrs[yi] for yi in y_xor],
-           edgecolors='k', s=100, zorder=5)
-ax.set_title('MLP decision boundary — XOR')
+           edgecolors='k', s=120, zorder=5)
+ax.set_title('MLP output surface — XOR')
 ax.set_xlabel('$x_1$')
 ax.set_ylabel('$x_2$')
 plt.tight_layout()
 ```
 
-The MLP finds a non-linear boundary that correctly separates the XOR pattern — something
-no single neuron or linear model can achieve.
+This figure is the direct sequel to the single-neuron surface from earlier in the
+chapter — same plot, different model. Where the single neuron could only draw one
+straight line, the hidden layer's neurons each contribute a line, and the output
+neuron combines them into a *band*: the black 0.5 contour now separates the two gold
+corners from the two navy ones, which no single straight line can do.
 
 :::{exercise}
 :label: ex-eda-nn-mlp-width
@@ -309,9 +371,24 @@ Explore the effect of hidden layer width on XOR and a regression task.
 ### The Loss Surface
 
 Training a neural network means finding weights $\{W^{(l)}, \mathbf{b}^{(l)}\}$ that
-minimize a loss function. For regression, the standard choice is **mean squared error**:
+minimize a loss function — which is *exactly* the problem of
+[Numerical Optimization](../1-numerical_methods/Topic1.4-Numerical_Optimization): a
+scalar loss, a vector of parameters, and derivatives to guide the search. Everything
+from that chapter transfers; what changes is the scale. For regression, the standard
+loss is **mean squared error**:
 
 $$\mathcal{L}(\theta) = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i(\theta))^2$$
+
+This is the same least-squares loss we have minimized since Module 1, and it carries
+the same statistical meaning:
+[Nonlinear Parameter Estimation](../1-numerical_methods/Topic1.5-Parameter_Estimation)
+showed that minimizing squared error is **maximum likelihood estimation under the
+assumption of independent Gaussian noise** on the targets. That assumption is a
+modeling *choice*, and other choices lead to other losses: mean *absolute* error
+corresponds to heavier-tailed noise and is less sensitive to outliers, and the
+**cross-entropy** loss used for classification is likewise a negative log-likelihood —
+of a Bernoulli (or categorical) model for class labels rather than a Gaussian model
+for continuous targets.
 
 The loss is a function of all the weights — a surface in a very high-dimensional space.
 For a deep network with millions of parameters, visualizing this surface is impossible,
@@ -320,10 +397,25 @@ moving in the direction of steepest descent:
 
 $$\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}$$
 
-where $\eta$ is the **learning rate** (step size). Too large and the optimizer
-overshoots; too small and convergence is slow. **Mini-batch stochastic gradient descent
-(SGD)** estimates the gradient from a random subset of data at each step, which is
-faster and often finds better solutions than full-batch gradient descent.
+This is precisely the update rule we implemented by hand for the Gaussian-peak problem
+in Topic 1.4, where the learning rate $\eta$ (step size) posed the same dilemma: too
+large and the optimizer overshoots, too small and convergence is slow. The pathologies
+of that six-parameter problem carry over too. The loss surface is non-convex, gradients
+can vanish (a badly placed Gaussian there; a saturated sigmoid or dead ReLU here), and
+the optimizer can stall on a plateau — the failure of the default stochastic optimizer
+on XOR earlier in this chapter is exactly that.
+
+Two things genuinely change at neural-network scale:
+
+- **First-order methods take over.** Topic 1.4's workhorse BFGS builds an approximate
+  inverse Hessian, which is practical for six parameters (and still the most reliable
+  choice for our tiny XOR network) but not for millions. Large networks are trained
+  with gradient-only methods, and the gradients come from automatic differentiation —
+  Topic 1.4's `autograd`, industrialized as *backpropagation* (next section).
+- **Mini-batching.** **Stochastic gradient descent (SGD)** estimates the gradient from
+  a random subset (mini-batch) of the data at each step. Each step is far cheaper, and
+  the gradient noise turns out to be a feature: it helps the optimizer escape plateaus
+  and poor local minima that would trap full-batch descent.
 
 :::{exercise}
 :label: ex-eda-nn-lr-effect
