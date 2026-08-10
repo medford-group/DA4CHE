@@ -561,6 +561,17 @@ do not change the output much) and reducing the number of parameters.</p>
 </section>
 <section id="a-minimal-cnn-on-mnist-digits">
 <h3><a class="toc-backref" href="#id4" role="doc-backlink">A Minimal CNN on MNIST Digits</a><a class="headerlink" href="#a-minimal-cnn-on-mnist-digits" title="Link to this heading">#</a></h3>
+<p>This is our first PyTorch model, so the example doubles as a tour of the workflow
+that every PyTorch project follows: <strong>prepare tensors → define a model class → write
+the training loop → evaluate</strong>. Where scikit-learn’s <code class="docutils literal notranslate"><span class="pre">fit()</span></code> hid this machinery
+(Topic 6.3), PyTorch asks you to write it out — the price of the flexibility that
+custom architectures require.</p>
+<p>Step one is data preparation. The key move is <em>undoing the flattening</em> that every
+previous chapter applied to these images: a convolutional layer needs to know which
+pixels are neighbors, so the 64-value rows become 8×8 images again, with an explicit
+channel dimension (PyTorch’s convention is <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">channels,</span> <span class="pre">height,</span> <span class="pre">width)</span></code>; grayscale
+means one channel). The <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> handles the mini-batching from Topic 6.3 —
+shuffled batches of 32, one full pass through them per epoch:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_digits</span>
@@ -591,6 +602,16 @@ do not change the output much) and reducing the number of parameters.</p>
 </div>
 </div>
 </div>
+<p>Next, the model and its training loop. Read the model class in two halves. The
+<code class="docutils literal notranslate"><span class="pre">features</span></code> half is the convolutional part: two rounds of <em>convolve → ReLU → pool</em>,
+with the comments tracking how each image shrinks spatially (8×8 → 4×4 → 2×2) while
+growing in channels (1 → 8 → 16) — trading <em>where</em> for <em>what</em>. The <code class="docutils literal notranslate"><span class="pre">classifier</span></code> half
+is then exactly Topic 6.3’s MLP, applied to the flattened 16×2×2 = 64-value feature
+map: <strong>a CNN is learned feature engineering with an MLP on top</strong>. The training loop
+is what <code class="docutils literal notranslate"><span class="pre">MLPRegressor.fit()</span></code> did for us internally, now written out: for every
+mini-batch, zero the stored gradients, compute the loss, call <code class="docutils literal notranslate"><span class="pre">loss.backward()</span></code>
+(automatic differentiation — backpropagation), and let the optimizer take one step.
+One pass through all batches is one epoch, the unit on the loss curve’s x-axis:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SmallCNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -650,6 +671,10 @@ do not change the output much) and reducing the number of parameters.</p>
 <img alt="../_images/8e796555d4a24953b32f09a51190bd5e29defa393f6ba0d53732d5f96deee2a2.png" src="../_images/8e796555d4a24953b32f09a51190bd5e29defa393f6ba0d53732d5f96deee2a2.png" />
 </div>
 </div>
+<p>Evaluation uses two idioms worth memorizing: <code class="docutils literal notranslate"><span class="pre">.eval()</span></code> switches off training-only
+behavior, and <code class="docutils literal notranslate"><span class="pre">torch.no_grad()</span></code> turns off gradient tracking (faster, less memory,
+and a signal to the reader that no learning happens here). The network outputs ten
+scores per image; <code class="docutils literal notranslate"><span class="pre">argmax</span></code> picks the highest-scoring class:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cnn</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -715,7 +740,7 @@ it to unsupervised (PCA) and supervised (LDA) projections:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_37874/2142271274.py:37: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_38543/2142271274.py:37: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
   plt.tight_layout()
 /opt/homebrew/Caskroom/miniforge/base/envs/DA4CHE/lib/python3.10/site-packages/IPython/core/events.py:82: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
   func(*args, **kwargs)
@@ -728,6 +753,30 @@ it to unsupervised (PCA) and supervised (LDA) projections:</p>
 </div>
 <p>LDA and CNN projections typically show better cluster separation than PCA because both
 use label information — LDA explicitly, CNN implicitly through the classification loss.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>From grids to graphs: convolutions on molecules.</strong> Nothing about the shared-filter
+idea actually requires a <em>grid</em> — only a notion of “neighborhood.” Recall from
+<a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html"><span class="doc std std-doc">Complex Structured Data</span></a> that
+a molecule is naturally a graph: atoms as nodes, bonds as edges. <strong>Graph
+convolutional networks</strong> (more generally, <em>message-passing</em> networks) apply exactly
+the CNN trick to that setting: each atom updates its feature vector from its bonded
+neighbors using the <em>same</em> learned weights everywhere in the molecule, just as an
+image filter is reused at every pixel. Stacking layers lets information propagate
+across the molecular graph the way edges become corners become textures in a CNN.</p>
+<p>This architecture family now dominates <strong>machine-learned interatomic potentials
+(MLIPs)</strong> — models trained to reproduce quantum-mechanical energies and forces at a
+tiny fraction of the cost, which are transforming computational chemistry and
+materials science. State-of-the-art examples include <strong>MACE</strong>
+(<a class="reference external" href="https://arxiv.org/abs/2206.07697">Batatia et al., 2022</a>), a higher-order
+message-passing model, and Meta’s <strong>UMA</strong> family
+(<a class="reference external" href="https://arxiv.org/abs/2506.23971">Wood et al., 2025</a>), universal models trained
+across molecules, materials, and catalysts. You can try these models without
+installing anything at the
+<a class="reference external" href="https://aidemos.atmeta.com/uma">UMA playground</a>, which runs structure relaxations
+and simple simulations right in the browser — a molecular graph network you can
+poke at interactively.</p>
+</div>
 <div class="exercise admonition" id="ex-eda-nn-cnn-filters">
 
 <p class="admonition-title"><span class="caption-number">Exercise 132 </span></p>
@@ -856,6 +905,25 @@ we use a chronological train/test split:</p>
 </div>
 </div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">make_windows</span></code> should look familiar: it is the lag-feature construction from Topic
+6.2’s AR models — each training example is 24 consecutive hourly values, and the
+target is the value that came next (an AR(24), in that chapter’s language). The
+difference is what happens downstream: the AR model flattened the window into 24
+independent regression features, while the LSTM will consume it <em>as a sequence</em>, in
+order. Two practical details: the series is standardized before windowing (gradient
+training needs scaled inputs, as in Topic 6.3 — strictly, μ and σ should come from
+the training portion only, per Module 2’s leakage discipline; with a series this
+long the difference is negligible, but fit-on-train is the habit to keep), and
+<code class="docutils literal notranslate"><span class="pre">unsqueeze(-1)</span></code> adds a feature dimension because PyTorch’s LSTM expects
+<code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">sequence_length,</span> <span class="pre">features)</span></code> — here one feature, the impurity itself, per
+time step.</p>
+<p>The model is three lines of substance: <code class="docutils literal notranslate"><span class="pre">nn.LSTM</span></code> runs the gated cell over the window
+one step at a time, carrying the hidden and cell states through the gates described
+above; <code class="docutils literal notranslate"><span class="pre">out[:,</span> <span class="pre">-1,</span> <span class="pre">:]</span></code> takes the hidden state after the <em>last</em> step — the network’s
+32-number summary of everything it saw in the window — and a linear layer maps that
+summary to the forecast. The training loop is the same pattern as the CNN’s; only
+the model and the loss changed (MSE, the regression loss with the Gaussian-noise
+interpretation from Topic 6.3):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LSTMForecaster</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -896,6 +964,9 @@ we use a chronological train/test split:</p>
 <img alt="../_images/d5e73dea1b3810a8c0a7209d3588efeb010949f187bebc869c71e0a681384c20.png" src="../_images/d5e73dea1b3810a8c0a7209d3588efeb010949f187bebc869c71e0a681384c20.png" />
 </div>
 </div>
+<p>Evaluation mirrors the CNN’s (<code class="docutils literal notranslate"><span class="pre">eval()</span></code> + <code class="docutils literal notranslate"><span class="pre">no_grad()</span></code>), with one extra step: the
+model predicts in <em>standardized</em> units, so its outputs are mapped back to impurity
+units with the saved μ and σ before computing errors:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstm_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -938,6 +1009,28 @@ given the previous 24). This is comparable to the AR model from Topic 6.2. For a
 comparison with ARIMA, the same window-based approach should be used with the ARIMA
 model. LSTMs often outperform ARIMA when the series has complex nonlinear patterns or
 when many training examples are available.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Beyond recurrence: transformers and attention.</strong> An LSTM reads a sequence one step
+at a time, squeezing everything it has seen into a fixed-size state — for long
+sequences, a narrow bottleneck. <strong>Transformers</strong>
+(<a class="reference external" href="https://arxiv.org/abs/1706.03762">Vaswani et al., 2017, “Attention Is All You Need”</a>)
+abandon recurrence entirely. Their core mechanism, the <strong>attention head</strong>, lets every
+position in the sequence look directly at every other position and learn <em>which ones
+matter for interpreting it</em>: each element emits a query, is scored against every
+other element’s key, and pulls in a weighted combination of their values. The word
+“it” in a sentence can attend straight to the noun it refers to, fifty words back —
+no relay through fifty intermediate hidden states, and therefore no vanishing signal
+along the way. This is what cracked the language problem: attention handles
+long-range dependencies that defeated recurrent networks, and because all positions
+are processed in parallel rather than sequentially, transformers scale superbly on
+modern hardware. Stacked attention layers are the architecture behind essentially
+all large language models — including the assistants of
+<a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html"><span class="doc std std-doc">Accessing Data with AI Tools</span></a>.
+The price is that attention compares all pairs of positions, so cost grows
+quadratically with sequence length — one reason recurrent and state-space models
+remain competitive for very long time series.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-nn-lstm-window">
 
@@ -992,6 +1085,16 @@ models of Topic 5.4.</p></li>
 </div>
 </div>
 </div>
+<p>Notice what the <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> holds: inputs and <em>nothing else</em>. There are no labels
+anywhere in this example — the input will serve as its own target, which is the
+defining trick of the autoencoder.</p>
+<p>The architecture is two mirror-image MLPs. The encoder funnels 64 pixel values
+down through 32 and 16 to just <code class="docutils literal notranslate"><span class="pre">LATENT_DIM</span> <span class="pre">=</span> <span class="pre">2</span></code> numbers; the decoder widens back out
+to 64, ending in a sigmoid so outputs land in <span class="math notranslate nohighlight">\([0, 1]\)</span> like the normalized pixels.
+The training loop is the same pattern for the third time — the only novelty is in
+the loss line, <code class="docutils literal notranslate"><span class="pre">crit_ae(ae(xb),</span> <span class="pre">xb)</span></code>: the reconstruction is compared against <strong>the
+input itself</strong>. Everything the network learns follows from being forced to squeeze
+each image through the 2-number bottleneck and rebuild it:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LATENT_DIM</span> <span class="o">=</span> <span class="mi">2</span>   <span class="c1"># 2-D latent space for easy visualization</span>
@@ -1111,6 +1214,30 @@ were used during training. The clusters tend to be less separated than PCA or LD
 because the objective (reconstruction) is not directly aligned with class separation.
 Increasing the latent dimension or adding a classification loss would tighten the
 clustering.</p>
+<p><strong>From autoencoders to generative chemistry: VAEs.</strong> A plain autoencoder’s latent
+space has “holes”: decode an arbitrary point <span class="math notranslate nohighlight">\(\mathbf{z}\)</span> that no training image
+mapped to, and the output may be garbage. The <strong>variational autoencoder (VAE)</strong>
+(<a class="reference external" href="https://arxiv.org/abs/1312.6114">Kingma &amp; Welling, 2014</a>) fixes this by making the
+encoder output a <em>distribution</em> over latent space rather than a point, and adding a
+regularization term that keeps the latent space smooth and densely packed. The
+payoff: the decoder becomes a true <strong>generative model</strong> — sample any reasonable
+<span class="math notranslate nohighlight">\(\mathbf{z}\)</span> and decode a plausible new example — the neural sibling of sampling
+from the GMMs of Topic 5.4.</p>
+<p>That property launched an entire subfield of molecular design. The landmark is
+<a class="reference external" href="https://doi.org/10.1021/acscentsci.7b00572">Gómez-Bombarelli et al. (2018)</a>
+(<em>ACS Central Science</em>, from the Aspuru-Guzik group): a VAE trained on hundreds of
+thousands of molecules turns chemical space into a <em>continuous</em> latent space, where
+gradient-based optimization — the machinery of Module 1! — can search for molecules
+with better properties, and the decoder translates the optimized latent point back
+into a candidate structure. Inverse molecular design becomes numerical optimization.
+The idea has compounded with the other architectures in this chapter: for example,
+<a class="reference external" href="https://doi.org/10.1016/j.bpj.2025.01.022">Nguyen &amp; Karolak (2025)</a>
+(<em>Biophysical Journal</em>) generate drug-like candidate molecules with a <strong>transformer
+graph VAE</strong> — molecular graphs as input (the Topic 4.4 representation), attention
+for the encoding, and a VAE latent space for generation, uniting all three notes in
+this chapter in a single model. In engineering practice the same latent-space idea
+appears in process monitoring, where reconstruction error from an autoencoder
+trained on normal operation flags anomalous plant states.</p>
 <div class="exercise admonition" id="ex-eda-nn-ae">
 
 <p class="admonition-title"><span class="caption-number">Exercise 134 </span></p>
@@ -1229,6 +1356,22 @@ data is available to exploit it.</p></li>
 accessible survey of CNNs and RNNs</p></li>
 <li><p>Hochreiter, S. &amp; Schmidhuber, J. (1997), “Long Short-Term Memory,” <em>Neural Computation</em>
 9(8), 1735–1780 — original LSTM paper</p></li>
+<li><p>Vaswani, A. et al. (2017), “Attention Is All You Need,” <em>NeurIPS</em> —
+<a class="reference external" href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a>; the transformer paper</p></li>
+<li><p>Batatia, I., Kovács, D. P., Simm, G. N. C., Ortner, C. &amp; Csányi, G. (2022), “MACE:
+Higher order equivariant message passing neural networks for fast and accurate force
+fields,” <em>NeurIPS</em> — <a class="reference external" href="https://arxiv.org/abs/2206.07697">arXiv:2206.07697</a></p></li>
+<li><p>Wood, B. M. et al. (2025), “UMA: A family of universal models for atoms” —
+<a class="reference external" href="https://arxiv.org/abs/2506.23971">arXiv:2506.23971</a>; try it live at the
+<a class="reference external" href="https://aidemos.atmeta.com/uma">UMA playground</a></p></li>
+<li><p>Kingma, D. P. &amp; Welling, M. (2014), “Auto-encoding variational Bayes,” <em>ICLR</em> —
+<a class="reference external" href="https://arxiv.org/abs/1312.6114">arXiv:1312.6114</a>; the original VAE paper</p></li>
+<li><p>Gómez-Bombarelli, R. et al. (2018), “Automatic chemical design using a data-driven
+continuous representation of molecules,” <em>ACS Central Science</em> 4(2), 268–276 —
+<a class="reference external" href="https://doi.org/10.1021/acscentsci.7b00572">doi:10.1021/acscentsci.7b00572</a></p></li>
+<li><p>Nguyen, T. &amp; Karolak, A. (2025), “Transformer graph variational autoencoder for
+generative molecular design,” <em>Biophysical Journal</em> 124(3) —
+<a class="reference external" href="https://doi.org/10.1016/j.bpj.2025.01.022">doi:10.1016/j.bpj.2025.01.022</a></p></li>
 <li><p>PyTorch tutorials: <a class="reference external" href="https://pytorch.org/tutorials/">pytorch.org/tutorials</a></p></li>
 </ul>
 </section>
