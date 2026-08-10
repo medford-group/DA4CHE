@@ -483,8 +483,9 @@ regression problem, and use BIC and PACF to select the model order <span class="
 and understand why dynamic forecasts degrade over time.</p></li>
 <li><p>Fit an ARIMA(<span class="math notranslate nohighlight">\(p,d,q\)</span>) model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>, interpret the summary output, and
 generate forecasts with 95% confidence bands.</p></li>
-<li><p>Choose between AR, ARIMA, and seasonal ARIMA based on the ACF/PACF patterns and
-properties of the data, checking convergence and including a drift term when the
+<li><p>Use the ACF/PACF cutoff signatures to identify pure AR or MA processes, and — when
+both tail off — select <span class="math notranslate nohighlight">\((p, q)\)</span> by a small grid search judged by convergence,
+information criteria, and held-out forecast error, including a drift term when the
 data trend.</p></li>
 <li><p>Describe what a multivariate time series is, why it is harder to model than a
 univariate one, and where classical (VAR, state-space) and machine-learning (LSTM,
@@ -1067,7 +1068,7 @@ into a single model:</p>
 <tbody>
 <tr class="row-even"><td><p><span class="math notranslate nohighlight">\(p\)</span></p></td>
 <td><p>AR order — lags in the autoregressive term</p></td>
-<td><p>PACF of differenced series</p></td>
+<td><p>PACF of differenced series (if it cuts off; else bound + search)</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
 <td><p>Integration order — number of differences needed for stationarity</p></td>
@@ -1075,7 +1076,7 @@ into a single model:</p>
 </tr>
 <tr class="row-even"><td><p><span class="math notranslate nohighlight">\(q\)</span></p></td>
 <td><p>MA order — lags in the moving-average (residual) term</p></td>
-<td><p>ACF of differenced series</p></td>
+<td><p>ACF of differenced series (if it cuts off; else bound + search)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1106,38 +1107,148 @@ inspect the ACF and PACF of the once-differenced series:</p>
 <img alt="../_images/78093a6828ba15bb414feeb618c94e97437387d70468fdf138d19a04ebe199ef.png" src="../_images/78093a6828ba15bb414feeb618c94e97437387d70468fdf138d19a04ebe199ef.png" />
 </div>
 </div>
-<ul class="simple">
-<li><p><strong>PACF</strong> cuts off sharply after lag 3–5 → <span class="math notranslate nohighlight">\(p \approx 4\)</span></p></li>
-<li><p><strong>ACF</strong> cuts off sharply after lag 3–4 → <span class="math notranslate nohighlight">\(q \approx 4\)</span></p></li>
-</ul>
-<p>These readings are starting points, not final answers. In practice ARIMA(<span class="math notranslate nohighlight">\(4,1,4\)</span>) on
-this series fails to converge: with four AR <em>and</em> four MA terms the model is
-over-parameterized, and near-cancelling AR/MA roots leave the likelihood surface too
-flat for the optimizer (statsmodels raises a <code class="docutils literal notranslate"><span class="pre">ConvergenceWarning</span></code>, and estimates from
-a non-converged fit should not be trusted — the same lesson as checking
-<code class="docutils literal notranslate"><span class="pre">result.success</span></code> in <a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="std std-doc">Numerical Optimization</span></a>).
-Trimming the MA order to <span class="math notranslate nohighlight">\(q = 2\)</span> resolves it. Two other settings matter:</p>
-<ul class="simple">
-<li><p><strong>Drift.</strong> With <span class="math notranslate nohighlight">\(d \ge 1\)</span>, statsmodels excludes a constant term by default, so the
-forecast eventually levels off at the last value — clearly wrong for a series with a
-persistent upward trend. Passing <code class="docutils literal notranslate"><span class="pre">trend='t'</span></code> adds a linear-in-time term, which after
-one difference acts as a constant <em>drift</em>: the forecast keeps climbing at the
-average historical rate.</p></li>
-<li><p><strong>Convergence check.</strong> Always confirm <code class="docutils literal notranslate"><span class="pre">mle_retvals['converged']</span></code> after fitting.</p></li>
-</ul>
-</section>
-<section id="fitting-arima">
-<h3><a class="toc-backref" href="#id15" role="doc-backlink">Fitting ARIMA</a><a class="headerlink" href="#fitting-arima" title="Link to this heading">#</a></h3>
+<p>How are these plots supposed to determine <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(q\)</span>? The textbook rules come from
+exact properties of <em>pure</em> processes:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Process</p></th>
+<th class="head"><p>ACF</p></th>
+<th class="head"><p>PACF</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pure AR(<span class="math notranslate nohighlight">\(p\)</span>)</p></td>
+<td><p>tails off gradually</p></td>
+<td><p><strong>cuts off after lag <span class="math notranslate nohighlight">\(p\)</span></strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Pure MA(<span class="math notranslate nohighlight">\(q\)</span>)</p></td>
+<td><p><strong>cuts off after lag <span class="math notranslate nohighlight">\(q\)</span></strong></p></td>
+<td><p>tails off gradually</p></td>
+</tr>
+<tr class="row-even"><td><p>Mixed ARMA(<span class="math notranslate nohighlight">\(p,q\)</span>)</p></td>
+<td><p>tails off</p></td>
+<td><p>tails off</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A pure MA(<span class="math notranslate nohighlight">\(q\)</span>) observation shares shocks only with neighbors up to <span class="math notranslate nohighlight">\(q\)</span> steps away, so
+its autocovariance is <em>exactly zero</em> beyond lag <span class="math notranslate nohighlight">\(q\)</span> — the ACF cuts off. A pure AR(<span class="math notranslate nohighlight">\(p\)</span>)
+depends on only <span class="math notranslate nohighlight">\(p\)</span> lags, and the PACF at lag <span class="math notranslate nohighlight">\(k\)</span> is the coefficient on <span class="math notranslate nohighlight">\(x_{t-k}\)</span>
+<em>after controlling for the intervening lags</em> — exactly zero for <span class="math notranslate nohighlight">\(k &gt; p\)</span>. When either
+plot shows a clean cutoff, the corresponding order can be read straight off it.</p>
+<p>Now read our plots honestly against that table. <strong>Neither cuts off.</strong> The ACF is
+statistically significant at essentially every lag (with <span class="math notranslate nohighlight">\(n \approx 2300\)</span>, the 95%
+band is only <span class="math notranslate nohighlight">\(\pm 0.04\)</span>) and <em>oscillates with the annual cycle</em> — negative near lag
+26, positive again at lag 52. The PACF’s first three to five lags dominate, but
+significant values reappear at higher lags. Both tailing off is the <em>mixed ARMA</em>
+signature — the orders cannot be read from the plots — and the lag-52 structure warns
+that unmodeled seasonality is contaminating everything. The plots earn their keep as
+rough <strong>upper bounds</strong> (<span class="math notranslate nohighlight">\(p, q \lesssim 4\)</span>), nothing more.</p>
+<p>When the plots cannot decide, search. The grid below fits every <span class="math notranslate nohighlight">\((p, q)\)</span> up to those
+bounds (with <span class="math notranslate nohighlight">\(d = 1\)</span> and drift — see the note after the table) and records three
+things: whether the optimizer converged, the in-sample BIC, and the mean absolute
+error of a dynamic forecast over the held-out period:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.arima.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARIMA</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.arima.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARIMA</span>
 
 <span class="c1"># Temporal split</span>
 <span class="n">train_co2</span> <span class="o">=</span> <span class="n">co2_df</span><span class="p">[</span><span class="s1">&#39;co2_interp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">N_train</span><span class="p">]</span>
 <span class="n">test_co2</span>  <span class="o">=</span> <span class="n">co2_df</span><span class="p">[</span><span class="s1">&#39;co2_interp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">N_train</span><span class="p">:</span><span class="n">N_train</span> <span class="o">+</span> <span class="n">N_test</span><span class="p">]</span>
 
-<span class="n">arima</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">train_co2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
-<span class="n">arima_fit</span> <span class="o">=</span> <span class="n">arima</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">p_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">q_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p_</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">q_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>   <span class="c1"># convergence is recorded explicitly below</span>
+            <span class="n">fit</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">train_co2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">p_</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">q_</span><span class="p">),</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">get_forecast</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="n">N_test</span><span class="p">)</span><span class="o">.</span><span class="n">predicted_mean</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="n">p_</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">q_</span><span class="p">,</span> <span class="s1">&#39;converged&#39;</span><span class="p">:</span> <span class="n">fit</span><span class="o">.</span><span class="n">mle_retvals</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;BIC&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">bic</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                     <span class="s1">&#39;val MAE (ppm)&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fc</span> <span class="o">-</span> <span class="n">test_co2</span><span class="o">.</span><span class="n">values</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)})</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Best 5 by in-sample BIC:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;BIC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Best 5 by held-out forecast MAE (converged models only):&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">grid</span><span class="o">.</span><span class="n">converged</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;val MAE (ppm)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Models that failed to converge:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="o">~</span><span class="n">grid</span><span class="o">.</span><span class="n">converged</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best 5 by in-sample BIC:
+ p  q  converged    BIC  val MAE (ppm)
+ 4  2       True 1966.8           3.41
+ 2  3       True 1981.2           3.30
+ 3  2       True 1994.0           3.01
+ 3  4      False 1995.3           3.28
+ 2  2       True 2002.9           2.71
+
+Best 5 by held-out forecast MAE (converged models only):
+ p  q  converged    BIC  val MAE (ppm)
+ 2  1       True 2126.7           2.16
+ 1  1       True 2189.6           2.20
+ 1  2       True 2068.0           2.22
+ 3  1       True 2057.4           2.22
+ 4  1       True 2059.3           2.24
+
+Models that failed to converge:
+ p  q  converged    BIC  val MAE (ppm)
+ 3  4      False 1995.3           3.28
+ 4  3      False 2008.6           3.06
+ 4  4      False 2010.9           2.84
+</pre></div>
+</div>
+</div>
+</div>
+<p>The grid teaches three lessons at once:</p>
+<ol class="arabic simple">
+<li><p><strong>The biggest models do not converge.</strong> ARIMA(<span class="math notranslate nohighlight">\(4,1,4\)</span>) — the order a naive reading
+of the plots might suggest — fails outright, along with its neighbors: with four AR
+<em>and</em> four MA terms the model is over-parameterized, and near-cancelling AR/MA
+roots leave the likelihood surface too flat for the optimizer. Estimates from a
+non-converged fit should not be trusted — the same lesson as checking
+<code class="docutils literal notranslate"><span class="pre">result.success</span></code> in <a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="std std-doc">Numerical Optimization</span></a>.
+Always confirm <code class="docutils literal notranslate"><span class="pre">mle_retvals['converged']</span></code>.</p></li>
+<li><p><strong>The two criteria disagree.</strong> BIC, computed in-sample, keeps rewarding larger
+models — its favorite is ARIMA(<span class="math notranslate nohighlight">\(4,1,2\)</span>) — because extra ARMA terms partially absorb
+the unmodeled seasonality. But those same terms extrapolate badly: the BIC winner
+has the <em>worst</em> held-out forecast error in the table. When the model class is
+misspecified (here: no seasonal terms), information criteria overfit relative to
+genuine forecasting, and the chronological validation split is the honest arbiter.</p></li>
+<li><p><strong>Parsimony wins.</strong> ARIMA(<span class="math notranslate nohighlight">\(2,1,1\)</span>) forecasts best (MAE ≈ 2.2 ppm), converges
+cleanly, and is consistent with the honest PACF reading (the first few lags carry
+the direct signal). That is our model.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Two settings used throughout the grid: <strong>drift</strong> — with <span class="math notranslate nohighlight">\(d \ge 1\)</span>, statsmodels
+excludes a constant term by default, so forecasts eventually level off at the last
+value, clearly wrong for a trending series; <code class="docutils literal notranslate"><span class="pre">trend='t'</span></code> adds a linear-in-time term,
+which after one difference acts as a constant drift. And a <strong>caveat on the selection
+itself</strong> — using the held-out period to <em>choose</em> the model makes it a validation set,
+so the winner’s MAE is no longer an unbiased estimate of future error. For an honest
+final number you would reserve a third, untouched span — exactly the
+train/validation/test discipline of
+<a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html"><span class="std std-doc">Model Validation</span></a>.</p>
+</div>
+</section>
+<section id="fitting-arima">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Fitting ARIMA</a><a class="headerlink" href="#fitting-arima" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arima</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">train_co2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="c1"># statsmodels notes that it replaced its default *starting* parameter guesses —</span>
+    <span class="c1"># a startup detail, not a convergence problem; convergence is checked explicitly</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+    <span class="n">arima_fit</span> <span class="o">=</span> <span class="n">arima</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converged: </span><span class="si">{</span><span class="n">arima_fit</span><span class="o">.</span><span class="n">mle_retvals</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">arima_fit</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 </pre></div>
@@ -1148,28 +1259,25 @@ average historical rate.</p></li>
                                SARIMAX Results                                
 ==============================================================================
 Dep. Variable:             co2_interp   No. Observations:                 1713
-Model:                 ARIMA(4, 1, 2)   Log Likelihood                -953.605
-Date:                Mon, 10 Aug 2026   AIC                           1923.209
-Time:                        12:21:25   BIC                           1966.772
-Sample:                    03-29-1958   HQIC                          1939.331
+Model:                 ARIMA(2, 1, 1)   Log Likelihood               -1044.758
+Date:                Mon, 10 Aug 2026   AIC                           2099.516
+Time:                        12:43:04   BIC                           2126.743
+Sample:                    03-29-1958   HQIC                          2109.592
                          - 01-19-1991                                         
 Covariance Type:                  opg                                         
 ==============================================================================
                  coef    std err          z      P&gt;|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-x1             0.0223      0.020      1.129      0.259      -0.016       0.061
-ar.L1          1.5835      0.031     50.717      0.000       1.522       1.645
-ar.L2         -0.5739      0.046    -12.344      0.000      -0.665      -0.483
-ar.L3          0.0965      0.043      2.219      0.027       0.011       0.182
-ar.L4         -0.1625      0.027     -6.129      0.000      -0.214      -0.111
-ma.L1         -1.7059      0.023    -72.900      0.000      -1.752      -1.660
-ma.L2          0.8088      0.022     35.958      0.000       0.765       0.853
-sigma2         0.1782      0.005     33.980      0.000       0.168       0.189
+x1             0.0241      0.028      0.850      0.395      -0.031       0.080
+ar.L1          0.6545      0.043     15.135      0.000       0.570       0.739
+ar.L2          0.2181      0.026      8.392      0.000       0.167       0.269
+ma.L1         -0.6732      0.042    -16.091      0.000      -0.755      -0.591
+sigma2         0.1984      0.006     33.048      0.000       0.187       0.210
 ===================================================================================
-Ljung-Box (L1) (Q):                   0.02   Jarque-Bera (JB):                48.46
-Prob(Q):                              0.90   Prob(JB):                         0.00
-Heteroskedasticity (H):               1.13   Skew:                            -0.09
-Prob(H) (two-sided):                  0.14   Kurtosis:                         3.81
+Ljung-Box (L1) (Q):                   2.24   Jarque-Bera (JB):                34.58
+Prob(Q):                              0.13   Prob(JB):                         0.00
+Heteroskedasticity (H):               1.16   Skew:                            -0.13
+Prob(H) (two-sided):                  0.08   Kurtosis:                         3.65
 ===================================================================================
 
 Warnings:
@@ -1187,7 +1295,7 @@ Warnings:
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">train_co2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training data&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">fitted</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ARIMA in-sample fit&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ARIMA(4,1,2) with drift — in-sample fit&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ARIMA(2,1,1) with drift — in-sample fit&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
@@ -1197,10 +1305,10 @@ Warnings:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>In-sample mean absolute error: 0.323 ppm
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>In-sample mean absolute error: 0.346 ppm
 </pre></div>
 </div>
-<img alt="../_images/1cff7cb4ffac118d9015da8fc2ff74689dd8f8492e58cc4aa071dd45c575d302.png" src="../_images/1cff7cb4ffac118d9015da8fc2ff74689dd8f8492e58cc4aa071dd45c575d302.png" />
+<img alt="../_images/3fb3de3d3d8387a3a7fb82829da69e2ca68948e88e3cbc36368d5cd989489b49.png" src="../_images/3fb3de3d3d8387a3a7fb82829da69e2ca68948e88e3cbc36368d5cd989489b49.png" />
 </div>
 </div>
 <p>The fit hugs the data so closely that the two curves are nearly indistinguishable —
@@ -1240,7 +1348,7 @@ nor for the model being wrong. Real coverage is usually somewhat worse than nomi
 <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">fc_ci</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
                 <span class="n">fc_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">fc_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">clrs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;95% CI&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ARIMA(4,1,2) with drift — dynamic forecast&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ARIMA(2,1,1) with drift — dynamic forecast&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
@@ -1252,19 +1360,20 @@ nor for the model being wrong. Real coverage is usually somewhat worse than nomi
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test MAE: 3.41 ppm;  fraction of test data inside 95% bands: 98.2%
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test MAE: 2.16 ppm;  fraction of test data inside 95% bands: 100.0%
 </pre></div>
 </div>
-<img alt="../_images/b5a7365e8ef639b83d9e2a0f3cf690129e36bd7ba20809579cacbfd64361c463.png" src="../_images/b5a7365e8ef639b83d9e2a0f3cf690129e36bd7ba20809579cacbfd64361c463.png" />
+<img alt="../_images/14c44796673e5804b0ab8424cea1f578955b349cc1dae9f746b3707c5fd1757e.png" src="../_images/14c44796673e5804b0ab8424cea1f578955b349cc1dae9f746b3707c5fd1757e.png" />
 </div>
 </div>
-<p>Thanks to the drift term, the forecast continues the long-run rise across the entire
-test period (without it, the prediction would level off almost immediately at the last
-training value). A brief transient from the AR terms is visible in the first few
-weeks, but the annual oscillation fades quickly — a plain ARIMA model has no seasonal
-terms, so it cannot regenerate the cycle. The 95% bands widen over the horizon exactly
-as the theory above predicts, from under ±1 ppm at the first step to tens of ppm by
-the end, and they comfortably contain the test data.</p>
+<p>Thanks to the drift term, the forecast climbs steadily across the entire test period
+(without it, the prediction would level off almost immediately at the last training
+value) and ends within about 2 ppm of the actual final value. The annual oscillation
+is absent, though — a plain ARIMA model has no seasonal terms, so it cannot regenerate
+the cycle, and the forecast threads through the middle of the seasonal swings instead.
+The 95% bands widen over the horizon exactly as the theory above predicts, from under
+±1 ppm at the first step to tens of ppm by the end, and they comfortably contain the
+test data.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Seasonal ARIMA (SARIMA)</strong> extends the model to explicitly handle periodic
@@ -1282,8 +1391,11 @@ statsmodels <code class="docutils literal notranslate"><span class="pre">SARIMAX
 <ol class="arabic simple">
 <li><p>Use the Augmented Dickey-Fuller test to determine <span class="math notranslate nohighlight">\(d\)</span> (the number of differences
 needed for stationarity).</p></li>
-<li><p>Inspect the ACF and PACF of the differenced series to estimate <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(q\)</span>.</p></li>
-<li><p>Fit <code class="docutils literal notranslate"><span class="pre">ARIMA(p,</span> <span class="pre">d,</span> <span class="pre">q)</span></code> on the first 75% of the Dow data (chronological split).</p></li>
+<li><p>Inspect the ACF and PACF of the differenced series. Do the cutoff signatures
+apply, or do both tail off? Use them to bound <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(q\)</span>.</p></li>
+<li><p>Select <span class="math notranslate nohighlight">\((p, q)\)</span> within your bounds by a small grid search (convergence + BIC +
+held-out MAE, as in the CO₂ example) and fit the winner on the first 75% of the
+Dow data (chronological split).</p></li>
 <li><p>Generate a dynamic forecast for the remaining 25%. Plot the forecast with 95%
 confidence bands overlaid on the actual test data.</p></li>
 <li><p>Report the mean absolute error (MAE) on the test set. How does it compare to
@@ -1429,10 +1541,12 @@ quickly as errors accumulate — this gap is a key diagnostic of how much genuin
 predictability exists beyond the trend.</p></li>
 <li><p><strong>ARIMA(<span class="math notranslate nohighlight">\(p,d,q\)</span>)</strong> packages differencing (<span class="math notranslate nohighlight">\(d\)</span>), autoregression (<span class="math notranslate nohighlight">\(p\)</span>), and
 moving-average error terms (<span class="math notranslate nohighlight">\(q\)</span>) into a single framework. The parameters are chosen
-from PACF (→ <span class="math notranslate nohighlight">\(p\)</span>), ADF test (→ <span class="math notranslate nohighlight">\(d\)</span>), and ACF (→ <span class="math notranslate nohighlight">\(q\)</span>) — then adjusted for practical
-behavior: check that the MLE converged (over-parameterized ARMA terms often prevent
-it), and include a drift term (<code class="docutils literal notranslate"><span class="pre">trend='t'</span></code>) so forecasts of trending data continue
-the trend. Forecast bands come from the estimated innovation variance accumulated
+starting from the plots — ADF test (→ <span class="math notranslate nohighlight">\(d\)</span>), and the ACF/PACF <em>cutoff signatures</em>
+(→ <span class="math notranslate nohighlight">\(q\)</span>, <span class="math notranslate nohighlight">\(p\)</span>) where they apply. When both plots tail off (mixed ARMA), the orders are
+not readable: bound them and grid-search, judging by convergence (over-parameterized
+ARMA terms often fail to converge), information criteria, and held-out forecast
+error — which can disagree, and out-of-sample error is the honest arbiter. Include a
+drift term (<code class="docutils literal notranslate"><span class="pre">trend='t'</span></code>) so forecasts of trending data continue the trend. Forecast bands come from the estimated innovation variance accumulated
 over the horizon; they cover future randomness, not parameter or model error.</p></li>
 <li><p>For seasonal data like CO₂, <strong>SARIMA</strong> extends ARIMA with seasonal terms; for
 purely trend-plus-noise industrial data like Dow impurity, standard ARIMA or AR

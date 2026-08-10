@@ -28,8 +28,9 @@ By the end of this chapter, you will be able to:
   and understand why dynamic forecasts degrade over time.
 - Fit an ARIMA($p,d,q$) model using `statsmodels`, interpret the summary output, and
   generate forecasts with 95% confidence bands.
-- Choose between AR, ARIMA, and seasonal ARIMA based on the ACF/PACF patterns and
-  properties of the data, checking convergence and including a drift term when the
+- Use the ACF/PACF cutoff signatures to identify pure AR or MA processes, and — when
+  both tail off — select $(p, q)$ by a small grid search judged by convergence,
+  information criteria, and held-out forecast error, including a drift term when the
   data trend.
 - Describe what a multivariate time series is, why it is harder to model than a
   univariate one, and where classical (VAR, state-space) and machine-learning (LSTM,
@@ -501,9 +502,9 @@ into a single model:
 
 | Parameter | Meaning | How to choose |
 |---|---|---|
-| $p$ | AR order — lags in the autoregressive term | PACF of differenced series |
+| $p$ | AR order — lags in the autoregressive term | PACF of differenced series (if it cuts off; else bound + search) |
 | $d$ | Integration order — number of differences needed for stationarity | ADF test (typically $d=1$ for most economic/physical series) |
-| $q$ | MA order — lags in the moving-average (residual) term | ACF of differenced series |
+| $q$ | MA order — lags in the moving-average (residual) term | ACF of differenced series (if it cuts off; else bound + search) |
 
 The **moving-average (MA)** component uses past *forecast errors* rather than past
 observations:
@@ -527,35 +528,105 @@ plot_pacf(diffed, lags=52, ax=axes[1], title='PACF — first difference')
 plt.tight_layout()
 ```
 
-- **PACF** cuts off sharply after lag 3–5 → $p \approx 4$
-- **ACF** cuts off sharply after lag 3–4 → $q \approx 4$
+How are these plots supposed to determine $p$ and $q$? The textbook rules come from
+exact properties of *pure* processes:
 
-These readings are starting points, not final answers. In practice ARIMA($4,1,4$) on
-this series fails to converge: with four AR *and* four MA terms the model is
-over-parameterized, and near-cancelling AR/MA roots leave the likelihood surface too
-flat for the optimizer (statsmodels raises a `ConvergenceWarning`, and estimates from
-a non-converged fit should not be trusted — the same lesson as checking
-`result.success` in [Numerical Optimization](../1-numerical_methods/Topic1.4-Numerical_Optimization.md)).
-Trimming the MA order to $q = 2$ resolves it. Two other settings matter:
+| Process | ACF | PACF |
+|---|---|---|
+| Pure AR($p$) | tails off gradually | **cuts off after lag $p$** |
+| Pure MA($q$) | **cuts off after lag $q$** | tails off gradually |
+| Mixed ARMA($p,q$) | tails off | tails off |
 
-- **Drift.** With $d \ge 1$, statsmodels excludes a constant term by default, so the
-  forecast eventually levels off at the last value — clearly wrong for a series with a
-  persistent upward trend. Passing `trend='t'` adds a linear-in-time term, which after
-  one difference acts as a constant *drift*: the forecast keeps climbing at the
-  average historical rate.
-- **Convergence check.** Always confirm `mle_retvals['converged']` after fitting.
+A pure MA($q$) observation shares shocks only with neighbors up to $q$ steps away, so
+its autocovariance is *exactly zero* beyond lag $q$ — the ACF cuts off. A pure AR($p$)
+depends on only $p$ lags, and the PACF at lag $k$ is the coefficient on $x_{t-k}$
+*after controlling for the intervening lags* — exactly zero for $k > p$. When either
+plot shows a clean cutoff, the corresponding order can be read straight off it.
 
-### Fitting ARIMA
+Now read our plots honestly against that table. **Neither cuts off.** The ACF is
+statistically significant at essentially every lag (with $n \approx 2300$, the 95%
+band is only $\pm 0.04$) and *oscillates with the annual cycle* — negative near lag
+26, positive again at lag 52. The PACF's first three to five lags dominate, but
+significant values reappear at higher lags. Both tailing off is the *mixed ARMA*
+signature — the orders cannot be read from the plots — and the lag-52 structure warns
+that unmodeled seasonality is contaminating everything. The plots earn their keep as
+rough **upper bounds** ($p, q \lesssim 4$), nothing more.
+
+When the plots cannot decide, search. The grid below fits every $(p, q)$ up to those
+bounds (with $d = 1$ and drift — see the note after the table) and records three
+things: whether the optimizer converged, the in-sample BIC, and the mean absolute
+error of a dynamic forecast over the held-out period:
 
 ```{code-cell} ipython3
+import warnings
 from statsmodels.tsa.arima.model import ARIMA
 
 # Temporal split
 train_co2 = co2_df['co2_interp'].iloc[:N_train]
 test_co2  = co2_df['co2_interp'].iloc[N_train:N_train + N_test]
 
-arima = ARIMA(train_co2, order=(4, 1, 2), trend='t')
-arima_fit = arima.fit()
+rows = []
+for p_ in range(5):
+    for q_ in range(5):
+        if p_ == 0 and q_ == 0:
+            continue
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')   # convergence is recorded explicitly below
+            fit = ARIMA(train_co2, order=(p_, 1, q_), trend='t').fit()
+        fc = fit.get_forecast(steps=N_test).predicted_mean.values
+        rows.append({'p': p_, 'q': q_, 'converged': fit.mle_retvals['converged'],
+                     'BIC': round(fit.bic, 1),
+                     'val MAE (ppm)': round(np.mean(np.abs(fc - test_co2.values)), 2)})
+
+grid = pd.DataFrame(rows)
+print('Best 5 by in-sample BIC:')
+print(grid.sort_values('BIC').head(5).to_string(index=False))
+print('\nBest 5 by held-out forecast MAE (converged models only):')
+print(grid[grid.converged].sort_values('val MAE (ppm)').head(5).to_string(index=False))
+print('\nModels that failed to converge:')
+print(grid[~grid.converged].to_string(index=False))
+```
+
+The grid teaches three lessons at once:
+
+1. **The biggest models do not converge.** ARIMA($4,1,4$) — the order a naive reading
+   of the plots might suggest — fails outright, along with its neighbors: with four AR
+   *and* four MA terms the model is over-parameterized, and near-cancelling AR/MA
+   roots leave the likelihood surface too flat for the optimizer. Estimates from a
+   non-converged fit should not be trusted — the same lesson as checking
+   `result.success` in [Numerical Optimization](../1-numerical_methods/Topic1.4-Numerical_Optimization.md).
+   Always confirm `mle_retvals['converged']`.
+2. **The two criteria disagree.** BIC, computed in-sample, keeps rewarding larger
+   models — its favorite is ARIMA($4,1,2$) — because extra ARMA terms partially absorb
+   the unmodeled seasonality. But those same terms extrapolate badly: the BIC winner
+   has the *worst* held-out forecast error in the table. When the model class is
+   misspecified (here: no seasonal terms), information criteria overfit relative to
+   genuine forecasting, and the chronological validation split is the honest arbiter.
+3. **Parsimony wins.** ARIMA($2,1,1$) forecasts best (MAE ≈ 2.2 ppm), converges
+   cleanly, and is consistent with the honest PACF reading (the first few lags carry
+   the direct signal). That is our model.
+
+:::{note}
+Two settings used throughout the grid: **drift** — with $d \ge 1$, statsmodels
+excludes a constant term by default, so forecasts eventually level off at the last
+value, clearly wrong for a trending series; `trend='t'` adds a linear-in-time term,
+which after one difference acts as a constant drift. And a **caveat on the selection
+itself** — using the held-out period to *choose* the model makes it a validation set,
+so the winner's MAE is no longer an unbiased estimate of future error. For an honest
+final number you would reserve a third, untouched span — exactly the
+train/validation/test discipline of
+[Model Validation](../2-regression/Topic2.2-Model_Validation.md).
+:::
+
+### Fitting ARIMA
+
+```{code-cell} ipython3
+arima = ARIMA(train_co2, order=(2, 1, 1), trend='t')
+with warnings.catch_warnings():
+    # statsmodels notes that it replaced its default *starting* parameter guesses —
+    # a startup detail, not a convergence problem; convergence is checked explicitly
+    warnings.simplefilter('ignore', UserWarning)
+    arima_fit = arima.fit()
 print(f"Converged: {arima_fit.mle_retvals['converged']}")
 print(arima_fit.summary())
 ```
@@ -568,7 +639,7 @@ fitted = arima_fit.fittedvalues.iloc[1:]
 fig, ax = plt.subplots(figsize=(10, 4))
 train_co2.plot(ax=ax, label='Training data', color=clrs[0], linewidth=2, alpha=0.5)
 fitted.plot(ax=ax, label='ARIMA in-sample fit', color=clrs[1], linestyle='--')
-ax.set_title('ARIMA(4,1,2) with drift — in-sample fit')
+ax.set_title('ARIMA(2,1,1) with drift — in-sample fit')
 ax.legend()
 plt.tight_layout()
 
@@ -614,7 +685,7 @@ fc_mean.plot(ax=ax, label='ARIMA forecast', color=clrs[1])
 ax.fill_between(fc_ci.index,
                 fc_ci.iloc[:, 0], fc_ci.iloc[:, 1],
                 alpha=0.2, color=clrs[1], label='95% CI')
-ax.set_title('ARIMA(4,1,2) with drift — dynamic forecast')
+ax.set_title('ARIMA(2,1,1) with drift — dynamic forecast')
 ax.legend(fontsize=8)
 plt.tight_layout()
 
@@ -624,13 +695,14 @@ inside = np.mean((test_co2.values >= fc_ci.iloc[:, 0].values) &
 print(f'Test MAE: {mae_test:.2f} ppm;  fraction of test data inside 95% bands: {inside:.1%}')
 ```
 
-Thanks to the drift term, the forecast continues the long-run rise across the entire
-test period (without it, the prediction would level off almost immediately at the last
-training value). A brief transient from the AR terms is visible in the first few
-weeks, but the annual oscillation fades quickly — a plain ARIMA model has no seasonal
-terms, so it cannot regenerate the cycle. The 95% bands widen over the horizon exactly
-as the theory above predicts, from under ±1 ppm at the first step to tens of ppm by
-the end, and they comfortably contain the test data.
+Thanks to the drift term, the forecast climbs steadily across the entire test period
+(without it, the prediction would level off almost immediately at the last training
+value) and ends within about 2 ppm of the actual final value. The annual oscillation
+is absent, though — a plain ARIMA model has no seasonal terms, so it cannot regenerate
+the cycle, and the forecast threads through the middle of the seasonal swings instead.
+The 95% bands widen over the horizon exactly as the theory above predicts, from under
+±1 ppm at the first step to tens of ppm by the end, and they comfortably contain the
+test data.
 
 :::{note}
 **Seasonal ARIMA (SARIMA)** extends the model to explicitly handle periodic
@@ -648,8 +720,11 @@ Apply an ARIMA model to the Dow impurity series.
 
 1. Use the Augmented Dickey-Fuller test to determine $d$ (the number of differences
    needed for stationarity).
-2. Inspect the ACF and PACF of the differenced series to estimate $p$ and $q$.
-3. Fit `ARIMA(p, d, q)` on the first 75% of the Dow data (chronological split).
+2. Inspect the ACF and PACF of the differenced series. Do the cutoff signatures
+   apply, or do both tail off? Use them to bound $p$ and $q$.
+3. Select $(p, q)$ within your bounds by a small grid search (convergence + BIC +
+   held-out MAE, as in the CO₂ example) and fit the winner on the first 75% of the
+   Dow data (chronological split).
 4. Generate a dynamic forecast for the remaining 25%. Plot the forecast with 95%
    confidence bands overlaid on the actual test data.
 5. Report the mean absolute error (MAE) on the test set. How does it compare to
@@ -777,10 +852,12 @@ Get a first taste of cross-variable structure in the full Dow dataset.
 
 - **ARIMA($p,d,q$)** packages differencing ($d$), autoregression ($p$), and
   moving-average error terms ($q$) into a single framework. The parameters are chosen
-  from PACF (→ $p$), ADF test (→ $d$), and ACF (→ $q$) — then adjusted for practical
-  behavior: check that the MLE converged (over-parameterized ARMA terms often prevent
-  it), and include a drift term (`trend='t'`) so forecasts of trending data continue
-  the trend. Forecast bands come from the estimated innovation variance accumulated
+  starting from the plots — ADF test (→ $d$), and the ACF/PACF *cutoff signatures*
+  (→ $q$, $p$) where they apply. When both plots tail off (mixed ARMA), the orders are
+  not readable: bound them and grid-search, judging by convergence (over-parameterized
+  ARMA terms often fail to converge), information criteria, and held-out forecast
+  error — which can disagree, and out-of-sample error is the honest arbiter. Include a
+  drift term (`trend='t'`) so forecasts of trending data continue the trend. Forecast bands come from the estimated innovation variance accumulated
   over the horizon; they cover future randomness, not parameter or model error.
 
 - For seasonal data like CO₂, **SARIMA** extends ARIMA with seasonal terms; for
