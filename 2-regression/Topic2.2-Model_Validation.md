@@ -22,10 +22,10 @@ kernelspec:
 By the end of this chapter, you should be able to:
 
 1. **Compute and interpret** multiple regression accuracy metrics (e.g.\ $r^2$, MAE, RMSE) and diagnose error structure with visual tools.
-2. **Apply** hold‑out, *k*-fold, and leave‑one‑out cross‑validation to estimate generalization error and discuss their trade‑offs.
+2. **Apply** hold-out, *k*-fold, and leave-one-out cross-validation to estimate generalization error and discuss their trade-offs.
 3. **Quantify prediction uncertainty** using residual analysis, resampling (bootstrapping), and Gaussian‐process regression.
 4. **Assess assumptions** such as homoskedasticity and data representativeness, and explain how violating them impacts error estimates.
-5. **Select appropriate validation and uncertainty techniques** for chemical‑engineering data sets of varying size and noise characteristics.
+5. **Select appropriate validation and uncertainty techniques** for chemical-engineering data sets of varying size and noise characteristics.
 :::
 
 ```{code-cell} ipython3
@@ -92,7 +92,7 @@ metrics_df
 Notice that each of the four datasets yields nearly identical $r^2$ and RMSE, even though their scatterplots differ substantially. This illustrates how numerical summaries alone can mask important structural differences, and is a good reminder of the power of visualization and the need for using multiple metrics to evaluate models.
 ```
 
-It is important to consider the context of a regression model and choose accuracy metrics that are relevant to its application. Below we introduce several commonly‑used options and illustrate them on Anscombe’s quartet.
+It is important to consider the context of a regression model and choose accuracy metrics that are relevant to its application. Below we introduce several commonly-used options and illustrate them on Anscombe’s quartet.
 
 ### $r^2$ value
 
@@ -105,7 +105,7 @@ Conceptually, $r^2$ can be considered as a ratio between the sum-of-squares erro
 
 ```{admonition} Explanation
 :class: note
-A **negative $r^2$** can occur when the chosen model fits the data worse than the trivial model that always predicts the mean of $y$.  In other words, the sum‑of‑squares error of the model exceeds the total variance of the data.  This signals severe model mis‑specification or extrapolation outside the domain of validity. It is commonly encountered in cross validation, when the $r^2$ score is computed on a test or validation set that was not used to determine the parameters (and indicates that the model does not generalize beyond the training data).
+A **negative $r^2$** can occur when the chosen model fits the data worse than the trivial model that always predicts the mean of $y$.  In other words, the sum-of-squares error of the model exceeds the total variance of the data.  This signals severe model mis-specification or extrapolation outside the domain of validity. It is commonly encountered in cross validation, when the $r^2$ score is computed on a test or validation set that was not used to determine the parameters (and indicates that the model does not generalize beyond the training data).
 ```
 
 ### Mean absolute error (MAE)
@@ -114,7 +114,7 @@ MAE reports the average magnitude of errors in the original units of $y$, making
 
 $$\text{MAE} = \frac{1}{N}\sum_i |y_i-\hat y_i|.$$
 
-### Root‑mean‑squared error (RMSE)
+### Root-mean-squared error (RMSE)
 
 RMSE also has the units of $y$, but penalizes large errors more strongly due to squaring, so it is sensitive to outliers. If residuals are i.i.d. Gaussian with zero mean, RMSE is an estimate of the standard deviation of the errors and minimizing a loss function that uses RMSE aligns with maximum-likelihood estimation under that noise model. 
 For the same dataset, RMSE $\geq$ MAE, with equality only when all absolute errors are equal.
@@ -130,7 +130,7 @@ Percentiles are in the same units as $y$, are easy to interpret ("90% of predict
 
 ### Maximum error
 
-The worst‑case deviation, $\max_i |y_i-\hat y_i|$ , is useful when spec violations or safety margins matter (e.g., no prediction may err by more than 2 degrees C). It is extremely sensitive to a single outlier; practitioners often report it alongside a high quantile of the absolute error distribution (e.g., 95th percentile) to summarize tail risk more stably. Similar to percentiles, the max error is difficult to directly minimize.
+The worst-case deviation, $\max_i |y_i-\hat y_i|$ , is useful when spec violations or safety margins matter (e.g., no prediction may err by more than 2 degrees C). It is extremely sensitive to a single outlier; practitioners often report it alongside a high quantile of the absolute error distribution (e.g., 95th percentile) to summarize tail risk more stably. Similar to percentiles, the max error is difficult to directly minimize.
 
 ### Parity plots
 
@@ -157,7 +157,7 @@ plt.tight_layout();
 
 ### Error histograms
 
-Error (residual) histograms provide another perspective on model accuracy.  Whereas summary numbers like MAE or RMSE compress all errors into a single value, a histogram reveals *shape*: skewness, heavy tails, or multi‑modality in the residual distribution.
+Error (residual) histograms provide another perspective on model accuracy.  Whereas summary numbers like MAE or RMSE compress all errors into a single value, a histogram reveals *shape*: skewness, heavy tails, or multi-modality in the residual distribution.
 
 ```{code-cell} ipython3
 fig, axes = plt.subplots(1, 4, figsize=(15, 4))
@@ -176,7 +176,7 @@ for ax, label, x, y in zip(axes.flatten(), labels, xs, ys):
 plt.tight_layout();
 ```
 
-A *roughly Gaussian* residual histogram centered at zero indicates that errors are random and homoscedastic, supporting the use of aggregate metrics such as RMSE.  Skewed or heavy‑tailed residuals (as seen for Dataset IV) warn that single‑number metrics can hide important structure in the errors.
+A *roughly Gaussian* residual histogram centered at zero indicates that errors are random and homoscedastic, supporting the use of aggregate metrics such as RMSE.  Skewed or heavy-tailed residuals (as seen for Dataset IV) warn that single-number metrics can hide important structure in the errors.
 
 
 :::{exercise}
@@ -187,20 +187,20 @@ Compute the MAE, RMSE, and maximum error for dataset III in Anscombe's quartet w
 
 ## Cross Validation
 
-In the prior examples we computed error metrics for models that were trained with **all** available data.  However, what we really care about is *generalization*—how the model will perform on **new** data.  Gathering additional measurements is often impractical, so we **simulate** this situation through **cross‑validation**.  In cross‑validation some examples (the *test* set) are hidden while the model is fit to the remaining *training* examples; we then evaluate the loss on the hidden data to see how well the model predicts it.
+In the prior examples we computed error metrics for models that were trained with **all** available data.  However, what we really care about is *generalization*—how the model will perform on **new** data.  Gathering additional measurements is often impractical, so we **simulate** this situation through **cross-validation**.  In cross-validation some examples (the *test* set) are hidden while the model is fit to the remaining *training* examples; we then evaluate the loss on the hidden data to see how well the model predicts it.
 
 There are many standard strategies:
 
-- **hold‑out** – randomly leave out a percentage (commonly ≈30 %) of the data during training.
-- **k‑fold** – split the data into *k* (typically 3–5) random, equally‑sized groups and train *k* times, holding each group out once.
-- **leave‑p‑out** – leave *p* (often 1) samples out, evaluate the error on those *p* samples, and repeat for every possible size‑*p* subset.
+- **hold-out** – randomly leave out a percentage (commonly ≈30 %) of the data during training.
+- **k-fold** – split the data into *k* (typically 3–5) random, equally-sized groups and train *k* times, holding each group out once.
+- **leave-p-out** – leave *p* (often 1) samples out, evaluate the error on those *p* samples, and repeat for every possible size-*p* subset.
 - **bootstrapping** – sample with replacement to generate synthetic datasets of the same size, repeating many times.
 
-Different techniques balance statistical robustness and computational effort.  Hold‑out is fast but can be sensitive to unlucky splits, especially for small datasets.  k‑fold alleviates that risk at the cost of *k* model fits.  Leave‑*p*‑out becomes expensive for *p > 1*.  **Doing some form of cross‑validation is almost always better than none.**
+Different techniques balance statistical robustness and computational effort.  Hold-out is fast but can be sensitive to unlucky splits, especially for small datasets.  k-fold alleviates that risk at the cost of *k* model fits.  Leave-*p*-out becomes expensive for *p > 1*.  **Doing some form of cross-validation is almost always better than none.**
 
 ```{admonition} Key assumption: data representativeness
 :class: note
-All cross‑validation techniques rely on the critical assumption that *the collected data are representative of future data*.  An example in chemical engineering would be building a model at one set of process conditions but then applying it under very different conditions. The CV accuracy will look deceptively good in that case, and the model will perform much worse when applied to the new conditions.
+All cross-validation techniques rely on the critical assumption that *the collected data are representative of future data*.  An example in chemical engineering would be building a model at one set of process conditions but then applying it under very different conditions. The CV accuracy will look deceptively good in that case, and the model will perform much worse when applied to the new conditions.
 ```
 
 In this section, we will return to the ethanol IR spectrum dataset and demonstrate various types of cross validation.
@@ -224,13 +224,13 @@ ax.set_xlabel('wavenumber [$cm^{-1}$]')
 ax.set_ylabel('absorbance');
 ```
 
-### Hold‑out cross validation
+### Hold-out cross validation
 
 Hold-out cross validation is the simplest form, where you simply hide some subset of the data from the training. There are various ways of selecting which data to hold out, and different strategies will affect how the technique performs.
 
-#### Deterministic every‑third‑point split
+#### Deterministic every-third-point split
 
-A quick deterministic variant of hold‑out is to **train on every Nth point** and test on the full dataset. This approach makes sense if you are trying to build a model that is capable of interpolating between known data, such as a model for replacing missing values. It is rarely used in practice, but is a useful conceptual demonstration.
+A quick deterministic variant of hold-out is to **train on every Nth point** and test on the full dataset. This approach makes sense if you are trying to build a model that is capable of interpolating between known data, such as a model for replacing missing values. It is rarely used in practice, but is a useful conceptual demonstration.
 
 ```{code-cell}
 spacing = 3
@@ -267,7 +267,7 @@ ax.set_ylabel('absorbance')
 ax.legend(['Original Data', 'Training Subset', 'Prediction']);
 ```
 
-This is a kind of hold‑out because the model has never seen two‑thirds of the points.  The pattern in the residuals hints that our kernel width, $\sigma\$, may be sub‑optimal.
+This is a kind of hold-out because the model has never seen two-thirds of the points.  The pattern in the residuals hints that our kernel width, $\sigma\$, may be sub-optimal.
 
 #### Random 60 / 40 split with `train_test_split`
 
@@ -313,9 +313,9 @@ ax.set_ylabel('Predicted');
 ```
 
 
-### k‑fold Cross Validation
+### k-fold Cross Validation
 
-Hold‑out yields **one** estimate of test error; **k‑fold** repeats the procedure *k* times for more robust statistics. This reduces the chances that our results are based on a specific sample, but increases the computational cost.
+Hold-out yields **one** estimate of test error; **k-fold** repeats the procedure *k* times for more robust statistics. This reduces the chances that our results are based on a specific sample, but increases the computational cost.
 
 ```{code-cell}
 from sklearn.model_selection import KFold
@@ -350,7 +350,7 @@ ax.set_title(f'{kf.n_splits}-fold cross validation');
 print(f"mean r^2 (test) = {np.mean(r2_test):.3f} ± {np.std(r2_test):.3f}")
 ```
 
-When the end‑points land in the test fold, the model must **extrapolate** and often fails catastrophically.  k‑fold CV lowers the risk of an **overly lucky** (or unlucky) split—but at the computational cost of *k* separate model fits.
+When the end-points land in the test fold, the model must **extrapolate** and often fails catastrophically.  k-fold CV lowers the risk of an **overly lucky** (or unlucky) split—but at the computational cost of *k* separate model fits.
 
 :::{exercise}
 :label: ex-reg-kfold-shuffle
@@ -360,9 +360,9 @@ In the code block above, note that we used `shuffle=True` when performing k-fold
 Re-make the plot with `shuffle=False` and visualize the result. Compare the MAE of each fold, and consider whether this is a meaningful way to do cross validation for this dataset.
 :::
 
-### Leave‑One‑Out Cross Validation (LOO)
+### Leave-One-Out Cross Validation (LOO)
 
-Leave‑one‑out is the limiting case of *k*-fold cross validation with *k = N* (the number of observations): each iteration trains on *N − 1* points and tests on the single left‑out point.  It provides an almost unbiased estimate of generalization error but can be computationally intensive for large datasets.
+Leave-one-out is the limiting case of *k*-fold cross validation with *k = N* (the number of observations): each iteration trains on *N − 1* points and tests on the single left-out point.  It provides an almost unbiased estimate of generalization error but can be computationally intensive for large datasets.
 
 ```{code-cell}
 from sklearn.model_selection import LeaveOneOut
@@ -396,17 +396,17 @@ print(f"std  RMSE (LOO) = {np.std(rmse_loo):.3e}")
 ```
 Note that since we compute the metric on a single data point, we need to use something like RMSE or MAE rather than $r^2$, since $r^2$ is not defined for a single point.
 
-Because each LOO model is trained on nearly the entire dataset, the variation in the models and predictions will be low.  However, the variation of the **error estimate** can be high: a single anomalous observation can strongly influence one iteration’s score.  Computationally, LOO requires *N* model fits, which is feasible for small‑to‑medium data but prohibitive for very large datasets.
+Because each LOO model is trained on nearly the entire dataset, the variation in the models and predictions will be low.  However, the variation of the **error estimate** can be high: a single anomalous observation can strongly influence one iteration’s score.  Computationally, LOO requires *N* model fits, which is feasible for small-to-medium data but prohibitive for very large datasets.
 
 :::{exercise}
 :label: ex-reg-split-stab
 
-Investigate how the **test‑set fraction** influences the stability of performance estimates for the RBF model at $\sigma = 10$.
+Investigate how the **test-set fraction** influences the stability of performance estimates for the RBF model at $\sigma = 10$.
 
 1. Choose three fractions: 20 %, 30 %, and 40 %.
 2. For each fraction, perform at least **100** random splits with `train_test_split` (set `random_state=None` inside the loop).
-3. Compute the test‑set $r^2$ for every split.
-4. Visualize the resulting distributions (boxplots or histograms) side‑by‑side.
+3. Compute the test-set $r^2$ for every split.
+4. Visualize the resulting distributions (boxplots or histograms) side-by-side.
 
 Which fraction yields the *lowest variance* in $r^2$?  Explain why smaller or larger test fractions may lead to more or less stable estimates.
 :::
@@ -493,7 +493,7 @@ No.  The underlying error structure varies across the quartet. Datasets III and 
 
 ### Resampling or "bootstrapping"
 
-Another possibility that avoids homoskedastic assumptions is to **resample** the data to build empirical distributions of parameters that capture the deviations in the data.  A simple approach is to **sample with replacement** so that each re‑sample is slightly different. This is referred to as "bootstrapping".
+Another possibility that avoids homoskedastic assumptions is to **resample** the data to build empirical distributions of parameters that capture the deviations in the data.  A simple approach is to **sample with replacement** so that each re-sample is slightly different. This is referred to as "bootstrapping".
 
 ```{code-cell}
 from numpy.random import choice  # randomly select items from a list
@@ -551,7 +551,7 @@ This approach is very powerful because it allows us to get estimates of the pred
 
 ### Gaussian Process Regression
 
-Gaussian process regression (GPR) is an extension of kernel methods that provides a *probabilistic* prediction complete with uncertainty.  A full treatment is beyond our scope, but we will briefly demonstrate it for the ethanol‑spectrum dataset:
+Gaussian process regression (GPR) is an extension of kernel methods that provides a *probabilistic* prediction complete with uncertainty.  A full treatment is beyond our scope, but we will briefly demonstrate it for the ethanol-spectrum dataset:
 
 ```{code-cell}
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -580,9 +580,9 @@ ax.set_title('Gaussian Process Regression');
 
 GPR is powerful for uncertainty estimation because it treats the unknown function as a "prior Gaussian process". We assume any finite collection of function values follows a multivariate normal distribution whose *covariance* is governed by a "kernel".  The kernel encodes assumptions about smoothness, periodicity, and overall variation. GPR is very similar to kernel ridge regression, and is identical in some limits, but in general the results can differ. A few things to consider when working with GPR:
 
-- **Kernel selection** — Common kernels are the same as for kernel ridge regression, and include the squared‑exponential (RBF), Matérn, and periodic forms; sums or products of kernels can model more complex structure.  Choosing an inappropriate kernel can over‑smooth the data or yield highly uncertain predictions.
-- **Hyper‑parameter optimization** — Each kernel carries hyper‑parameters (e.g., length‑scale, variance).  Scikit‑learn maximizes the log‑marginal likelihood by default, but you can also tune hyper‑parameters via cross‑validation or Bayesian optimization.  Good uncertainty estimates depend critically on finding well‑calibrated values.
-- **Computation** — Exact GPR scales as $\mathcal{O}(N^3)$ due to matrix inversion, so large datasets may require sparse approximations or inducing‑point methods.
+- **Kernel selection** — Common kernels are the same as for kernel ridge regression, and include the squared-exponential (RBF), Matérn, and periodic forms; sums or products of kernels can model more complex structure.  Choosing an inappropriate kernel can over-smooth the data or yield highly uncertain predictions.
+- **Hyper-parameter optimization** — Each kernel carries hyper-parameters (e.g., length-scale, variance).  Scikit-learn maximizes the log-marginal likelihood by default, but you can also tune hyper-parameters via cross-validation or Bayesian optimization.  Good uncertainty estimates depend critically on finding well-calibrated values.
+- **Computation** — Exact GPR scales as $\mathcal{O}(N^3)$ due to matrix inversion, so large datasets may require sparse approximations or inducing-point methods.
 
 For a candid discussion of the strengths and pitfalls of Bayesian model selection, especially Gaussian processes, see the blog post [“Lies, damn lies, statistics, and **Bayesian** statistics”](https://kitchingroup.cheme.cmu.edu/blog/2025/06/22/Lies-damn-lies-statistics-and-Bayesian-statistics/). The post is actually written by a chemical engineer (Prof. John Kitchin), and uses an example that is relevant to chemical engineers who work with atomic-scale models.
 

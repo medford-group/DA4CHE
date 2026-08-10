@@ -167,7 +167,7 @@ A baseline is the **simplest reasonable model** you can implement quickly and ev
 - **Evaluated fairly** with proper splitting/CV, the same metrics, and fixed randomness.
 - **Reproducible** with recorded settings and code.
 
-If a new approach cannot **beat the baseline on held‑out data**, revisit your data, features, or evaluation before adding complexity.
+If a new approach cannot **beat the baseline on held-out data**, revisit your data, features, or evaluation before adding complexity.
 ```
 
 We see that the performance of the model is not great, and to improve things we will need to add some non-linearity. In 1-dimensional space we achieved this by adding transforms of the features as new features. However, this is more challenging in a high-dimensional space since the number of features will scale with the number of dimensions.
@@ -321,7 +321,7 @@ X_fs = sfs.transform(X)
 final_model = LinearRegression().fit(X_fs, y)
 print("r^2 on full data using selected subset:", final_model.score(X_fs, y))
 ```
-Note that the features selected with this more sophisticated approach differ from the naive approach, and that we are able to reach $r^2 > 0.6$ with just 10 features, instead of the 17 required above. This is because many of the features are highly correlated (as we already saw with the correlation matrix above), so some of the features selected in the naive univariate ranking were partially redundant. The `SequentialFeatureSelector` approach above is much less tranparent, and uses some more advanced `scikit-learn` features, but it also yields good results with relatively little code. Don't worry if you don't understand all the details: the main point is that there are different ways to do feature selection, and each strategy can yield different results.
+Note that the features selected with this more sophisticated approach differ from the naive approach, and that we are able to reach $r^2 > 0.6$ with just 10 features, instead of the 17 required above. This is because many of the features are highly correlated (as we already saw with the correlation matrix above), so some of the features selected in the naive univariate ranking were partially redundant. The `SequentialFeatureSelector` approach above is much less transparent, and uses some more advanced `scikit-learn` features, but it also yields good results with relatively little code. Don't worry if you don't understand all the details: the main point is that there are different ways to do feature selection, and each strategy can yield different results.
 
 ```{note}
 **Choosing `n_features_to_select`**  
@@ -360,7 +360,7 @@ Toy data in original 2-dimensional coordinates (left) and in rotated "principal 
 
 ```{note}
 **PCA coordinates vs. Cartesian coordinates**  
-Think of the usual x–y axes as a fixed Cartesian frame. PCA rotates this frame to a new set of perpendicular axes (the principal components) that align with the directions of greatest variance in the data—similar to choosing an origin and x- and y-axis when solving an engineering problem. The new axes are orthonormal (like the unit vectors i, j, k), and projecting data onto them is just taking dot products with these unit vectors. In this rotated frame, covariances vanish (the off‑diagonals go to ~0), so variability is concentrated along a few axes, making analysis and modeling simpler, but the underlying data is not really changed.
+Think of the usual x–y axes as a fixed Cartesian frame. PCA rotates this frame to a new set of perpendicular axes (the principal components) that align with the directions of greatest variance in the data—similar to choosing an origin and x- and y-axis when solving an engineering problem. The new axes are orthonormal (like the unit vectors i, j, k), and projecting data onto them is just taking dot products with these unit vectors. In this rotated frame, covariances vanish (the off-diagonals go to ~0), so variability is concentrated along a few axes, making analysis and modeling simpler, but the underlying data is not really changed.
 ```
 
 The eigenvalues provide the variance in each direction, and we can use this to determine how much variance each principal component contributes:
@@ -469,10 +469,10 @@ print(f"r^2 regular = {r2:.3f}")
 
 ```{note}
 **Why is a PCR model not always better than direct linear regression?**  
-PCA orders directions by **variance in X**, not by how well they **predict y**. A high‑variance component can be weakly related (or unrelated) to the target, while a lower‑variance component might carry most of the predictive signal. PCR is unsupervised in its dimensionality reduction; it ignores `y` when choosing components.
+PCA orders directions by **variance in X**, not by how well they **predict y**. A high-variance component can be weakly related (or unrelated) to the target, while a lower-variance component might carry most of the predictive signal. PCR is unsupervised in its dimensionality reduction; it ignores `y` when choosing components.
 ```
 
-The PCA projection collects as much information as possible in each feature and orders components by variance. We can also check them one‑by‑one to see how they correlate:
+The PCA projection collects as much information as possible in each feature and orders components by variance. We can also check them one-by-one to see how they correlate:
 
 ```{code-cell}
 score_list = []

@@ -379,7 +379,7 @@ ax.plot(x_peak, y_peak)
 ax.plot(x_peak, y_guess);
 ```
 
-Visualizing the initial guess is a good idea whenever possible (e.g. when fitting spectra), since it ensures that you are starting from a resonable point. We can use the same loss function as before to optimize the other parameters:
+Visualizing the initial guess is a good idea whenever possible (e.g. when fitting spectra), since it ensures that you are starting from a reasonable point. We can use the same loss function as before to optimize the other parameters:
 
 ```{code-cell} ipython3
 def g(lamda, x=x_peak, y=y_peak, m=2):

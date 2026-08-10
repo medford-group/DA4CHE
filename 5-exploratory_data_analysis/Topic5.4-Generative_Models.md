@@ -231,7 +231,7 @@ ax.set_ylabel(df.columns[5]);
 
 To visualize the fitted Gaussians we draw confidence ellipses. The helper functions below
 (adapted from the
-[Python Data Science Handbook](https://github.com/jakevdp/PythonDataScienceHandbook)) are
+[Python Data Science Handbook](https://github.com/jakevdp/PythonDataScienceHandbook) are
 provided for visualization purposes — you do not need to understand their internals.
 
 ```{code-cell} ipython3
