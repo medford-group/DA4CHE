@@ -25,6 +25,7 @@ By the end of this chapter, you will be able to:
 - Apply LASSO regularization to a polynomial feature matrix to select a sparse, interpretable set of nonlinear features.
 - Use `autofeat` to generate and select physically meaningful nonlinear features from engineering data, with and without dimensional constraints.
 - Articulate the practical trade-offs of symbolic regression: interpretability and efficiency at test time vs. high training cost and sensitivity to train/test splits.
+- Describe how automated model discovery methods extend feature generation to searching for the functional form of a model, and identify representative tools used in science and in chemical engineering.
 :::
 
 ```{code-cell} ipython3
@@ -67,6 +68,16 @@ y_dow = np.array(all_data[real_rows, -3],  dtype='float')
 X_dow_scaled = (X_dow - X_dow.mean(axis=0)) / X_dow.std(axis=0)
 print(f'X shape: {X_dow_scaled.shape},  y shape: {y_dow.shape}')
 ```
+
+This is the same preparation used in Topics 2.4 and 2.5, repeated here so the chapter
+runs on its own. The `is_real_and_finite` helper is needed because the raw spreadsheet
+contains text placeholders in some cells, so `real_rows` keeps only the rows where every
+column is a usable number. The column slicing selects the process variables as inputs
+(`:-5`) and the impurity as the target (`-3`), and the features are standardized to zero
+mean and unit variance. Standardization matters more than usual in this chapter: we are
+about to multiply features together, and a product of two variables with very different
+magnitudes would otherwise dominate the feature matrix for reasons of units rather than
+physics.
 
 ## Motivation: When Linear Combinations Are Not Enough
 
@@ -129,8 +140,8 @@ print(f'Degree-2 features:  {X_poly_train.shape[1]}')
 
 :::{note}
 **Why subsample?** With 40 features and degree-2 polynomial expansion, the feature count
-is $\binom{40 + 2}{2} - 1 = 859$. At degree 3 it exceeds 11,000 — larger than many training
-sets. We subsample to avoid memory issues during the fitting step below. In practice you
+is $\binom{40 + 2}{2} - 1 = 860$. At degree 3 it exceeds 12,000, which is larger than many
+training sets. We subsample to avoid memory issues during the fitting step below. In practice you
 would use regularization (LASSO, ridge) rather than subsampling to handle the
 large-feature regime.
 :::
@@ -157,7 +168,11 @@ of the **curse of dimensionality**.
 
 With more features than samples, standard linear regression overfits badly. LASSO
 regularization shrinks many coefficients to exactly zero, effectively selecting a sparse
-subset of the polynomial features:
+subset of the polynomial features.
+
+To see the effect clearly we fit three models on the same train/test split, changing one
+thing at a time. The first is a plain linear regression on the original 40 features,
+which serves as the baseline to beat:
 
 ```{code-cell} ipython3
 # Baseline: plain linear regression on original features
@@ -168,6 +183,11 @@ r2_base_test  = linreg.score(X_test,  y_test)
 print(f'Linear regression:  train r² = {r2_base_train:.3f},  test r² = {r2_base_test:.3f}')
 ```
 
+The second uses the 860 polynomial features but no regularization. With that many
+features relative to the number of training samples, we expect the training $r^2$ to
+improve substantially while the test $r^2$ gets worse, which is the signature of
+overfitting from Topic 2.3:
+
 ```{code-cell} ipython3
 # Unregularized: polynomial features + ordinary least squares — should overfit
 linreg_poly = LinearRegression()
@@ -176,6 +196,9 @@ r2_poly_train = linreg_poly.score(X_poly_train, y_train)
 r2_poly_test  = linreg_poly.score(X_poly_test,  y_test)
 print(f'Poly + OLS:         train r² = {r2_poly_train:.3f},  test r² = {r2_poly_test:.3f}')
 ```
+
+The third uses the same polynomial features with a LASSO penalty, and also counts how
+many coefficients survive:
 
 ```{code-cell} ipython3
 # LASSO on polynomial features — sparse selection
@@ -194,7 +217,9 @@ improves test accuracy significantly — and with far fewer nonzero coefficients
 ### Interpreting the Selected Features
 
 A key advantage over black-box approaches is that `PolynomialFeatures` can name every
-output column:
+output column, so a sparse model can be read as an equation. The cell below asks for
+those names, finds the coefficients that LASSO did not set to zero, and sorts them by
+magnitude so that the most influential terms appear first:
 
 ```{code-cell} ipython3
 feature_names = poly.get_feature_names_out(
@@ -281,12 +306,23 @@ if _autofeat_available:
     print(afreg.new_feat_cols_)
 ```
 
+These are the nonlinear combinations that `autofeat` constructed and judged predictive.
+It is worth also inspecting `good_cols_`, which is a different quantity: `new_feat_cols_`
+lists only the *newly generated* features, while `good_cols_` lists every feature the
+final model actually uses, including whichever of the original 40 variables survived
+selection:
+
 ```{code-cell} ipython3
 if _autofeat_available:
     # All features (original + new) retained after final selection
     print('All selected features (used in model):')
     print(afreg.good_cols_)
 ```
+
+The distinction matters when interpreting the model, and it also explains the
+overfitting comparison at the end of this section: scoring the fitted `AutoFeatRegressor`
+uses only `good_cols_`, whereas transforming the data ourselves returns the full
+generated matrix.
 
 ```{code-cell} ipython3
 if _autofeat_available:
@@ -324,6 +360,14 @@ supply physical units for each input feature, it will only generate dimensionall
 consistent combinations. This dramatically reduces the number of candidates and
 biases the search toward physically meaningful features.
 
+Supplying those units requires knowing what each column represents. The Dow column names
+end in words like "Flow", "Level", or "Temperature", so the cell below assigns units by
+reading that suffix and marks anything unrecognized as dimensionless. This is a
+convenient shortcut rather than a rigorous one: a mislabeled column would silently
+constrain the search in the wrong way, so in your own work it is worth checking the unit
+assignments against the process documentation. `autofeat` also needs the feature names
+themselves, which is why the arrays are wrapped in DataFrames:
+
 ```{code-cell} ipython3
 if _autofeat_available:
     # Assign physical units to the Dow features based on column name suffixes
@@ -348,6 +392,10 @@ if _autofeat_available:
     X_train_df = pd.DataFrame(X_train, columns=dow_input_names)
     X_test_df  = pd.DataFrame(X_test,  columns=dow_input_names)
 ```
+
+With units supplied, we can afford a larger pool of transformations than before, because
+the dimensional constraint will discard most of the combinations they generate. The
+`units=` argument is the only substantive change from the earlier fit:
 
 ```{code-cell} ipython3
 if _autofeat_available:
@@ -406,6 +454,96 @@ Apply units-aware `AutoFeatRegressor` to the Dow dataset.
    of what it represents (e.g., a ratio of flow rates, a product of pressures).
 :::
 
+## Beyond Feature Selection: Automated Model Discovery
+
+It is worth stepping back to see what `autofeat` does and does not do. It generates a
+large library of candidate nonlinear terms and then selects a useful subset, but the
+model itself is still a **linear combination of those terms**. The functional form is
+therefore fixed by the transformations we allowed in the search: we chose the pool, and
+the algorithm chose from it. The same is true of the LASSO polynomial models earlier in
+this chapter, and of the regularized models in
+[Complexity and Optimization](Topic2.3-Complexity_Optimization).
+
+**Model discovery** (often called **symbolic regression** in its more general form)
+removes that restriction and searches over the structure of the equation itself, with
+the goal of returning a compact expression that a person can read, interpret, and
+check against physical intuition. The difficulty is that the space of possible
+equations is astronomically large, so every practical method imposes strong priors on
+what a reasonable model looks like. This is the same principle as regularization,
+applied to the *structure* of the model rather than to the size of its coefficients.
+Three examples are worth knowing:
+
+* **AI-Feynman** ([Udrescu & Tegmark, 2020](https://doi.org/10.1126/sciadv.aay2631),
+  *Science Advances*) exploits properties that physical laws tend to possess:
+  dimensional consistency, symmetry, separability into independent parts, and
+  smoothness. A neural network is fit to the data first, not as the final model, but
+  as a probe that can be queried to test for these properties, which then break the
+  problem into simpler sub-problems recursively. The method recovered all 100 equations
+  from the *Feynman Lectures on Physics*, where the best previously available software
+  found 71. The code is [openly available](https://github.com/SJ001/AI-Feynman). Note
+  that the dimensional-consistency idea is exactly the `units=` constraint we used with
+  `autofeat` above, applied to a much larger search.
+
+* **AI-DARWIN** ([Chakraborty, Sivaram & Venkatasubramanian,
+  2021](https://doi.org/10.1016/j.compchemeng.2021.107470), *Computers & Chemical
+  Engineering*) is aimed specifically at chemical engineering problems, where data are
+  typically limited and noisy rather than abundant. It uses a genetic algorithm to
+  evolve candidate nonlinear terms, statistical testing to retain only the terms the
+  data actually support, and nonlinear regression to fit the remaining parameters. The
+  result is a mechanistic-looking model rather than a black box, which is the
+  motivation behind the broader argument that hybrid models are often more appropriate
+  than purely data-driven ones in our field.
+
+* **HyMech** ([Rossi, Bezzo & Barolo,
+  2026](https://doi.org/10.1016/j.compchemeng.2026.109634), *Computers & Chemical
+  Engineering*) builds directly on the AI-DARWIN engine and adds prior process
+  knowledge to the search through physics-informed pools of allowed functions and
+  variables. It addresses a situation that is common in practice: you already have a
+  first-principles model, it does not quite match the plant data, and you want to know
+  *where the model structure is deficient*. Conventional hybrid modeling patches such a
+  mismatch with a black-box correction term, which improves predictions without
+  explaining anything; HyMech instead searches for an interpretable equation for the
+  correction itself.
+
+These methods are directly relevant to industrial practice, and in fact to the dataset
+used throughout this course. The Dow impurity data was originally posed by researchers
+at Dow as a "data challenge" problem: given more than 40 process variables from an
+integrated multi-column process, identify which of them actually drive the impurity
+measured at the primary column outlet, and build an inferential sensor to predict it.
+Identifying the relevant variables and producing a model that an engineer can inspect
+and trust is precisely the goal of the methods above, and it is the same problem we
+have been working on in this chapter with polynomial features and `autofeat`. Work in
+this direction is ongoing, including methods developed jointly with industry such as
+[SyMANTIC](https://doi.org/10.1021/acs.iecr.4c03503) (Muthyala et al., 2025, *Ind.
+Eng. Chem. Res.*), which combines mutual-information-based feature screening with
+sparse regression to keep the search tractable.
+
+Full model discovery is beyond the scope of this course, and these tools require more
+care and computational effort than the methods we have used here. They are worth
+knowing about, however, because they represent the natural endpoint of the progression
+in this chapter: from choosing features by hand, to generating and selecting them
+automatically, to searching for the form of the model itself.
+
+:::{exercise}
+:label: ex-reg-search-space
+
+Estimate why unrestricted equation search is impractical, and how much a physical
+prior helps.
+
+1. Consider building expressions as binary trees with $n$ internal nodes. Each internal
+   node is one of $k$ binary operators ($+, -, \times, \div$, so $k = 4$) and each of
+   the $n+1$ leaves is one of $p$ input variables. The number of tree shapes is the
+   Catalan number $C_n = \binom{2n}{n}/(n+1)$, so the total count of expressions is
+   $C_n \, k^n \, p^{\,n+1}$. Using `math.comb`, compute and print this count for
+   $p = 40$ (the Dow features) and $n = 1, 2, \ldots, 6$.
+2. Plot the count versus $n$ on a log scale. At what $n$ does the count exceed the
+   roughly $10^3$ candidate features that `PolynomialFeatures` produced at degree 2?
+3. Now suppose dimensional analysis rules out all but 1% of these expressions as
+   dimensionally inconsistent. Re-plot the surviving count. Does the constraint change
+   the *rate* of growth, or only the prefactor? What does your answer imply about
+   relying on dimensional analysis alone to make the search tractable?
+:::
+
 ## Summary
 
 - **Linear feature combinations** (PCA, PLS, random projections) cannot improve a
@@ -425,6 +563,12 @@ Apply units-aware `AutoFeatRegressor` to the Dow dataset.
   Results are compact and interpretable but sensitive to train/test splits; physical
   units constraints (`units=`) improve robustness and chemical interpretability.
 
+- **Automated model discovery** goes one step further by searching over the functional
+  form of the model rather than selecting from a fixed pool of generated terms. Tools
+  such as AI-Feynman, AI-DARWIN, and HyMech make the search tractable by imposing
+  physical priors (dimensional consistency, symmetry, or an existing first-principles
+  model), which is regularization applied to model structure.
+
 ## Additional Reading
 
 - Kanter, J. M. & Veeramachaneni, K. (2015), "Deep Feature Synthesis: Towards
@@ -433,6 +577,21 @@ Apply units-aware `AutoFeatRegressor` to the Dow dataset.
   symbolic regression methods" — survey of symbolic regression approaches
 - Tibshirani, R. (1996), "Regression Shrinkage and Selection via the Lasso,"
   *Journal of the Royal Statistical Society B* — original LASSO paper
+- Udrescu, S.-M. & Tegmark, M. (2020), "AI Feynman: A physics-inspired method for
+  symbolic regression," *Science Advances* 6(16), eaay2631 —
+  [doi:10.1126/sciadv.aay2631](https://doi.org/10.1126/sciadv.aay2631)
+- Chakraborty, A., Sivaram, A. & Venkatasubramanian, V. (2021), "AI-DARWIN: A first
+  principles-based model discovery engine using machine learning," *Computers &
+  Chemical Engineering* 154, 107470 —
+  [doi:10.1016/j.compchemeng.2021.107470](https://doi.org/10.1016/j.compchemeng.2021.107470)
+- Rossi, L., Bezzo, F. & Barolo, M. (2026), "HyMech: AI-driven framework for
+  physics-informed discovery of interpretable hybrid models," *Computers & Chemical
+  Engineering* 210, 109634 —
+  [doi:10.1016/j.compchemeng.2026.109634](https://doi.org/10.1016/j.compchemeng.2026.109634)
+- Muthyala, M. R., Sorourifar, F., Peng, Y. & Paulson, J. A. (2025), "SyMANTIC: An
+  efficient symbolic regression method for interpretable and parsimonious model
+  discovery," *Industrial & Engineering Chemistry Research* 64(6), 3354–3369 —
+  [doi:10.1021/acs.iecr.4c03503](https://doi.org/10.1021/acs.iecr.4c03503)
 - scikit-learn User Guide:
   [PolynomialFeatures](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html),
   [Lasso](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html)

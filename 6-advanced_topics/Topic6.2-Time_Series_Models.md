@@ -28,8 +28,8 @@ By the end of this chapter, you will be able to:
   and understand why dynamic forecasts degrade over time.
 - Fit an ARIMA($p,d,q$) model using `statsmodels`, interpret the summary output, and
   generate forecasts with 95% confidence bands.
-- Use the ACF/PACF cutoff signatures to identify pure AR or MA processes, and — when
-  both tail off — select $(p, q)$ by a small grid search judged by convergence,
+- Use the ACF/PACF cutoff signatures to identify pure AR or MA processes, and, when
+  both tail off, select $(p, q)$ by a small grid search judged by convergence,
   information criteria, and held-out forecast error, including a drift term when the
   data trend.
 - Describe what a multivariate time series is, why it is harder to model than a
@@ -84,8 +84,8 @@ of [Linear Regression](../1-numerical_methods/Topic1.3-Linear_Regression), with 
 as the only input. The feature-library-plus-LASSO strategy below is likewise the same
 regularized feature selection we used in
 [Nonlinear Feature Engineering](../2-regression/Topic2.6-Nonlinear_Feature_Engineering):
-nothing about the tooling is new, only the interpretation — the "features" are all
-functions of $t$.
+nothing about the tooling is new; only the interpretation changes, since the
+"features" are all functions of $t$.
 
 Our hand-rolled approach is a simple version of what the time-series literature calls
 **harmonic regression** (fitting sinusoids at known or candidate frequencies).
@@ -258,10 +258,10 @@ plot_pacf(resid_diff, lags=52, ax=axes[1], title='PACF — differenced residuals
 plt.tight_layout()
 ```
 
-Differencing treats the autocorrelation as a *nuisance* and destroys it. But look at
-what that means: the correlation between $r_t$ and $r_{t-1}$ is precisely the
-statement that *the recent past predicts the present*. Destroying it throws away
-forecastable structure. The alternative is to **model** the dependence instead —
+Differencing treats the autocorrelation as a nuisance and removes it. However, the
+correlation between $r_t$ and $r_{t-1}$ is just another way of saying that the recent
+past predicts the present, so removing it throws away structure that could be used
+for forecasting. The alternative is to **model** the dependence instead —
 write $r_t$ as an explicit function of its own recent values and fit the
 coefficients. That is an autoregressive model, and it is the subject of the next
 section. (Differencing returns in the ARIMA framework, where it plays its proper
@@ -367,8 +367,8 @@ print(f'Coefficients (oldest lag → most recent): {np.round(ARM.coef_, 3)}')
 print(f'Intercept: {ARM.intercept_:.4f}')
 ```
 
-The fit explains roughly 80% of the residual variance — the autocorrelation that the
-ACF revealed is genuinely predictive structure, and the AR model has captured it. The
+The fit explains roughly 80% of the residual variance: the autocorrelation that the
+ACF revealed is predictive structure, and the AR model has captured it. The
 coefficients are interpretable, too: the most recent lag carries the largest weight
 (the best single predictor of this week's residual is last week's), with smaller
 contributions from earlier lags. The intercept is nearly zero because the de-trended
@@ -455,12 +455,12 @@ ax.legend(fontsize=8)
 plt.tight_layout()
 ```
 
-Look closely at the start of the forecast: the AR component begins at the last
-observed residual and *decays gradually toward zero* over the following months, so the
-prediction starts offset from the bare trend and relaxes onto it. It does not collapse
-instantly — the fitted lag weights sustain the influence of the last observations for
-a meaningful horizon — but it cannot oscillate or regenerate structure indefinitely,
-because it has no access to new measurements.
+Note the behavior at the start of the forecast: the AR component begins at the last
+observed residual and decays gradually toward zero over the following months, so the
+prediction starts offset from the trend and relaxes onto it. It does not collapse
+instantly, since the fitted lag weights sustain the influence of the last observations
+for a meaningful horizon. However, it cannot oscillate or regenerate structure
+indefinitely, because it has no access to new measurements.
 
 :::{note}
 **Why does a dynamic forecast decay to the trend?** Iterating the fitted recursion
@@ -543,16 +543,16 @@ depends on only $p$ lags, and the PACF at lag $k$ is the coefficient on $x_{t-k}
 *after controlling for the intervening lags* — exactly zero for $k > p$. When either
 plot shows a clean cutoff, the corresponding order can be read straight off it.
 
-Now read our plots honestly against that table. **Neither cuts off.** The ACF is
-statistically significant at essentially every lag (with $n \approx 2300$, the 95%
-band is only $\pm 0.04$) and *oscillates with the annual cycle* — negative near lag
-26, positive again at lag 52. The PACF's first three to five lags dominate, but
-significant values reappear at higher lags. Both tailing off is the *mixed ARMA*
-signature — the orders cannot be read from the plots — and the lag-52 structure warns
-that unmodeled seasonality is contaminating everything. The plots earn their keep as
-rough **upper bounds** ($p, q \lesssim 4$), nothing more.
+Comparing our plots against this table, we see that neither one actually cuts off.
+The ACF is statistically significant at essentially every lag (with $n \approx 2300$,
+the 95% band is only $\pm 0.04$), and it oscillates with the annual cycle: negative
+near lag 26 and positive again at lag 52. The PACF's first three to five lags
+dominate, but significant values reappear at higher lags. Both tailing off is the
+*mixed ARMA* signature, so the orders cannot be read directly from the plots, and the
+lag-52 structure indicates that unmodeled seasonality is affecting every lag. In
+practice, the plots are most useful here as rough **upper bounds** ($p, q \lesssim 4$).
 
-When the plots cannot decide, search. The grid below fits every $(p, q)$ up to those
+When the plots cannot decide, we can search over candidate orders instead. The grid below fits every $(p, q)$ up to those
 bounds (with $d = 1$ and drift — see the note after the table) and records three
 things: whether the optimizer converged, the in-sample BIC, and the mean absolute
 error of a dynamic forecast over the held-out period:
@@ -587,24 +587,25 @@ print('\nModels that failed to converge:')
 print(grid[~grid.converged].to_string(index=False))
 ```
 
-The grid teaches three lessons at once:
+There are three things to notice in these results:
 
-1. **The biggest models do not converge.** ARIMA($4,1,4$) — the order a naive reading
-   of the plots might suggest — fails outright, along with its neighbors: with four AR
-   *and* four MA terms the model is over-parameterized, and near-cancelling AR/MA
+1. **The biggest models do not converge.** ARIMA($4,1,4$), the order a naive reading
+   of the plots might suggest, fails to converge, along with its neighbors: with four
+   AR *and* four MA terms the model is over-parameterized, and near-cancelling AR/MA
    roots leave the likelihood surface too flat for the optimizer. Estimates from a
-   non-converged fit should not be trusted — the same lesson as checking
-   `result.success` in [Numerical Optimization](../1-numerical_methods/Topic1.4-Numerical_Optimization.md).
+   non-converged fit should not be trusted (the same lesson as checking
+   `result.success` in [Numerical Optimization](../1-numerical_methods/Topic1.4-Numerical_Optimization.md)).
    Always confirm `mle_retvals['converged']`.
 2. **The two criteria disagree.** BIC, computed in-sample, keeps rewarding larger
-   models — its favorite is ARIMA($4,1,2$) — because extra ARMA terms partially absorb
-   the unmodeled seasonality. But those same terms extrapolate badly: the BIC winner
-   has the *worst* held-out forecast error in the table. When the model class is
-   misspecified (here: no seasonal terms), information criteria overfit relative to
-   genuine forecasting, and the chronological validation split is the honest arbiter.
-3. **Parsimony wins.** ARIMA($2,1,1$) forecasts best (MAE ≈ 2.2 ppm), converges
-   cleanly, and is consistent with the honest PACF reading (the first few lags carry
-   the direct signal). That is our model.
+   models (its favorite is ARIMA($4,1,2$)) because extra ARMA terms partially absorb
+   the unmodeled seasonality. However, those same terms extrapolate badly: the BIC
+   winner has the *worst* held-out forecast error in the table. When the model class
+   is missing something (here, seasonal terms), information criteria can overfit
+   relative to actual forecasting performance, so the chronological validation split
+   is the more reliable guide.
+3. **The simplest reasonable model wins.** ARIMA($2,1,1$) forecasts best
+   (MAE ≈ 2.2 ppm), converges cleanly, and is consistent with the PACF (the first few
+   lags carry most of the direct signal). We will use this model going forward.
 
 :::{note}
 Two settings used throughout the grid: **drift** — with $d \ge 1$, statsmodels
@@ -786,7 +787,7 @@ in which each variable may depend not only on its own past but on the past of ev
 other variable. That cross-coupling is the whole point — an upstream flow disturbance
 shows up in a downstream temperature some minutes later, and exploiting such lead–lag
 relationships is how a model can see disturbances coming. It is also what makes the
-problem genuinely hard:
+problem difficult:
 
 - **Parameter explosion.** The natural generalization of AR($p$) is the vector
   autoregression **VAR($p$)**, in which each of the $k$ variables gets $p$ lag
@@ -856,7 +857,8 @@ Get a first taste of cross-variable structure in the full Dow dataset.
   (→ $q$, $p$) where they apply. When both plots tail off (mixed ARMA), the orders are
   not readable: bound them and grid-search, judging by convergence (over-parameterized
   ARMA terms often fail to converge), information criteria, and held-out forecast
-  error — which can disagree, and out-of-sample error is the honest arbiter. Include a
+  error — which can disagree; when they do, out-of-sample error is the more reliable
+  guide. Include a
   drift term (`trend='t'`) so forecasts of trending data continue the trend. Forecast bands come from the estimated innovation variance accumulated
   over the horizon; they cover future randomness, not parameter or model error.
 

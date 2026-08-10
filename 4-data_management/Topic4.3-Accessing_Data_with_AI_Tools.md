@@ -144,9 +144,8 @@ first attempt needed correction.
 
 Topic 4.2 ended with a caution: not every useful data source offers a clean JSON API.
 Many give you only an HTML page built for humans, and scraping it by hand means staring
-at nested tags and writing brittle parsing logic. This is another place an assistant
-earns its keep — and a sharper test, because there is no library like `pubchempy` to lean
-on.
+at nested tags and writing brittle parsing logic. This is another place where an assistant is useful, and it is a harder test, since
+there is no library like `pubchempy` to lean on.
 
 The [NIST Chemistry WebBook](https://webbook.nist.gov/) is a good example. Its
 gas-phase thermochemistry pages list the constant-pressure heat capacity $C_p$ of a gas

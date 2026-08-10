@@ -211,12 +211,12 @@ used for visualization (seeing the trend through the scatter), as preprocessing 
 methods that assume a smooth underlying signal, and in online monitoring, where an
 unsmoothed dashboard would flicker with every reading.
 
-Smoothing is risky for exactly the same reason it is useful: it *removes information*.
+Smoothing is risky for the same reason it is useful: it removes information.
 Over-smoothing can hide real, physically meaningful patterns — a short-lived process
 upset, the onset of an oscillation, or the seasonal cycle itself — and every smoother
 distorts the signal somewhat (a moving average, for instance, lags behind sudden
-changes). Two habits protect you: treat the smoothing parameter as a choice that needs
-justification rather than a default, and always retain and report the unsmoothed data
+changes). Two habits help protect against this: treat the smoothing parameter as a choice that
+needs justification rather than a default, and always retain and report the unsmoothed data
 alongside any smoothed version, so the provenance of every figure is clear and readers
 can judge for themselves what the smoothing removed.
 
@@ -516,7 +516,7 @@ plt.tight_layout()
 The correlation is high at every lag, but it *oscillates with a one-year period*:
 readings 52 weeks apart sit at the same phase of the seasonal cycle (maximum
 correlation), while readings 26 weeks apart sit at opposite phases (minimum). The lag
-structure of the correlation is itself a fingerprint of the seasonality.
+structure of the correlation reflects the seasonality directly.
 
 This is essentially the **autocorrelation function** that the next section formalizes.
 The standard ACF differs from our loop in two small ways: it reports the signed
@@ -549,7 +549,7 @@ plt.tight_layout()
 ```
 
 The manual formula and statsmodels agree exactly. Notice, however, that the pearsonr
-loop drifts *above* both at long lags. Using a single global mean and variance quietly
+loop drifts *above* both at long lags. Using a single global mean and variance implicitly
 assumes the series' statistics do not change over time — for the steadily rising CO₂
 signal the shifted windows have different means, so the two estimators separate as the
 lag grows. That assumption has a name — *stationarity* — and we return to it at the

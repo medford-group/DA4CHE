@@ -117,7 +117,7 @@ A clustering of $N = 100$ points into $K = 3$ clusters is compared against $J = 
 | $c_2$ | 5 | 22 | 8 |
 | $c_3$ | 3 | 7 | 20 |
 
-(a) Compute the purity. (b) Now suppose $\omega_2$ is split into two clusters of 16 and 17 points, whose majority classes contribute 14 and 11 correct points respectively. Recompute the purity and state whether the clustering has genuinely improved. (c) What purity would you get by placing each of the 100 points in its own cluster, and what does that tell you about using purity to select $K$?
+(a) Compute the purity. (b) Now suppose $\omega_2$ is split into two clusters of 16 and 17 points, whose majority classes contribute 14 and 11 correct points respectively. Recompute the purity and state whether the clustering has actually improved. (c) What purity would you get by placing each of the 100 points in its own cluster, and what does that tell you about using purity to select $K$?
 :::
 
 ## Dataset Preparation
@@ -424,7 +424,7 @@ axes[1].set_xticks(n_clusters_list)
 plt.tight_layout()
 ```
 
-Unlike the silhouette score, BIC explicitly penalizes model complexity by adding a term proportional to the number of parameters. In textbook cases with a few clean Gaussian clusters this keeps BIC from selecting too many components. On this dataset, however, BIC keeps decreasing well past a handful of components and only bottoms out around a dozen — because the Dow process data is not actually a small number of tidy Gaussians. Each extra component improves the likelihood more than the complexity penalty costs, so BIC is effectively using many Gaussians to approximate a continuous density rather than identifying a few "true" clusters. This is a useful reminder that these criteria answer "which model fits best," not "how many real groups are there" — the two questions only coincide when the data genuinely is clustered. The silhouette score, which rewards compact well-separated groups, often prefers far fewer clusters; using both in tandem gives a more balanced picture.
+Unlike the silhouette score, BIC explicitly penalizes model complexity by adding a term proportional to the number of parameters. In textbook cases with a few clean Gaussian clusters this keeps BIC from selecting too many components. On this dataset, however, BIC keeps decreasing well past a handful of components and only bottoms out around a dozen — because the Dow process data is not actually a small number of tidy Gaussians. Each extra component improves the likelihood more than the complexity penalty costs, so BIC is effectively using many Gaussians to approximate a continuous density rather than identifying a few "true" clusters. This is a useful reminder that these criteria answer "which model fits best," not "how many real groups are there" — the two questions only coincide when the data really is clustered. The silhouette score, which rewards compact well-separated groups, often prefers far fewer clusters; using both in tandem gives a more balanced picture.
 
 **Demonstration: filtering to well-defined cluster members**
 

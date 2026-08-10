@@ -165,7 +165,7 @@ train_loader = DataLoader(train_ds, batch_size=32, shuffle=True)
 Next, the model and its training loop. Read the model class in two halves. The
 `features` half is the convolutional part: two rounds of *convolve → ReLU → pool*,
 with the comments tracking how each image shrinks spatially (8×8 → 4×4 → 2×2) while
-growing in channels (1 → 8 → 16) — trading *where* for *what*. The `classifier` half
+growing in channels (1 → 8 → 16), so spatial detail is traded for feature richness. The `classifier` half
 is then exactly Topic 6.3's MLP, applied to the flattened 16×2×2 = 64-value feature
 map: **a CNN is learned feature engineering with an MLP on top**. The training loop
 is what `MLPRegressor.fit()` did for us internally, now written out: for every
@@ -226,7 +226,7 @@ ax.set_title('CNN training loss — MNIST digits')
 plt.tight_layout()
 ```
 
-Evaluation uses two idioms worth memorizing: `.eval()` switches off training-only
+Evaluation uses two standard PyTorch idioms: `.eval()` switches off training-only
 behavior, and `torch.no_grad()` turns off gradient tracking (faster, less memory,
 and a signal to the reader that no learning happens here). The network outputs ten
 scores per image; `argmax` picks the highest-scoring class:
@@ -513,9 +513,9 @@ abandon recurrence entirely. Their core mechanism, the **attention head**, lets 
 position in the sequence look directly at every other position and learn *which ones
 matter for interpreting it*: each element emits a query, is scored against every
 other element's key, and pulls in a weighted combination of their values. The word
-"it" in a sentence can attend straight to the noun it refers to, fifty words back —
-no relay through fifty intermediate hidden states, and therefore no vanishing signal
-along the way. This is what cracked the language problem: attention handles
+"it" in a sentence can attend directly to the noun it refers to, fifty words back,
+without relaying information through fifty intermediate hidden states, so there is no
+vanishing signal along the way. This is what cracked the language problem: attention handles
 long-range dependencies that defeated recurrent networks, and because all positions
 are processed in parallel rather than sequentially, transformers scale superbly on
 modern hardware. Stacked attention layers are the architecture behind essentially
@@ -574,9 +574,9 @@ X_ae_te = torch.tensor(X_te.reshape(len(X_te), -1))
 ae_loader = DataLoader(TensorDataset(X_ae_tr), batch_size=64, shuffle=True)
 ```
 
-Notice what the `DataLoader` holds: inputs and *nothing else*. There are no labels
-anywhere in this example — the input will serve as its own target, which is the
-defining trick of the autoencoder.
+Note that the `DataLoader` holds only the inputs. There are no labels anywhere in
+this example: the input will serve as its own target, which is the defining trick of
+the autoencoder.
 
 The architecture is two mirror-image MLPs. The encoder funnels 64 pixel values
 down through 32 and 16 to just `LATENT_DIM = 2` numbers; the decoder widens back out
@@ -685,24 +685,25 @@ space has "holes": decode an arbitrary point $\mathbf{z}$ that no training image
 mapped to, and the output may be garbage. The **variational autoencoder (VAE)**
 ([Kingma & Welling, 2014](https://arxiv.org/abs/1312.6114)) fixes this by making the
 encoder output a *distribution* over latent space rather than a point, and adding a
-regularization term that keeps the latent space smooth and densely packed. The
-payoff: the decoder becomes a true **generative model** — sample any reasonable
-$\mathbf{z}$ and decode a plausible new example — the neural sibling of sampling
-from the GMMs of Topic 5.4.
+regularization term that keeps the latent space smooth and densely packed. As a
+result, the decoder becomes a true **generative model**: sample any reasonable
+$\mathbf{z}$ and it decodes to a plausible new example, similar to sampling from the
+GMMs of Topic 5.4.
 
-That property launched an entire subfield of molecular design. The landmark is
+This property launched an entire subfield of molecular design. A landmark example is
 [Gómez-Bombarelli et al. (2018)](https://doi.org/10.1021/acscentsci.7b00572)
 (*ACS Central Science*, from the Aspuru-Guzik group): a VAE trained on hundreds of
 thousands of molecules turns chemical space into a *continuous* latent space, where
-gradient-based optimization — the machinery of Module 1! — can search for molecules
+gradient-based optimization (the machinery of Module 1) can search for molecules
 with better properties, and the decoder translates the optimized latent point back
-into a candidate structure. Inverse molecular design becomes numerical optimization.
+into a candidate structure. This turns inverse molecular design into a numerical
+optimization problem.
 The idea has compounded with the other architectures in this chapter: for example,
 [Nguyen & Karolak (2025)](https://doi.org/10.1016/j.bpj.2025.01.022)
 (*Biophysical Journal*) generate drug-like candidate molecules with a **transformer
-graph VAE** — molecular graphs as input (the Topic 4.4 representation), attention
-for the encoding, and a VAE latent space for generation, uniting all three notes in
-this chapter in a single model. In engineering practice the same latent-space idea
+graph VAE**: molecular graphs as input (the Topic 4.4 representation), attention for
+the encoding, and a VAE latent space for generation, combining several of the ideas
+from this chapter in a single model. In engineering practice the same latent-space idea
 appears in process monitoring, where reconstruction error from an autoencoder
 trained on normal operation flags anomalous plant states.
 

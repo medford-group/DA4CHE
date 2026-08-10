@@ -322,11 +322,11 @@ The ROC curve evaluates performance across all possible thresholds. It is most i
 
 The confusion matrix generalizes false positives and false negatives to **multi-class** problems. Each row corresponds to a true class and each column to a predicted class. Diagonal entries are correct predictions; off-diagonal entries are errors.
 
-:::{figure} images/confusion_matrix.png
+:::{figure} images/confusion_matrix_iris.png
 :name: fig-cls-confmat
 :width: 60%
 
-A confusion matrix for a multi-class classifier. Diagonal elements are true positives/negatives; off-diagonal elements reveal which classes are being confused with each other.
+A confusion matrix for a multi-class classifier (the iris flower dataset, classified using only its two sepal features). Diagonal elements are true positives/negatives; off-diagonal elements reveal which classes are being confused with each other.
 :::
 
 Confusion matrices are especially useful for diagnosing *which* classes are problematic. For example, if class A is frequently misclassified as class B but rarely confused with class C, the confusion matrix reveals this structure immediately.

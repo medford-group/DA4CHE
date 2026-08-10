@@ -114,7 +114,7 @@ plt.show()
 ```
 
 In a few lines we have turned an API response into a labeled graph and a picture of the
-molecule's connectivity. The payoff is bigger than chemistry, though: **graphs represent
+molecule's connectivity. This is not limited to chemistry: **graphs represent
 relationships of all kinds in science and engineering.** Reaction networks, process
 flowsheets, the dependency structure among process variables, and state-transition
 diagrams are all graphs, and the same `networkx` toolkit applies to every one of them.
