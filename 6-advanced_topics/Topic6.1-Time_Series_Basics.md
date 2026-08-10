@@ -640,18 +640,30 @@ print(f'P(stationary) ≈ {1 - p_val:.4f}')
 ```
 
 ```{code-cell} ipython3
-# Rolling statistics confirm non-stationarity visually
+# Rolling statistics confirm non-stationarity visually. The mean (~340 ppm) and the
+# std (~2 ppm) live on very different scales, so each gets its own y-axis.
 window = 52
-stats = co2_df['co2_interp'].copy().to_frame()
-stats['rolling_mean'] = co2_df['co2_interp'].rolling(window).mean()
-stats['rolling_std']  = co2_df['co2_interp'].rolling(window).std()
+rolling_mean = co2_df['co2_interp'].rolling(window).mean()['1980':'1985']
+rolling_std  = co2_df['co2_interp'].rolling(window).std()['1980':'1985']
 
-stats[['rolling_mean', 'rolling_std']]['1980':'1985'].plot(figsize=(10, 3))
-plt.title('Rolling mean and std — CO₂ (1980–1985)')
+fig, ax1 = plt.subplots(figsize=(10, 3))
+ax1.plot(rolling_mean.index, rolling_mean, color=clrs[0])
+ax1.set_ylabel('Rolling mean (ppm)', color=clrs[0])
+ax1.tick_params(axis='y', labelcolor=clrs[0])
+
+ax2 = ax1.twinx()
+ax2.plot(rolling_std.index, rolling_std, color=clrs[1])
+ax2.set_ylabel('Rolling std (ppm)', color=clrs[1])
+ax2.tick_params(axis='y', labelcolor=clrs[1])
+
+ax1.set_title('Rolling mean and std — CO₂ (1980–1985, 52-week window)')
 plt.tight_layout()
 ```
 
-The rising mean confirms what the ADF test found: CO₂ is not stationary.
+The rising mean confirms what the ADF test found: CO₂ is not stationary. The rolling
+standard deviation — readable now that it has its own axis — wiggles with the seasonal
+cycle but stays near 2 ppm with no long-run trend: the non-stationarity of this series
+lives in the mean, not the variance.
 
 ### First-Order Differencing
 
