@@ -122,6 +122,19 @@ do not change the output much) and reducing the number of parameters.
 
 ### A Minimal CNN on MNIST Digits
 
+This is our first PyTorch model, so the example doubles as a tour of the workflow
+that every PyTorch project follows: **prepare tensors → define a model class → write
+the training loop → evaluate**. Where scikit-learn's `fit()` hid this machinery
+(Topic 6.3), PyTorch asks you to write it out — the price of the flexibility that
+custom architectures require.
+
+Step one is data preparation. The key move is *undoing the flattening* that every
+previous chapter applied to these images: a convolutional layer needs to know which
+pixels are neighbors, so the 64-value rows become 8×8 images again, with an explicit
+channel dimension (PyTorch's convention is `(N, channels, height, width)`; grayscale
+means one channel). The `DataLoader` handles the mini-batching from Topic 6.3 —
+shuffled batches of 32, one full pass through them per epoch:
+
 ```{code-cell} ipython3
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
@@ -148,6 +161,17 @@ y_te_t = torch.from_numpy(y_te)
 train_ds = TensorDataset(X_tr_t, y_tr_t)
 train_loader = DataLoader(train_ds, batch_size=32, shuffle=True)
 ```
+
+Next, the model and its training loop. Read the model class in two halves. The
+`features` half is the convolutional part: two rounds of *convolve → ReLU → pool*,
+with the comments tracking how each image shrinks spatially (8×8 → 4×4 → 2×2) while
+growing in channels (1 → 8 → 16) — trading *where* for *what*. The `classifier` half
+is then exactly Topic 6.3's MLP, applied to the flattened 16×2×2 = 64-value feature
+map: **a CNN is learned feature engineering with an MLP on top**. The training loop
+is what `MLPRegressor.fit()` did for us internally, now written out: for every
+mini-batch, zero the stored gradients, compute the loss, call `loss.backward()`
+(automatic differentiation — backpropagation), and let the optimizer take one step.
+One pass through all batches is one epoch, the unit on the loss curve's x-axis:
 
 ```{code-cell} ipython3
 class SmallCNN(nn.Module):
@@ -201,6 +225,11 @@ ax.set_ylabel('Cross-entropy loss')
 ax.set_title('CNN training loss — MNIST digits')
 plt.tight_layout()
 ```
+
+Evaluation uses two idioms worth memorizing: `.eval()` switches off training-only
+behavior, and `torch.no_grad()` turns off gradient tracking (faster, less memory,
+and a signal to the reader that no learning happens here). The network outputs ten
+scores per image; `argmax` picks the highest-scoring class:
 
 ```{code-cell} ipython3
 cnn.eval()
@@ -258,6 +287,31 @@ plt.tight_layout()
 
 LDA and CNN projections typically show better cluster separation than PCA because both
 use label information — LDA explicitly, CNN implicitly through the classification loss.
+
+:::{note}
+**From grids to graphs: convolutions on molecules.** Nothing about the shared-filter
+idea actually requires a *grid* — only a notion of "neighborhood." Recall from
+[Complex Structured Data](../4-data_management/Topic4.4-Complex_Structured_Data) that
+a molecule is naturally a graph: atoms as nodes, bonds as edges. **Graph
+convolutional networks** (more generally, *message-passing* networks) apply exactly
+the CNN trick to that setting: each atom updates its feature vector from its bonded
+neighbors using the *same* learned weights everywhere in the molecule, just as an
+image filter is reused at every pixel. Stacking layers lets information propagate
+across the molecular graph the way edges become corners become textures in a CNN.
+
+This architecture family now dominates **machine-learned interatomic potentials
+(MLIPs)** — models trained to reproduce quantum-mechanical energies and forces at a
+tiny fraction of the cost, which are transforming computational chemistry and
+materials science. State-of-the-art examples include **MACE**
+([Batatia et al., 2022](https://arxiv.org/abs/2206.07697)), a higher-order
+message-passing model, and Meta's **UMA** family
+([Wood et al., 2025](https://arxiv.org/abs/2506.23971)), universal models trained
+across molecules, materials, and catalysts. You can try these models without
+installing anything at the
+[UMA playground](https://aidemos.atmeta.com/uma), which runs structure relaxations
+and simple simulations right in the browser — a molecular graph network you can
+poke at interactively.
+:::
 
 :::{exercise}
 :label: ex-eda-nn-cnn-filters
@@ -358,6 +412,27 @@ lstm_train_ds = TensorDataset(X_tr_t, y_tr_t)
 lstm_loader   = DataLoader(lstm_train_ds, batch_size=64, shuffle=True)
 ```
 
+`make_windows` should look familiar: it is the lag-feature construction from Topic
+6.2's AR models — each training example is 24 consecutive hourly values, and the
+target is the value that came next (an AR(24), in that chapter's language). The
+difference is what happens downstream: the AR model flattened the window into 24
+independent regression features, while the LSTM will consume it *as a sequence*, in
+order. Two practical details: the series is standardized before windowing (gradient
+training needs scaled inputs, as in Topic 6.3 — strictly, μ and σ should come from
+the training portion only, per Module 2's leakage discipline; with a series this
+long the difference is negligible, but fit-on-train is the habit to keep), and
+`unsqueeze(-1)` adds a feature dimension because PyTorch's LSTM expects
+`(batch, sequence_length, features)` — here one feature, the impurity itself, per
+time step.
+
+The model is three lines of substance: `nn.LSTM` runs the gated cell over the window
+one step at a time, carrying the hidden and cell states through the gates described
+above; `out[:, -1, :]` takes the hidden state after the *last* step — the network's
+32-number summary of everything it saw in the window — and a linear layer maps that
+summary to the forecast. The training loop is the same pattern as the CNN's; only
+the model and the loss changed (MSE, the regression loss with the Gaussian-noise
+interpretation from Topic 6.3):
+
 ```{code-cell} ipython3
 class LSTMForecaster(nn.Module):
     def __init__(self, input_size=1, hidden_size=32, num_layers=1):
@@ -392,6 +467,10 @@ ax.set_title('LSTM training loss — Dow impurity')
 plt.tight_layout()
 ```
 
+Evaluation mirrors the CNN's (`eval()` + `no_grad()`), with one extra step: the
+model predicts in *standardized* units, so its outputs are mapped back to impurity
+units with the saved μ and σ before computing errors:
+
 ```{code-cell} ipython3
 lstm_model.eval()
 with torch.no_grad():
@@ -423,6 +502,28 @@ given the previous 24). This is comparable to the AR model from Topic 6.2. For a
 comparison with ARIMA, the same window-based approach should be used with the ARIMA
 model. LSTMs often outperform ARIMA when the series has complex nonlinear patterns or
 when many training examples are available.
+:::
+
+:::{note}
+**Beyond recurrence: transformers and attention.** An LSTM reads a sequence one step
+at a time, squeezing everything it has seen into a fixed-size state — for long
+sequences, a narrow bottleneck. **Transformers**
+([Vaswani et al., 2017, "Attention Is All You Need"](https://arxiv.org/abs/1706.03762))
+abandon recurrence entirely. Their core mechanism, the **attention head**, lets every
+position in the sequence look directly at every other position and learn *which ones
+matter for interpreting it*: each element emits a query, is scored against every
+other element's key, and pulls in a weighted combination of their values. The word
+"it" in a sentence can attend straight to the noun it refers to, fifty words back —
+no relay through fifty intermediate hidden states, and therefore no vanishing signal
+along the way. This is what cracked the language problem: attention handles
+long-range dependencies that defeated recurrent networks, and because all positions
+are processed in parallel rather than sequentially, transformers scale superbly on
+modern hardware. Stacked attention layers are the architecture behind essentially
+all large language models — including the assistants of
+[Accessing Data with AI Tools](../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools).
+The price is that attention compares all pairs of positions, so cost grows
+quadratically with sequence length — one reason recurrent and state-space models
+remain competitive for very long time series.
 :::
 
 :::{exercise}
@@ -472,6 +573,18 @@ X_ae_te = torch.tensor(X_te.reshape(len(X_te), -1))
 
 ae_loader = DataLoader(TensorDataset(X_ae_tr), batch_size=64, shuffle=True)
 ```
+
+Notice what the `DataLoader` holds: inputs and *nothing else*. There are no labels
+anywhere in this example — the input will serve as its own target, which is the
+defining trick of the autoencoder.
+
+The architecture is two mirror-image MLPs. The encoder funnels 64 pixel values
+down through 32 and 16 to just `LATENT_DIM = 2` numbers; the decoder widens back out
+to 64, ending in a sigmoid so outputs land in $[0, 1]$ like the normalized pixels.
+The training loop is the same pattern for the third time — the only novelty is in
+the loss line, `crit_ae(ae(xb), xb)`: the reconstruction is compared against **the
+input itself**. Everything the network learns follows from being forced to squeeze
+each image through the 2-number bottleneck and rebuild it:
 
 ```{code-cell} ipython3
 LATENT_DIM = 2   # 2-D latent space for easy visualization
@@ -567,6 +680,32 @@ because the objective (reconstruction) is not directly aligned with class separa
 Increasing the latent dimension or adding a classification loss would tighten the
 clustering.
 
+**From autoencoders to generative chemistry: VAEs.** A plain autoencoder's latent
+space has "holes": decode an arbitrary point $\mathbf{z}$ that no training image
+mapped to, and the output may be garbage. The **variational autoencoder (VAE)**
+([Kingma & Welling, 2014](https://arxiv.org/abs/1312.6114)) fixes this by making the
+encoder output a *distribution* over latent space rather than a point, and adding a
+regularization term that keeps the latent space smooth and densely packed. The
+payoff: the decoder becomes a true **generative model** — sample any reasonable
+$\mathbf{z}$ and decode a plausible new example — the neural sibling of sampling
+from the GMMs of Topic 5.4.
+
+That property launched an entire subfield of molecular design. The landmark is
+[Gómez-Bombarelli et al. (2018)](https://doi.org/10.1021/acscentsci.7b00572)
+(*ACS Central Science*, from the Aspuru-Guzik group): a VAE trained on hundreds of
+thousands of molecules turns chemical space into a *continuous* latent space, where
+gradient-based optimization — the machinery of Module 1! — can search for molecules
+with better properties, and the decoder translates the optimized latent point back
+into a candidate structure. Inverse molecular design becomes numerical optimization.
+The idea has compounded with the other architectures in this chapter: for example,
+[Nguyen & Karolak (2025)](https://doi.org/10.1016/j.bpj.2025.01.022)
+(*Biophysical Journal*) generate drug-like candidate molecules with a **transformer
+graph VAE** — molecular graphs as input (the Topic 4.4 representation), attention
+for the encoding, and a VAE latent space for generation, uniting all three notes in
+this chapter in a single model. In engineering practice the same latent-space idea
+appears in process monitoring, where reconstruction error from an autoencoder
+trained on normal operation flags anomalous plant states.
+
 :::{exercise}
 :label: ex-eda-nn-ae
 
@@ -654,4 +793,20 @@ Compare CNN and MLP on the MNIST digits dataset.
   accessible survey of CNNs and RNNs
 - Hochreiter, S. & Schmidhuber, J. (1997), "Long Short-Term Memory," *Neural Computation*
   9(8), 1735–1780 — original LSTM paper
+- Vaswani, A. et al. (2017), "Attention Is All You Need," *NeurIPS* —
+  [arXiv:1706.03762](https://arxiv.org/abs/1706.03762); the transformer paper
+- Batatia, I., Kovács, D. P., Simm, G. N. C., Ortner, C. & Csányi, G. (2022), "MACE:
+  Higher order equivariant message passing neural networks for fast and accurate force
+  fields," *NeurIPS* — [arXiv:2206.07697](https://arxiv.org/abs/2206.07697)
+- Wood, B. M. et al. (2025), "UMA: A family of universal models for atoms" —
+  [arXiv:2506.23971](https://arxiv.org/abs/2506.23971); try it live at the
+  [UMA playground](https://aidemos.atmeta.com/uma)
+- Kingma, D. P. & Welling, M. (2014), "Auto-encoding variational Bayes," *ICLR* —
+  [arXiv:1312.6114](https://arxiv.org/abs/1312.6114); the original VAE paper
+- Gómez-Bombarelli, R. et al. (2018), "Automatic chemical design using a data-driven
+  continuous representation of molecules," *ACS Central Science* 4(2), 268–276 —
+  [doi:10.1021/acscentsci.7b00572](https://doi.org/10.1021/acscentsci.7b00572)
+- Nguyen, T. & Karolak, A. (2025), "Transformer graph variational autoencoder for
+  generative molecular design," *Biophysical Journal* 124(3) —
+  [doi:10.1016/j.bpj.2025.01.022](https://doi.org/10.1016/j.bpj.2025.01.022)
 - PyTorch tutorials: [pytorch.org/tutorials](https://pytorch.org/tutorials/)
