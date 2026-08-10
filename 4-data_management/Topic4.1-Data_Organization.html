@@ -223,6 +223,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../problem_sets/intro.html">Problem Sets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
@@ -2108,7 +2109,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.61 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.69 s
 </pre></div>
 </div>
 </div>
@@ -2212,9 +2213,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0006 s
-HDF5 one column:  0.0003 s
-In-memory slice:  0.000161 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0009 s
+HDF5 one column:  0.0004 s
+In-memory slice:  0.000219 s
 </pre></div>
 </div>
 </div>
@@ -2259,10 +2260,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0429 s
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet read:  0.0509 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0770 s
+Parquet read:  0.0959 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:
