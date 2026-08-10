@@ -832,14 +832,31 @@ by the layer after it. The “multi-layer” in the name counts the input, hidde
 output layers — a single hidden layer of many neurons already qualifies, and it is the
 width of that layer (not depth) that gives the simplest MLPs their flexibility. Deeper
 networks chain several hidden layers, each taking the previous layer’s activations as
-input; with two hidden layers, for example:</p>
+input. The standard way to draw such a network — and the picture behind every
+“neural network” icon you have ever seen — is circles for neurons and lines for
+weights:</p>
+<figure class="align-default" id="fig-nn-mlp-diagram">
+<a class="reference internal image-reference" href="../_images/mlp_diagram.png"><img alt="../_images/mlp_diagram.png" src="../_images/mlp_diagram.png" style="width: 95%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">A two-hidden-layer MLP (3 inputs, hidden layers of 4 and 3 neurons, 1 output). Each
+circle is a neuron — a weighted sum followed by an activation <span class="math notranslate nohighlight">\(\sigma\)</span> — and each
+line carries one weight. The bundle of lines connecting two columns <em>is</em> the weight
+matrix <span class="math notranslate nohighlight">\(W^{(l)}\)</span>: one row per destination neuron, one column per source.</span><a class="headerlink" href="#fig-nn-mlp-diagram" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The math is this diagram read left to right, one column at a time:</p>
 <div class="math notranslate nohighlight">
 \[\mathbf{h}^{(1)} = \sigma(W^{(1)} \mathbf{x} + \mathbf{b}^{(1)})\]</div>
 <div class="math notranslate nohighlight">
 \[\mathbf{h}^{(2)} = \sigma(W^{(2)} \mathbf{h}^{(1)} + \mathbf{b}^{(2)})\]</div>
 <div class="math notranslate nohighlight">
 \[\hat{y} = W^{(3)} \mathbf{h}^{(2)} + b^{(3)}\]</div>
-<p>(For regression, the output layer is typically linear; for classification, softmax.)</p>
+<p>Each equation processes one column of the figure: collect the previous column’s
+values, multiply by the weights on the incoming lines (<span class="math notranslate nohighlight">\(W^{(1)}\)</span> is 4×3 here —
+four hidden neurons, each with three incoming weights), add that layer’s biases, and
+apply the activation. (For regression, the output layer is typically linear; for
+classification, softmax.)</p>
 <p><strong>The Universal Approximation Theorem</strong> states that a <em>single</em> hidden layer with
 enough neurons can approximate any continuous function on a compact domain. For ReLU
 activations you have already seen why this is plausible: one hidden layer of ReLU
@@ -1072,6 +1089,17 @@ Are they in agreement to at least 6 decimal places?</p></li>
 <hr class="docutils" />
 <section id="demonstration-mlpregressor-on-the-dow-dataset">
 <h2><a class="toc-backref" href="#id15" role="doc-backlink">Demonstration: <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> on the Dow Dataset</a><a class="headerlink" href="#demonstration-mlpregressor-on-the-dow-dataset" title="Link to this heading">#</a></h2>
+<p>Time to put the pieces together on a real problem: predicting the Dow impurity from
+the plant’s forty process sensors. We will use scikit-learn’s <code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> — the
+simplest practical neural-network implementation. It wraps everything this chapter has
+covered (hidden layers, activations, mini-batch training with adam, early stopping)
+behind the same <code class="docutils literal notranslate"><span class="pre">fit</span></code>/<code class="docutils literal notranslate"><span class="pre">score</span></code> interface as every other sklearn model, which makes it
+ideal for moderate-sized tabular problems like this one. Its limitation is
+flexibility: custom architectures, GPUs, and non-standard training loops require a
+framework like PyTorch, which is exactly where
+<a class="reference internal" href="Topic6.4-Neural_Network_Architectures.html"><span class="doc std std-doc">Neural Network Architectures</span></a> picks up.</p>
+<p>The workflow has four steps, each in its own cell below: prepare and <em>standardize</em> the
+data, fit the network, inspect the training curve, and sweep the architecture.</p>
 <section id="fitting-and-training-loss">
 <h3><a class="toc-backref" href="#id16" role="doc-backlink">Fitting and Training Loss</a><a class="headerlink" href="#fitting-and-training-loss" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
@@ -1106,6 +1134,17 @@ Are they in agreement to at least 6 decimal places?</p></li>
 </div>
 </div>
 </div>
+<p>The preparation cell filters out rows with non-numeric entries (the same data-quality
+issue from Module 4), takes the process sensors as features and the impurity as the
+target, splits off a test set, and <strong>standardizes the features</strong>. Standardization is
+not optional for neural networks: gradient descent takes the same step size <span class="math notranslate nohighlight">\(\eta\)</span> in
+every direction, so features on wildly different scales produce a badly conditioned
+loss surface that trains slowly or not at all. (The scaler is fit on the training data
+only — the leakage discipline from Module 2.)</p>
+<p>Now the fit. One hidden layer of 64 ReLU neurons, trained with adam; <code class="docutils literal notranslate"><span class="pre">early_stopping</span></code>
+holds out 10% of the training data as a validation set and stops training when the
+validation score stops improving — the same overfitting guard we have used since
+Module 2, built into the training loop:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mlp_reg</span> <span class="o">=</span> <span class="n">MLPRegressor</span><span class="p">(</span>
@@ -1134,6 +1173,20 @@ Stopped at iteration: 161
 </div>
 </div>
 </div>
+<p>The train and test <span class="math notranslate nohighlight">\(r^2\)</span> land close together — the network generalizes — and the
+third line reports <em>when early stopping fired</em>. The word “iteration” here needs
+unpacking, because neural-network training has two nested loops:</p>
+<ul class="simple">
+<li><p>An <strong>epoch</strong> is one complete pass through the training data. Within each epoch, the
+data is split into mini-batches, and the weights are updated once per batch — so a
+single epoch contains many <em>gradient updates</em> (<code class="docutils literal notranslate"><span class="pre">n_samples</span> <span class="pre">/</span> <span class="pre">batch_size</span></code> of them).</p></li>
+<li><p>In scikit-learn, one “iteration” <strong>is</strong> one epoch: <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>, <code class="docutils literal notranslate"><span class="pre">n_iter_</span></code>, and each
+point of <code class="docutils literal notranslate"><span class="pre">loss_curve_</span></code> all count full passes through the data, not individual
+updates. Beware that other frameworks (PyTorch included) often use “iteration” for a
+single mini-batch update instead — when reading training logs, always check which
+loop is being counted.</p></li>
+</ul>
+<p>Plotting the loss after every epoch gives the standard training diagnostic:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -1151,6 +1204,11 @@ Stopped at iteration: 161
 <img alt="../_images/17d6830f25fd57f8f257d92a8d86fd60c3603369c319f080e04bb5a0e585cebc.png" src="../_images/17d6830f25fd57f8f257d92a8d86fd60c3603369c319f080e04bb5a0e585cebc.png" />
 </div>
 </div>
+<p>The training loss falls steeply in the first epochs and then flattens, while the
+validation <span class="math notranslate nohighlight">\(r^2\)</span> climbs and plateaus — the moment it stops improving is where early
+stopping ends the run. A training curve is to a neural network what a convergence
+check was to the optimizers of Topic 1.4: the first thing to look at when results
+disappoint.</p>
 </section>
 <section id="effect-of-hidden-layer-size">
 <h3><a class="toc-backref" href="#id17" role="doc-backlink">Effect of Hidden Layer Size</a><a class="headerlink" href="#effect-of-hidden-layer-size" title="Link to this heading">#</a></h3>
@@ -1181,10 +1239,21 @@ Stopped at iteration: 161
 <img alt="../_images/3693328ad972023c0e9345dd60dc243b91f2c399257586a10068978959ed5bcd.png" src="../_images/3693328ad972023c0e9345dd60dc243b91f2c399257586a10068978959ed5bcd.png" />
 </div>
 </div>
-<p>As the hidden layer grows, training <span class="math notranslate nohighlight">\(r^2\)</span> increases monotonically (the model has more
-capacity), but test <span class="math notranslate nohighlight">\(r^2\)</span> peaks and may decrease — the signature of overfitting.
-Early stopping (<code class="docutils literal notranslate"><span class="pre">early_stopping=True</span></code>) helps, but is not a substitute for choosing a
-network architecture appropriate to the dataset size.</p>
+<p>As the hidden layer grows, training <span class="math notranslate nohighlight">\(r^2\)</span> rises at first — more capacity — but then
+<em>levels off and even dips slightly</em> at the largest widths. That should give you pause:
+a wider network strictly contains the smaller ones, so at the true minimum of the loss
+its training score could never be worse. The catch is “at the true minimum.” All of
+these networks share the same fixed budget (<code class="docutils literal notranslate"><span class="pre">max_iter=500</span></code>, one adam run from one
+random initialization), and the larger the network, the further from converged that
+budget leaves it. This is a fundamental difference from the linear models of Modules
+1–2, where the least-squares solution is unique and computed in closed form: <strong>a
+neural network’s reported performance is a property of the model <em>and its
+optimization</em> together</strong> — architecture, optimizer, learning rate, initialization, and
+iteration budget all leave fingerprints on the numbers, and changing any of them
+changes the “result.” The test curve tells the more familiar story: it peaks around
+64–128 units and gains nothing beyond, while the persistent train–test gap signals
+mild overfitting. Early stopping (<code class="docutils literal notranslate"><span class="pre">early_stopping=True</span></code>) helps, but is not a
+substitute for choosing a network architecture appropriate to the dataset size.</p>
 <div class="exercise admonition" id="ex-eda-nn-mlp">
 
 <p class="admonition-title"><span class="caption-number">Exercise 129 </span></p>

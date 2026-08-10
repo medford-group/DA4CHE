@@ -298,13 +298,31 @@ by the layer after it. The "multi-layer" in the name counts the input, hidden, a
 output layers — a single hidden layer of many neurons already qualifies, and it is the
 width of that layer (not depth) that gives the simplest MLPs their flexibility. Deeper
 networks chain several hidden layers, each taking the previous layer's activations as
-input; with two hidden layers, for example:
+input. The standard way to draw such a network — and the picture behind every
+"neural network" icon you have ever seen — is circles for neurons and lines for
+weights:
+
+:::{figure} images/mlp_diagram.png
+:name: fig-nn-mlp-diagram
+:width: 95%
+
+A two-hidden-layer MLP (3 inputs, hidden layers of 4 and 3 neurons, 1 output). Each
+circle is a neuron — a weighted sum followed by an activation $\sigma$ — and each
+line carries one weight. The bundle of lines connecting two columns *is* the weight
+matrix $W^{(l)}$: one row per destination neuron, one column per source.
+:::
+
+The math is this diagram read left to right, one column at a time:
 
 $$\mathbf{h}^{(1)} = \sigma(W^{(1)} \mathbf{x} + \mathbf{b}^{(1)})$$
 $$\mathbf{h}^{(2)} = \sigma(W^{(2)} \mathbf{h}^{(1)} + \mathbf{b}^{(2)})$$
 $$\hat{y} = W^{(3)} \mathbf{h}^{(2)} + b^{(3)}$$
 
-(For regression, the output layer is typically linear; for classification, softmax.)
+Each equation processes one column of the figure: collect the previous column's
+values, multiply by the weights on the incoming lines ($W^{(1)}$ is 4×3 here —
+four hidden neurons, each with three incoming weights), add that layer's biases, and
+apply the activation. (For regression, the output layer is typically linear; for
+classification, softmax.)
 
 **The Universal Approximation Theorem** states that a *single* hidden layer with
 enough neurons can approximate any continuous function on a compact domain. For ReLU
@@ -517,6 +535,19 @@ Verify the manual backpropagation calculation numerically.
 
 ## Demonstration: `MLPRegressor` on the Dow Dataset
 
+Time to put the pieces together on a real problem: predicting the Dow impurity from
+the plant's forty process sensors. We will use scikit-learn's `MLPRegressor` — the
+simplest practical neural-network implementation. It wraps everything this chapter has
+covered (hidden layers, activations, mini-batch training with adam, early stopping)
+behind the same `fit`/`score` interface as every other sklearn model, which makes it
+ideal for moderate-sized tabular problems like this one. Its limitation is
+flexibility: custom architectures, GPUs, and non-standard training loops require a
+framework like PyTorch, which is exactly where
+[Neural Network Architectures](Topic6.4-Neural_Network_Architectures) picks up.
+
+The workflow has four steps, each in its own cell below: prepare and *standardize* the
+data, fit the network, inspect the training curve, and sweep the architecture.
+
 ### Fitting and Training Loss
 
 ```{code-cell} ipython3
@@ -548,6 +579,19 @@ X_tr = scaler.fit_transform(X_train)
 X_te = scaler.transform(X_test)
 ```
 
+The preparation cell filters out rows with non-numeric entries (the same data-quality
+issue from Module 4), takes the process sensors as features and the impurity as the
+target, splits off a test set, and **standardizes the features**. Standardization is
+not optional for neural networks: gradient descent takes the same step size $\eta$ in
+every direction, so features on wildly different scales produce a badly conditioned
+loss surface that trains slowly or not at all. (The scaler is fit on the training data
+only — the leakage discipline from Module 2.)
+
+Now the fit. One hidden layer of 64 ReLU neurons, trained with adam; `early_stopping`
+holds out 10% of the training data as a validation set and stops training when the
+validation score stops improving — the same overfitting guard we have used since
+Module 2, built into the training loop:
+
 ```{code-cell} ipython3
 mlp_reg = MLPRegressor(
     hidden_layer_sizes=(64,),
@@ -566,6 +610,21 @@ print(f'Test  r²: {mlp_reg.score(X_te, y_test):.3f}')
 print(f'Stopped at iteration: {mlp_reg.n_iter_}')
 ```
 
+The train and test $r^2$ land close together — the network generalizes — and the
+third line reports *when early stopping fired*. The word "iteration" here needs
+unpacking, because neural-network training has two nested loops:
+
+- An **epoch** is one complete pass through the training data. Within each epoch, the
+  data is split into mini-batches, and the weights are updated once per batch — so a
+  single epoch contains many *gradient updates* (`n_samples / batch_size` of them).
+- In scikit-learn, one "iteration" **is** one epoch: `max_iter`, `n_iter_`, and each
+  point of `loss_curve_` all count full passes through the data, not individual
+  updates. Beware that other frameworks (PyTorch included) often use "iteration" for a
+  single mini-batch update instead — when reading training logs, always check which
+  loop is being counted.
+
+Plotting the loss after every epoch gives the standard training diagnostic:
+
 ```{code-cell} ipython3
 fig, ax = plt.subplots(figsize=(7, 3))
 ax.plot(mlp_reg.loss_curve_, label='Training loss')
@@ -576,6 +635,12 @@ ax.set_title('Training curve — MLPRegressor')
 ax.legend()
 plt.tight_layout()
 ```
+
+The training loss falls steeply in the first epochs and then flattens, while the
+validation $r^2$ climbs and plateaus — the moment it stops improving is where early
+stopping ends the run. A training curve is to a neural network what a convergence
+check was to the optimizers of Topic 1.4: the first thing to look at when results
+disappoint.
 
 ### Effect of Hidden Layer Size
 
@@ -600,10 +665,21 @@ ax.legend()
 plt.tight_layout()
 ```
 
-As the hidden layer grows, training $r^2$ increases monotonically (the model has more
-capacity), but test $r^2$ peaks and may decrease — the signature of overfitting.
-Early stopping (`early_stopping=True`) helps, but is not a substitute for choosing a
-network architecture appropriate to the dataset size.
+As the hidden layer grows, training $r^2$ rises at first — more capacity — but then
+*levels off and even dips slightly* at the largest widths. That should give you pause:
+a wider network strictly contains the smaller ones, so at the true minimum of the loss
+its training score could never be worse. The catch is "at the true minimum." All of
+these networks share the same fixed budget (`max_iter=500`, one adam run from one
+random initialization), and the larger the network, the further from converged that
+budget leaves it. This is a fundamental difference from the linear models of Modules
+1–2, where the least-squares solution is unique and computed in closed form: **a
+neural network's reported performance is a property of the model *and its
+optimization* together** — architecture, optimizer, learning rate, initialization, and
+iteration budget all leave fingerprints on the numbers, and changing any of them
+changes the "result." The test curve tells the more familiar story: it peaks around
+64–128 units and gains nothing beyond, while the persistent train–test gap signals
+mild overfitting. Early stopping (`early_stopping=True`) helps, but is not a
+substitute for choosing a network architecture appropriate to the dataset size.
 
 :::{exercise}
 :label: ex-eda-nn-mlp
