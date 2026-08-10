@@ -526,7 +526,7 @@ feature engineering decisions of deep learning. A well-chosen architecture encod
 domain knowledge that would otherwise need to be hand-crafted.</p>
 <div class="exercise admonition" id="ex-eda-nn-arch-table">
 
-<p class="admonition-title"><span class="caption-number">Exercise 131 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 132 </span></p>
 <section id="exercise-content">
 <p>Use the unifying view to reason about architecture choice.</p>
 <p>For each scenario below, identify the most appropriate architecture from the table
@@ -605,7 +605,7 @@ shuffled batches of 32, one full pass through them per epoch:</p>
 <p>Next, the model and its training loop. Read the model class in two halves. The
 <code class="docutils literal notranslate"><span class="pre">features</span></code> half is the convolutional part: two rounds of <em>convolve → ReLU → pool</em>,
 with the comments tracking how each image shrinks spatially (8×8 → 4×4 → 2×2) while
-growing in channels (1 → 8 → 16) — trading <em>where</em> for <em>what</em>. The <code class="docutils literal notranslate"><span class="pre">classifier</span></code> half
+growing in channels (1 → 8 → 16), so spatial detail is traded for feature richness. The <code class="docutils literal notranslate"><span class="pre">classifier</span></code> half
 is then exactly Topic 6.3’s MLP, applied to the flattened 16×2×2 = 64-value feature
 map: <strong>a CNN is learned feature engineering with an MLP on top</strong>. The training loop
 is what <code class="docutils literal notranslate"><span class="pre">MLPRegressor.fit()</span></code> did for us internally, now written out: for every
@@ -671,7 +671,7 @@ One pass through all batches is one epoch, the unit on the loss curve’s x-axis
 <img alt="../_images/8e796555d4a24953b32f09a51190bd5e29defa393f6ba0d53732d5f96deee2a2.png" src="../_images/8e796555d4a24953b32f09a51190bd5e29defa393f6ba0d53732d5f96deee2a2.png" />
 </div>
 </div>
-<p>Evaluation uses two idioms worth memorizing: <code class="docutils literal notranslate"><span class="pre">.eval()</span></code> switches off training-only
+<p>Evaluation uses two standard PyTorch idioms: <code class="docutils literal notranslate"><span class="pre">.eval()</span></code> switches off training-only
 behavior, and <code class="docutils literal notranslate"><span class="pre">torch.no_grad()</span></code> turns off gradient tracking (faster, less memory,
 and a signal to the reader that no learning happens here). The network outputs ten
 scores per image; <code class="docutils literal notranslate"><span class="pre">argmax</span></code> picks the highest-scoring class:</p>
@@ -740,7 +740,7 @@ it to unsupervised (PCA) and supervised (LDA) projections:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_38543/2142271274.py:37: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/d5/ylnycwpn6szdb0t1n25l0d_40000gn/T/ipykernel_41936/2142271274.py:37: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
   plt.tight_layout()
 /opt/homebrew/Caskroom/miniforge/base/envs/DA4CHE/lib/python3.10/site-packages/IPython/core/events.py:82: UserWarning: Glyph 8594 (\N{RIGHTWARDS ARROW}) missing from font(s) Helvetica.
   func(*args, **kwargs)
@@ -779,7 +779,7 @@ poke at interactively.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-nn-cnn-filters">
 
-<p class="admonition-title"><span class="caption-number">Exercise 132 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 133 </span></p>
 <section id="exercise-content">
 <p>Inspect the learned filters of the trained CNN.</p>
 <ol class="arabic simple">
@@ -1020,9 +1020,9 @@ abandon recurrence entirely. Their core mechanism, the <strong>attention head</s
 position in the sequence look directly at every other position and learn <em>which ones
 matter for interpreting it</em>: each element emits a query, is scored against every
 other element’s key, and pulls in a weighted combination of their values. The word
-“it” in a sentence can attend straight to the noun it refers to, fifty words back —
-no relay through fifty intermediate hidden states, and therefore no vanishing signal
-along the way. This is what cracked the language problem: attention handles
+“it” in a sentence can attend directly to the noun it refers to, fifty words back,
+without relaying information through fifty intermediate hidden states, so there is no
+vanishing signal along the way. This is what cracked the language problem: attention handles
 long-range dependencies that defeated recurrent networks, and because all positions
 are processed in parallel rather than sequentially, transformers scale superbly on
 modern hardware. Stacked attention layers are the architecture behind essentially
@@ -1034,7 +1034,7 @@ remain competitive for very long time series.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-nn-lstm-window">
 
-<p class="admonition-title"><span class="caption-number">Exercise 133 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 134 </span></p>
 <section id="exercise-content">
 <p>Investigate the effect of window size on LSTM forecasting performance.</p>
 <ol class="arabic simple">
@@ -1085,9 +1085,9 @@ models of Topic 5.4.</p></li>
 </div>
 </div>
 </div>
-<p>Notice what the <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> holds: inputs and <em>nothing else</em>. There are no labels
-anywhere in this example — the input will serve as its own target, which is the
-defining trick of the autoencoder.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> holds only the inputs. There are no labels anywhere in
+this example: the input will serve as its own target, which is the defining trick of
+the autoencoder.</p>
 <p>The architecture is two mirror-image MLPs. The encoder funnels 64 pixel values
 down through 32 and 16 to just <code class="docutils literal notranslate"><span class="pre">LATENT_DIM</span> <span class="pre">=</span> <span class="pre">2</span></code> numbers; the decoder widens back out
 to 64, ending in a sigmoid so outputs land in <span class="math notranslate nohighlight">\([0, 1]\)</span> like the normalized pixels.
@@ -1219,28 +1219,29 @@ space has “holes”: decode an arbitrary point <span class="math notranslate n
 mapped to, and the output may be garbage. The <strong>variational autoencoder (VAE)</strong>
 (<a class="reference external" href="https://arxiv.org/abs/1312.6114">Kingma &amp; Welling, 2014</a>) fixes this by making the
 encoder output a <em>distribution</em> over latent space rather than a point, and adding a
-regularization term that keeps the latent space smooth and densely packed. The
-payoff: the decoder becomes a true <strong>generative model</strong> — sample any reasonable
-<span class="math notranslate nohighlight">\(\mathbf{z}\)</span> and decode a plausible new example — the neural sibling of sampling
-from the GMMs of Topic 5.4.</p>
-<p>That property launched an entire subfield of molecular design. The landmark is
+regularization term that keeps the latent space smooth and densely packed. As a
+result, the decoder becomes a true <strong>generative model</strong>: sample any reasonable
+<span class="math notranslate nohighlight">\(\mathbf{z}\)</span> and it decodes to a plausible new example, similar to sampling from the
+GMMs of Topic 5.4.</p>
+<p>This property launched an entire subfield of molecular design. A landmark example is
 <a class="reference external" href="https://doi.org/10.1021/acscentsci.7b00572">Gómez-Bombarelli et al. (2018)</a>
 (<em>ACS Central Science</em>, from the Aspuru-Guzik group): a VAE trained on hundreds of
 thousands of molecules turns chemical space into a <em>continuous</em> latent space, where
-gradient-based optimization — the machinery of Module 1! — can search for molecules
+gradient-based optimization (the machinery of Module 1) can search for molecules
 with better properties, and the decoder translates the optimized latent point back
-into a candidate structure. Inverse molecular design becomes numerical optimization.
+into a candidate structure. This turns inverse molecular design into a numerical
+optimization problem.
 The idea has compounded with the other architectures in this chapter: for example,
 <a class="reference external" href="https://doi.org/10.1016/j.bpj.2025.01.022">Nguyen &amp; Karolak (2025)</a>
 (<em>Biophysical Journal</em>) generate drug-like candidate molecules with a <strong>transformer
-graph VAE</strong> — molecular graphs as input (the Topic 4.4 representation), attention
-for the encoding, and a VAE latent space for generation, uniting all three notes in
-this chapter in a single model. In engineering practice the same latent-space idea
+graph VAE</strong>: molecular graphs as input (the Topic 4.4 representation), attention for
+the encoding, and a VAE latent space for generation, combining several of the ideas
+from this chapter in a single model. In engineering practice the same latent-space idea
 appears in process monitoring, where reconstruction error from an autoencoder
 trained on normal operation flags anomalous plant states.</p>
 <div class="exercise admonition" id="ex-eda-nn-ae">
 
-<p class="admonition-title"><span class="caption-number">Exercise 134 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 135 </span></p>
 <section id="exercise-content">
 <p>Extend the autoencoder experiment.</p>
 <ol class="arabic simple">
@@ -1308,7 +1309,7 @@ filters has far fewer parameters than an MLP on the same input size.</p></li>
 </ul>
 <div class="exercise admonition" id="ex-eda-nn-cnn-vs-mlp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 135 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 136 </span></p>
 <section id="exercise-content">
 <p>Compare CNN and MLP on the MNIST digits dataset.</p>
 <ol class="arabic simple">

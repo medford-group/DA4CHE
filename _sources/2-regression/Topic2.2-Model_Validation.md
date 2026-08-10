@@ -580,7 +580,7 @@ ax.set_title('Gaussian Process Regression');
 
 GPR is powerful for uncertainty estimation because it treats the unknown function as a "prior Gaussian process". We assume any finite collection of function values follows a multivariate normal distribution whose *covariance* is governed by a "kernel".  The kernel encodes assumptions about smoothness, periodicity, and overall variation. GPR is very similar to kernel ridge regression, and is identical in some limits, but in general the results can differ. A few things to consider when working with GPR:
 
-- **Kernel selection** — Common kernels are the same as for kernel ridge regression, and include the squared‑exponential (RBF), Matérn, and periodic forms; sums or products of kernels can model more complex structure.  Choosing an inappropriate kernel can over‑smooth the data or yield wildly uncertain predictions.
+- **Kernel selection** — Common kernels are the same as for kernel ridge regression, and include the squared‑exponential (RBF), Matérn, and periodic forms; sums or products of kernels can model more complex structure.  Choosing an inappropriate kernel can over‑smooth the data or yield highly uncertain predictions.
 - **Hyper‑parameter optimization** — Each kernel carries hyper‑parameters (e.g., length‑scale, variance).  Scikit‑learn maximizes the log‑marginal likelihood by default, but you can also tune hyper‑parameters via cross‑validation or Bayesian optimization.  Good uncertainty estimates depend critically on finding well‑calibrated values.
 - **Computation** — Exact GPR scales as $\mathcal{O}(N^3)$ due to matrix inversion, so large datasets may require sparse approximations or inducing‑point methods.
 

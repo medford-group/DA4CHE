@@ -162,11 +162,11 @@ plt.tight_layout()
 ```
 
 The straight black line is the decision boundary $z = 0$ (i.e., $x_1 - x_2 = 0$).
-The four XOR points are overlaid, colored by class — and the problem is immediately
-visible: this particular boundary even puts the two *same-class* gold points on
-opposite sides, and no rotation or shift of a single straight line can ever isolate
-the two gold corners from the two navy ones. A single neuron can only draw one
-straight line, so it cannot solve XOR.
+The four XOR points are overlaid, colored by class, and the problem is easy to see:
+this particular boundary puts the two *same-class* gold points on opposite sides, and
+no rotation or shift of a single straight line can isolate the two gold corners from
+the two navy ones. A single neuron can only draw one straight line, so it cannot
+solve XOR.
 
 :::{exercise}
 :label: ex-eda-nn-neuron-impl
@@ -234,8 +234,8 @@ respectively.
 
 ### ReLU Is a Hinge Function
 
-Look closely at the ReLU: $\max(0, z)$ is exactly the piecewise-linear **hinge
-function** from [Non-parametric Models](../2-regression/Topic2.1-Non-parametric_Models).
+If you look closely at the ReLU, $\max(0, z)$ is exactly the piecewise-linear
+**hinge function** from [Non-parametric Models](../2-regression/Topic2.1-Non-parametric_Models).
 There, we built a basis of hinges $\max(0, x - x_j)$ with a knot at every data point
 and fit their coefficients by least squares, turning ordinary linear regression into a
 linear interpolator. A ReLU neuron computes $\max(0, wx + b)$ — the same hinge, but
@@ -264,13 +264,14 @@ ax.set_title('A sum of ReLUs is a piecewise-linear interpolator')
 plt.tight_layout()
 ```
 
-Eight hinges already trace the sine curve as eight straight segments, and adding knots
-makes the approximation arbitrarily good: **a sum of ReLUs with different offsets and
-slopes is an arbitrary piecewise-linear interpolator**, and piecewise-linear functions
-can track any continuous curve as closely as desired. The only thing a neural network
-adds to the Topic 2.1 picture is that the knots and slopes are not fixed in advance —
-they are *learned* by gradient descent. Keep this in mind for the next section: it is
-the intuition that makes the universal approximation theorem believable.
+Eight hinges already trace the sine curve as eight straight segments, and adding
+knots makes the approximation arbitrarily good: **a sum of ReLUs with different
+offsets and slopes is an arbitrary piecewise-linear interpolator**, and
+piecewise-linear functions can track any continuous curve as closely as desired. The
+only thing a neural network adds to the Topic 2.1 picture is that the knots and
+slopes are not fixed in advance; they are *learned* by gradient descent. This is
+worth keeping in mind for the next section, since it is the intuition behind the
+universal approximation theorem.
 
 :::{exercise}
 :label: ex-eda-nn-activation-plot
@@ -361,8 +362,8 @@ ax.set_ylabel('$x_2$')
 plt.tight_layout()
 ```
 
-This figure is the direct sequel to the single-neuron surface from earlier in the
-chapter — same plot, different model. Where the single neuron could only draw one
+This is the same type of plot as the single-neuron surface from earlier in the
+chapter, but with a different model. Where the single neuron could only draw one
 straight line, the hidden layer's neurons each contribute a line, and the output
 neuron combines them into a *band*: the black 0.5 contour now separates the two gold
 corners from the two navy ones, which no single straight line can do.
@@ -423,7 +424,7 @@ can vanish (a badly placed Gaussian there; a saturated sigmoid or dead ReLU here
 the optimizer can stall on a plateau — the failure of the default stochastic optimizer
 on XOR earlier in this chapter is exactly that.
 
-Two things genuinely change at neural-network scale:
+Two things do change at neural-network scale:
 
 - **First-order methods take over.** Topic 1.4's workhorse BFGS builds an approximate
   inverse Hessian, which is practical for six parameters (and still the most reliable
@@ -583,7 +584,7 @@ The preparation cell filters out rows with non-numeric entries (the same data-qu
 issue from Module 4), takes the process sensors as features and the impurity as the
 target, splits off a test set, and **standardizes the features**. Standardization is
 not optional for neural networks: gradient descent takes the same step size $\eta$ in
-every direction, so features on wildly different scales produce a badly conditioned
+every direction, so features with very different scales produce a badly conditioned
 loss surface that trains slowly or not at all. (The scaler is fit on the training data
 only — the leakage discipline from Module 2.)
 
@@ -637,10 +638,10 @@ plt.tight_layout()
 ```
 
 The training loss falls steeply in the first epochs and then flattens, while the
-validation $r^2$ climbs and plateaus — the moment it stops improving is where early
-stopping ends the run. A training curve is to a neural network what a convergence
-check was to the optimizers of Topic 1.4: the first thing to look at when results
-disappoint.
+validation $r^2$ climbs and plateaus; the point where it stops improving is where
+early stopping ends the run. A training curve plays the same role for a neural
+network that a convergence check did for the optimizers of Topic 1.4: it is the first
+thing to check when results are unexpected.
 
 ### Effect of Hidden Layer Size
 
@@ -666,16 +667,16 @@ plt.tight_layout()
 ```
 
 As the hidden layer grows, training $r^2$ rises at first — more capacity — but then
-*levels off and even dips slightly* at the largest widths. That should give you pause:
-a wider network strictly contains the smaller ones, so at the true minimum of the loss
-its training score could never be worse. The catch is "at the true minimum." All of
-these networks share the same fixed budget (`max_iter=500`, one adam run from one
-random initialization), and the larger the network, the further from converged that
-budget leaves it. This is a fundamental difference from the linear models of Modules
-1–2, where the least-squares solution is unique and computed in closed form: **a
-neural network's reported performance is a property of the model *and its
-optimization* together** — architecture, optimizer, learning rate, initialization, and
-iteration budget all leave fingerprints on the numbers, and changing any of them
+levels off and even dips slightly at the largest widths. This may be surprising: a
+wider network strictly contains the smaller ones, so at the true minimum of the loss
+its training score could never be worse. However, that guarantee only applies at the
+true minimum. All of these networks share the same fixed budget (`max_iter=500`, one
+adam run from one random initialization), and the larger the network, the further
+from converged that budget leaves it. This is a fundamental difference from the
+linear models of Modules 1–2, where the least-squares solution is unique and computed
+in closed form: **a neural network's reported performance depends on the model *and
+its optimization* together**. The architecture, optimizer, learning rate,
+initialization, and iteration budget all affect the numbers, and changing any of them
 changes the "result." The test curve tells the more familiar story: it peaks around
 64–128 units and gains nothing beyond, while the persistent train–test gap signals
 mild overfitting. Early stopping (`early_stopping=True`) helps, but is not a

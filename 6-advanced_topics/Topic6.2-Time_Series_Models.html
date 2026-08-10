@@ -483,8 +483,8 @@ regression problem, and use BIC and PACF to select the model order <span class="
 and understand why dynamic forecasts degrade over time.</p></li>
 <li><p>Fit an ARIMA(<span class="math notranslate nohighlight">\(p,d,q\)</span>) model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>, interpret the summary output, and
 generate forecasts with 95% confidence bands.</p></li>
-<li><p>Use the ACF/PACF cutoff signatures to identify pure AR or MA processes, and — when
-both tail off — select <span class="math notranslate nohighlight">\((p, q)\)</span> by a small grid search judged by convergence,
+<li><p>Use the ACF/PACF cutoff signatures to identify pure AR or MA processes, and, when
+both tail off, select <span class="math notranslate nohighlight">\((p, q)\)</span> by a small grid search judged by convergence,
 information criteria, and held-out forecast error, including a drift term when the
 data trend.</p></li>
 <li><p>Describe what a multivariate time series is, why it is harder to model than a
@@ -549,8 +549,8 @@ of <a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Re
 as the only input. The feature-library-plus-LASSO strategy below is likewise the same
 regularized feature selection we used in
 <a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html"><span class="doc std std-doc">Nonlinear Feature Engineering</span></a>:
-nothing about the tooling is new, only the interpretation — the “features” are all
-functions of <span class="math notranslate nohighlight">\(t\)</span>.</p>
+nothing about the tooling is new; only the interpretation changes, since the
+“features” are all functions of <span class="math notranslate nohighlight">\(t\)</span>.</p>
 <p>Our hand-rolled approach is a simple version of what the time-series literature calls
 <strong>harmonic regression</strong> (fitting sinusoids at known or candidate frequencies).
 Classical alternatives worth knowing: <strong>classical decomposition</strong> (estimate the trend
@@ -595,7 +595,7 @@ seasonality) and a slight upward curvature — suggesting the trend is not perfe
 linear. We address the seasonality next.</p>
 <div class="exercise admonition" id="ex-eda-ts-trend-fit">
 
-<p class="admonition-title"><span class="caption-number">Exercise 117 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 118 </span></p>
 <section id="exercise-content">
 <p>Compare polynomial trend models for the CO₂ series.</p>
 <ol class="arabic simple">
@@ -733,7 +733,7 @@ tends to still be above zero next week.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-ts-season-lasso">
 
-<p class="admonition-title"><span class="caption-number">Exercise 118 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 119 </span></p>
 <section id="exercise-content">
 <p>Tune the LASSO regularization for seasonal de-trending.</p>
 <ol class="arabic simple">
@@ -781,10 +781,10 @@ slowly decaying ACF:</p>
 <img alt="../_images/f007f6cdbb6fbdb947e92edb7d51d6fee1aee5a1033c91cf78d4ee256acbddef.png" src="../_images/f007f6cdbb6fbdb947e92edb7d51d6fee1aee5a1033c91cf78d4ee256acbddef.png" />
 </div>
 </div>
-<p>Differencing treats the autocorrelation as a <em>nuisance</em> and destroys it. But look at
-what that means: the correlation between <span class="math notranslate nohighlight">\(r_t\)</span> and <span class="math notranslate nohighlight">\(r_{t-1}\)</span> is precisely the
-statement that <em>the recent past predicts the present</em>. Destroying it throws away
-forecastable structure. The alternative is to <strong>model</strong> the dependence instead —
+<p>Differencing treats the autocorrelation as a nuisance and removes it. However, the
+correlation between <span class="math notranslate nohighlight">\(r_t\)</span> and <span class="math notranslate nohighlight">\(r_{t-1}\)</span> is just another way of saying that the recent
+past predicts the present, so removing it throws away structure that could be used
+for forecasting. The alternative is to <strong>model</strong> the dependence instead —
 write <span class="math notranslate nohighlight">\(r_t\)</span> as an explicit function of its own recent values and fit the
 coefficients. That is an autoregressive model, and it is the subject of the next
 section. (Differencing returns in the ARIMA framework, where it plays its proper
@@ -910,8 +910,8 @@ Intercept: 0.0047
 </div>
 </div>
 </div>
-<p>The fit explains roughly 80% of the residual variance — the autocorrelation that the
-ACF revealed is genuinely predictive structure, and the AR model has captured it. The
+<p>The fit explains roughly 80% of the residual variance: the autocorrelation that the
+ACF revealed is predictive structure, and the AR model has captured it. The
 coefficients are interpretable, too: the most recent lag carries the largest weight
 (the best single predictor of this week’s residual is last week’s), with smaller
 contributions from earlier lags. The intercept is nearly zero because the de-trended
@@ -1012,12 +1012,12 @@ forecast</strong>:</p>
 <img alt="../_images/3625e8446d63eec4a02bf3fa224768a54b6bd7bde157d2e6b994abf75ee01b80.png" src="../_images/3625e8446d63eec4a02bf3fa224768a54b6bd7bde157d2e6b994abf75ee01b80.png" />
 </div>
 </div>
-<p>Look closely at the start of the forecast: the AR component begins at the last
-observed residual and <em>decays gradually toward zero</em> over the following months, so the
-prediction starts offset from the bare trend and relaxes onto it. It does not collapse
-instantly — the fitted lag weights sustain the influence of the last observations for
-a meaningful horizon — but it cannot oscillate or regenerate structure indefinitely,
-because it has no access to new measurements.</p>
+<p>Note the behavior at the start of the forecast: the AR component begins at the last
+observed residual and decays gradually toward zero over the following months, so the
+prediction starts offset from the trend and relaxes onto it. It does not collapse
+instantly, since the fitted lag weights sustain the influence of the last observations
+for a meaningful horizon. However, it cannot oscillate or regenerate structure
+indefinitely, because it has no access to new measurements.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Why does a dynamic forecast decay to the trend?</strong> Iterating the fitted recursion
@@ -1033,7 +1033,7 @@ genuine predictability the series contains.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-ts-ar-order">
 
-<p class="admonition-title"><span class="caption-number">Exercise 119 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 120 </span></p>
 <section id="exercise-content">
 <p>Explore AR model order selection on the Dow impurity series.</p>
 <ol class="arabic simple">
@@ -1137,15 +1137,15 @@ its autocovariance is <em>exactly zero</em> beyond lag <span class="math notrans
 depends on only <span class="math notranslate nohighlight">\(p\)</span> lags, and the PACF at lag <span class="math notranslate nohighlight">\(k\)</span> is the coefficient on <span class="math notranslate nohighlight">\(x_{t-k}\)</span>
 <em>after controlling for the intervening lags</em> — exactly zero for <span class="math notranslate nohighlight">\(k &gt; p\)</span>. When either
 plot shows a clean cutoff, the corresponding order can be read straight off it.</p>
-<p>Now read our plots honestly against that table. <strong>Neither cuts off.</strong> The ACF is
-statistically significant at essentially every lag (with <span class="math notranslate nohighlight">\(n \approx 2300\)</span>, the 95%
-band is only <span class="math notranslate nohighlight">\(\pm 0.04\)</span>) and <em>oscillates with the annual cycle</em> — negative near lag
-26, positive again at lag 52. The PACF’s first three to five lags dominate, but
-significant values reappear at higher lags. Both tailing off is the <em>mixed ARMA</em>
-signature — the orders cannot be read from the plots — and the lag-52 structure warns
-that unmodeled seasonality is contaminating everything. The plots earn their keep as
-rough <strong>upper bounds</strong> (<span class="math notranslate nohighlight">\(p, q \lesssim 4\)</span>), nothing more.</p>
-<p>When the plots cannot decide, search. The grid below fits every <span class="math notranslate nohighlight">\((p, q)\)</span> up to those
+<p>Comparing our plots against this table, we see that neither one actually cuts off.
+The ACF is statistically significant at essentially every lag (with <span class="math notranslate nohighlight">\(n \approx 2300\)</span>,
+the 95% band is only <span class="math notranslate nohighlight">\(\pm 0.04\)</span>), and it oscillates with the annual cycle: negative
+near lag 26 and positive again at lag 52. The PACF’s first three to five lags
+dominate, but significant values reappear at higher lags. Both tailing off is the
+<em>mixed ARMA</em> signature, so the orders cannot be read directly from the plots, and the
+lag-52 structure indicates that unmodeled seasonality is affecting every lag. In
+practice, the plots are most useful here as rough <strong>upper bounds</strong> (<span class="math notranslate nohighlight">\(p, q \lesssim 4\)</span>).</p>
+<p>When the plots cannot decide, we can search over candidate orders instead. The grid below fits every <span class="math notranslate nohighlight">\((p, q)\)</span> up to those
 bounds (with <span class="math notranslate nohighlight">\(d = 1\)</span> and drift — see the note after the table) and records three
 things: whether the optimizer converged, the in-sample BIC, and the mean absolute
 error of a dynamic forecast over the held-out period:</p>
@@ -1207,24 +1207,25 @@ Models that failed to converge:
 </div>
 </div>
 </div>
-<p>The grid teaches three lessons at once:</p>
+<p>There are three things to notice in these results:</p>
 <ol class="arabic simple">
-<li><p><strong>The biggest models do not converge.</strong> ARIMA(<span class="math notranslate nohighlight">\(4,1,4\)</span>) — the order a naive reading
-of the plots might suggest — fails outright, along with its neighbors: with four AR
-<em>and</em> four MA terms the model is over-parameterized, and near-cancelling AR/MA
+<li><p><strong>The biggest models do not converge.</strong> ARIMA(<span class="math notranslate nohighlight">\(4,1,4\)</span>), the order a naive reading
+of the plots might suggest, fails to converge, along with its neighbors: with four
+AR <em>and</em> four MA terms the model is over-parameterized, and near-cancelling AR/MA
 roots leave the likelihood surface too flat for the optimizer. Estimates from a
-non-converged fit should not be trusted — the same lesson as checking
-<code class="docutils literal notranslate"><span class="pre">result.success</span></code> in <a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="std std-doc">Numerical Optimization</span></a>.
+non-converged fit should not be trusted (the same lesson as checking
+<code class="docutils literal notranslate"><span class="pre">result.success</span></code> in <a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="std std-doc">Numerical Optimization</span></a>).
 Always confirm <code class="docutils literal notranslate"><span class="pre">mle_retvals['converged']</span></code>.</p></li>
 <li><p><strong>The two criteria disagree.</strong> BIC, computed in-sample, keeps rewarding larger
-models — its favorite is ARIMA(<span class="math notranslate nohighlight">\(4,1,2\)</span>) — because extra ARMA terms partially absorb
-the unmodeled seasonality. But those same terms extrapolate badly: the BIC winner
-has the <em>worst</em> held-out forecast error in the table. When the model class is
-misspecified (here: no seasonal terms), information criteria overfit relative to
-genuine forecasting, and the chronological validation split is the honest arbiter.</p></li>
-<li><p><strong>Parsimony wins.</strong> ARIMA(<span class="math notranslate nohighlight">\(2,1,1\)</span>) forecasts best (MAE ≈ 2.2 ppm), converges
-cleanly, and is consistent with the honest PACF reading (the first few lags carry
-the direct signal). That is our model.</p></li>
+models (its favorite is ARIMA(<span class="math notranslate nohighlight">\(4,1,2\)</span>)) because extra ARMA terms partially absorb
+the unmodeled seasonality. However, those same terms extrapolate badly: the BIC
+winner has the <em>worst</em> held-out forecast error in the table. When the model class
+is missing something (here, seasonal terms), information criteria can overfit
+relative to actual forecasting performance, so the chronological validation split
+is the more reliable guide.</p></li>
+<li><p><strong>The simplest reasonable model wins.</strong> ARIMA(<span class="math notranslate nohighlight">\(2,1,1\)</span>) forecasts best
+(MAE ≈ 2.2 ppm), converges cleanly, and is consistent with the PACF (the first few
+lags carry most of the direct signal). We will use this model going forward.</p></li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1261,7 +1262,7 @@ train/validation/test discipline of
 Dep. Variable:             co2_interp   No. Observations:                 1713
 Model:                 ARIMA(2, 1, 1)   Log Likelihood               -1044.758
 Date:                Mon, 10 Aug 2026   AIC                           2099.516
-Time:                        14:28:48   BIC                           2126.743
+Time:                        16:12:22   BIC                           2126.743
 Sample:                    03-29-1958   HQIC                          2109.592
                          - 01-19-1991                                         
 Covariance Type:                  opg                                         
@@ -1385,7 +1386,7 @@ statsmodels <code class="docutils literal notranslate"><span class="pre">SARIMAX
 </div>
 <div class="exercise admonition" id="ex-eda-ts-arima-dow">
 
-<p class="admonition-title"><span class="caption-number">Exercise 120 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 121 </span></p>
 <section id="exercise-content">
 <p>Apply an ARIMA model to the Dow impurity series.</p>
 <ol class="arabic simple">
@@ -1445,7 +1446,7 @@ long-range forecasts as reliable point estimates.</p></li>
 </ul>
 <div class="exercise admonition" id="ex-eda-ts-model-select">
 
-<p class="admonition-title"><span class="caption-number">Exercise 121 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 122 </span></p>
 <section id="exercise-content">
 <p>Use the practical guidance table to choose and evaluate a model for a new scenario.</p>
 <p>Given the Dow impurity series:</p>
@@ -1476,7 +1477,7 @@ measurements at every time step,</p>
 other variable. That cross-coupling is the whole point — an upstream flow disturbance
 shows up in a downstream temperature some minutes later, and exploiting such lead–lag
 relationships is how a model can see disturbances coming. It is also what makes the
-problem genuinely hard:</p>
+problem difficult:</p>
 <ul class="simple">
 <li><p><strong>Parameter explosion.</strong> The natural generalization of AR(<span class="math notranslate nohighlight">\(p\)</span>) is the vector
 autoregression <strong>VAR(<span class="math notranslate nohighlight">\(p\)</span>)</strong>, in which each of the <span class="math notranslate nohighlight">\(k\)</span> variables gets <span class="math notranslate nohighlight">\(p\)</span> lag
@@ -1510,7 +1511,7 @@ easy-to-measure process variables around it — which is precisely the multivari
 generalization of what this chapter has been doing with one column.</p>
 <div class="exercise admonition" id="ex-eda-ts-multivar">
 
-<p class="admonition-title"><span class="caption-number">Exercise 122 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 123 </span></p>
 <section id="exercise-content">
 <p>Get a first taste of cross-variable structure in the full Dow dataset.</p>
 <ol class="arabic simple">
@@ -1545,7 +1546,8 @@ starting from the plots — ADF test (→ <span class="math notranslate nohighli
 (→ <span class="math notranslate nohighlight">\(q\)</span>, <span class="math notranslate nohighlight">\(p\)</span>) where they apply. When both plots tail off (mixed ARMA), the orders are
 not readable: bound them and grid-search, judging by convergence (over-parameterized
 ARMA terms often fail to converge), information criteria, and held-out forecast
-error — which can disagree, and out-of-sample error is the honest arbiter. Include a
+error — which can disagree; when they do, out-of-sample error is the more reliable
+guide. Include a
 drift term (<code class="docutils literal notranslate"><span class="pre">trend='t'</span></code>) so forecasts of trending data continue the trend. Forecast bands come from the estimated innovation variance accumulated
 over the horizon; they cover future randomness, not parameter or model error.</p></li>
 <li><p>For seasonal data like CO₂, <strong>SARIMA</strong> extends ARIMA with seasonal terms; for

@@ -122,7 +122,7 @@ In practice it is often difficult to verify whether a particular dataset satisfi
 
 Another important limitation is that non-parametric models do not have a fixed, well-defined set of parameters; the effective parameters (and even their number) depend on the training data.  As a result, information criteria are awkward—sometimes impossible—to apply to non-parametric models.
 
-Despite these caveats, the overarching idea of **trading off the number of parameters against model error** provides a powerful mental framework for thinking about complexity optimisation.  In the examples below we will focus on BIC (AIC usually selects a similar optimum).
+Despite these caveats, the overarching idea of **trading off the number of parameters against model error** provides a powerful mental framework for thinking about complexity optimization.  In the examples below we will focus on BIC (AIC usually selects a similar optimum).
 
 
 Throughout this topic we will use the following helper function that computes the BIC (under the assumption of normally distributed homoskedastic error).
@@ -237,7 +237,7 @@ axes[1].set_title('Gaussian Regression w/ n = 20');
 
 Based on the visualization, it seems clear that the BIC prediction is correct: The Gaussian model is better even though it has fewer parameters.
 
-Building on this, let's next use the BIC to determine the optimal number of evenly-spaced Gaussian basis functions. To do this, we compute the BIC as a function of *N* and choose the value that minimises the criterion.
+Building on this, let's next use the BIC to determine the optimal number of evenly-spaced Gaussian basis functions. To do this, we compute the BIC as a function of *N* and choose the value that minimizes the criterion.
 
 ```{code-cell} ipython3
 bic_list = []
@@ -256,7 +256,7 @@ plt.figure(figsize=(6, 4))
 plt.plot(N_list, bic_list, "o-" )
 plt.xlabel("Number of Gaussian basis functions, N")
 plt.ylabel("BIC")
-plt.title("Model complexity optimisation with BIC")
+plt.title("Model complexity optimization with BIC")
 plt.axvline(opt_N, ls="--", label=f"optimum N = {opt_N}")
 plt.legend()
 ```
@@ -500,13 +500,13 @@ This can be compared to the loss function for ridge regression:
 
 $L_{ridge} = \sum_i \epsilon_i^2 + \alpha ||\vec{w}||_2$
 
-We will not go through the derivation of *why* the L1 norm causes parameters to go to zero, but the following schematic, borrowed from [this website](https://niallmartin.wordpress.com/2016/05/12/shrinkage-methods-ridge-and-lasso-regression/) may be useful (note that $\vec{\beta}$ is equivalent to $\vec{w}$. In short, the fact that the $L_1$ norm is square with points that fall on the axes makes it more likely that the combined loss function will have a minima that also falls on an axis (where one of the weights will be zero).
+We will not go through the derivation of *why* the L1 norm causes parameters to go to zero, but the following schematic may be useful. The penalty can be viewed as a constraint on the size of the weights (the gold regions below), and the error contours expand outward from the unconstrained least-squares solution until they first touch the allowed region. In short, the fact that the $L_1$ region is square with points that fall on the axes makes it more likely that the combined loss function will have a minima that also falls on an axis (where one of the weights will be zero).
 
-```{figure} images/lasso_vs_ridge_regression.png
-:width: 600px
+```{figure} images/lasso_ridge_constraints.png
+:width: 95%
 :align: center
 
-Illustration of $L_1$ and $L_2$ loss functions used for regularization.
+Illustration of the $L_1$ (LASSO) and $L_2$ (ridge) constraint regions used for regularization. The contours show the sum of squared errors, and the constrained solution is the first point where a contour touches the allowed region: a corner (one weight exactly zero) for LASSO, a generic tangent point (all weights shrunk but nonzero) for ridge.
 ```
 
 The derivation is much more complex, and the resulting model is slightly more difficult to solve, but the cost is generally similar to KRR. We can also test LASSO regression with `scikit-learn`. Unfortunately, we need to create our own feature (basis) matrix, $X_{ij}$, similar to linear regression, since "kernel LASSO" is not a very common approach. Usually, LASSO is applied directly to high-dimensional regression problems, as we will see later in the course.
@@ -564,7 +564,7 @@ nonzero = [f for f in np.isclose(coeffs,0) if f == False]
 print('Total number of non-zero parameters: {}'.format(len(nonzero)))
 ```
 
-We see that the LASSO regularization has a lot of coefficients that are equal to zero. This is equivalent to discarding these terms and finding which Gaussians should (or should not) be included.
+We see that the LASSO regularization has a lot of coefficients that are equal to zero. This is equivalent to discarding these terms and finding which Gaussians should (or should not) be included. This idea of letting the data decide which terms belong in a model is taken considerably further in [Nonlinear Feature Engineering](Topic2.6-Nonlinear_Feature_Engineering), where we generate large libraries of candidate nonlinear features and discuss methods that attempt to discover the form of the model itself.
 
 ---
 

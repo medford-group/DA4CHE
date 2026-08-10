@@ -542,7 +542,7 @@ document.write(`
 <p>There are a few other information criteria, with the <strong>Akaike Information Criterion (AIC)</strong> being the other most commonly used.  <strong>AIC</strong> is <a class="reference external" href="https://doi.org/10.1109/TAC.1974.1100705">derived from a slightly different set of statistical assumptions</a> than BIC; many more criteria exist in the statistical literature.</p>
 <p>In practice it is often difficult to verify whether a particular dataset satisfies the assumptions required by any given criterion, so practitioners commonly default to BIC.  These criteria should therefore be viewed as heuristics rather than absolute rules—use them to guide your intuition, but do not ignore domain knowledge or common-sense checks.</p>
 <p>Another important limitation is that non-parametric models do not have a fixed, well-defined set of parameters; the effective parameters (and even their number) depend on the training data.  As a result, information criteria are awkward—sometimes impossible—to apply to non-parametric models.</p>
-<p>Despite these caveats, the overarching idea of <strong>trading off the number of parameters against model error</strong> provides a powerful mental framework for thinking about complexity optimisation.  In the examples below we will focus on BIC (AIC usually selects a similar optimum).</p>
+<p>Despite these caveats, the overarching idea of <strong>trading off the number of parameters against model error</strong> provides a powerful mental framework for thinking about complexity optimization.  In the examples below we will focus on BIC (AIC usually selects a similar optimum).</p>
 <p>Throughout this topic we will use the following helper function that computes the BIC (under the assumption of normally distributed homoskedastic error).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -682,7 +682,7 @@ document.write(`
 </div>
 </div>
 <p>Based on the visualization, it seems clear that the BIC prediction is correct: The Gaussian model is better even though it has fewer parameters.</p>
-<p>Building on this, let’s next use the BIC to determine the optimal number of evenly-spaced Gaussian basis functions. To do this, we compute the BIC as a function of <em>N</em> and choose the value that minimises the criterion.</p>
+<p>Building on this, let’s next use the BIC to determine the optimal number of evenly-spaced Gaussian basis functions. To do this, we compute the BIC as a function of <em>N</em> and choose the value that minimizes the criterion.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bic_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -701,7 +701,7 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_list</span><span class="p">,</span> <span class="n">bic_list</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span> <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Number of Gaussian basis functions, N&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Model complexity optimisation with BIC&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Model complexity optimization with BIC&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">opt_N</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;optimum N = </span><span class="si">{</span><span class="n">opt_N</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
@@ -711,10 +711,10 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal N according to BIC = 15
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12c1bfee0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x128471bd0&gt;
 </pre></div>
 </div>
-<img alt="../_images/a40fd77dd062b2fce118791b84fbc901ae5f6682fa818eef4650880ed1eada7d.png" src="../_images/a40fd77dd062b2fce118791b84fbc901ae5f6682fa818eef4650880ed1eada7d.png" />
+<img alt="../_images/eb1271100f6e623daf3d80b737b0dc09f5ce0bfaeaa6de0710e764e29de3001d.png" src="../_images/eb1271100f6e623daf3d80b737b0dc09f5ce0bfaeaa6de0710e764e29de3001d.png" />
 </div>
 </div>
 <p>The two competing factors in complexity optimization can be seen in this plot. Before the optimum, the BIC decreases quickly because it is dominated by the improvement in accuracy. After the optimum, it increases slowly, because it is dominated by the logarithmic dependence on the number of parameters. Let’s visualize again to see how the optimum from the BIC compares to models that it determined to be underfit or overfit:</p>
@@ -980,12 +980,12 @@ Mean coeff: 3.418e-02, Std: 3.542e-01, L2 norm: 3.559e+00
 <p><span class="math notranslate nohighlight">\(L_{LASSO} = \sum_i \epsilon_i^2 + \alpha ||\vec{w}||_1\)</span></p>
 <p>This can be compared to the loss function for ridge regression:</p>
 <p><span class="math notranslate nohighlight">\(L_{ridge} = \sum_i \epsilon_i^2 + \alpha ||\vec{w}||_2\)</span></p>
-<p>We will not go through the derivation of <em>why</em> the L1 norm causes parameters to go to zero, but the following schematic, borrowed from <a class="reference external" href="https://niallmartin.wordpress.com/2016/05/12/shrinkage-methods-ridge-and-lasso-regression/">this website</a> may be useful (note that <span class="math notranslate nohighlight">\(\vec{\beta}\)</span> is equivalent to <span class="math notranslate nohighlight">\(\vec{w}\)</span>. In short, the fact that the <span class="math notranslate nohighlight">\(L_1\)</span> norm is square with points that fall on the axes makes it more likely that the combined loss function will have a minima that also falls on an axis (where one of the weights will be zero).</p>
+<p>We will not go through the derivation of <em>why</em> the L1 norm causes parameters to go to zero, but the following schematic may be useful. The penalty can be viewed as a constraint on the size of the weights (the gold regions below), and the error contours expand outward from the unconstrained least-squares solution until they first touch the allowed region. In short, the fact that the <span class="math notranslate nohighlight">\(L_1\)</span> region is square with points that fall on the axes makes it more likely that the combined loss function will have a minima that also falls on an axis (where one of the weights will be zero).</p>
 <figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="../_images/lasso_vs_ridge_regression.png"><img alt="../_images/lasso_vs_ridge_regression.png" src="../_images/lasso_vs_ridge_regression.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/lasso_ridge_constraints.png"><img alt="../_images/lasso_ridge_constraints.png" src="../_images/lasso_ridge_constraints.png" style="width: 95%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Illustration of <span class="math notranslate nohighlight">\(L_1\)</span> and <span class="math notranslate nohighlight">\(L_2\)</span> loss functions used for regularization.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Illustration of the <span class="math notranslate nohighlight">\(L_1\)</span> (LASSO) and <span class="math notranslate nohighlight">\(L_2\)</span> (ridge) constraint regions used for regularization. The contours show the sum of squared errors, and the constrained solution is the first point where a contour touches the allowed region: a corner (one weight exactly zero) for LASSO, a generic tangent point (all weights shrunk but nonzero) for ridge.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The derivation is much more complex, and the resulting model is slightly more difficult to solve, but the cost is generally similar to KRR. We can also test LASSO regression with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>. Unfortunately, we need to create our own feature (basis) matrix, <span class="math notranslate nohighlight">\(X_{ij}\)</span>, similar to linear regression, since “kernel LASSO” is not a very common approach. Usually, LASSO is applied directly to high-dimensional regression problems, as we will see later in the course.</p>
@@ -1061,7 +1061,7 @@ Mean coeff: 3.418e-02, Std: 3.542e-01, L2 norm: 3.559e+00
 <img alt="../_images/f085b0555e863f8f59a6bd027a7bdeeedff1698a40d298ad54590bd724f7ee3a.png" src="../_images/f085b0555e863f8f59a6bd027a7bdeeedff1698a40d298ad54590bd724f7ee3a.png" />
 </div>
 </div>
-<p>We see that the LASSO regularization has a lot of coefficients that are equal to zero. This is equivalent to discarding these terms and finding which Gaussians should (or should not) be included.</p>
+<p>We see that the LASSO regularization has a lot of coefficients that are equal to zero. This is equivalent to discarding these terms and finding which Gaussians should (or should not) be included. This idea of letting the data decide which terms belong in a model is taken considerably further in <a class="reference internal" href="Topic2.6-Nonlinear_Feature_Engineering.html"><span class="doc std std-doc">Nonlinear Feature Engineering</span></a>, where we generate large libraries of candidate nonlinear features and discuss methods that attempt to discover the form of the model itself.</p>
 <hr class="docutils" />
 <div class="exercise admonition" id="ex-reg-krr-lasso">
 

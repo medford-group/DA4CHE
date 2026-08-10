@@ -474,7 +474,7 @@ generation is short.</p>
 structures), and data augmentation when new experiments are expensive.</p>
 <div class="exercise admonition" id="ex-eda-gen-conditional">
 
-<p class="admonition-title"><span class="caption-number">Exercise 102 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 103 </span></p>
 <section id="exercise-content">
 <p>Generative models are built on <strong>conditional probability</strong>, <span class="math notranslate nohighlight">\(P(A \mid B)\)</span> — “the probability
 of <span class="math notranslate nohighlight">\(A\)</span> given that <span class="math notranslate nohighlight">\(B\)</span> is true” — combined through Bayes’ theorem. A classic illustration is
@@ -553,7 +553,7 @@ samples matches the PDF:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/467cda8d722f21eaac9a737abe5412b2c5ece8fd4bd30ce43d90b920f5f3db6c.png" src="../_images/467cda8d722f21eaac9a737abe5412b2c5ece8fd4bd30ce43d90b920f5f3db6c.png" />
+<img alt="../_images/9638d8c650b739d05ed634dabd2e01fe1260142210f3aa817aad0dfdbbf5e041.png" src="../_images/9638d8c650b739d05ed634dabd2e01fe1260142210f3aa817aad0dfdbbf5e041.png" />
 </div>
 </div>
 <p>This is the core idea of generative modeling: learn the parameters of a probability
@@ -602,7 +602,7 @@ Gaussian case we need only two parameters, <span class="math notranslate nohighl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/bce27ee80d704299ef9ca08c07e09e2717635b07f63657a0b07a1744d24c7dab.png" src="../_images/bce27ee80d704299ef9ca08c07e09e2717635b07f63657a0b07a1744d24c7dab.png" />
+<img alt="../_images/a10d10c4bf52e62cbccd3122b564e9fa01a105a00a1d7d66e8048e5522533b23.png" src="../_images/a10d10c4bf52e62cbccd3122b564e9fa01a105a00a1d7d66e8048e5522533b23.png" />
 </div>
 </div>
 <p>The distributions are broadly similar but do not match exactly — this feature is not perfectly
@@ -610,7 +610,7 @@ Gaussian. Furthermore, this captures only one of the 40 features, so a single fi
 distribution is a very limited generative model for the full dataset.</p>
 <div class="exercise admonition" id="ex-eda-norm-fit">
 
-<p class="admonition-title"><span class="caption-number">Exercise 103 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 104 </span></p>
 <section id="exercise-content">
 <p>Select a different feature from the Dow dataset (try column index 10 or 20). Fit a normal
 distribution to that feature, generate 500 synthetic samples using <code class="docutils literal notranslate"><span class="pre">norm.rvs</span></code>, and overlay
@@ -799,7 +799,7 @@ The optimal model minimizes the BIC.</p>
 accuracy and complexity for this 2-D dataset.</p>
 <div class="exercise admonition" id="ex-eda-gmm-bic3d">
 
-<p class="admonition-title"><span class="caption-number">Exercise 104 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 105 </span></p>
 <section id="exercise-content">
 <p>Extend the 2-D GMM analysis to three features so that <code class="docutils literal notranslate"><span class="pre">X_3d</span> <span class="pre">=</span> <span class="pre">X_dow[:,</span> <span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">6]]</span></code>. To keep
 the fits quick, subsample first (e.g. <code class="docutils literal notranslate"><span class="pre">X_3d</span> <span class="pre">=</span> <span class="pre">X_3d[::5]</span></code>, ~2,000 rows). Fit GMMs with 2 to 20
@@ -1010,7 +1010,7 @@ imbalance in deep learning — in our case with a simple GMM, and in state-of-th
 with deep generative models such as Variational Autoencoders (VAEs).</p>
 <div class="exercise admonition" id="ex-eda-gmm-digit-other">
 
-<p class="admonition-title"><span class="caption-number">Exercise 105 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 106 </span></p>
 <section id="exercise-content">
 <p>Adapt the digit-6 demonstration above to generate synthetic samples for a digit of your
 choice (0–9, excluding 6). Use <code class="docutils literal notranslate"><span class="pre">PCA(n_components=20)</span></code> and BIC to select the optimal number
@@ -1087,14 +1087,14 @@ removed and can look qualitatively different from one bin count to the next.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/faf0bfb9e7117e41ef3d5310051c6d6d7a3a6be2cec86bf4e14bf5b76e3e05d2.png" src="../_images/faf0bfb9e7117e41ef3d5310051c6d6d7a3a6be2cec86bf4e14bf5b76e3e05d2.png" />
+<img alt="../_images/9294ef6a76bc989600f396f4effa8a26255d155ee18fc74b551d8a11ea1b16d0.png" src="../_images/9294ef6a76bc989600f396f4effa8a26255d155ee18fc74b551d8a11ea1b16d0.png" />
 </div>
 </div>
 <p>The sampled distribution closely matches the original, confirming that the KDE has captured
 the data density accurately.</p>
 <div class="exercise admonition" id="ex-eda-kde-bandwidth">
 
-<p class="admonition-title"><span class="caption-number">Exercise 106 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 107 </span></p>
 <section id="exercise-content">
 <p>Fit KDE models to the same Dow feature using three different bandwidths: 0.01, 0.15, and
 1.0. Plot the three KDE curves on the same axes alongside a histogram of the original data.
@@ -1269,7 +1269,7 @@ a data point — there are no covariance matrices to estimate. We apply it direc
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ed30ef2b3c2b82a5d06ab88feb4d0c3a585293d993c58a6f37e6025825bd9904.png" src="../_images/ed30ef2b3c2b82a5d06ab88feb4d0c3a585293d993c58a6f37e6025825bd9904.png" />
+<img alt="../_images/422942b90a103f9ab1e5f6595f10a319d1dd6e75af4e7d8a753f4d839a1b0630.png" src="../_images/422942b90a103f9ab1e5f6595f10a319d1dd6e75af4e7d8a753f4d839a1b0630.png" />
 </div>
 </div>
 <p>The samples are recognizable as handwritten digits generated entirely by the computer.
@@ -1386,7 +1386,7 @@ discards all of that structure. By fitting a full multivariate KDE to each class
 not-so-naive classifier captures these correlations and achieves near-perfect accuracy.</p>
 <div class="exercise admonition" id="ex-eda-kde-bw-cls">
 
-<p class="admonition-title"><span class="caption-number">Exercise 107 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 108 </span></p>
 <section id="exercise-content">
 <p>Re-run <code class="docutils literal notranslate"><span class="pre">kde_bayes_predict</span></code> with three different bandwidth values: 1, 10, and 50. Print the
 test-set accuracy for each. Which bandwidth gives the best performance, and why do you think
@@ -1501,7 +1501,7 @@ estimating <span class="math notranslate nohighlight">\(40 \times 41 / 2 = 820\)
 after PCA reduction.</p>
 <div class="exercise admonition" id="ex-eda-gmm-dow-full">
 
-<p class="admonition-title"><span class="caption-number">Exercise 108 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 109 </span></p>
 <section id="exercise-content">
 <p>Re-run the full Dow generative pipeline with <code class="docutils literal notranslate"><span class="pre">n_components=0.80</span></code> (retaining 80% of the
 variance instead of 95%). How many PCA components are used? Does the synthetic data still
@@ -1591,7 +1591,7 @@ the association will depend on how well the training data captures normal operat
 </div>
 <div class="exercise admonition" id="ex-eda-anomaly-score">
 
-<p class="admonition-title"><span class="caption-number">Exercise 109 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 110 </span></p>
 <section id="exercise-content">
 <p>Re-run the anomaly detection using the full-dimensional KDE model (<code class="docutils literal notranslate"><span class="pre">kde_dow</span></code> applied to
 <code class="docutils literal notranslate"><span class="pre">X_dow_k</span></code>). Compare the anomalous points flagged by the KDE to those flagged by the GMM:

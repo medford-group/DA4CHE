@@ -34,9 +34,9 @@ parameters?*
 
 This chapter develops the classical answer, which connects three ideas that we have
 already met separately: least-squares loss functions (Topic 1.3–1.4), derivatives via
-automatic differentiation (Topic 1.4), and eigendecomposition (Topic 1.2). The punchline
-is that the **curvature of the loss surface at the minimum** — its Hessian matrix —
-determines how well the data pin down each parameter.
+automatic differentiation (Topic 1.4), and eigendecomposition (Topic 1.2). The key idea
+is that the **curvature of the loss surface at the minimum** (the Hessian matrix)
+determines how well the data determine each parameter.
 
 We begin by reproducing the setup from the previous chapter so this notebook runs on its
 own: the C–H stretch region of the ethanol IR spectrum, the multi-Gaussian model, and
@@ -215,8 +215,8 @@ With $n - p = 94$ here the difference is negligible ($t \approx 1.99$); Himmelbl
 *Process Analysis by Statistical Methods* treats the small-sample case carefully.
 :::
 
-Look at the relative errors, because the parameters live on wildly different scales
-(absorbances near 0.5, wavenumbers near 2900, widths near 30): the peak *positions* are
+It is best to compare the relative errors here, since the parameters have very
+different scales (absorbances near 0.5, wavenumbers near 2900, widths near 30). The peak *positions* are
 determined to about 0.03–0.05% — 95% confidence intervals spanning only a few
 wavenumbers out of ~2900 — while the *weights* and *widths* are only known to a few
 percent. The confidence intervals turn the curvature
@@ -273,7 +273,7 @@ fig.colorbar(im, ax=ax, label='correlation')
 ax.set_title('Parameter correlation matrix (2-Gaussian fit)')
 ```
 
-The structure is striking: the strongest correlations are not within a single peak but
+Interestingly, the strongest correlations are not within a single peak but
 **between the two peaks**. The two centers move together
 ($\mathrm{corr}(\mu_0, \mu_1) \approx +0.87$), and the second peak's weight trades off
 against the first peak's width ($\mathrm{corr}(w_1, \sigma_0) \approx -0.85$). The
@@ -327,8 +327,8 @@ print('Hessian eigenvalues:', [f'{v:.2e}' for v in eigvals])
 print(f'Condition number: {eigvals[-1]/eigvals[0]:.1e}')
 ```
 
-Five orders of magnitude separate the stiffest direction from the sloppiest — and this
-is with a model that fits *well*. (Part of the spread simply reflects units: wavenumbers
+Five orders of magnitude separate the stiffest direction from the sloppiest, even
+though this model fits the data well. (Part of the spread simply reflects units: wavenumbers
 and absorbances have very different magnitudes, which is why the unit-free relative
 errors and correlations above are often more interpretable than raw eigenvalues.)
 
@@ -343,9 +343,9 @@ for the pair from (b) and describe how its shape differs.
 
 ## Sloppiness Grows with Model Complexity
 
-What happens if we add a third Gaussian? The fit can only improve — more parameters
-never increase the minimum SSE — but parameter estimation tells a different story than
-the loss value alone:
+What happens if we add a third Gaussian? The fit can only improve, since more
+parameters never increase the minimum SSE. However, parameter estimation tells a
+different story than the loss value alone:
 
 ```{code-cell} ipython3
 guess3 = np.array([0.5, 0.6, 0.2, 2900., 2980., 2940., 25., 25., 15.])
@@ -368,9 +368,9 @@ ax.set_ylabel('absorbance')
 ax.legend()
 ```
 
-The SSE drops by about 17% — but look at the components: the third Gaussian has fit a
-**negative** weight, carving a dip out of the other two peaks rather than describing any
-physical absorption. The optimizer is using the extra flexibility to chase noise and
+The SSE drops by about 17%. However, if we look at the components, the third Gaussian
+has fit a **negative** weight, so it subtracts a dip from the other two peaks rather
+than describing any physical absorption. The optimizer is using the extra flexibility to chase noise and
 baseline structure, not chemistry.
 
 The Hessian makes the diagnosis quantitative:

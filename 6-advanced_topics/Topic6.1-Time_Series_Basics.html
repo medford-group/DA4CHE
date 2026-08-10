@@ -522,7 +522,7 @@ seasonal amplitude grows with the level of the series.</p>
 and models, as we will see throughout this chapter.</p>
 <div class="exercise admonition" id="ex-eda-ts-iid-split">
 
-<p class="admonition-title"><span class="caption-number">Exercise 110 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 111 </span></p>
 <section id="exercise-content">
 <p>Illustrate the danger of a random train/test split on time series data.</p>
 <ol class="arabic simple">
@@ -602,7 +602,7 @@ by 2001, with clear annual oscillations of ~7 ppm amplitude — the breathing of
 Northern Hemisphere biosphere.</p>
 <div class="exercise admonition" id="ex-eda-ts-dataset-explore">
 
-<p class="admonition-title"><span class="caption-number">Exercise 111 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 112 </span></p>
 <section id="exercise-content">
 <p>Explore the structure of both datasets.</p>
 <ol class="arabic simple">
@@ -730,7 +730,7 @@ large gaps can introduce patterns that do not exist in the original signal.</p>
 </div>
 <div class="exercise admonition" id="ex-eda-ts-interp-compare">
 
-<p class="admonition-title"><span class="caption-number">Exercise 112 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 113 </span></p>
 <section id="exercise-content">
 <p>Compare interpolation strategies on the Dow impurity series.</p>
 <ol class="arabic simple">
@@ -754,12 +754,12 @@ seasonality) an analysis usually targets. <strong>Smoothing</strong> suppresses 
 used for visualization (seeing the trend through the scatter), as preprocessing for
 methods that assume a smooth underlying signal, and in online monitoring, where an
 unsmoothed dashboard would flicker with every reading.</p>
-<p>Smoothing is risky for exactly the same reason it is useful: it <em>removes information</em>.
+<p>Smoothing is risky for the same reason it is useful: it removes information.
 Over-smoothing can hide real, physically meaningful patterns — a short-lived process
 upset, the onset of an oscillation, or the seasonal cycle itself — and every smoother
 distorts the signal somewhat (a moving average, for instance, lags behind sudden
-changes). Two habits protect you: treat the smoothing parameter as a choice that needs
-justification rather than a default, and always retain and report the unsmoothed data
+changes). Two habits help protect against this: treat the smoothing parameter as a choice that
+needs justification rather than a default, and always retain and report the unsmoothed data
 alongside any smoothed version, so the provenance of every figure is clear and readers
 can judge for themselves what the smoothing removed.</p>
 <section id="moving-average">
@@ -861,7 +861,7 @@ average with a physically motivated window for analysis of historical data — a
 either case, keep the raw series in the figure.</p>
 <div class="exercise admonition" id="ex-eda-ts-moving-avg">
 
-<p class="admonition-title"><span class="caption-number">Exercise 113 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 114 </span></p>
 <section id="exercise-content">
 <p>Compute the moving average for the Dow impurity series with a window of 24 time steps
 (approximately one day of hourly measurements).</p>
@@ -1020,7 +1020,7 @@ system and an impossible one — and it means the data you later pull from a his
 already been compressed</em>, at a resolution someone chose upstream.</p>
 <div class="exercise admonition" id="ex-eda-ts-historian">
 
-<p class="admonition-title"><span class="caption-number">Exercise 114 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 115 </span></p>
 <section id="exercise-content">
 <p>Investigate the compression/fidelity trade-off of the swinging-door algorithm.</p>
 <ol class="arabic simple">
@@ -1094,7 +1094,7 @@ predicts CO₂ now with very high accuracy. This is the essence of autocorrelati
 <p>The correlation is high at every lag, but it <em>oscillates with a one-year period</em>:
 readings 52 weeks apart sit at the same phase of the seasonal cycle (maximum
 correlation), while readings 26 weeks apart sit at opposite phases (minimum). The lag
-structure of the correlation is itself a fingerprint of the seasonality.</p>
+structure of the correlation reflects the seasonality directly.</p>
 <p>This is essentially the <strong>autocorrelation function</strong> that the next section formalizes.
 The standard ACF differs from our loop in two small ways: it reports the signed
 correlation <span class="math notranslate nohighlight">\(r\)</span> rather than <span class="math notranslate nohighlight">\(r^2\)</span> (so negative correlations remain visible), and it
@@ -1130,7 +1130,7 @@ pair of shifted windows:</p>
 </div>
 </div>
 <p>The manual formula and statsmodels agree exactly. Notice, however, that the pearsonr
-loop drifts <em>above</em> both at long lags. Using a single global mean and variance quietly
+loop drifts <em>above</em> both at long lags. Using a single global mean and variance implicitly
 assumes the series’ statistics do not change over time — for the steadily rising CO₂
 signal the shifted windows have different means, so the two estimators separate as the
 lag grows. That assumption has a name — <em>stationarity</em> — and we return to it at the
@@ -1186,7 +1186,7 @@ contain direct predictive information.</p>
 ACF or PACF values outside this band are statistically significant.</p>
 <div class="exercise admonition" id="ex-eda-ts-acf-lag">
 
-<p class="admonition-title"><span class="caption-number">Exercise 115 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 116 </span></p>
 <section id="exercise-content">
 <p>Investigate the lag-correlation structure of the Dow impurity series.</p>
 <ol class="arabic simple">
@@ -1325,7 +1325,7 @@ Notice that the seasonal pattern (annual cycle at lag ≈ 52 weeks) is now clear
 visible in the ACF — differencing removed the trend but the seasonality remains.</p>
 <div class="exercise admonition" id="ex-eda-ts-differencing">
 
-<p class="admonition-title"><span class="caption-number">Exercise 116 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 117 </span></p>
 <section id="exercise-content">
 <p>Apply first-order differencing to the Dow impurity series and test for stationarity.</p>
 <ol class="arabic simple">

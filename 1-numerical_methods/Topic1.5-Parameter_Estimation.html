@@ -436,9 +436,9 @@ peak position, or activation energy should answer: <em>how uncertain are the fit
 parameters?</em></p>
 <p>This chapter develops the classical answer, which connects three ideas that we have
 already met separately: least-squares loss functions (Topic 1.3–1.4), derivatives via
-automatic differentiation (Topic 1.4), and eigendecomposition (Topic 1.2). The punchline
-is that the <strong>curvature of the loss surface at the minimum</strong> — its Hessian matrix —
-determines how well the data pin down each parameter.</p>
+automatic differentiation (Topic 1.4), and eigendecomposition (Topic 1.2). The key idea
+is that the <strong>curvature of the loss surface at the minimum</strong> (the Hessian matrix)
+determines how well the data determine each parameter.</p>
 <p>We begin by reproducing the setup from the previous chapter so this notebook runs on its
 own: the C–H stretch region of the ethanol IR spectrum, the multi-Gaussian model, and
 the least-squares fit.</p>
@@ -648,8 +648,8 @@ by the corresponding value of Student’s t-distribution with <span class="math 
 With <span class="math notranslate nohighlight">\(n - p = 94\)</span> here the difference is negligible (<span class="math notranslate nohighlight">\(t \approx 1.99\)</span>); Himmelblau’s
 <em>Process Analysis by Statistical Methods</em> treats the small-sample case carefully.</p>
 </div>
-<p>Look at the relative errors, because the parameters live on wildly different scales
-(absorbances near 0.5, wavenumbers near 2900, widths near 30): the peak <em>positions</em> are
+<p>It is best to compare the relative errors here, since the parameters have very
+different scales (absorbances near 0.5, wavenumbers near 2900, widths near 30). The peak <em>positions</em> are
 determined to about 0.03–0.05% — 95% confidence intervals spanning only a few
 wavenumbers out of ~2900 — while the <em>weights</em> and <em>widths</em> are only known to a few
 percent. The confidence intervals turn the curvature
@@ -716,7 +716,7 @@ parameters move <em>together</em>, and are easiest to read after normalizing to 
 <img alt="../_images/920e60484d34b17e8d05be32dadde18dd8f676c838e877eeb3cf7deabcc66c13.png" src="../_images/920e60484d34b17e8d05be32dadde18dd8f676c838e877eeb3cf7deabcc66c13.png" />
 </div>
 </div>
-<p>The structure is striking: the strongest correlations are not within a single peak but
+<p>Interestingly, the strongest correlations are not within a single peak but
 <strong>between the two peaks</strong>. The two centers move together
 (<span class="math notranslate nohighlight">\(\mathrm{corr}(\mu_0, \mu_1) \approx +0.87\)</span>), and the second peak’s weight trades off
 against the first peak’s width (<span class="math notranslate nohighlight">\(\mathrm{corr}(w_1, \sigma_0) \approx -0.85\)</span>). The
@@ -784,8 +784,8 @@ Condition number: 2.2e+05
 </div>
 </div>
 </div>
-<p>Five orders of magnitude separate the stiffest direction from the sloppiest — and this
-is with a model that fits <em>well</em>. (Part of the spread simply reflects units: wavenumbers
+<p>Five orders of magnitude separate the stiffest direction from the sloppiest, even
+though this model fits the data well. (Part of the spread simply reflects units: wavenumbers
 and absorbances have very different magnitudes, which is why the unit-free relative
 errors and correlations above are often more interpretable than raw eigenvalues.)</p>
 <div class="exercise admonition" id="ex-nm-corr-pairs">
@@ -801,9 +801,9 @@ for the pair from (b) and describe how its shape differs.</p>
 </section>
 <section id="sloppiness-grows-with-model-complexity">
 <h2>Sloppiness Grows with Model Complexity<a class="headerlink" href="#sloppiness-grows-with-model-complexity" title="Link to this heading">#</a></h2>
-<p>What happens if we add a third Gaussian? The fit can only improve — more parameters
-never increase the minimum SSE — but parameter estimation tells a different story than
-the loss value alone:</p>
+<p>What happens if we add a third Gaussian? The fit can only improve, since more
+parameters never increase the minimum SSE. However, parameter estimation tells a
+different story than the loss value alone:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">guess3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">2900.</span><span class="p">,</span> <span class="mf">2980.</span><span class="p">,</span> <span class="mf">2940.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">])</span>
@@ -833,15 +833,15 @@ the loss value alone:</p>
 SSE: 0.0347 (m=2)  -&gt;  0.0266 (m=3)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x133caa380&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x132c43a30&gt;
 </pre></div>
 </div>
 <img alt="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" src="../_images/2c4fc35cd33ca5cdee892f8b9a24f82131aefc54d4cdf94983cc75dcb71a7d4b.png" />
 </div>
 </div>
-<p>The SSE drops by about 17% — but look at the components: the third Gaussian has fit a
-<strong>negative</strong> weight, carving a dip out of the other two peaks rather than describing any
-physical absorption. The optimizer is using the extra flexibility to chase noise and
+<p>The SSE drops by about 17%. However, if we look at the components, the third Gaussian
+has fit a <strong>negative</strong> weight, so it subtracts a dip from the other two peaks rather
+than describing any physical absorption. The optimizer is using the extra flexibility to chase noise and
 baseline structure, not chemistry.</p>
 <p>The Hessian makes the diagnosis quantitative:</p>
 <div class="cell docutils container">

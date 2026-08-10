@@ -558,7 +558,7 @@ document.write(`
 <p>Where possible, plotting the low-dimensional representation and visually inspecting cluster structure is a powerful qualitative check. When labeled data are available, a complementary approach is to train a supervised model in both the original and reduced spaces: if model accuracy does not drop substantially, the key structure has been preserved.</p>
 <div class="exercise admonition" id="ex-eda-stress-variance">
 
-<p class="admonition-title"><span class="caption-number">Exercise 86 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 87 </span></p>
 <section id="exercise-content">
 <p>Retained variance and stress do not always agree. Consider the three vertices of an equilateral triangle centered at the origin:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
@@ -697,7 +697,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1363cd180&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1412acb20&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -705,7 +705,7 @@ Smallest eigenvalue:       0.0000
 </div>
 <div class="exercise admonition" id="ex-eda-pca-scree">
 
-<p class="admonition-title"><span class="caption-number">Exercise 87 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 88 </span></p>
 <section id="exercise-content">
 <p>Using the scree plot data above, determine the minimum number of principal components needed to retain at least <strong>90%</strong> of the total variance in the MNIST dataset. Then load the Dow dataset (<code class="docutils literal notranslate"><span class="pre">data/impurity_dataset-training.xlsx</span></code>) and apply PCA to report the number of components required for 90% retained variance. Which dataset is more compressible, and why?</p>
 </section>
@@ -849,7 +849,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x14a1c9300&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x144961300&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -907,7 +907,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x137cf10f0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x143bb1780&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -980,7 +980,7 @@ Retained variance: 0.890
 <p>Compare the two reconstructions to the original. Linear PCA with both components retained reproduces the data exactly — the transform is just a rotation, so inverting it loses nothing. The kernel PCA reconstruction, in contrast, is visibly distorted: the moons are recognizable but warped. The nonlinear mapping into the implicit feature space is not exactly reversible — <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> only <em>approximates</em> a pre-image of each point, and some information is lost in the round trip. Kernel PCA is therefore “invertible” only in this approximate sense, which is what the comparison table at the end of the chapter means by “Yes (approx.)”.</p>
 <div class="exercise admonition" id="ex-eda-kpca-gamma">
 
-<p class="admonition-title"><span class="caption-number">Exercise 88 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 89 </span></p>
 <section id="exercise-content">
 <p>Using the moons dataset, fit <code class="docutils literal notranslate"><span class="pre">KernelPCA</span></code> with <code class="docutils literal notranslate"><span class="pre">kernel='rbf'</span></code> for five values of <code class="docutils literal notranslate"><span class="pre">gamma</span></code> spanning a wide range (e.g. 0.1, 1, 10, 100, 1000). For each, plot the 2D transformed data colored by class. Describe what happens to the separation as <code class="docutils literal notranslate"><span class="pre">gamma</span></code> increases. At what value does the transformation appear to overfit to individual points?</p>
 </section>
@@ -998,7 +998,7 @@ Retained variance: 0.890
 </section>
 <section id="supervised-dimensionality-reduction-lda">
 <h2>Supervised Dimensionality Reduction: LDA<a class="headerlink" href="#supervised-dimensionality-reduction-lda" title="Link to this heading">#</a></h2>
-<p>Everything in this chapter so far has been <em>unsupervised</em>: PCA and its variants find directions using the feature matrix alone. But the MNIST dataset comes with labels, and ignoring them leaves information on the table. <strong>Linear Discriminant Analysis (LDA)</strong> uses the labels directly: instead of maximizing total variance, it finds the directions that maximize the spread <em>between</em> class centroids relative to the spread <em>within</em> each class. Mechanically it is the same eigendecomposition machinery as PCA, applied to the composite matrix <span class="math notranslate nohighlight">\(C_\text{intra}^{-1} C_\text{inter}\)</span> instead of the covariance matrix — a step-by-step manual derivation is given in <a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html"><span class="doc std std-doc">High-Dimensional Classification</span></a>.</p>
+<p>Everything in this chapter so far has been <em>unsupervised</em>: PCA and its variants find directions using the feature matrix alone. However, the MNIST dataset comes with labels, and ignoring them means discarding useful information. <strong>Linear Discriminant Analysis (LDA)</strong> uses the labels directly: instead of maximizing total variance, it finds the directions that maximize the spread <em>between</em> class centroids relative to the spread <em>within</em> each class. Mechanically it is the same eigendecomposition machinery as PCA, applied to the composite matrix <span class="math notranslate nohighlight">\(C_\text{intra}^{-1} C_\text{inter}\)</span> instead of the covariance matrix — a step-by-step manual derivation is given in <a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html"><span class="doc std std-doc">High-Dimensional Classification</span></a>.</p>
 <p>Because the LDA directions separate class centroids, there can be at most <span class="math notranslate nohighlight">\(C - 1\)</span> of them for <span class="math notranslate nohighlight">\(C\)</span> classes. For the MNIST digits (10 classes, 64 pixel features), LDA therefore projects down to at most 9 components:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1095,7 +1095,7 @@ SVC on raw features  (64 dims): accuracy = 0.990
 <p>LDA features achieve comparable accuracy to the full-feature SVM while compressing 64 dimensions to 9 — a 7× reduction. This speedup scales dramatically as image resolution increases: for a 128×128 image (16,384 pixels), LDA would still reduce to at most 9 components for a 10-class problem.</p>
 <div class="exercise admonition" id="ex-eda-lda-pca-acc">
 
-<p class="admonition-title"><span class="caption-number">Exercise 89 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 90 </span></p>
 <section id="exercise-content">
 <p>Compare LDA-based and PCA-based dimensionality reduction as preprocessing for classification.</p>
 <ol class="arabic simple">
@@ -1137,11 +1137,11 @@ SVC on raw features  (64 dims): accuracy = 0.990
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3665
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3509
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/1879687b1255c2e0b3bcb0db8314da28d3ac7e1dd659e8a3addf1e86422516a7.png" src="../_images/1879687b1255c2e0b3bcb0db8314da28d3ac7e1dd659e8a3addf1e86422516a7.png" />
+<img alt="../_images/d9feb13b35379eb4b0cd77818d7efdd47bc8d8310e17df4b2ac03d623739517f.png" src="../_images/d9feb13b35379eb4b0cd77818d7efdd47bc8d8310e17df4b2ac03d623739517f.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1183,7 +1183,7 @@ Stress PCA: 0.5405
 </div>
 <div class="exercise admonition" id="ex-eda-tsne-perp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 90 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 91 </span></p>
 <section id="exercise-content">
 <p>Using the PCA-reduced MNIST data (<code class="docutils literal notranslate"><span class="pre">X_pca_pre</span></code> above), run t-SNE with <code class="docutils literal notranslate"><span class="pre">perplexity</span></code> values of 5, 30, and 100 (keep all other parameters fixed, and set <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>). Plot the three 2D embeddings side-by-side colored by digit. How does perplexity affect the size and separation of the clusters? Which value gives the clearest separation?</p>
 </section>
@@ -1261,7 +1261,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <p>Test points land in the same regions as their corresponding training classes, confirming that the embedding generalizes — the same fit-on-train, transform-both pattern used with LDA above.</p>
 <div class="exercise admonition" id="ex-eda-umap-params">
 
-<p class="admonition-title"><span class="caption-number">Exercise 91 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 92 </span></p>
 <section id="exercise-content">
 <p>Fit UMAP on the MNIST dataset with three combinations of hyperparameters: (a) <code class="docutils literal notranslate"><span class="pre">n_neighbors=5,</span> <span class="pre">min_dist=0.01</span></code>, (b) <code class="docutils literal notranslate"><span class="pre">n_neighbors=15,</span> <span class="pre">min_dist=0.1</span></code> (the default above), and (c) <code class="docutils literal notranslate"><span class="pre">n_neighbors=50,</span> <span class="pre">min_dist=0.5</span></code>. Plot the three embeddings side-by-side colored by digit. Describe how increasing <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code> changes the structure of the embedding.</p>
 </section>
@@ -1466,9 +1466,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07352
-Epoch  20  loss = 0.06567
-Epoch  30  loss = 0.06165
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07230
+Epoch  20  loss = 0.06090
+Epoch  30  loss = 0.05484
 </pre></div>
 </div>
 </div>
@@ -1492,7 +1492,7 @@ Epoch  30  loss = 0.06165
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/57a50ca9ad94100f020045f595b315af22eaec32e969ce20e2c41ef29658b67e.png" src="../_images/57a50ca9ad94100f020045f595b315af22eaec32e969ce20e2c41ef29658b67e.png" />
+<img alt="../_images/d91529bc039ba5ded1a3f92e7a244bd0504b6f231087a80a1b2c88bfb82fff94.png" src="../_images/d91529bc039ba5ded1a3f92e7a244bd0504b6f231087a80a1b2c88bfb82fff94.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1520,7 +1520,7 @@ Epoch  30  loss = 0.06165
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/9367e21257a4ce36b12aef4f43e588de9d6f36b2e960a0438ca984c861d69801.png" src="../_images/9367e21257a4ce36b12aef4f43e588de9d6f36b2e960a0438ca984c861d69801.png" />
+<img alt="../_images/e723e493d0d94b59733f1a0c1f13401782beb391d0c57812ee23d5a6bdcd300d.png" src="../_images/e723e493d0d94b59733f1a0c1f13401782beb391d0c57812ee23d5a6bdcd300d.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -1530,7 +1530,7 @@ Epoch  30  loss = 0.06165
 </div>
 <div class="exercise admonition" id="ex-eda-autoencoder-design">
 
-<p class="admonition-title"><span class="caption-number">Exercise 92 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 93 </span></p>
 <section id="exercise-content">
 <p>Sketch an autoencoder architecture that compresses a 20-dimensional input into a 3-dimensional latent space, specifying the width of each encoder and decoder layer.</p>
 </section>

@@ -645,7 +645,7 @@ plain-English record of what the code is supposed to do.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-ai-pubchem-prop">
 
-<p class="admonition-title"><span class="caption-number">Exercise 74 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 75 </span></p>
 <section id="exercise-content">
 <p>Work with an LLM of your choice to regenerate <code class="docutils literal notranslate"><span class="pre">fetch_properties</span></code>, this time also returning
 the compound’s <strong>topological polar surface area (TPSA)</strong>. Run the new code on a few
@@ -659,9 +659,8 @@ first attempt needed correction.</p>
 <h2>Extracting Data from Unstructured Web Pages<a class="headerlink" href="#extracting-data-from-unstructured-web-pages" title="Link to this heading">#</a></h2>
 <p>Topic 4.2 ended with a caution: not every useful data source offers a clean JSON API.
 Many give you only an HTML page built for humans, and scraping it by hand means staring
-at nested tags and writing brittle parsing logic. This is another place an assistant
-earns its keep — and a sharper test, because there is no library like <code class="docutils literal notranslate"><span class="pre">pubchempy</span></code> to lean
-on.</p>
+at nested tags and writing brittle parsing logic. This is another place where an assistant is useful, and it is a harder test, since
+there is no library like <code class="docutils literal notranslate"><span class="pre">pubchempy</span></code> to lean on.</p>
 <p>The <a class="reference external" href="https://webbook.nist.gov/">NIST Chemistry WebBook</a> is a good example. Its
 gas-phase thermochemistry pages list the constant-pressure heat capacity <span class="math notranslate nohighlight">\(C_p\)</span> of a gas
 as a table of <span class="math notranslate nohighlight">\((C_p, T)\)</span> measurements, but there is no JSON endpoint — you get HTML. Say
@@ -779,7 +778,7 @@ later changes — the same versioning discipline introduced in Topic 4.2.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-ai-nist-cp">
 
-<p class="admonition-title"><span class="caption-number">Exercise 75 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 76 </span></p>
 <section id="exercise-content">
 <p>Work with an LLM of your choice to adapt the scraper to a different compound — such as
 <a class="reference external" href="https://webbook.nist.gov/cgi/cbook.cgi?ID=C71432&amp;amp;Units=SI&amp;amp;Mask=1">benzene</a> or toluene —
@@ -844,7 +843,7 @@ shape of the answer you want is the single most effective habit.</p>
 </div>
 <div class="exercise admonition" id="ex-dm-ai-llm-tool">
 
-<p class="admonition-title"><span class="caption-number">Exercise 76 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 77 </span></p>
 <section id="exercise-content">
 <p>Work with an LLM of your choice to create a small <em>programmatic</em> prompting tool: a script
 that sends a prompt to a provider’s API and prints the response (note that this requires
