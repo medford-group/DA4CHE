@@ -185,7 +185,7 @@ clean-tests:
 
 # --- GitHub Pages publish (manual ghp-import) -------------------------------
 # Configure the GitHub repo you want to publish to:
-REMOTE_URL ?= https://github.com/medford-group/da4che.git
+REMOTE_URL ?= https://github.com/medford-group/DA4CHE.git
 PUBLISH_BRANCH ?= gh-pages
 
 .PHONY: publish
@@ -218,4 +218,4 @@ publish:  ## Build the book and publish _build/html to GitHub Pages (gh-pages)
 	fi; \
 	echo ">> Publishing to $(PUBLISH_BRANCH) via ghp-import"; \
 	$(CONDA_RUN) ghp-import -n -p -f -b $(PUBLISH_BRANCH) "$(HTMLDIR)"; \
-	echo ">> Done. Your site will be available at: https://medford-group.github.io/da4che/"
+	echo ">> Done. Your site will be available at: https://medford-group.github.io/DA4CHE/"
