@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>External Resources &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'resources/Resources';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Project Ideas" href="Project_Ideas.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../problem_sets/intro.html">Problem Sets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Datasets and Resources</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/resources/Resources.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>External Resources</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-with-cache">Start with CACHE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#courses-and-books">Courses and books</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-and-tutorials">Tools and tutorials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-ai-language-models-and-agents">Generative AI, language models, and agents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-any-of-this-responsibly">Using any of this responsibly</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#external-resources" id="id1">External Resources</a></p>
+<ul>
+<li><p><a class="reference internal" href="#start-with-cache" id="id2">Start with CACHE</a></p></li>
+<li><p><a class="reference internal" href="#courses-and-books" id="id3">Courses and books</a></p></li>
+<li><p><a class="reference internal" href="#tools-and-tutorials" id="id4">Tools and tutorials</a></p></li>
+<li><p><a class="reference internal" href="#generative-ai-language-models-and-agents" id="id5">Generative AI, language models, and agents</a></p></li>
+<li><p><a class="reference internal" href="#using-any-of-this-responsibly" id="id6">Using any of this responsibly</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="external-resources">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">External Resources</a><a class="headerlink" href="#external-resources" title="Link to this heading">#</a></h1>
+<p>This book covers one path through data analytics for chemical engineers. A great deal of
+excellent material covers adjacent paths, and some of it is actively maintained in ways a
+static book cannot be.</p>
+<section id="start-with-cache">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Start with CACHE</a><a class="headerlink" href="#start-with-cache" title="Link to this heading">#</a></h2>
+<p>The <a class="reference external" href="https://cache.org/teaching-resources-center">CACHE Corporation</a> Teaching Resources
+Center maintains two collections that are the best single starting point for this material
+in a chemical engineering context. Both are curated, annotated with audience and
+prerequisite level, and updated as things change — treat them as the superset of anything
+listed on this page:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://cache.org/teaching-resources-center/aiml"><strong>Machine Learning and Artificial Intelligence</strong></a>
+— course models that can be adopted wholesale, assignment ideas with defined student
+deliverables, learner pathways, datasets, and guidance on generative AI and agents. Each
+entry is tagged with best use, audience, level, expected time, access terms, and the
+limitations to know about before assigning it.</p></li>
+<li><p><a class="reference external" href="https://cache.org/teaching-resources-center/statistics"><strong>Data, Statistics, and Analytics</strong></a>
+— syllabi from several departments, textbook recommendations, screencast libraries, and
+datasets, oriented toward the statistics and uncertainty side of the subject.</p></li>
+</ul>
+<p>The <a class="reference external" href="https://github.com/medford-group/data_analytics_ChE">original notes</a> that this book was
+built from are listed on both pages, so you may well have arrived here from one of them.</p>
+</section>
+<section id="courses-and-books">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Courses and books</a><a class="headerlink" href="#courses-and-books" title="Link to this heading">#</a></h2>
+<p>Course materials in this area are unusually open — most of the entries below include
+lectures, notebooks, and assignments you can work through independently.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>What it is</p></th>
+<th class="head"><p>Level</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://kitchingroup.cheme.cmu.edu/s26-06642/syllabus.html">Data Science and Machine Learning in Chemical Engineering</a> (Carnegie Mellon)</p></td>
+<td><p>A full course: syllabus, lectures, class exercises, 13 homework sets, and a course project</p></td>
+<td><p>Intermediate</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://apmonitor.com/pds/">Machine Learning for Engineers</a> (APMonitor / BYU)</p></td>
+<td><p>Engineering-first ML course with Python notebooks, projects, and case studies; code MIT licensed</p></td>
+<td><p>Introductory to intermediate</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://apmonitor.com/dde/">Data-Driven Engineering</a> (APMonitor / BYU)</p></td>
+<td><p>Sensor data, cleaning, statistics, visualization, time series, and uncertainty, with a group project</p></td>
+<td><p>Introductory to intermediate</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://edgarsmdn.github.io/MLCE_book/intro.html">Machine Learning in Chemical Engineering</a></p></td>
+<td><p>A Jupyter Book with exercises on properties, vapor–liquid equilibrium, CSTR models, control, and PCA</p></td>
+<td><p>Intermediate</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/vzavala/StatsBook">Statistics for Chemical Engineers</a></p></td>
+<td><p>Companion materials to the book: slides, scripts, worked examples, and data files</p></td>
+<td><p>Intermediate</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/zavalab/Tutorials">Advanced Mathematics and Computation for Chemical Engineers</a> (Wisconsin)</p></td>
+<td><p>Tutorials with Colab links on neural networks, graph neural networks, topological data analysis, and t-SNE</p></td>
+<td><p>Advanced</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/KaihangShi/AI-for-Chemical-Engineers_UB">AI for Chemical Engineers</a> (Buffalo)</p></td>
+<td><p>Slides and tutorials on fault detection, materials, optimization, and generative models; CC BY 4.0</p></td>
+<td><p>Intermediate to advanced</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.databookuw.com/">Data-Driven Science and Engineering</a> (Brunton and Kutz)</p></td>
+<td><p>Videos, exercises, and code on dynamics, control, and reduced-order models. Companion materials open; textbook sold separately</p></td>
+<td><p>Advanced undergraduate to graduate</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://dmol.pub/">Deep Learning for Molecules and Materials</a></p></td>
+<td><p>Interactive text with Colab notebooks on representations, graph neural networks, equivariance, and generative models; CC BY-NC 3.0</p></td>
+<td><p>Advanced</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://physicsbaseddeeplearning.org/">Physics-Based Deep Learning</a></p></td>
+<td><p>Digital book on physical constraints, differentiable simulation, and surrogates. A GPU helps</p></td>
+<td><p>Advanced</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://composites.uw.edu/AI/">Physics-Informed Machine Learning</a> (Washington)</p></td>
+<td><p>Slides and code for heat transfer, reaction discovery, and manufacturing applications</p></td>
+<td><p>Upper undergraduate to graduate</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kitchingroup.cheme.cmu.edu/pycse/book/intro.html">PyCSE</a> (Kitchin)</p></td>
+<td><p>Scientific Python for engineers, from the ground up. Strongly recommended if you are still finding your footing in Python</p></td>
+<td><p>Introductory</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="tools-and-tutorials">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Tools and tutorials</a><a class="headerlink" href="#tools-and-tutorials" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://inria.github.io/scikit-learn-mooc/">scikit-learn MOOC</a></p></td>
+<td><p>A thorough, exercise-driven tour of the library this book uses most</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://developers.google.com/machine-learning/crash-course">Google Machine Learning Crash Course</a></p></td>
+<td><p>Regression, classification, splitting, and evaluation from first principles</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://pysindy.readthedocs.io/en/latest/examples/index.html">PySINDy examples</a></p></td>
+<td><p>Discovering governing equations from dynamic data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://idaes-examples.readthedocs.io/en/stable/docs/surrogates/index.html">IDAES surrogate modeling examples</a></p></td>
+<td><p>Surrogate models inside flowsheet optimization, from DOE and NETL</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://streamlit.io/">Streamlit</a></p></td>
+<td><p>Turning a finished model or analysis into a small interactive application</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.learncheme.com/screencasts/statistics">LearnChE statistics screencasts</a> (Colorado Boulder)</p></td>
+<td><p>Sixty-plus short videos on statistics topics, including software tutorials</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.math.uah.edu/stat/">Virtual Laboratories in Probability and Statistics</a></p></td>
+<td><p>Interactive demonstrations of distributions and statistical concepts</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="generative-ai-language-models-and-agents">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Generative AI, language models, and agents</a><a class="headerlink" href="#generative-ai-language-models-and-agents" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html"><span class="doc">Accessing Data with AI Tools</span></a>
+covers the practical use of these tools for getting at data. The resources below go deeper
+into how they work and how to build with them.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>What it covers</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/learn/llm-course/chapter1/1">Hugging Face LLM Course</a></p></td>
+<td><p>Transformers, tokenizers, fine-tuning, and reasoning models</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://huggingface.co/learn/agents-course/unit0/introduction">Hugging Face Agents Course</a></p></td>
+<td><p>Function calling, retrieval, frameworks, observability, and evaluation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a></p></td>
+<td><p>Chaining, routing, orchestration, and evaluator loops. Vendor-authored — pair it with your own testing</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://cs336.stanford.edu/">Stanford CS336: Language Modeling from Scratch</a></p></td>
+<td><p>Building a language model end to end. Assumes strong ML and systems background</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://kitchingroup.cheme.cmu.edu/s26-06642/optional/llms-for-research.html">Using LLMs in Scientific Research</a> (Carnegie Mellon)</p></td>
+<td><p>Literature work, data analysis, coding, and keeping work repeatable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://inspect.aisi.org.uk/">Inspect AI</a> (UK AI Security Institute)</p></td>
+<td><p>Building fixed test sets and clear scoring for model and agent evaluation</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For instructors deciding on course policy,
+<a class="reference external" href="https://che.engin.umich.edu/2026/06/23/incorporating-generative-ai-in-the-chemical-engineering-classroom-a-perspective-for-cache-by-rebecca-k-lindsey/">Incorporating Generative AI in the Chemical Engineering Classroom</a>
+(written for CACHE) and
+<a class="reference external" href="https://mtei.engineering.cornell.edu/teaching-resources/guidance-genai/">Cornell Engineering’s guidance</a>
+both give concrete, adaptable starting points.</p>
+</section>
+<section id="using-any-of-this-responsibly">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Using any of this responsibly</a><a class="headerlink" href="#using-any-of-this-responsibly" title="Link to this heading">#</a></h2>
+<p>The failure modes here are not exotic; they are the ordinary ones, and they are easy to
+avoid on purpose and hard to avoid by accident.</p>
+<ul class="simple">
+<li><p><strong>Record where the data came from.</strong> Source, license, units, missing-value convention, how
+it was sampled, what you changed, and the measurement uncertainty if it is stated. This
+costs ten minutes at the start and saves the entire analysis later.</p></li>
+<li><p><strong>Match the validation split to the real use.</strong> Keep related times, batches, and equipment
+out of both training and test sets. If the model will be applied to future data, validate
+on future data.</p></li>
+<li><p><strong>Apply engineering checks a metric will not catch.</strong> Do the predictions conserve mass and
+energy? Are the units right? Do limiting cases behave? What happens outside the training
+range? A model can have excellent cross-validated error and still predict negative
+concentrations.</p></li>
+<li><p><strong>Report how it fails, not only how well it works.</strong> Uncertainty, failure cases, drift over
+time, and the conditions under which the model should not be used.</p></li>
+<li><p><strong>Verify what a language model tells you.</strong> Check the calculations, the code, the
+quotations, and the sources. Confident phrasing is not evidence, and these tools are most
+persuasive exactly where they are least reliable — plausible-looking citations, and
+algebra that is formatted correctly but wrong.</p></li>
+<li><p><strong>Constrain agents that take actions.</strong> Limit tools and permissions, protect private data,
+log what was done, set cost and time limits, and require human approval for anything
+affecting safety, equipment, or records.</p></li>
+</ul>
+<p>For a formal framework, the
+<a class="reference external" href="https://doi.org/10.6028/NIST.AI.600-1">NIST AI Risk Management Framework Generative AI Profile</a>
+sets out risk registers, test plans, and source records in a way that maps onto engineering
+practice.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>External links were last reviewed in August 2026. The CACHE pages linked at the top of this
+page are maintained continuously; if something here has gone stale, check there first. If you
+find a broken link, please
+<a class="reference external" href="https://github.com/medford-group/DA4CHE/issues">open an issue</a>.</p>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./resources"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Project_Ideas.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Project Ideas</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-with-cache">Start with CACHE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#courses-and-books">Courses and books</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-and-tutorials">Tools and tutorials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-ai-language-models-and-agents">Generative AI, language models, and agents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-any-of-this-responsibly">Using any of this responsibly</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2025 A.J. Medford
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

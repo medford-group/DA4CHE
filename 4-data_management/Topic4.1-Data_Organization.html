@@ -229,6 +229,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -1740,6 +1746,9 @@ strategy. The <code class="docutils literal notranslate"><span class="pre">numer
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>After dropping bad rows: (10297, 46)  (lost 406 rows)
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -2109,7 +2118,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.73 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.75 s
 </pre></div>
 </div>
 </div>
@@ -2215,7 +2224,7 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0006 s
 HDF5 one column:  0.0003 s
-In-memory slice:  0.000241 s
+In-memory slice:  0.000218 s
 </pre></div>
 </div>
 </div>
@@ -2260,8 +2269,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0466 s
-Parquet read:  0.0611 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0531 s
+Parquet read:  0.0596 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:

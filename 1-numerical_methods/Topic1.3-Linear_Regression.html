@@ -229,6 +229,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -523,7 +529,7 @@ y_i = \sum_{j=0}^1 w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/19afd57c148a98e6bab94590c6b2bd3af18c4d87ce64b402f290e4baccb8efb4.png" src="../_images/19afd57c148a98e6bab94590c6b2bd3af18c4d87ce64b402f290e4baccb8efb4.png" />
+<img alt="../_images/e769bdb5c1df516a2afac845987aadaa267edf6d407cf6555b686dbdbd73f9ad.png" src="../_images/e769bdb5c1df516a2afac845987aadaa267edf6d407cf6555b686dbdbd73f9ad.png" />
 </div>
 </div>
 <p>The goal of linear regression is to use the data, <span class="math notranslate nohighlight">\(y_i\)</span>, to recover the best-fit line. In this case, we know the answer since we generated the data. However, we can also try to recover the line based only on the noisy data.</p>
@@ -628,7 +634,7 @@ g(\vec{w})
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.33398538 -2.49513758]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.43949158 -2.50233535]
 Original weights to generate data: [1.4, -2.5]
 </pre></div>
 </div>
@@ -647,7 +653,7 @@ Original weights to generate data: [1.4, -2.5]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c16b8a634217c28a2a38a15c86fbc45a26f10e42b58f735202659533ee0fd1b5.png" src="../_images/c16b8a634217c28a2a38a15c86fbc45a26f10e42b58f735202659533ee0fd1b5.png" />
+<img alt="../_images/8a1ef38c98c8c1751d3b648c6b83c238e8764c9f140d975381dc1a3814548944.png" src="../_images/8a1ef38c98c8c1751d3b648c6b83c238e8764c9f140d975381dc1a3814548944.png" />
 </div>
 </div>
 <p>We can see that the best-fit line actually fits the data better than the original weights! We will explore more strategies for quantifying the fit in the “regression” lecture.</p>
@@ -699,7 +705,7 @@ y_i = \sum_{j=0}^m w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3fb96f177baa93730356d26f9fc4f4b578e7b2ee7ad00c16c3855d2386df3727.png" src="../_images/3fb96f177baa93730356d26f9fc4f4b578e7b2ee7ad00c16c3855d2386df3727.png" />
+<img alt="../_images/ae67f1761c74c3de832f401bf4f9f3f0e83ef07775adbe6b19330e744bf727fa.png" src="../_images/ae67f1761c74c3de832f401bf4f9f3f0e83ef07775adbe6b19330e744bf727fa.png" />
 </div>
 </div>
 <p>Now we can try to recover the weights, <span class="math notranslate nohighlight">\(w\)</span> using the same math as before:</p>
@@ -714,7 +720,7 @@ y_i = \sum_{j=0}^m w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.2427202   0.8812821  -0.32406908  0.02168533]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.27625249  0.96559207 -0.34056331  0.02254593]
 Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </pre></div>
 </div>
@@ -732,7 +738,7 @@ Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a886e435de1ccaeb60aa64ff021e2331ac19d28bafc9827650393e207b7a0a0a.png" src="../_images/a886e435de1ccaeb60aa64ff021e2331ac19d28bafc9827650393e207b7a0a0a.png" />
+<img alt="../_images/6ab9ab064765ab8f90109ddb30b98780c6f54fec87a685e360f1ea4229766cd4.png" src="../_images/6ab9ab064765ab8f90109ddb30b98780c6f54fec87a685e360f1ea4229766cd4.png" />
 </div>
 </div>
 <p>In this case we cheated a bit, since we knew that the data was generated from a third-order polynomial. We can also find fits based on lower (or higher) orders of polynomials by modifying the order of the Vandermonde matrix used in the least-squares equation. First, we can make a function that creates a Vandermonde matrix of any order:</p>
@@ -787,13 +793,13 @@ Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights: [ 1.32023149e+00 -6.67459122e+00  1.39972099e+01 -1.01171937e+01
-  3.58857123e+00 -7.01805855e-01  7.70736734e-02 -4.45330231e-03
-  1.05363723e-04]
-Sum of Squared Errors (g): 0.05583100050721672
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights: [ 1.24221436e+00  2.96013084e+00 -3.76212160e+00  2.13581702e+00
+ -6.24220854e-01  9.65481007e-02 -7.77565842e-03  2.89045088e-04
+ -3.18470192e-06]
+Sum of Squared Errors (g): 0.022464804819821927
 </pre></div>
 </div>
-<img alt="../_images/558850d447ada459567b11c56b55a1863566a2f1a91365d2ddbbf2ba57b51256.png" src="../_images/558850d447ada459567b11c56b55a1863566a2f1a91365d2ddbbf2ba57b51256.png" />
+<img alt="../_images/6d1ee23efb7a1c0b136beb25067195c263cb1b4eea87c5ca176bdf0caf1626db.png" src="../_images/6d1ee23efb7a1c0b136beb25067195c263cb1b4eea87c5ca176bdf0caf1626db.png" />
 </div>
 </div>
 <p>We see that as the order of the polynomial increases, the sum of squared errors decreases. However, we are only checking the behavior of our model at the points we use to train it. We can also use the model to interpolate between points or extrapolate to new points by creating a new Vandermonde matrix with more rows. Increasing the resolution adds rows within the original range, and results in interpolation, while increasing the range will result in extrapolation. Let’s try both:</p>
@@ -836,7 +842,7 @@ Sum of Squared Errors (g): 0.05583100050721672
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/51ea5b6a23bb1edbe6b8a3b5d80a25a5d63d6123fc4a2bda976f5bce8022b42f.png" src="../_images/51ea5b6a23bb1edbe6b8a3b5d80a25a5d63d6123fc4a2bda976f5bce8022b42f.png" />
+<img alt="../_images/ac75fc5f6442d8dad43b4241182d873e6f8022b66243e2d8d58e6ecce5b57a21.png" src="../_images/ac75fc5f6442d8dad43b4241182d873e6f8022b66243e2d8d58e6ecce5b57a21.png" />
 </div>
 </div>
 <p>We will discuss more techniques for validating the model and assessing the best order of the polynomial in future lectures.</p>
