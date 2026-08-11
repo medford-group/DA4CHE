@@ -49,8 +49,18 @@ html:
   navbar_number_sections: true
 #  use_edit_page_button: true
   extra_navbar: ""
-  extra_footer: "© 2025 A.J. Medford"
+  extra_footer: '© 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
   home_page_in_navbar: true
+
+  # Both of the following are set by scripts/release.py (DA4CHE-manager) for the
+  # duration of a release build, then restored. Leave them empty on `main`:
+  #
+  #   announcement -- names the edition and patch level being read. Empty here so the
+  #     development build carries no edition claim; a published edition always states
+  #     which one it is, because a patch republishes an edition in place.
+  #   baseurl -- the edition's own URL, so a published copy does not advertise the
+  #     development site as its canonical location.
+  announcement: ""
   baseurl: ""
 
 # Sphinx extensions
@@ -62,6 +72,17 @@ sphinx:
     # this natively but only sets it up inside its Binder/Colab launch-button code, so a
     # book without launch buttons never offers the notebook. See _ext/ipynb_download.py.
     ipynb_download: _ext/
+  config:
+    # jupyter-book leaves html_static_path unset, so this is additive rather than a
+    # override of theme assets (verified against the resolved config).
+    html_static_path:
+      - _static
+    # Adds an "other versions" control to every page. Reads the published version
+    # index at an absolute path, so an already-published edition still discovers
+    # editions released after it. No-ops when that index is unreachable, which is the
+    # case for local builds and the development site.
+    html_js_files:
+      - version-switcher.js
 
 # Add custom CSS or JS if needed
 #extra_css:

@@ -23,14 +23,36 @@ If you are a student in ChBE 4745/6745, you should think of this as a supplement
 
 If you are not a student in ChBE 4745/6745, congrats on finding this unpublicized resource. You are welcome to use it as you see fit and I hope you find it helpful. Feedback is always welcome and appreciated.
 
-If you are an instructor of another similar course, or want to use these materials for educational purposes, please feel free to use and modify any of these resources as you see fit for your course. The book is available under the MIT license. Attribution is greatly appreciated, and if you find the book particularly useful or have any questions about adapting it please send a note to [A.J. Medford](mailto:ajm@gatech.edu).
+If you are an instructor of another similar course, or want to use these materials for educational purposes, please feel free to use and modify any of these resources as you see fit for your course. The book is available under the [Creative Commons Attribution 4.0 license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), so you may share and adapt it for any purpose, including commercially, as long as you give credit. If you find the book particularly useful or have any questions about adapting it please send a note to [A.J. Medford](mailto:ajm@gatech.edu).
 
 ## Current status
 
 As of the latest update (August 2026), all modules have been converted and the full book has been revised, including a detailed review pass through every chapter. This should be treated as a "beta version": the content is complete and has been checked, but it has not yet been tested by a full semester of students, so some issues and rough edges are likely to remain. The problem sets are still a work in progress, and will be added and refined over time. The [Datasets and Resources](resources/intro.md) section at the end of the book is a newer addition, collecting open datasets suitable for independent work, project directions, and pointers to external resources; suggestions of datasets or resources to add there are especially welcome. Feedback on any part of the book is welcome through the [Github issues page](https://github.com/medford-group/DA4CHE/issues).
 
+### Which version am I reading?
+
+The book exists in two forms, and it is worth knowing which one you have open.
+
+**Published editions** are dated snapshots, named by year and month — `v2026.08`, for example.
+Each one lives at a URL that does not change, so a link in a syllabus or a citation in a report
+keeps working after the book has moved on. Editions are listed at
+[dsci-gt.github.io/DA4CHE/versions.html](https://dsci-gt.github.io/DA4CHE/versions.html), and
+[dsci-gt.github.io/DA4CHE/stable/](https://dsci-gt.github.io/DA4CHE/stable/) always points at
+the most recent one. **If you are teaching from this book or citing it, use an edition.**
+
+Corrections — a typo, a broken link, a code cell that stopped working — are folded into the
+current edition rather than creating a new one, and are counted as patches. This does mean an
+edition can change after you have read it, so every page of a patched edition carries a banner
+naming its patch level and the date it was applied. If you need a copy that is guaranteed never
+to change, download the archive attached to that edition's
+[release](https://github.com/DSCI-GT/DA4CHE/releases).
+
+**The development version** is this book as it is being worked on, published at
+[www.medford.chbe.gatech.edu/DA4CHE/](https://www.medford.chbe.gatech.edu/DA4CHE/). It is
+usually ahead of the newest edition and changes without notice. Fixes land here first.
+
 # Attributions
 
 These notes have been collected, refined, and revised numerous times over the years, and it is impossible to directly attribute all ideas and notes to their original sources. Links or references are included in the notes where ideas or quotes are taken directly. I want to extend a special thanks to Leo Chiang and Ivan Castillo at Dow Chemical who provided the chemical process dataset used as an example throughout the course. At the time of creation, there were few if any similar datasets that were publicly available. I also want to give credit to the many fantastic resources and blog posts from Prof. John Kitchin, who is a pioneer of Python and data science education in chemical engineering, and I strongly recommend his ["PyCSE" book](https://kitchingroup.cheme.cmu.edu/pycse/book/intro.html#) for anyone (especially engineers) who are just getting started with Python. In addition, I am grateful to the general openness of the machine learning community, which has provided access to both code and helpful blog posts and other learning resources -- the content created by Sebastian Raschka was particularly useful in creating the first version of the course. The course textbooks, "Machine Learning Refined" and "Elements of Statistical Learning" were heavily influential when crafting the original version of the notes. I also want to thank colleagues who have adapted these resources and provided valuable feedback along the way, especially Prof. Chris Paolucci at UVA. I must also acknowledge that LLMs, including Claude and ChatGPT, were particularly useful when refining the notes, both by helping with menial tasks to set up the Jupyter Book, and in providing additional suggestions of exercises and elaboration on the notes. In particular, Claude Code was instrumental in conversion of the latter half of the course.
 
-Finally, I would like to acknowledge the people who have helped create and support the ["Data Science for the Chemical Industry"](https://www.chbe.gatech.edu/online-graduate-certificate-data-science-chemical-industry) certificate program, which has made it possible to create this course and book in the form it currently is. This includes Profs. David Sholl, Carson Meredith, and Martha Grover who were instrumental in starting the program, and Prof. Fani Boukouvala who has provided endless feedback and support along the way (and teaches the companion course, ChBE 4745/6745 on "Data Driven Process Systems Engineering"). Support from Georgia Tech Professional Education was also critical, especially from Fatimah Wirth. I am grateful to be a part of this program, and hope that this book grows along with it.
+Finally, I would like to acknowledge the people who have helped create and support the ["Data Science for the Chemical Industry"](https://www.chbe.gatech.edu/graduate-certificate-data-science-chemical-industry) certificate program, which has made it possible to create this course and book in the form it currently is. This includes Profs. David Sholl, Carson Meredith, and Martha Grover who were instrumental in starting the program, and Prof. Fani Boukouvala who has provided endless feedback and support along the way (and teaches the companion course, ChBE 4746/6746 on "Data-Driven Process Systems Engineering"). Support from Georgia Tech Professional Education was also critical, especially from Fatimah Wirth. I am grateful to be a part of this program, and hope that this book grows along with it.

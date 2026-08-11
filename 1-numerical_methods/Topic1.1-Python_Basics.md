@@ -546,7 +546,7 @@ The easiest way to set up the course environment is:
 
 ```bash
 conda env create -f environment.yml
-conda activate da4che
+conda activate DA4CHE
 ```
 
 This uses the `environment.yml` file provided with the course to install the required versions of Python and all packages.

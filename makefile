@@ -218,4 +218,6 @@ publish:  ## Build the book and publish _build/html to GitHub Pages (gh-pages)
 	fi; \
 	echo ">> Publishing to $(PUBLISH_BRANCH) via ghp-import"; \
 	$(CONDA_RUN) ghp-import -n -p -f -b $(PUBLISH_BRANCH) "$(HTMLDIR)"; \
-	echo ">> Done. Your site will be available at: https://medford-group.github.io/DA4CHE/"
+	echo ">> Done. Development build available at: https://www.medford.chbe.gatech.edu/DA4CHE/"; \
+	echo ">> (medford-group.github.io/DA4CHE/ redirects there -- the org's user-pages repo sets that domain)"; \
+	echo ">> Published editions are cut separately, with DA4CHE-manager's scripts/release.py"
