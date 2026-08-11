@@ -27,7 +27,7 @@ If you are an instructor of another similar course, or want to use these materia
 
 ## Current status
 
-As of the latest update (August 2026), all modules have been converted and the full book has been revised, including a detailed review pass through every chapter. This should be treated as a "beta version": the content is complete and has been checked, but it has not yet been tested by a full semester of students, so some issues and rough edges are likely to remain. The problem sets are still a work in progress, and will be added and refined over time. Feedback on any part of the book is welcome through the [Github issues page](https://github.com/medford-group/DA4CHE/issues).
+As of the latest update (August 2026), all modules have been converted and the full book has been revised, including a detailed review pass through every chapter. This should be treated as a "beta version": the content is complete and has been checked, but it has not yet been tested by a full semester of students, so some issues and rough edges are likely to remain. The problem sets are still a work in progress, and will be added and refined over time. The [Datasets and Resources](resources/intro.md) section at the end of the book is a newer addition, collecting open datasets suitable for independent work, project directions, and pointers to external resources; suggestions of datasets or resources to add there are especially welcome. Feedback on any part of the book is welcome through the [Github issues page](https://github.com/medford-group/DA4CHE/issues).
 
 # Attributions
 

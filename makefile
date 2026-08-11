@@ -20,7 +20,7 @@ CONDA_RUN   := conda run -n $(ENV_NAME)
 
 .DEFAULT_GOAL := help
 
-.PHONY: help env build fast serve watch open clean retoc pdf conda-info
+.PHONY: help env build fast serve serve-only watch open clean retoc pdf conda-info
 
 ## help: Show common commands
 help:
@@ -68,11 +68,20 @@ fast: env $(TOC) ## Fast build (no execution) if you have _config-fast.yml
 	@env $(ENVVARS) $(CONDA_RUN) jupyter-book build $(DOCS) --config _config-fast.yml
 
 serve: build ## Build then serve & open browser
+	$(MAKE) serve-only
+
+# Serve an already-built site. `serve` depends on `build`, which runs `--all` and
+# re-executes every notebook — too slow to sit through when you only want to look at the
+# HTML you just built. Use this target in that case.
+# The interpreter goes through $(CONDA_RUN): bare `python` does not exist on a stock macOS
+# shell (only `python3`), so calling it directly fails with "command not found".
+serve-only: ## Serve the existing _build/html without rebuilding
+	@test -d "$(HTMLDIR)" || { echo ">> No build found at $(HTMLDIR). Run 'make build' first."; exit 1; }
 	@echo ">> Serving $(HTMLDIR) on http://localhost:$(PORT)/"
 	@if command -v xdg-open >/dev/null; then xdg-open "http://localhost:$(PORT)/index.html"; \
 	elif command -v open >/dev/null; then open "http://localhost:$(PORT)/index.html"; \
 	else start "http://localhost:$(PORT)/index.html"; fi
-	cd $(HTMLDIR) && python -m http.server $(PORT)
+	cd $(HTMLDIR) && $(CONDA_RUN) python -m http.server $(PORT)
 
 watch: env ## Auto-rebuild & serve (no execution; good for editing prose)
 	@env $(ENVVARS) $(CONDA_RUN) sphinx-autobuild -b html $(DOCS) $(HTMLDIR) \

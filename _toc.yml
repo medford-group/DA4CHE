@@ -47,3 +47,8 @@ chapters:
       - file: problem_sets/Topic1.3-Linear_Regression_Problems
       - file: problem_sets/Topic2.2-Model_Validation_Problems
       - file: problem_sets/Topic5.3-Clustering_Problems
+  - file: resources/intro
+    sections:
+      - file: resources/Datasets
+      - file: resources/Project_Ideas
+      - file: resources/Resources
