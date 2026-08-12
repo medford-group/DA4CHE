@@ -23,10 +23,11 @@ documentation, and then summarized them into the tables you see here.
 
 Links were checked automatically at the time of writing, and the descriptions reflect what
 each source says about itself. But **I have not independently verified every dataset, every
-license, or every claim made about them here.** Sizes, licenses, and characterizations of
-what a dataset contains should be treated as a starting point rather than as authoritative.
-Before you rely on a dataset — and especially before you use one in published work — check
-its license, citation requirements, and documentation at the source.
+license, or every claim made about them here.**
+Sizes, licenses, the measured-or-simulated labels, and characterizations of what a dataset
+contains should be treated as a starting point rather than as authoritative. Before you
+rely on a dataset — and especially before you use one in published work — check its
+license, citation requirements, and documentation at the source.
 
 If you find an error, a dead link, a mislabeled license, or a dataset that is not what it is
 described as, please [open an issue](https://github.com/medford-group/DA4CHE/issues).
@@ -36,9 +37,9 @@ Corrections are genuinely welcome, and are the fastest way for this section to i
 ## What is here
 
 - **{doc}`Datasets </resources/Datasets>`** — a curated catalog of chemical-engineering
-  datasets that are open, documented, and sized for independent work, with the license and
-  scale information you need in order to decide whether a dataset fits before you commit
-  to it. It closes with a short guide to finding your own.
+  datasets that are open, documented, and sized for independent work, with the license,
+  scale, and measured-or-simulated information you need in order to decide whether a
+  dataset fits before you commit to it. It closes with a short guide to finding your own.
 
 - **{doc}`Project Ideas </resources/Project_Ideas>`** — a table of concrete directions,
   each paired with a dataset and the chapters that bear on it, plus three worked examples
@@ -65,6 +66,11 @@ dataset is chosen. Four questions are worth answering first:
 - **Are the units and provenance documented?** A column named `T` with no unit and no
   measurement description is a liability. Documented uncertainty is better still, and rare
   enough to be worth seeking out.
+- **Was it measured or simulated?** Both are worth working with, but they fail differently.
+  Simulated data has no sensor dropout, no calibration drift, and no outliers you cannot
+  explain, so a method that succeeds on it has not yet been tested against the parts of
+  real data that are actually hard. The catalog labels each dataset, because several of the
+  most industrial-looking entries are simulator output.
 
 ## Scoping the work
 

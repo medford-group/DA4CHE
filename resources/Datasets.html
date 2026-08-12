@@ -59,6 +59,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'resources/Datasets';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Project Ideas" href="Project_Ideas.html" />
@@ -425,8 +426,15 @@ download, changes what the work looks like.</p>
 <p class="admonition-title">Note</p>
 <p>None of these are used in the chapters of this book, and none are derived from it. That is
 deliberate: working on data you have not already seen analyzed is most of the point.</p>
-<p>The scale and license details below are summarized from each source and have <strong>not</strong> all
-been independently verified — see
+<p>The <strong>Data</strong> column records how each dataset was produced: <em>Measured</em> for instrument,
+plant, or laboratory data; <em>Simulated</em> for the output of a model, whether a process
+simulator, a quantum-chemistry calculation, or a building-energy model; <em>Mixed</em> where a
+single collection holds both; and <em>See source</em> where the source does not say plainly
+enough to label it. The distinction matters more than it looks. Simulated data has no
+sensor dropout, no drift, and no unexplained outliers, so a method that works on it has
+not yet met the thing that makes real data hard.</p>
+<p>The scale, license, and provenance details below are summarized from each source and have
+<strong>not</strong> all been independently verified — see
 <a class="reference internal" href="intro.html"><span class="doc">how this section was compiled</span></a> before relying on them.</p>
 </div>
 <section id="process-data-and-time-series">
@@ -437,6 +445,7 @@ the ones where a careless random train/test split will quietly invalidate your r
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
 <th class="head"><p>Good for</p></th>
 <th class="head"><p>Scale and notes</p></th>
 <th class="head"><p>Source</p></th>
@@ -444,36 +453,43 @@ the ones where a careless random train/test split will quietly invalidate your r
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>Combined Cycle Power Plant</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Multivariate regression; a clean first target with real measurements</p></td>
 <td><p>9,568 rows; 4 inputs (ambient temperature, ambient pressure, relative humidity, exhaust vacuum), 1 output (net hourly electrical energy output)</p></td>
 <td><p><a class="reference external" href="https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant">UCI 294</a> · <a class="reference external" href="https://doi.org/10.1016/j.ijepes.2014.02.027">10.1016/j.ijepes.2014.02.027</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Tennessee Eastman process simulation</strong></p></td>
+<td><p>Simulated</p></td>
 <td><p>Fault detection and classification, PCA, anomaly detection, time-aware validation</p></td>
 <td><p>500 runs, 52 variables, 20 fault types. Simulated, so it is clean by the standards of real plant data; split by run <em>and</em> by time</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.7910/DVN/6C3JR1">10.7910/DVN/6C3JR1</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>PRONTO multiphase flow benchmark</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Process monitoring and fault detection with heterogeneous data types</p></td>
 <td><p>About 1.7 GB across several data types — meaningfully more setup than a CSV</p></td>
 <td><p><a class="reference external" href="https://zenodo.org/records/1341583">Zenodo 1341583</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Fluid catalytic cracking operating data</strong></p></td>
+<td><p>See source</p></td>
 <td><p>Data-driven modeling and control of a refinery unit</p></td>
 <td><p>Released with the paper; see its data availability statement</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.1016/j.compchemeng.2022.107900">10.1016/j.compchemeng.2022.107900</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>IndPenSim penicillin fed-batch</strong></p></td>
+<td><p>Simulated</p></td>
 <td><p>Bioprocess modeling, batch-wise validation, control and optimization studies</p></td>
 <td><p>Industrial-scale simulated fed-batch fermentation, released as multiple batches</p></td>
 <td><p><a class="reference external" href="https://data.mendeley.com/datasets/pdnjz7zz5x/1">Mendeley Data</a> · simulator paper <a class="reference external" href="https://doi.org/10.1016/j.jbiotec.2014.10.029">10.1016/j.jbiotec.2014.10.029</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>SECOM semiconductor manufacturing</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Imbalanced classification, missing data, aggressive feature selection</p></td>
 <td><p>1,567 rows × 591 sensor features. Many missing values and very few failure cases — the class imbalance <em>is</em> the problem. CC BY 4.0</p></td>
 <td><p><a class="reference external" href="https://archive.ics.uci.edu/dataset/179/secom">UCI 179</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>NASA C-MAPSS turbofan degradation</strong></p></td>
+<td><p>Simulated</p></td>
 <td><p>Remaining useful life, predictive maintenance, distribution shift between train and test</p></td>
 <td><p>708 training and 707 test engine trajectories across four sub-datasets (FD001–FD004) with different fault modes and operating conditions. The catalog does not state an explicit license</p></td>
 <td><p><a class="reference external" href="https://data.nasa.gov/dataset/cmapss-jet-engine-simulated-data">data.nasa.gov</a> · <a class="reference external" href="https://ntrs.nasa.gov/citations/20190001645">Saxena et al. 2008</a></p></td>
@@ -491,6 +507,7 @@ the input rather than which regressor you use. These connect most directly to
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
 <th class="head"><p>Good for</p></th>
 <th class="head"><p>Scale and notes</p></th>
 <th class="head"><p>Source</p></th>
@@ -498,26 +515,31 @@ the input rather than which regressor you use. These connect most directly to
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>QM9</strong></p></td>
+<td><p>Simulated</p></td>
 <td><p>Structure-to-property mapping; comparing molecular representations</p></td>
-<td><p>About 134,000 small organic molecules with computed properties — atomization energy, internal energy, enthalpy, band gap, dipole moment</p></td>
+<td><p>About 134,000 small organic molecules with properties computed by DFT — atomization energy, internal energy, enthalpy, band gap, dipole moment</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.1038/sdata.2014.22">10.1038/sdata.2014.22</a> · <a class="reference external" href="https://quantum-machine.org/datasets/">quantum-machine.org</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Matbench</strong></p></td>
+<td><p>Mixed</p></td>
 <td><p>Materials regression and classification, and <em>fair</em> model comparison</p></td>
-<td><p>13 tasks spanning roughly 300 to 132,000 samples. Check the terms of each underlying source dataset</p></td>
+<td><p>13 tasks spanning roughly 300 to 132,000 samples, most of them computed; three are measured — experimental band gap, experimental metallicity, and steel yield strength. Check the terms of each underlying source dataset</p></td>
 <td><p><a class="reference external" href="https://docs.materialsproject.org/services/ml-and-ai-applications/matbench">Matbench</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Open Reaction Database</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Reaction outcome prediction, experiment planning, working with a real schema</p></td>
 <td><p>More than 2 million reactions. Data CC BY-SA 4.0, software Apache 2.0. Preparing it is more work than reading a CSV</p></td>
 <td><p><a class="reference external" href="https://open-reaction-database.org/about">open-reaction-database.org</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Polymerization property data</strong></p></td>
+<td><p>See source</p></td>
 <td><p>Predictive models for polymer properties and polymerization processes</p></td>
 <td><p>See the paper’s data availability statement</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.1039/D4PY00995A">10.1039/D4PY00995A</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Li-ion battery cycle life</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Predicting long-run behavior from early-cycle features; high-dimensional regression at small sample size</p></td>
 <td><p>Commercial cells cycled to failure, with early-cycle features used to predict eventual cycle life. Few samples, many candidate features</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.1038/s41560-019-0356-8">10.1038/s41560-019-0356-8</a> · related <a class="reference external" href="https://github.com/petermattia/battery-parameter-spaces">battery-parameter-spaces</a></p></td>
@@ -531,6 +553,7 @@ the input rather than which regressor you use. These connect most directly to
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
 <th class="head"><p>Good for</p></th>
 <th class="head"><p>Scale and notes</p></th>
 <th class="head"><p>Source</p></th>
@@ -538,18 +561,21 @@ the input rather than which regressor you use. These connect most directly to
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>NIST ThermoML Archive</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Property prediction, and practice with structured XML, units, uncertainty, and source tracking</p></td>
 <td><p>A large XML archive. Availability and reuse terms depend on the original publisher</p></td>
 <td><p><a class="reference external" href="https://www.nist.gov/mml/acmd/trc/thermoml/thermoml-archive">ThermoML</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>UCI Energy Efficiency</strong></p></td>
+<td><p>Simulated</p></td>
 <td><p>Regression, model comparison, residual diagnostics</p></td>
-<td><p>768 rows, 8 inputs, 2 targets. Small and simple by design — a good warm-up, not a process dataset. CC BY 4.0</p></td>
+<td><p>768 rows, 8 inputs, 2 targets, produced by building-energy simulation of 768 candidate building shapes. Small and simple by design — a good warm-up, not a process dataset. CC BY 4.0</p></td>
 <td><p><a class="reference external" href="https://archive.ics.uci.edu/dataset/242/energy+efficiency">UCI 242</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Henry’s law constants</strong></p></td>
+<td><p>Mixed</p></td>
 <td><p>Regression against temperature across a very wide range of solutes</p></td>
-<td><p>A large curated compilation drawn from the literature</p></td>
+<td><p>A large curated compilation drawn from the literature — predominantly measured values, alongside estimated and calculated ones</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.5194/acp-23-10901-2023">10.5194/acp-23-10901-2023</a></p></td>
 </tr>
 </tbody>
@@ -561,6 +587,7 @@ the input rather than which regressor you use. These connect most directly to
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
 <th class="head"><p>Good for</p></th>
 <th class="head"><p>Scale and notes</p></th>
 <th class="head"><p>Source</p></th>
@@ -568,6 +595,7 @@ the input rather than which regressor you use. These connect most directly to
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>Light-color inverse problem</strong></p></td>
+<td><p>Measured</p></td>
 <td><p>Demonstrating and <em>evaluating</em> generative models on an inverse problem with a known forward map</p></td>
 <td><p>Measured light intensity as a function of red, green, and blue input settings. Small, physically interpretable, and the forward direction is easy — which is what makes the inverse direction a fair test</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.1039/D5DD00137D">10.1039/D5DD00137D</a></p></td>
@@ -581,6 +609,7 @@ the input rather than which regressor you use. These connect most directly to
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
 <th class="head"><p>Good for</p></th>
 <th class="head"><p>Scale and notes</p></th>
 <th class="head"><p>Source</p></th>
@@ -588,6 +617,7 @@ the input rather than which regressor you use. These connect most directly to
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>ChemBench</strong></p></td>
+<td><p>—</p></td>
 <td><p>Testing what a language model actually knows about chemistry; comparing tool use against no tool use</p></td>
 <td><p>More than 2,700 questions. Intended for evaluation, <strong>not</strong> for training</p></td>
 <td><p><a class="reference external" href="https://lamalab-org.github.io/chembench/">ChemBench</a></p></td>
@@ -754,7 +784,7 @@ By A.J. Medford
   <div class="footer-item">
     
 <div class="extra_footer">
-  © 2025 A.J. Medford
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
 </div>
   </div>
   
