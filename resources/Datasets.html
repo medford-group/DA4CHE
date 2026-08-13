@@ -383,6 +383,8 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#process-data-and-time-series">Process data and time series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectroscopy-and-soft-sensors">Spectroscopy and soft sensors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-and-microscopy">Images and microscopy</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#materials-and-molecules">Materials and molecules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#thermophysical-properties">Thermophysical properties</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-problems-and-generative-modeling">Inverse problems and generative modeling</a></li>
@@ -404,11 +406,13 @@ document.write(`
 <li><p><a class="reference internal" href="#datasets" id="id1">Datasets</a></p>
 <ul>
 <li><p><a class="reference internal" href="#process-data-and-time-series" id="id2">Process data and time series</a></p></li>
-<li><p><a class="reference internal" href="#materials-and-molecules" id="id3">Materials and molecules</a></p></li>
-<li><p><a class="reference internal" href="#thermophysical-properties" id="id4">Thermophysical properties</a></p></li>
-<li><p><a class="reference internal" href="#inverse-problems-and-generative-modeling" id="id5">Inverse problems and generative modeling</a></p></li>
-<li><p><a class="reference internal" href="#benchmarks-for-evaluating-models" id="id6">Benchmarks for evaluating models</a></p></li>
-<li><p><a class="reference internal" href="#finding-your-own-data" id="id7">Finding your own data</a></p></li>
+<li><p><a class="reference internal" href="#spectroscopy-and-soft-sensors" id="id3">Spectroscopy and soft sensors</a></p></li>
+<li><p><a class="reference internal" href="#images-and-microscopy" id="id4">Images and microscopy</a></p></li>
+<li><p><a class="reference internal" href="#materials-and-molecules" id="id5">Materials and molecules</a></p></li>
+<li><p><a class="reference internal" href="#thermophysical-properties" id="id6">Thermophysical properties</a></p></li>
+<li><p><a class="reference internal" href="#inverse-problems-and-generative-modeling" id="id7">Inverse problems and generative modeling</a></p></li>
+<li><p><a class="reference internal" href="#benchmarks-for-evaluating-models" id="id8">Benchmarks for evaluating models</a></p></li>
+<li><p><a class="reference internal" href="#finding-your-own-data" id="id9">Finding your own data</a></p></li>
 </ul>
 </li>
 </ul>
@@ -426,6 +430,10 @@ download, changes what the work looks like.</p>
 <p class="admonition-title">Note</p>
 <p>None of these are used in the chapters of this book, and none are derived from it. That is
 deliberate: working on data you have not already seen analyzed is most of the point.</p>
+<p>A few entries are published in repositories that carry <strong>no license file</strong>. They are
+included because the data is genuinely useful and its provenance is clear, but the absence
+is called out in the table, and it means you should ask the authors before redistributing
+the data or releasing anything derived from it.</p>
 <p>The <strong>Data</strong> column records how each dataset was produced: <em>Measured</em> for instrument,
 plant, or laboratory data; <em>Simulated</em> for the output of a model, whether a process
 simulator, a quantum-chemistry calculation, or a building-energy model; <em>Mixed</em> where a
@@ -494,12 +502,127 @@ the ones where a careless random train/test split will quietly invalidate your r
 <td><p>708 training and 707 test engine trajectories across four sub-datasets (FD001–FD004) with different fault modes and operating conditions. The catalog does not state an explicit license</p></td>
 <td><p><a class="reference external" href="https://data.nasa.gov/dataset/cmapss-jet-engine-simulated-data">data.nasa.gov</a> · <a class="reference external" href="https://ntrs.nasa.gov/citations/20190001645">Saxena et al. 2008</a></p></td>
 </tr>
+<tr class="row-odd"><td><p><strong>Paracetamol batch crystallization under control</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Batch-structured time series; soft-sensor regression; data from a closed control loop</p></td>
+<td><p>Five experimental controlled runs, 243–772 rows × 19 columns each, plus separate instrument training sets (1,054 rows). Every run is a batch, so a split that mixes runs leaks. Small enough to open directly in pandas. MIT</p></td>
+<td><p><a class="reference external" href="https://github.com/fearrais96/Batch-Crystallization-Experimental-Control">GitHub</a> · <a class="reference external" href="https://doi.org/10.1021/acs.iecr.5c03894">10.1021/acs.iecr.5c03894</a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Nuclear waste slurry fault detection</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Fault detection on measured rather than simulated data; fusing three instruments</p></td>
+<td><p>Raman, ATR-FTIR, and particle-size measurements from simulant slurry processing runs, distributed as one 7 MB archive alongside the analysis scripts. A measured counterpart to Tennessee Eastman, and a rare thing: real process data with real faults in it. MIT</p></td>
+<td><p><a class="reference external" href="https://github.com/magrover/MSPM-Fault-Detection">GitHub</a> · <a class="reference external" href="https://doi.org/10.1002/aic.70234">10.1002/aic.70234</a></p></td>
+</tr>
 </tbody>
 </table>
 </div>
 </section>
+<section id="spectroscopy-and-soft-sensors">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Spectroscopy and soft sensors</a><a class="headerlink" href="#spectroscopy-and-soft-sensors" title="Link to this heading">#</a></h2>
+<p>Spectra are the most common process analytical measurement in chemical engineering, and they
+have a shape almost nothing else in this catalog has: far more features than samples. A few
+dozen spectra against sixteen hundred Raman shifts is ordinary. You cannot fit ordinary
+least squares to data like that at all, which makes these the natural companions to
+<a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html"><span class="doc">High-dimensional Data</span></a>,
+<a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html"><span class="doc">High-dimensional Regression</span></a>, and
+<a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html"><span class="doc">Dimensionality Reduction</span></a>.</p>
+<p>The recurring application is the <strong>soft sensor</strong>: an instrument measures something fast and
+easy — a spectrum, a chord length distribution — and a calibration model converts it into the
+quantity you actually care about, such as a concentration or a crystal size distribution. The
+model <em>is</em> the sensor, which means how you validate it is a process decision and not merely a
+statistic.</p>
+<p>Most entries below come from the Grover lab at Georgia Tech, whose data repositories are
+collected at <a class="reference external" href="https://github.com/magrover">github.com/magrover</a>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
+<th class="head"><p>Good for</p></th>
+<th class="head"><p>Scale and notes</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Paracetamol ATR-FTIR in mixed solvent</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Calibration model development; PLS against PCA + neural network; in-run calibration strategy</p></td>
+<td><p>247 spectra × 464 wavenumber channels, each labeled with ethanol weight fraction, temperature, and paracetamol concentration. Spans ethanol/water mixtures and deliberately includes probe-to-probe variability, which is what makes the calibration hard. CC BY 4.0</p></td>
+<td><p><a class="reference external" href="https://github.com/fearrais96/IR-Calibration-Model-Framework">GitHub</a> · <a class="reference external" href="https://doi.org/10.1021/acs.oprd.5c00338">10.1021/acs.oprd.5c00338</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Nuclear waste simulant FTIR</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Quantification when unmodeled species are present; blind source separation, MCR-ALS, PLS</p></td>
+<td><p>3,902 spectra × 155 wavenumbers from a 2 L non-radioactive process run, plus 8 training spectra, 5 single-species references, and ion-chromatography concentrations for nitrate and nitrite. The README documents every file and column — rarer than it should be. <strong>No license file</strong></p></td>
+<td><p><a class="reference external" href="https://github.com/magrover/Blind_Source_Separation_CLS.PCA.MCR-ALS">GitHub</a> · <a class="reference external" href="https://doi.org/10.3389/fnuen.2023.1295995">10.3389/fnuen.2023.1295995</a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Multicomponent slurry quantification</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Comparing two instruments on one problem; multi-species quantification in a dense slurry</p></td>
+<td><p>48 ATR-FTIR spectra × 243 wavenumbers and 66 Raman spectra × 1,601 shifts, each paired with gravimetric concentrations for five species. The two instruments have different sample sets, so they cannot simply be concatenated. <strong>No license file</strong></p></td>
+<td><p><a class="reference external" href="https://github.com/magrover/multicomponent-slurry-quantification">GitHub</a> · <a class="reference external" href="https://doi.org/10.1021/acs.iecr.3c01249">10.1021/acs.iecr.3c01249</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="images-and-microscopy">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Images and microscopy</a><a class="headerlink" href="#images-and-microscopy" title="Link to this heading">#</a></h2>
+<p>The only image data in the chapters of this book is the 8 × 8 handwritten digit set built into
+scikit-learn, which stands in for image data rather than being an example of it. The datasets
+below are the real thing: in-situ microscope images of crystals captured through a process
+probe, annotated for a specific task. They connect most directly to
+<a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html"><span class="doc">Neural Network Architectures</span></a>.</p>
+<p>They are also the largest entries in this catalog, and they carry two access conditions worth
+settling before you plan around them: downloading requires a free Kaggle account, and all
+four are CC BY-SA 4.0, whose ShareAlike clause constrains what you may do with a derived
+dataset. All four come from <strong>OpenCrystalData</strong>, a maintained open-access database with
+Georgia Tech co-authors. Start with the EasyViewer set — it is an order of magnitude smaller
+than the largest.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
+<th class="head"><p>Good for</p></th>
+<th class="head"><p>Scale and notes</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>EasyViewer in-line images</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>A first look at image-based process monitoring, at a size you can actually download</p></td>
+<td><p>120 in-situ images of wollastonite and L-glutamic acid, with size and chord length information. 0.45 GB — the smallest of the four and the place to start. CC BY-SA 4.0</p></td>
+<td><p><a class="reference external" href="https://www.kaggle.com/datasets/opencrystaldata/easyviewer-based-image-characterization">Kaggle</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Crystallization impurity detection</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Anomaly and morphology detection — a classification problem where the classes are shapes</p></td>
+<td><p>400 raw and 6,000 cropped in-situ images of a cephalexin monohydrate slurry, captured with an EasyViewer-100 probe, with phenylglycine impurity crystals present in some. 1.47 GB. CC BY-SA 4.0</p></td>
+<td><p><a class="reference external" href="https://www.kaggle.com/datasets/opencrystaldata/cephalexin-reactive-crystallization">Kaggle</a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Standard polystyrene microspheres</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Object detection and segmentation against particle-level ground truth</p></td>
+<td><p>2,300 in-situ images of standard spheres with particle-level annotations. Known, uniform geometry is what makes this the fair test case before you attempt real crystals. 1.72 GB. CC BY-SA 4.0</p></td>
+<td><p><a class="reference external" href="https://www.kaggle.com/datasets/opencrystaldata/standard-polystyrene-microspheres-polys">Kaggle</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Ag-Crystal needle images</strong></p></td>
+<td><p>Measured</p></td>
+<td><p>Estimating a particle size distribution from images and checking it against offline measurement</p></td>
+<td><p>3,888 in-situ images of needle-like crystals from an industrial agrochemical process, intended for models whose PSD output is comparable with offline PSD. Needles are far harder than spheres. 5.31 GB — the largest entry in this catalog. CC BY-SA 4.0</p></td>
+<td><p><a class="reference external" href="https://www.kaggle.com/datasets/opencrystaldata/agcrystal-images">Kaggle</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>All four are described together in
+<a class="reference external" href="https://doi.org/10.1016/j.dche.2024.100150">10.1016/j.dche.2024.100150</a>, which is the paper
+to cite and the best guide to what each one contains. Note that the per-dataset DOIs printed
+in that paper did not resolve when this section was last checked — use the Kaggle links above.</p>
+</section>
 <section id="materials-and-molecules">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Materials and molecules</a><a class="headerlink" href="#materials-and-molecules" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Materials and molecules</a><a class="headerlink" href="#materials-and-molecules" title="Link to this heading">#</a></h2>
 <p>Structure-to-property problems, where the interesting question is usually how you represent
 the input rather than which regressor you use. These connect most directly to
 <a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html"><span class="doc">High-dimensional Data</span></a> and
@@ -544,12 +667,18 @@ the input rather than which regressor you use. These connect most directly to
 <td><p>Commercial cells cycled to failure, with early-cycle features used to predict eventual cycle life. Few samples, many candidate features</p></td>
 <td><p><a class="reference external" href="https://doi.org/10.1038/s41560-019-0356-8">10.1038/s41560-019-0356-8</a> · related <a class="reference external" href="https://github.com/petermattia/battery-parameter-spaces">battery-parameter-spaces</a></p></td>
 </tr>
+<tr class="row-odd"><td><p><strong>PET stabilizer additives</strong></p></td>
+<td><p>Mixed</p></td>
+<td><p>Small-data classification and feature selection where the features vastly outnumber the samples</p></td>
+<td><p>59 additives × 1,875 computed molecular descriptors, labeled with six measured stabilizer performance columns (dry at 1–3 hours, wet at 3–15 days). The extreme shape — thirty times more descriptors than samples — <em>is</em> the problem, and a companion file adds MACCS fingerprints for 10,000 candidate molecules. <strong>No license file</strong></p></td>
+<td><p><a class="reference external" href="https://github.com/magrover/PET_additive_classification">GitHub</a> · <a class="reference external" href="https://doi.org/10.1021/acsapm.0c00921">10.1021/acsapm.0c00921</a></p></td>
+</tr>
 </tbody>
 </table>
 </div>
 </section>
 <section id="thermophysical-properties">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Thermophysical properties</a><a class="headerlink" href="#thermophysical-properties" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Thermophysical properties</a><a class="headerlink" href="#thermophysical-properties" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
@@ -583,7 +712,7 @@ the input rather than which regressor you use. These connect most directly to
 </div>
 </section>
 <section id="inverse-problems-and-generative-modeling">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Inverse problems and generative modeling</a><a class="headerlink" href="#inverse-problems-and-generative-modeling" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Inverse problems and generative modeling</a><a class="headerlink" href="#inverse-problems-and-generative-modeling" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
@@ -605,7 +734,7 @@ the input rather than which regressor you use. These connect most directly to
 </div>
 </section>
 <section id="benchmarks-for-evaluating-models">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Benchmarks for evaluating models</a><a class="headerlink" href="#benchmarks-for-evaluating-models" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Benchmarks for evaluating models</a><a class="headerlink" href="#benchmarks-for-evaluating-models" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
@@ -627,7 +756,7 @@ the input rather than which regressor you use. These connect most directly to
 </div>
 </section>
 <section id="finding-your-own-data">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Finding your own data</a><a class="headerlink" href="#finding-your-own-data" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Finding your own data</a><a class="headerlink" href="#finding-your-own-data" title="Link to this heading">#</a></h2>
 <p>The catalog above is a starting point, not a boundary. Two habits make independent
 searching far more productive.</p>
 <p><strong>Read the data availability statement first.</strong> Most journals now require one, and it is
@@ -741,6 +870,8 @@ so the mechanics of pulling from an API and parsing the response are already cov
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#process-data-and-time-series">Process data and time series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectroscopy-and-soft-sensors">Spectroscopy and soft sensors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-and-microscopy">Images and microscopy</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#materials-and-molecules">Materials and molecules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#thermophysical-properties">Thermophysical properties</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-problems-and-generative-modeling">Inverse problems and generative modeling</a></li>

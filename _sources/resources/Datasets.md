@@ -18,6 +18,11 @@ download, changes what the work looks like.
 None of these are used in the chapters of this book, and none are derived from it. That is
 deliberate: working on data you have not already seen analyzed is most of the point.
 
+A few entries are published in repositories that carry **no license file**. They are
+included because the data is genuinely useful and its provenance is clear, but the absence
+is called out in the table, and it means you should ask the authors before redistributing
+the data or releasing anything derived from it.
+
 The **Data** column records how each dataset was produced: *Measured* for instrument,
 plant, or laboratory data; *Simulated* for the output of a model, whether a process
 simulator, a quantum-chemistry calculation, or a building-energy model; *Mixed* where a
@@ -46,6 +51,60 @@ the ones where a careless random train/test split will quietly invalidate your r
 | **IndPenSim penicillin fed-batch** | Simulated | Bioprocess modeling, batch-wise validation, control and optimization studies | Industrial-scale simulated fed-batch fermentation, released as multiple batches | [Mendeley Data](https://data.mendeley.com/datasets/pdnjz7zz5x/1) · simulator paper [10.1016/j.jbiotec.2014.10.029](https://doi.org/10.1016/j.jbiotec.2014.10.029) |
 | **SECOM semiconductor manufacturing** | Measured | Imbalanced classification, missing data, aggressive feature selection | 1,567 rows × 591 sensor features. Many missing values and very few failure cases — the class imbalance *is* the problem. CC BY 4.0 | [UCI 179](https://archive.ics.uci.edu/dataset/179/secom) |
 | **NASA C-MAPSS turbofan degradation** | Simulated | Remaining useful life, predictive maintenance, distribution shift between train and test | 708 training and 707 test engine trajectories across four sub-datasets (FD001–FD004) with different fault modes and operating conditions. The catalog does not state an explicit license | [data.nasa.gov](https://data.nasa.gov/dataset/cmapss-jet-engine-simulated-data) · [Saxena et al. 2008](https://ntrs.nasa.gov/citations/20190001645) |
+| **Paracetamol batch crystallization under control** | Measured | Batch-structured time series; soft-sensor regression; data from a closed control loop | Five experimental controlled runs, 243–772 rows × 19 columns each, plus separate instrument training sets (1,054 rows). Every run is a batch, so a split that mixes runs leaks. Small enough to open directly in pandas. MIT | [GitHub](https://github.com/fearrais96/Batch-Crystallization-Experimental-Control) · [10.1021/acs.iecr.5c03894](https://doi.org/10.1021/acs.iecr.5c03894) |
+| **Nuclear waste slurry fault detection** | Measured | Fault detection on measured rather than simulated data; fusing three instruments | Raman, ATR-FTIR, and particle-size measurements from simulant slurry processing runs, distributed as one 7 MB archive alongside the analysis scripts. A measured counterpart to Tennessee Eastman, and a rare thing: real process data with real faults in it. MIT | [GitHub](https://github.com/magrover/MSPM-Fault-Detection) · [10.1002/aic.70234](https://doi.org/10.1002/aic.70234) |
+
+## Spectroscopy and soft sensors
+
+Spectra are the most common process analytical measurement in chemical engineering, and they
+have a shape almost nothing else in this catalog has: far more features than samples. A few
+dozen spectra against sixteen hundred Raman shifts is ordinary. You cannot fit ordinary
+least squares to data like that at all, which makes these the natural companions to
+{doc}`High-dimensional Data </2-regression/Topic2.4-High_dimensional_data>`,
+{doc}`High-dimensional Regression </2-regression/Topic2.5-High_dimensional_regression>`, and
+{doc}`Dimensionality Reduction </5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction>`.
+
+The recurring application is the **soft sensor**: an instrument measures something fast and
+easy — a spectrum, a chord length distribution — and a calibration model converts it into the
+quantity you actually care about, such as a concentration or a crystal size distribution. The
+model *is* the sensor, which means how you validate it is a process decision and not merely a
+statistic.
+
+Most entries below come from the Grover lab at Georgia Tech, whose data repositories are
+collected at [github.com/magrover](https://github.com/magrover).
+
+| Dataset | Data | Good for | Scale and notes | Source |
+|---|---|---|---|---|
+| **Paracetamol ATR-FTIR in mixed solvent** | Measured | Calibration model development; PLS against PCA + neural network; in-run calibration strategy | 247 spectra × 464 wavenumber channels, each labeled with ethanol weight fraction, temperature, and paracetamol concentration. Spans ethanol/water mixtures and deliberately includes probe-to-probe variability, which is what makes the calibration hard. CC BY 4.0 | [GitHub](https://github.com/fearrais96/IR-Calibration-Model-Framework) · [10.1021/acs.oprd.5c00338](https://doi.org/10.1021/acs.oprd.5c00338) |
+| **Nuclear waste simulant FTIR** | Measured | Quantification when unmodeled species are present; blind source separation, MCR-ALS, PLS | 3,902 spectra × 155 wavenumbers from a 2 L non-radioactive process run, plus 8 training spectra, 5 single-species references, and ion-chromatography concentrations for nitrate and nitrite. The README documents every file and column — rarer than it should be. **No license file** | [GitHub](https://github.com/magrover/Blind_Source_Separation_CLS.PCA.MCR-ALS) · [10.3389/fnuen.2023.1295995](https://doi.org/10.3389/fnuen.2023.1295995) |
+| **Multicomponent slurry quantification** | Measured | Comparing two instruments on one problem; multi-species quantification in a dense slurry | 48 ATR-FTIR spectra × 243 wavenumbers and 66 Raman spectra × 1,601 shifts, each paired with gravimetric concentrations for five species. The two instruments have different sample sets, so they cannot simply be concatenated. **No license file** | [GitHub](https://github.com/magrover/multicomponent-slurry-quantification) · [10.1021/acs.iecr.3c01249](https://doi.org/10.1021/acs.iecr.3c01249) |
+
+## Images and microscopy
+
+The only image data in the chapters of this book is the 8 × 8 handwritten digit set built into
+scikit-learn, which stands in for image data rather than being an example of it. The datasets
+below are the real thing: in-situ microscope images of crystals captured through a process
+probe, annotated for a specific task. They connect most directly to
+{doc}`Neural Network Architectures </6-advanced_topics/Topic6.4-Neural_Network_Architectures>`.
+
+They are also the largest entries in this catalog, and they carry two access conditions worth
+settling before you plan around them: downloading requires a free Kaggle account, and all
+four are CC BY-SA 4.0, whose ShareAlike clause constrains what you may do with a derived
+dataset. All four come from **OpenCrystalData**, a maintained open-access database with
+Georgia Tech co-authors. Start with the EasyViewer set — it is an order of magnitude smaller
+than the largest.
+
+| Dataset | Data | Good for | Scale and notes | Source |
+|---|---|---|---|---|
+| **EasyViewer in-line images** | Measured | A first look at image-based process monitoring, at a size you can actually download | 120 in-situ images of wollastonite and L-glutamic acid, with size and chord length information. 0.45 GB — the smallest of the four and the place to start. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/easyviewer-based-image-characterization) |
+| **Crystallization impurity detection** | Measured | Anomaly and morphology detection — a classification problem where the classes are shapes | 400 raw and 6,000 cropped in-situ images of a cephalexin monohydrate slurry, captured with an EasyViewer-100 probe, with phenylglycine impurity crystals present in some. 1.47 GB. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/cephalexin-reactive-crystallization) |
+| **Standard polystyrene microspheres** | Measured | Object detection and segmentation against particle-level ground truth | 2,300 in-situ images of standard spheres with particle-level annotations. Known, uniform geometry is what makes this the fair test case before you attempt real crystals. 1.72 GB. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/standard-polystyrene-microspheres-polys) |
+| **Ag-Crystal needle images** | Measured | Estimating a particle size distribution from images and checking it against offline measurement | 3,888 in-situ images of needle-like crystals from an industrial agrochemical process, intended for models whose PSD output is comparable with offline PSD. Needles are far harder than spheres. 5.31 GB — the largest entry in this catalog. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/agcrystal-images) |
+
+All four are described together in
+[10.1016/j.dche.2024.100150](https://doi.org/10.1016/j.dche.2024.100150), which is the paper
+to cite and the best guide to what each one contains. Note that the per-dataset DOIs printed
+in that paper did not resolve when this section was last checked — use the Kaggle links above.
 
 ## Materials and molecules
 
@@ -61,6 +120,7 @@ the input rather than which regressor you use. These connect most directly to
 | **Open Reaction Database** | Measured | Reaction outcome prediction, experiment planning, working with a real schema | More than 2 million reactions. Data CC BY-SA 4.0, software Apache 2.0. Preparing it is more work than reading a CSV | [open-reaction-database.org](https://open-reaction-database.org/about) |
 | **Polymerization property data** | See source | Predictive models for polymer properties and polymerization processes | See the paper's data availability statement | [10.1039/D4PY00995A](https://doi.org/10.1039/D4PY00995A) |
 | **Li-ion battery cycle life** | Measured | Predicting long-run behavior from early-cycle features; high-dimensional regression at small sample size | Commercial cells cycled to failure, with early-cycle features used to predict eventual cycle life. Few samples, many candidate features | [10.1038/s41560-019-0356-8](https://doi.org/10.1038/s41560-019-0356-8) · related [battery-parameter-spaces](https://github.com/petermattia/battery-parameter-spaces) |
+| **PET stabilizer additives** | Mixed | Small-data classification and feature selection where the features vastly outnumber the samples | 59 additives × 1,875 computed molecular descriptors, labeled with six measured stabilizer performance columns (dry at 1–3 hours, wet at 3–15 days). The extreme shape — thirty times more descriptors than samples — *is* the problem, and a companion file adds MACCS fingerprints for 10,000 candidate molecules. **No license file** | [GitHub](https://github.com/magrover/PET_additive_classification) · [10.1021/acsapm.0c00921](https://doi.org/10.1021/acsapm.0c00921) |
 
 ## Thermophysical properties
 
