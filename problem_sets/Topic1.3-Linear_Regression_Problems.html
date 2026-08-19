@@ -510,12 +510,27 @@ to ask how many basis functions a band actually needs.</p>
 <img alt="../_images/b7ed81a9f1302bca2efcdad2245d163459124f5fc2e401ead755eabd9744d903.png" src="../_images/b7ed81a9f1302bca2efcdad2245d163459124f5fc2e401ead755eabd9744d903.png" />
 </div>
 </div>
-<p>Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.</p>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">otter</span>
-<span class="n">grader</span> <span class="o">=</span> <span class="n">otter</span><span class="o">.</span><span class="n">Notebook</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;887bc508ac93&#39;</span><span class="p">,</span> <span class="s1">&#39;d833e1b76c6e&#39;</span><span class="p">,</span> <span class="s1">&#39;7af23019f7b7&#39;</span><span class="p">,</span> <span class="s1">&#39;a573c201482e&#39;</span><span class="p">,</span> <span class="s1">&#39;51c5722120e6&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;eda665e625f7&#39;</span><span class="p">,</span> <span class="s1">&#39;17d8aff0af34&#39;</span><span class="p">,</span> <span class="s1">&#39;fd6b59ebdc0b&#39;</span><span class="p">,</span> <span class="s1">&#39;3d1df7e03fd4&#39;</span><span class="p">,</span> <span class="s1">&#39;885056be2e0f&#39;</span><span class="p">,</span> <span class="s1">&#39;f6c1a2f88e57&#39;</span><span class="p">,</span> <span class="s1">&#39;365eee4e8b61&#39;</span><span class="p">,</span> <span class="s1">&#39;dc1dd5d51876&#39;</span><span class="p">,</span> <span class="s1">&#39;7e6beeac81b3&#39;</span><span class="p">,</span> <span class="s1">&#39;23c200bc0fbe&#39;</span><span class="p">,</span> <span class="s1">&#39;fd29cbda40f8&#39;</span><span class="p">,</span> <span class="s1">&#39;5b64dda48afb&#39;</span><span class="p">,</span> <span class="s1">&#39;d56953b73b41&#39;</span><span class="p">,</span> <span class="s1">&#39;618ae9d0216d&#39;</span><span class="p">,</span> <span class="s1">&#39;cb1ac17bc882&#39;</span><span class="p">,</span> <span class="s1">&#39;9545ae7d6017&#39;</span><span class="p">,</span> <span class="s1">&#39;91fec1918875&#39;</span><span class="p">,</span> <span class="s1">&#39;b07c03b41378&#39;</span><span class="p">,</span> <span class="s1">&#39;00dd3025974c&#39;</span><span class="p">,</span> <span class="s1">&#39;6bd3a06c3285&#39;</span><span class="p">,</span> <span class="s1">&#39;0f90e9f39d66&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fa1a484807cf&#39;</span><span class="p">,</span> <span class="s1">&#39;57f95f0cdb0f&#39;</span><span class="p">,</span> <span class="s1">&#39;36ffd9ff38c4&#39;</span><span class="p">,</span> <span class="s1">&#39;a065cea9a80c&#39;</span><span class="p">,</span> <span class="s1">&#39;8db02c74254f&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -552,7 +567,7 @@ element, which you can use to look up the corresponding wavenumber.</p>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">peak_wavenumber</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -586,7 +601,7 @@ Gaussian, one of ones for the baseline — and solve the normal equations
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">w_gauss</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -620,7 +635,7 @@ number to beat.</p>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">sse_single</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

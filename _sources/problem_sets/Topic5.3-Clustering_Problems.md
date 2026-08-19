@@ -103,14 +103,29 @@ ax.set_xlabel('binding energy [eV]'); ax.set_ylabel('intensity [counts]')
 ax.legend(fontsize=8);
 ```
 
-Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.
+Run this once. It defines the `check` helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-import otter
-grader = otter.Notebook()
+# Run this once. It defines `check`, used after each Part A answer below.
+import hashlib
+
+_EXPECTED = {
+    'q1': (4, ['de1865409dad', '9ad688634a5b', '3cb00e2f3acb', '411421c52119', '600e0f9e4b65', '5342f93c90e2', '6d465827cdcb', '4d59f4778132', '396ac9e346b2', '921cff5fcee5', '216cd2970ccd']),
+    'q2': (4, ['ec048c6d7eb5', '4ae3b1c880e1', '98f1d0cc8ae4', '8e496e78553f', '370ba1d9bd20', '73d8ca92b84b', '30c1bf0fdb7b', '2e9cc6c82a8d', '2ac0c77a469a', 'a6679a56cc86', '0d0fda597364', '117b7dd94d94', '4f27674e405a', 'aa30850c3b1f', 'ef84be62b771', 'ca579b21f61b', '547e481934c0']),
+    'q3': (6, ['2a6a9d08764d', '3683be74603d', 'f673f0fffee3', '8291fe5714d2', '5fd8456a51b5', '4793940c6051', '5dc8b9350272']),
+}
+
+def check(qid, value):
+    """Compare an answer against a stored digest. Practice only -- nothing is recorded."""
+    places, digests = _EXPECTED[qid]
+    if value is Ellipsis:
+        print(f"{qid}: not answered yet")
+        return
+    got = hashlib.sha256(f"{float(value):.{places}f}".encode()).hexdigest()[:12]
+    print(f"{qid}: {'correct' if got in digests else 'not the expected value'}")
 ```
 
 ### Preprocessing — use exactly this
@@ -174,7 +189,7 @@ sil_k4 = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q1")
+check("q1", sil_k4)
 ```
 
 
@@ -213,7 +228,7 @@ purity_k4 = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q2")
+check("q2", purity_k4)
 ```
 
 
@@ -238,7 +253,7 @@ n_pc_95 = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q3")
+check("q3", n_pc_95)
 ```
 
 

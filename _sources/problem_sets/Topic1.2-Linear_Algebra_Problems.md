@@ -144,14 +144,29 @@ Given free of charge, not to be derived: a reaction is a *direction* in species 
 vector $\vec{\nu}$ of stoichiometric coefficients that is negative for what is consumed and
 positive for what is produced. Here $\vec{\nu} = (-1,\, -1,\, 3,\, 1)$.
 
-Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.
+Run this once. It defines the `check` helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-import otter
-grader = otter.Notebook()
+# Run this once. It defines `check`, used after each Part A answer below.
+import hashlib
+
+_EXPECTED = {
+    'q1': (6, ['c47a79ad8418', '4f3ff37addc7', '929a3b34668c', '4421e4afa7ac', '1c7024b29045', '51bfb7ace329', 'ea708bc020a4', '936cd6bc4de7', '665d597ffa88', 'c253c67f96c3', '88b6fdf21ba2', '574078d08ff0', 'fd93056f265d', '74046f398ff7', '18c04ee6d0fc', 'aea7f6ce018d', 'f5089056b258', '27d91e6fcd24', '5a43adbfc7bf', 'f073fb936cbc', 'd4d0ce5305bd']),
+    'q2': (6, ['85554482369d', 'e5d20945846a', '4626cdce8084', '291891a665c5', '5dcea6c4085e']),
+    'q3': (6, ['2a6a9d08764d', '3683be74603d', 'f673f0fffee3', '8291fe5714d2', '5fd8456a51b5', '4793940c6051', '5dc8b9350272']),
+}
+
+def check(qid, value):
+    """Compare an answer against a stored digest. Practice only -- nothing is recorded."""
+    places, digests = _EXPECTED[qid]
+    if value is Ellipsis:
+        print(f"{qid}: not answered yet")
+        return
+    got = hashlib.sha256(f"{float(value):.{places}f}".encode()).hexdigest()[:12]
+    print(f"{qid}: {'correct' if got in digests else 'not the expected value'}")
 ```
 
 ---
@@ -191,7 +206,7 @@ h_atoms = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q1")
+check("q1", h_atoms)
 ```
 
 
@@ -262,7 +277,7 @@ o_residual = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q2")
+check("q2", o_residual)
 ```
 
 
@@ -310,7 +325,7 @@ nu_H2 = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q3")
+check("q3", nu_H2)
 ```
 
 

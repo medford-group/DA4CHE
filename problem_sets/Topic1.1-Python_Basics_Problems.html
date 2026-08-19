@@ -458,7 +458,7 @@ Python and data files, and it shows you how every later problem set will be arra
 answer to a named variable, then run a check cell that tells you immediately whether it is
 accepted. <strong>You may resubmit as often as you like</strong>, so there is no reason to hand in a
 Part A that does not pass. The check cells look like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Part B — Visualization (35 pts).</strong> Make a plot and say what it shows. Graded by your
@@ -474,8 +474,8 @@ should run as-is.</p>
 <p>One convention worth knowing before you start: a line like <code class="docutils literal notranslate"><span class="pre">n_rows</span> <span class="pre">=</span> <span class="pre">...</span></code> is a placeholder.
 The three dots are real Python — an object called <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> that does nothing — and they
 mark the spot where your answer goes. Replace the <code class="docutils literal notranslate"><span class="pre">...</span></code>, do not add to it. If you run the
-check cell without replacing it, the autograder will tell you the question is unanswered
-rather than marking it wrong.</p>
+check cell without replacing it, it will tell you the question is unanswered rather
+than marking it wrong.</p>
 </div>
 <section id="setup">
 <h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
@@ -662,12 +662,27 @@ a variable into it inside braces, and <code class="docutils literal notranslate"
 </pre></div>
 </div>
 </div>
-<p>Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.</p>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">otter</span>
-<span class="n">grader</span> <span class="o">=</span> <span class="n">otter</span><span class="o">.</span><span class="n">Notebook</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;5dae47c34366&#39;</span><span class="p">,</span> <span class="s1">&#39;c4424da473fa&#39;</span><span class="p">,</span> <span class="s1">&#39;48b1f8b449c0&#39;</span><span class="p">,</span> <span class="s1">&#39;6d1d493036d2&#39;</span><span class="p">,</span> <span class="s1">&#39;783ff2033953&#39;</span><span class="p">,</span> <span class="s1">&#39;08749b96adc6&#39;</span><span class="p">,</span> <span class="s1">&#39;d7cec2088c6f&#39;</span><span class="p">,</span> <span class="s1">&#39;4a20cdc5ee47&#39;</span><span class="p">,</span> <span class="s1">&#39;9411a8b4c718&#39;</span><span class="p">,</span> <span class="s1">&#39;8f54f2b4595d&#39;</span><span class="p">,</span> <span class="s1">&#39;0929d4c14afc&#39;</span><span class="p">,</span> <span class="s1">&#39;fb466e10cc2e&#39;</span><span class="p">,</span> <span class="s1">&#39;b46947b5dfa6&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;320f0766641b&#39;</span><span class="p">,</span> <span class="s1">&#39;0fd7ed66f37d&#39;</span><span class="p">,</span> <span class="s1">&#39;493be04430c7&#39;</span><span class="p">,</span> <span class="s1">&#39;7e8723eb895a&#39;</span><span class="p">,</span> <span class="s1">&#39;4b12d8a537b1&#39;</span><span class="p">,</span> <span class="s1">&#39;4f2650eaa302&#39;</span><span class="p">,</span> <span class="s1">&#39;dff2e51982c5&#39;</span><span class="p">,</span> <span class="s1">&#39;969800b20539&#39;</span><span class="p">,</span> <span class="s1">&#39;77a8418ea94a&#39;</span><span class="p">,</span> <span class="s1">&#39;e76a41f92846&#39;</span><span class="p">,</span> <span class="s1">&#39;f609cbc9b341&#39;</span><span class="p">,</span> <span class="s1">&#39;6cb42271f6da&#39;</span><span class="p">,</span> <span class="s1">&#39;ef1e287df425&#39;</span><span class="p">,</span> <span class="s1">&#39;3b36ee3af84f&#39;</span><span class="p">,</span> <span class="s1">&#39;1a25b7f79324&#39;</span><span class="p">,</span> <span class="s1">&#39;ac6f7dd80434&#39;</span><span class="p">,</span> <span class="s1">&#39;c55387b17a6c&#39;</span><span class="p">,</span> <span class="s1">&#39;5c94818b8773&#39;</span><span class="p">,</span> <span class="s1">&#39;85c1e58a2fe1&#39;</span><span class="p">,</span> <span class="s1">&#39;0b9997115471&#39;</span><span class="p">,</span> <span class="s1">&#39;5f0275fd85c4&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;af55b3313b07&#39;</span><span class="p">,</span> <span class="s1">&#39;2bc6d1af03bc&#39;</span><span class="p">,</span> <span class="s1">&#39;1df6ad6090ec&#39;</span><span class="p">,</span> <span class="s1">&#39;869bcd209fd1&#39;</span><span class="p">,</span> <span class="s1">&#39;e022e51189d5&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -700,7 +715,7 @@ its first element.</p>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -728,7 +743,7 @@ one.</p>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">mean_density</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -757,7 +772,7 @@ centipoise.</p>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">viscosity_cP</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
