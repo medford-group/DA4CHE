@@ -81,14 +81,29 @@ ax.set_xlabel('wavenumber [cm$^{-1}$]')
 ax.set_ylabel('absorbance');
 ```
 
-Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.
+Run this once. It defines the `check` helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-import otter
-grader = otter.Notebook()
+# Run this once. It defines `check`, used after each Part A answer below.
+import hashlib
+
+_EXPECTED = {
+    'q1': (1, ['887bc508ac93', 'd833e1b76c6e', '7af23019f7b7', 'a573c201482e', '51c5722120e6']),
+    'q2': (3, ['eda665e625f7', '17d8aff0af34', 'fd6b59ebdc0b', '3d1df7e03fd4', '885056be2e0f', 'f6c1a2f88e57', '365eee4e8b61', 'dc1dd5d51876', '7e6beeac81b3', '23c200bc0fbe', 'fd29cbda40f8', '5b64dda48afb', 'd56953b73b41', '618ae9d0216d', 'cb1ac17bc882', '9545ae7d6017', '91fec1918875', 'b07c03b41378', '00dd3025974c', '6bd3a06c3285', '0f90e9f39d66']),
+    'q3': (3, ['fa1a484807cf', '57f95f0cdb0f', '36ffd9ff38c4', 'a065cea9a80c', '8db02c74254f']),
+}
+
+def check(qid, value):
+    """Compare an answer against a stored digest. Practice only -- nothing is recorded."""
+    places, digests = _EXPECTED[qid]
+    if value is Ellipsis:
+        print(f"{qid}: not answered yet")
+        return
+    got = hashlib.sha256(f"{float(value):.{places}f}".encode()).hexdigest()[:12]
+    print(f"{qid}: {'correct' if got in digests else 'not the expected value'}")
 ```
 
 ---
@@ -125,7 +140,7 @@ peak_wavenumber = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q1")
+check("q1", peak_wavenumber)
 ```
 
 
@@ -158,7 +173,7 @@ w_gauss = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q2")
+check("q2", w_gauss)
 ```
 
 
@@ -191,7 +206,7 @@ sse_single = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q3")
+check("q3", sse_single)
 ```
 
 

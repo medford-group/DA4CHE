@@ -44,7 +44,7 @@ accepted. **You may resubmit as often as you like**, so there is no reason to ha
 Part A that does not pass. The check cells look like this:
 
 ```
-grader.check("q1")
+check("q1", n_rows)
 ```
 
 **Part B — Visualization (35 pts).** Make a plot and say what it shows. Graded by your
@@ -64,8 +64,8 @@ should run as-is.
 One convention worth knowing before you start: a line like `n_rows = ...` is a placeholder.
 The three dots are real Python — an object called `Ellipsis` that does nothing — and they
 mark the spot where your answer goes. Replace the `...`, do not add to it. If you run the
-check cell without replacing it, the autograder will tell you the question is unanswered
-rather than marking it wrong.
+check cell without replacing it, it will tell you the question is unanswered rather
+than marking it wrong.
 :::
 
 ## Setup
@@ -141,14 +141,29 @@ print(f"mean density = {mean_density:.4f} kg/m^3")
 ```
 :::
 
-Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.
+Run this once. It defines the `check` helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-import otter
-grader = otter.Notebook()
+# Run this once. It defines `check`, used after each Part A answer below.
+import hashlib
+
+_EXPECTED = {
+    'q1': (5, ['5dae47c34366', 'c4424da473fa', '48b1f8b449c0', '6d1d493036d2', '783ff2033953', '08749b96adc6', 'd7cec2088c6f', '4a20cdc5ee47', '9411a8b4c718', '8f54f2b4595d', '0929d4c14afc', 'fb466e10cc2e', 'b46947b5dfa6']),
+    'q2': (2, ['320f0766641b', '0fd7ed66f37d', '493be04430c7', '7e8723eb895a', '4b12d8a537b1', '4f2650eaa302', 'dff2e51982c5', '969800b20539', '77a8418ea94a', 'e76a41f92846', 'f609cbc9b341', '6cb42271f6da', 'ef1e287df425', '3b36ee3af84f', '1a25b7f79324', 'ac6f7dd80434', 'c55387b17a6c', '5c94818b8773', '85c1e58a2fe1', '0b9997115471', '5f0275fd85c4']),
+    'q3': (4, ['af55b3313b07', '2bc6d1af03bc', '1df6ad6090ec', '869bcd209fd1', 'e022e51189d5']),
+}
+
+def check(qid, value):
+    """Compare an answer against a stored digest. Practice only -- nothing is recorded."""
+    places, digests = _EXPECTED[qid]
+    if value is Ellipsis:
+        print(f"{qid}: not answered yet")
+        return
+    got = hashlib.sha256(f"{float(value):.{places}f}".encode()).hexdigest()[:12]
+    print(f"{qid}: {'correct' if got in digests else 'not the expected value'}")
 ```
 
 ---
@@ -181,7 +196,7 @@ n_rows = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q1")
+check("q1", n_rows)
 ```
 
 
@@ -208,7 +223,7 @@ mean_density = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q2")
+check("q2", mean_density)
 ```
 
 
@@ -236,7 +251,7 @@ viscosity_cP = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q3")
+check("q3", viscosity_cP)
 ```
 
 

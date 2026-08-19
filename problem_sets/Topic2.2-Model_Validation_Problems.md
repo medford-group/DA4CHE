@@ -99,14 +99,29 @@ print(df['lnH'].values[sel][:8].round(4))
 Those are the first eight of twenty-nine independent reports of the same constant, and
 they do not all agree. Keep that in mind — Part C is about exactly this.
 
-Run this once to load the autograder. It will not run inside the book — use the
-downloaded notebook.
+Run this once. It defines the `check` helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-import otter
-grader = otter.Notebook()
+# Run this once. It defines `check`, used after each Part A answer below.
+import hashlib
+
+_EXPECTED = {
+    'q1': (4, ['57ac221ae7d3', '91faaf5e510b', '67558e22c994', '67bd4bdfe127', 'cbfa01c1d052', 'e0c027c6edd0', '92039333635d', '2d9023de4e90', '46458459d3f5', '27edf60435b1', 'ba87409b22ea', '973f75322414', 'cb3d629732e4', '65f45eafdb5d', 'ed40404ab65d']),
+    'q2': (4, ['0b08c753b20b', 'df11515bf4c3', '59e63a565041', '27ba3fc28a0e', '2a24e4750169', 'fce97f5ebcdb', '65f5bfbea45a', '0541eb18b7ca', '64bebad620f8', '43b0aca226b1', 'f7fd34bfaa05', '44d794ada822', 'ff769759650c']),
+    'q3': (3, ['b4be85884507', 'd3b0f9a5ae0b', 'd66dd59b43f5', 'fc8ca000190b', '8754e0fea022', 'f59185661213', '255bb6100d46', '2c7e26c6ba57', '69689d8f0e6f']),
+}
+
+def check(qid, value):
+    """Compare an answer against a stored digest. Practice only -- nothing is recorded."""
+    places, digests = _EXPECTED[qid]
+    if value is Ellipsis:
+        print(f"{qid}: not answered yet")
+        return
+    got = hashlib.sha256(f"{float(value):.{places}f}".encode()).hexdigest()[:12]
+    print(f"{qid}: {'correct' if got in digests else 'not the expected value'}")
 ```
 
 ---
@@ -138,7 +153,7 @@ r2_full = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q1")
+check("q1", r2_full)
 ```
 
 
@@ -171,7 +186,7 @@ r2_cv = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q2")
+check("q2", r2_cv)
 ```
 
 
@@ -199,7 +214,7 @@ rmse_cv = ...
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-grader.check("q3")
+check("q3", rmse_cv)
 ```
 
 
