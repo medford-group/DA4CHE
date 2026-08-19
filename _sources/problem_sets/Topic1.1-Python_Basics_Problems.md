@@ -141,6 +141,20 @@ print(f"mean density = {mean_density:.4f} kg/m^3")
 ```
 :::
 
+:::{admonition} How the self-check works, and when it can be wrong
+:class: note
+
+`check` does not store the expected answer — it stores a **hash** of it, so the answers
+are not sitting in this notebook. It rounds what you give it to a set number of decimals,
+hashes that, and compares. Nothing is recorded anywhere; this copy is practice.
+
+The consequence is that it can be wrong in one direction. A rounding boundary can make a
+**correct** answer read as incorrect, and an answer very close to correct can read as
+correct. If you are confident in an answer that `check` rejects, you are probably right —
+move on, and please
+[open an issue](https://github.com/medford-group/DA4CHE/issues) so it can be fixed.
+:::
+
 Run this once. It defines the `check` helper used after each Part A answer. It will
 not run inside the book — use the downloaded notebook.
 

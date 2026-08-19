@@ -662,6 +662,17 @@ a variable into it inside braces, and <code class="docutils literal notranslate"
 </pre></div>
 </div>
 </div>
+<div class="note admonition">
+<p class="admonition-title">How the self-check works, and when it can be wrong</p>
+<p><code class="docutils literal notranslate"><span class="pre">check</span></code> does not store the expected answer — it stores a <strong>hash</strong> of it, so the answers
+are not sitting in this notebook. It rounds what you give it to a set number of decimals,
+hashes that, and compares. Nothing is recorded anywhere; this copy is practice.</p>
+<p>The consequence is that it can be wrong in one direction. A rounding boundary can make a
+<strong>correct</strong> answer read as incorrect, and an answer very close to correct can read as
+correct. If you are confident in an answer that <code class="docutils literal notranslate"><span class="pre">check</span></code> rejects, you are probably right —
+move on, and please
+<a class="reference external" href="https://github.com/medford-group/DA4CHE/issues">open an issue</a> so it can be fixed.</p>
+</div>
 <p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
 not run inside the book — use the downloaded notebook.</p>
 <div class="cell tag_skip-execution docutils container">
