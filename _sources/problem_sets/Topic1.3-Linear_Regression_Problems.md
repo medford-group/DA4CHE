@@ -199,7 +199,7 @@ grader.check("q3")
 
 ## Part B — Visualization (35 pts)
 
-:::{exercise}
+::::{exercise}
 :label: pr-nm-meoh-basis-tune
 
 One Gaussian left SSE at 11.8. Stay in the **same 950–1120 cm⁻¹ window** and find out what
@@ -208,40 +208,59 @@ ordinary linear least-squares fit: build $\bar{\bar{X}}$, then solve
 $\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}$ with `np.linalg.solve`.
 
 **1. Polynomials, and why the origin matters.** Use the chapter's `vandermonde(x, order)`
-for `order = 3, 5, 7, 9, 11, 13` columns, twice over:
+for `order = 3, 5, 7, 9, 11, 13`, twice over:
 
 - once on the raw wavenumbers, and
 - once on **centered** wavenumbers, `x_band - x_band.mean()`.
+
+:::{admonition} `order` counts columns, not degree
+:class: warning
+
+`vandermonde(x, order)` returns `order` columns holding $x^0, x^1, \ldots, x^{order-1}$, so
+`order = 5` gives $1, x, x^2, x^3, x^4$ — five columns spanning polynomials of degree up to
+**four**. Watch out for the clash with {doc}`Linear Algebra </1-numerical_methods/Topic1.2-Linear_Algebra>`,
+whose "2nd-order Vandermonde matrix" demonstration counts the other way and produces
+**three** columns. Here, and in the tables you are about to build, `order` is the column
+count.
+:::
 
 For each fit record the SSE **and** the condition number of $\bar{\bar{X}}^T\bar{\bar{X}}$
 (`np.linalg.cond`, from {doc}`Linear Algebra </1-numerical_methods/Topic1.2-Linear_Algebra>`).
 The two versions describe the same family of curves — centering only moves the origin — so
 any difference between them is not about the model.
 
-**2. Gaussians, placed by hand.** Extend the chapter's two-column construction: allocate
-`np.zeros((len(x_band), N + 1))`, fill column $j$ with a Gaussian of your chosen center
-$c_j$ and width $\sigma_j$, and make the last column ones for the baseline. Only the
-amplitudes come from the solve — the centers and widths are yours to choose.
+**2. Gaussians, placed by hand.** Extend the chapter's two-column construction. For each
+`N`, allocate a design matrix of `N + 1` columns with `np.zeros((len(x_band), N + 1))`,
+fill columns $0 \ldots N-1$ with Gaussians of your chosen centers $c_j$ and widths
+$\sigma_j$, and set the last column to ones for the baseline. Only the amplitudes come from
+the solve — the centers and widths are yours to choose.
 
-Work from `N = 1` to `N = 6`. For each `N`, move and widen the Gaussians by eye until the
-fit tracks the data as well as you can get it, then record SSE and the condition number.
-Say in one line what you were trying to capture with each new component.
+Work from `N = 1` to `N = 6`. For each `N`, move and widen the Gaussians by inspecting the
+spectrum until the fit tracks the data as well as you can get it, then record SSE and the
+condition number. **Your choices will not match anyone else's, and they are not supposed
+to** — aim for a reasonable representation of the features you can see. Give one short
+description of what each new Gaussian is capturing.
 
 **3. Plot.** The data with your `N = 1`, `N = 3` and `N = 6` fits overlaid, and beneath it,
 on shared x-axes, the differences $y - \hat{y}$ for those three.
 
-**4. Interpret**, in **4–6 sentences**:
+**4. Three numbers from your own tables**, then two sentences. Every number here is read
+off the results *you* produced — there is no target value to hit.
 
-- Raw-wavenumber polynomials stop improving past about 7 columns, while centered ones keep
-  improving. Explain this using your condition numbers. What is a condition number of
-  $10^{40}$ telling you about the weights that came back?
-- The Gaussian condition numbers stay below about 40 no matter how many components you add,
-  which is some thirty orders of magnitude better. What is different about those columns?
-- Your Gaussian SSE should drop sharply somewhere and then nearly stop. Where, and what does
-  that say about the band?
+1. **Centering.** At the largest `order` you ran, divide the raw-wavenumber condition
+   number by the centered one. (Both are the same model on the same data; only the origin
+   moved.)
+2. **Basis.** The largest condition number across *all* your Gaussian fits, next to the
+   largest across your polynomial fits. Compare orders of magnitude, not digits.
+3. **Saturation.** For each `N`, the ratio $\mathrm{SSE}(N) / \mathrm{SSE}(N+1)$. Which
+   single step is the biggest?
+
+Then, **in one or two sentences**: double precision carries about 16 significant digits, so
+which of your polynomial fits can still have returned meaningful weights — and what is it
+about the Gaussian columns that keeps their condition numbers where they are?
 
 Label your axes with units.
-:::
+::::
 
 ```{code-cell} ipython3
 :tags: [skip-execution]
@@ -295,10 +314,15 @@ Support your answer with:
    more than the individual values.
 3. Evidence that your chosen `N` is not merely the largest you tried: show what one more
    component buys, and show the difference plot $y - \hat{y}$ has no obvious structure left.
-4. A short written argument (**one paragraph**). "Number of components" can mean the number
-   of visible maxima, or the number of columns the data actually justifies, or the number of
-   underlying physical features. These need not be the same number, and saying so with
-   evidence is a better answer than picking one.
+4. **Three counts, then two sentences.** "Number of components" can mean three different
+   things, so count all three:
+   - how many resolved maxima you can pick out in the band by eye;
+   - how many columns your fits actually justify — the `N` past which SSE stops improving
+     materially, by the same ratio test you used in Part B;
+   - how many of your fitted amplitudes are within a factor of about 3 of the largest one.
+
+   Then, **in one or two sentences**: do your three numbers agree, and which one would you
+   report if someone asked how many components this band has?
 
 :::{note}
 Domain knowledge of spectroscopy may be helpful here, but it is **not required** — the
@@ -318,19 +342,6 @@ There is more than one defensible answer. You are graded on the reasoning and th
 
 ---
 
-## Summary
-
-- Part A built a two-column design matrix by hand and solved the normal equations, exactly as
-  the chapter does, and scored the result with the sum of squared errors: 11.8 against a
-  mean-only baseline of 33.3.
-- Part B set polynomial and Gaussian bases against each other on the same band. Polynomials
-  on raw wavenumbers stall once the condition number passes what double precision can carry;
-  centering the same model recovers thirty orders of magnitude of conditioning. A localized
-  Gaussian basis stays well conditioned at any size, and its SSE stops improving once there is
-  one component per resolved maximum.
-- Part C changed the shape of the basis functions rather than their number, and found that
-  three Voigt profiles describe the band better than thirteen polynomial columns or six
-  Gaussians — then asked what "three components" actually means.
 
 ## Additional Reading
 

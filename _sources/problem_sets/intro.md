@@ -20,6 +20,7 @@ Solutions are not published here.
 ## Numerical Methods
 
 - **1.1 Python Basics** — {doc}`Topic1.1-Python_Basics_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.1-Python_Basics`) · {download}`zip <archives/Topic1.1-Python_Basics_Problems.zip>`
+- **1.2 Linear Algebra** — {doc}`Topic1.2-Linear_Algebra_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.2-Linear_Algebra`) · {download}`zip <archives/Topic1.2-Linear_Algebra_Problems.zip>`
 - **1.3 Linear Regression** — {doc}`Topic1.3-Linear_Regression_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.3-Linear_Regression`) · {download}`zip <archives/Topic1.3-Linear_Regression_Problems.zip>`
 
 ## Regression

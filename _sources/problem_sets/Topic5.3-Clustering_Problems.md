@@ -322,17 +322,6 @@ There is more than one defensible answer. You are graded on the reasoning and th
 
 ---
 
-## Summary
-
-- Part A scored one clustering two ways: silhouette, which needs no labels, and purity,
-  which uses them but only through a per-cluster majority vote. Both are unchanged by
-  renumbering the clusters, which is what makes an unsupervised result checkable at all.
-- Part B showed the two metrics disagreeing on purpose. Silhouette peaks at the true number
-  of chemistries; purity keeps climbing as clusters are split, so it can report on a choice
-  but cannot make one.
-- Part C traced the stubborn gap between 0.72 and 1 back to the closure constraint on
-  compositional data, and used a density-based method's failure as positive evidence about
-  the shape of the dataset.
 
 ## Additional Reading
 

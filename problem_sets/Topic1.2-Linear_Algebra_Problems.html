@@ -1,0 +1,1095 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Linear Algebra &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic1.2-Linear_Algebra_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Problems: Linear Regression" href="Topic1.3-Linear_Regression_Problems.html" />
+    <link rel="prev" title="Problems: Python Basics" href="Topic1.1-Python_Basics_Problems.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Problems: Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic1.2-Linear_Algebra_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic1.2-Linear_Algebra_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Linear Algebra</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#four-species-four-dimensions">Four species, four dimensions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-count-atoms-with-a-matrix-vector-product-10-pts">A1. Count atoms with a matrix-vector product (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-independent-elements-independent-rows-10-pts">A2. Independent elements → independent rows (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-conserved-atoms-the-direction-the-rows-leave-over-10-pts">A3. Conserved atoms → the direction the rows leave over (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic1.2-Linear_Algebra/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-linear-algebra" id="id1">Problems: Linear Algebra</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-linear-algebra">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Linear Algebra</a><a class="headerlink" href="#problems-linear-algebra" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/44d0d49cba72a22c509000723d6b4335/Topic1.2-Linear_Algebra_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic1.2-Linear_Algebra_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">smr_ms.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a>.
+It is worth <strong>100 points</strong>: <strong>Part A</strong> (30, auto-graded, unlimited attempts), <strong>Part B</strong>
+(35, plots plus interpretation, peer graded) and <strong>Part C</strong> (35, open ended, peer graded).
+The parts build on each other, so do them in order.</p>
+<p><strong>No chemistry is required.</strong> Every chemical fact you need is given to you below. The work
+is linear algebra.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>Steam methane reforming is how most of the world’s hydrogen is made. <strong>The reaction is:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{CH_4} + \mathrm{H_2O} \;\longrightarrow\; 3\,\mathrm{H_2} + \mathrm{CO}
+\]</div>
+<p>The dataset is <code class="docutils literal notranslate"><span class="pre">data/smr_ms.csv</span></code>: a quadrupole mass spectrometer watching a catalytic
+reactor outlet for 180 minutes as it lights off, sampling once a minute. Four channels,
+one per species, recorded as <strong>ion currents in mA</strong>. It is inspired by a mass spectroscopy
+measurement in the lab of Prof. Bjarne Kreitz at Georgia Tech.</p>
+<p>An ion current is not a concentration: it is proportional to how much of a species is
+present, but with a per-species constant nobody has calibrated here. Part C is about why
+that matters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/smr_ms.csv&#39;</span><span class="p">)</span>
+<span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CH4&#39;</span><span class="p">,</span> <span class="s1">&#39;H2O&#39;</span><span class="p">,</span> <span class="s1">&#39;H2&#39;</span><span class="p">,</span> <span class="s1">&#39;CO&#39;</span><span class="p">]</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;t_min&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">species</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>          <span class="c1"># 180 x 4: one column per species, in the order above</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(180, 4)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>t_min</th>
+      <th>CH4</th>
+      <th>H2O</th>
+      <th>H2</th>
+      <th>CO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.73604</td>
+      <td>0.89408</td>
+      <td>-0.003929</td>
+      <td>-0.003459</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0.74296</td>
+      <td>0.91777</td>
+      <td>-0.001942</td>
+      <td>0.001329</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0.74234</td>
+      <td>0.89850</td>
+      <td>0.001058</td>
+      <td>0.007203</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0.74588</td>
+      <td>0.89577</td>
+      <td>0.010228</td>
+      <td>0.012154</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0.74625</td>
+      <td>0.89740</td>
+      <td>0.004382</td>
+      <td>-0.000570</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">species</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">species</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time [min]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ion current [mA]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/3af002f6ea108846e72258dfc146d6114eaf037556b2eb69ba2c1c11383402e9.png" src="../_images/3af002f6ea108846e72258dfc146d6114eaf037556b2eb69ba2c1c11383402e9.png" />
+</div>
+</div>
+<p>The reactor lights off early: H₂ and CO start climbing within the first twenty minutes,
+are halfway up by about minute 42, and level off over the second half. CH₄ falls as they
+rise. H₂O barely moves, because it is fed in large excess.</p>
+<div class="warning admonition">
+<p class="admonition-title">The species order is fixed. Memorize it.</p>
+<p>Every vector and every matrix column here is ordered
+<span class="math notranslate nohighlight">\(\mathrm{CH_4}, \mathrm{H_2O}, \mathrm{H_2}, \mathrm{CO}\)</span>, matching the columns of <code class="docutils literal notranslate"><span class="pre">X</span></code>.
+Nothing will warn you if you scramble it — you will just get a different number that looks
+equally plausible. If an answer comes back wrong, check the ordering first.</p>
+</div>
+<section id="four-species-four-dimensions">
+<h3>Four species, four dimensions<a class="headerlink" href="#four-species-four-dimensions" title="Link to this heading">#</a></h3>
+<p>Four species means a composition is <strong>a vector of four numbers</strong>, so every composition the
+reactor could have is a point in <strong>four-dimensional space</strong>. Call it <em>species space</em>.</p>
+<p>The bookkeeping is done by the <strong>atom matrix</strong> — one row per element, one column per
+species, holding how many of that element each molecule contains:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\bar{\bar{N}} =
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 1 \\
+4 &amp; 2 &amp; 2 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 1
+\end{bmatrix}
+\qquad
+\begin{matrix}
+\leftarrow \text{C} \\ \leftarrow \text{H} \\ \leftarrow \text{O}
+\end{matrix}
+\end{split}\]</div>
+<p>Reading the first row: CH₄ has one carbon, H₂O none, H₂ none, CO one. If <span class="math notranslate nohighlight">\(\vec{n}\)</span> holds
+the moles of each species, <span class="math notranslate nohighlight">\(\bar{\bar{N}}\vec{n}\)</span> is the moles of each <strong>element</strong> —
+matrix-vector multiplication, <span class="math notranslate nohighlight">\(\sum_j N_{ij} n_j\)</span>.</p>
+<p><strong>You already know the chemistry. This set is about what the chemistry does to the
+matrices.</strong> Every step below is one row of this table, and the right-hand column is the
+part being graded:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Chemical fact — you know this</p></th>
+<th class="head"><p>What it does to the matrix — this is the work</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Molecular formulas</p></td>
+<td><p>fixes the entries of <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> (A1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Three elements, no one of them redundant</p></td>
+<td><p>the rows of <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> are linearly independent, so its rank is 3 (A2)</p></td>
+</tr>
+<tr class="row-even"><td><p>Atoms are conserved by any reaction</p></td>
+<td><p><span class="math notranslate nohighlight">\(\bar{\bar{N}}\vec{\nu} = \vec{0}\)</span> — the reaction vector is orthogonal to every row (A3)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Only one reaction is possible here</p></td>
+<td><p><span class="math notranslate nohighlight">\(4 - 3 = 1\)</span> direction survives the constraints (A3)</p></td>
+</tr>
+<tr class="row-even"><td><p>One reaction drives all four channels</p></td>
+<td><p>the <span class="math notranslate nohighlight">\(180 \times 4\)</span> data matrix is <em>effectively rank 1</em> (Part B)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ion current is not moles</p></td>
+<td><p>a diagonal rescaling, which turns the measured direction (Part B)</p></td>
+</tr>
+<tr class="row-even"><td><p>A species you did not measure</p></td>
+<td><p>one more column, same rank, one more possible reaction (Part C)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Given free of charge, not to be derived: a reaction is a <em>direction</em> in species space, a
+vector <span class="math notranslate nohighlight">\(\vec{\nu}\)</span> of stoichiometric coefficients that is negative for what is consumed and
+positive for what is produced. Here <span class="math notranslate nohighlight">\(\vec{\nu} = (-1,\, -1,\, 3,\, 1)\)</span>.</p>
+<p>Run this once to load the autograder. It will not run inside the book — use the
+downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">otter</span>
+<span class="n">grader</span> <span class="o">=</span> <span class="n">otter</span><span class="o">.</span><span class="n">Notebook</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Three questions, 10 points each. Each asks you to assign a single number to a named
+variable. Run the check cell after each one; there is no limit on attempts.</p>
+<section id="a1-count-atoms-with-a-matrix-vector-product-10-pts">
+<h3>A1. Count atoms with a matrix-vector product (10 pts)<a class="headerlink" href="#a1-count-atoms-with-a-matrix-vector-product-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-smr-atom-matvec">
+
+<p class="admonition-title"><span class="caption-number">Exercise 142 </span></p>
+<section id="exercise-content">
+<p>Write a function <code class="docutils literal notranslate"><span class="pre">matvec_loops(A,</span> <span class="pre">x)</span></code> computing <span class="math notranslate nohighlight">\(b_i = \sum_j A_{ij}x_j\)</span> with <strong>nested
+<code class="docutils literal notranslate"><span class="pre">for</span></code> loops only</strong> — no <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, no <code class="docutils literal notranslate"><span class="pre">np.dot</span></code>, no <code class="docutils literal notranslate"><span class="pre">np.matmul</span></code>. Read the sizes off <code class="docutils literal notranslate"><span class="pre">A.shape</span></code> so
+it works for any shape: Part C will hand it a 3×5 matrix.</p>
+<p>Build <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> exactly as printed above, then apply your function to the composition
+<span class="math notranslate nohighlight">\(\vec{n} = (0.62,\, 2.15,\, 1.14,\, 0.38)\)</span> mol — in the fixed species order, so 0.62 mol
+CH₄ and 0.38 mol CO. Check it against the built-in <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">&#64;</span> <span class="pre">n</span></code> with <code class="docutils literal notranslate"><span class="pre">np.allclose</span></code>.</p>
+<p>Assign the moles of <strong>hydrogen atoms</strong> to <code class="docutils literal notranslate"><span class="pre">h_atoms</span></code>. Watch the row order: <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span>
+has rows C, H, O, so hydrogen is row index <strong>1</strong>, not 0.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">matvec_loops</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="n">h_atoms</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-independent-elements-independent-rows-10-pts">
+<h3>A2. Independent elements → independent rows (10 pts)<a class="headerlink" href="#a2-independent-elements-independent-rows-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-smr-gram-schmidt">
+
+<p class="admonition-title"><span class="caption-number">Exercise 143 </span></p>
+<section id="exercise-content">
+<p>Each <strong>row</strong> of <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> is a vector in the same four-dimensional species space:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{c} = (1, 0, 0, 1), \qquad
+\vec{h} = (4, 2, 2, 0), \qquad
+\vec{o} = (0, 1, 0, 1)
+\]</div>
+<p>Three constraints in a four-dimensional space — but only if the rows are genuinely
+<em>independent</em>. A row that was a combination of the other two would remove no dimension of
+its own, and the rank would be 2. Chemically you expect independence, since carbon,
+hydrogen and oxygen are counted separately and no one of them is implied by the other two;
+<strong>Gram-Schmidt is how you turn that expectation into a number</strong>. Run it on the three rows in
+the order <span class="math notranslate nohighlight">\(\vec{c}, \vec{h}, \vec{o}\)</span> and watch how much of each survives.</p>
+<p>The procedure is the chapter’s, with the first step done for you:</p>
+<p><strong>Step 1.</strong> Normalize the first vector.</p>
+<div class="math notranslate nohighlight">
+\[
+\lVert\vec{c}\rVert_2 = \sqrt{1^2 + 0^2 + 0^2 + 1^2} = \sqrt{2} = 1.414214,
+\qquad
+\vec{q}_1 = \frac{\vec{c}}{1.414214} = (0.7071,\, 0,\, 0,\, 0.7071)
+\]</div>
+<p><strong>Step 2.</strong> Take <span class="math notranslate nohighlight">\(\vec{h}\)</span>, subtract its projection onto <span class="math notranslate nohighlight">\(\vec{q}_1\)</span>, then normalize what
+is left:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{r} = \vec{h} - (\vec{q}_1 \cdot \vec{h})\,\vec{q}_1,
+\qquad
+\vec{q}_2 = \frac{\vec{r}}{\lVert\vec{r}\rVert_2}
+\]</div>
+<p><strong>Step 3.</strong> Take <span class="math notranslate nohighlight">\(\vec{o}\)</span> and subtract its projections onto <strong>both</strong> <span class="math notranslate nohighlight">\(\vec{q}_1\)</span> and
+<span class="math notranslate nohighlight">\(\vec{q}_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{r} = \vec{o} - (\vec{q}_1 \cdot \vec{o})\,\vec{q}_1 - (\vec{q}_2 \cdot \vec{o})\,\vec{q}_2
+\]</div>
+<p>Assign <span class="math notranslate nohighlight">\(\lVert\vec{r}\rVert_2\)</span> from <strong>step 3</strong> to <code class="docutils literal notranslate"><span class="pre">o_residual</span></code> — what is left of the oxygen
+row once the carbon and hydrogen rows are projected out. Measure it <strong>before</strong> you
+normalize. Use <code class="docutils literal notranslate"><span class="pre">np.dot</span></code> and <code class="docutils literal notranslate"><span class="pre">np.linalg.norm</span></code>; a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop over the three rows is tidier
+than writing the steps out, but either is fine.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Zero would mean the oxygen row is a combination of the other two, adding no new constraint.
+Clearly non-zero means all three are independent — row 2 of the table above.</p>
+</div>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">o_residual</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-conserved-atoms-the-direction-the-rows-leave-over-10-pts">
+<h3>A3. Conserved atoms → the direction the rows leave over (10 pts)<a class="headerlink" href="#a3-conserved-atoms-the-direction-the-rows-leave-over-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-smr-balance">
+
+<p class="admonition-title"><span class="caption-number">Exercise 144 </span></p>
+<section id="exercise-content">
+<p>Rank 3 in a 4-D space leaves one direction, and conserving atoms means the reaction is that
+direction: <span class="math notranslate nohighlight">\(\bar{\bar{N}}\vec{\nu} = \vec{0}\)</span>. <strong>You already know the answer</strong> —
+<span class="math notranslate nohighlight">\(\vec{\nu} = (-1, -1, 3, 1)\)</span> — so use it to check your work. The job is to <em>recover</em> it from
+<span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> alone, a trick you repeat in Part C where the answer is not given.</p>
+<p><code class="docutils literal notranslate"><span class="pre">np.linalg.solve</span></code> needs a square matrix and <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> is 3×4. Two observations fix it:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{\nu}\)</span> is only defined up to scale — doubling every coefficient is the same
+reaction — so <strong>fix one coefficient</strong>: set <span class="math notranslate nohighlight">\(\nu_{\mathrm{CO}} = 1\)</span>.</p></li>
+<li><p>The CO column is then known, so move it to the other side:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\underbrace{
+\begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 4 &amp; 2 &amp; 2 \\ 0 &amp; 1 &amp; 0 \end{bmatrix}}_{\text{first 3 columns of } \bar{\bar{N}}}
+\begin{bmatrix} \nu_{\mathrm{CH_4}} \\ \nu_{\mathrm{H_2O}} \\ \nu_{\mathrm{H_2}} \end{bmatrix}
+= -\begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}
+\;=\; -\,(\text{the CO column})
+\end{split}\]</div>
+<p>That system is 3×3 and full rank, so <code class="docutils literal notranslate"><span class="pre">np.linalg.solve</span></code> applies. Solve it and assign the
+recovered H₂ coefficient to <code class="docutils literal notranslate"><span class="pre">nu_H2</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Worth doing, not graded: dot the full <span class="math notranslate nohighlight">\(\vec{\nu}\)</span> with each of A2’s three orthonormal
+vectors. All three give zero — the reaction really is perpendicular to every element
+constraint, which is what <span class="math notranslate nohighlight">\(\bar{\bar{N}}\vec{\nu} = \vec{0}\)</span> means geometrically.</p>
+</div>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">nu_H2</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grader</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<div class="exercise admonition" id="pr-nm-smr-effective-rank">
+
+<p class="admonition-title"><span class="caption-number">Exercise 145 </span></p>
+<section id="exercise-content">
+<p>From Part A, the atom matrix predicts one independent reaction direction,</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{\nu}=(-1,-1,3,1).
+\]</div>
+<p>The data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> contains 180 measurements of the four species in the order</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{CH_4,\ H_2O,\ H_2,\ CO}.
+\]</div>
+<p>Use the centered data and SVD to determine whether the experimental data are consistent with this one-reaction picture.</p>
+<p><strong>1. Center the data.</strong></p>
+<p>Remove the mean composition from <code class="docutils literal notranslate"><span class="pre">X</span></code> so that the data describe changes relative to the operating point. Determine the matrix rank of the centered data.</p>
+<p>Does the mathematical rank exactly match the one-dimensional chemical prediction? If not, what might explain the additional dimensions?</p>
+<p><strong>2. Visualize the dominant direction.</strong></p>
+<p>First examine a simple two-dimensional projection by plotting <strong>H₂ versus CO</strong>. Based on the stoichiometry, what shape should you expect if the reactor is primarily following the predicted reaction?</p>
+<p>Then use an SVD of the centered data to identify the directions along which the data vary most strongly. Project the data onto the first two SVD directions and visualize the result both with ordinary axis scaling and with equal aspect ratio.</p>
+<p>Which visualization gives a more honest impression of the dimensionality of the data, and why?</p>
+<p><strong>3. Quantify the dominant direction.</strong>
+Report the four singular values, and the percentage of total squared variation represented by each,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\sigma_i^2}{\sum_k\sigma_k^2}.
+\]</div>
+<p>A singular value is exactly how far
+the cloud extends along its direction — <span class="math notranslate nohighlight">\(\sigma_k = \lVert\)</span> <code class="docutils literal notranslate"><span class="pre">Xc</span> <span class="pre">&#64;</span> <span class="pre">vk</span></code> <span class="math notranslate nohighlight">\(\rVert\)</span></p>
+<p>What does this ratio tell you about how strongly the data are concentrated along the
+dominant direction?</p>
+<p><strong>4. Compare measured against predicted.</strong> <span class="math notranslate nohighlight">\(\vec{v}_1\)</span> is the direction the data actually
+moves along. Plot it with <code class="docutils literal notranslate"><span class="pre">ax.bar(species,</span> <span class="pre">v1)</span></code> alongside A3’s <span class="math notranslate nohighlight">\(\vec{\nu}\)</span> <strong>normalized to
+unit length</strong>, then compute the <strong>angle between them</strong> in degrees using <code class="docutils literal notranslate"><span class="pre">np.dot</span></code>,
+<code class="docutils literal notranslate"><span class="pre">np.arccos</span></code> and <code class="docutils literal notranslate"><span class="pre">np.degrees</span></code>.</p>
+<p>Do the measured and predicted directions have the same sign pattern? How closely do the two directions agree?</p>
+<p><strong>5. Two ratios.</strong> Reduce the singular values to the two ratios that summarize the data:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\sigma_1/\sigma_2\)</span> — how much stronger the main direction is than the second direction.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma_2/\sigma_4\)</span> — how similar the three smaller singular values are.</p></li>
+</ul>
+<p><strong>In one or two sentences</strong>, use these ratios and the <code class="docutils literal notranslate"><span class="pre">matrix_rank(Xc)</span></code> result to determine:</p>
+<ul class="simple">
+<li><p>Does the data support <strong>one main chemical reaction</strong>, with the smaller variations likely due to <strong>noise</strong>, or does it suggest <strong>additional reactions</strong>?</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The sign of a singular vector is arbitrary: <span class="math notranslate nohighlight">\(\vec{v}_1\)</span> and <span class="math notranslate nohighlight">\(-\vec{v}_1\)</span> describe the same
+direction, and NumPy may hand you either. If yours comes back with the reactants positive,
+flip it before comparing.</p>
+</div>
+<p>Label your axes.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>Real reformers rarely run one reaction. Steam reforming is almost always accompanied by
+<strong>water-gas shift</strong>, <span class="math notranslate nohighlight">\(\mathrm{CO} + \mathrm{H_2O} \rightarrow \mathrm{H_2} +
+\mathrm{CO_2}\)</span>, which consumes some of the CO the first reaction makes. This instrument has
+no CO₂ channel.</p>
+<div class="exercise admonition" id="pr-nm-smr-second-reaction">
+
+<p class="admonition-title"><span class="caption-number">Exercise 146 </span></p>
+<section id="exercise-content">
+<p><strong>How many reactions are running in this reactor, and would you know if there were two?</strong></p>
+<p>Three things to do, two of them arithmetic.</p>
+<ol class="arabic">
+<li><p><strong>Count the directions again, with CO₂ in the list.</strong> Species space is now
+five-dimensional, ordered CH₄, H₂O, H₂, CO, CO₂. The CO₂ column of the atom matrix is
+<span class="math notranslate nohighlight">\((1, 0, 2)\)</span> for C, H, O — the rest is unchanged. Build the 3×5 matrix, use <strong>your
+<code class="docutils literal notranslate"><span class="pre">matvec_loops</span></code> from A1</strong> to check that
+<span class="math notranslate nohighlight">\(\vec{\nu}_{\mathrm{WGS}} = (0, -1, 1, -1, 1)\)</span> gives <span class="math notranslate nohighlight">\(\bar{\bar{N}}\vec{\nu} = \vec{0}\)</span>,
+and report the rank. Then repeat <strong>A2’s count</strong>: species minus rank. How many
+independent reactions does the chemistry now allow?</p></li>
+<li><p><strong>Ask whether the two reactions even look different to this instrument.</strong> You measure
+four of the five species, so drop the CO₂ entry from both reaction vectors:</p>
+<div class="math notranslate nohighlight">
+\[
+   \vec{\nu}_{\mathrm{SMR}} \to (-1, -1, 3, 1),
+   \qquad
+   \vec{\nu}_{\mathrm{WGS}} \to (0, -1, 1, -1)
+   \]</div>
+<p>Compute the <strong>angle between these two</strong>, the same way you did in Part B task 4. If it
+came out near 0°, the two reactions would push the composition in nearly the same
+direction and no amount of data could tell them apart. What did you get?</p>
+</li>
+<li><p><strong>One or two sentences</strong>, using your angle from 2 and your <span class="math notranslate nohighlight">\(\sigma_2/\sigma_4\)</span> from
+Part B: is water-gas shift <em>not happening</em>, or <em>happening and invisible</em>? Then name one
+change to the measurement that would settle it.</p></li>
+</ol>
+<p>More than one answer is defensible. You are graded on the numbers and on whether your
+sentence follows from them.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Inspired by a mass spectroscopy measurement in the
+<a class="reference external" href="https://chbe.gatech.edu/people/bjarne-kreitz">lab of Prof. Bjarne Kreitz</a> at Georgia
+Tech.</p></li>
+<li><p>Trefethen &amp; Bau, <em>Numerical Linear Algebra</em>, Lectures 4–5 — the SVD, and what small
+singular values mean.</p></li>
+<li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.matrix_rank.html"><code class="docutils literal notranslate"><span class="pre">numpy.linalg.matrix_rank</span></code></a>
+— note the <code class="docutils literal notranslate"><span class="pre">tol</span></code> argument, which makes “rank” a numerical question, not an algebraic one.</p></li>
+<li><p>Aris, R., <em>Elementary Chemical Reactor Analysis</em> — the species-minus-rank rule in its
+chemical-engineering setting.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic1.1-Python_Basics_Problems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Problems: Python Basics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic1.3-Linear_Regression_Problems.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Problems: Linear Regression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#four-species-four-dimensions">Four species, four dimensions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-count-atoms-with-a-matrix-vector-product-10-pts">A1. Count atoms with a matrix-vector product (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-independent-elements-independent-rows-10-pts">A2. Independent elements → independent rows (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-conserved-atoms-the-direction-the-rows-leave-over-10-pts">A3. Conserved atoms → the direction the rows leave over (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

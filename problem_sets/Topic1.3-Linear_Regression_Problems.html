@@ -65,7 +65,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Problems: Model Validation" href="Topic2.2-Model_Validation_Problems.html" />
-    <link rel="prev" title="Problems: Python Basics" href="Topic1.1-Python_Basics_Problems.html" />
+    <link rel="prev" title="Problems: Linear Algebra" href="Topic1.2-Linear_Algebra_Problems.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -225,6 +225,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">Problems: Linear Algebra</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Problems: Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
@@ -410,7 +411,6 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
             </nav>
@@ -435,8 +435,7 @@ document.write(`
 <li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
 <li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
 <li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
-<li><p><a class="reference internal" href="#summary" id="id6">Summary</a></p></li>
-<li><p><a class="reference internal" href="#additional-reading" id="id7">Additional Reading</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
 </ul>
 </li>
 </ul>
@@ -531,7 +530,7 @@ variable. Run the check cell after each one; there is no limit on attempts.</p>
 <h3>A1. Locate the C–O stretch (10 pts)<a class="headerlink" href="#a1-locate-the-co-stretch-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-nm-meoh-co-peak">
 
-<p class="admonition-title"><span class="caption-number">Exercise 142 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 147 </span></p>
 <section id="exercise-content">
 <p>Restrict the spectrum to the window <span class="math notranslate nohighlight">\(950 \le \tilde\nu \le 1120\)</span> cm⁻¹, which is the
 region every part of this problem set works in. Find the wavenumber at which absorbance is
@@ -563,7 +562,7 @@ element, which you can use to look up the corresponding wavenumber.</p>
 <h3>A2. Fit one Gaussian to the band (10 pts)<a class="headerlink" href="#a2-fit-one-gaussian-to-the-band-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-nm-meoh-gauss-fit">
 
-<p class="admonition-title"><span class="caption-number">Exercise 143 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 148 </span></p>
 <section id="exercise-content">
 <p>Model the same window as a single Gaussian sitting on a flat baseline:</p>
 <div class="math notranslate nohighlight">
@@ -597,7 +596,7 @@ Gaussian, one of ones for the baseline — and solve the normal equations
 <h3>A3. Score the fit (10 pts)<a class="headerlink" href="#a3-score-the-fit-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-nm-meoh-fit-sse">
 
-<p class="admonition-title"><span class="caption-number">Exercise 144 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 149 </span></p>
 <section id="exercise-content">
 <p>Score the A2 fit <strong>over the same window</strong> with the sum of squared errors the chapter uses:</p>
 <div class="math notranslate nohighlight">
@@ -633,41 +632,57 @@ number to beat.</p>
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-nm-meoh-basis-tune">
 
-<p class="admonition-title"><span class="caption-number">Exercise 145 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 150 </span></p>
 <section id="exercise-content">
 <p>One Gaussian left SSE at 11.8. Stay in the <strong>same 950–1120 cm⁻¹ window</strong> and find out what
 it takes to do better, using the two basis families from the chapter. Everything here is an
 ordinary linear least-squares fit: build <span class="math notranslate nohighlight">\(\bar{\bar{X}}\)</span>, then solve
 <span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}\)</span> with <code class="docutils literal notranslate"><span class="pre">np.linalg.solve</span></code>.</p>
 <p><strong>1. Polynomials, and why the origin matters.</strong> Use the chapter’s <code class="docutils literal notranslate"><span class="pre">vandermonde(x,</span> <span class="pre">order)</span></code>
-for <code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">=</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">9,</span> <span class="pre">11,</span> <span class="pre">13</span></code> columns, twice over:</p>
+for <code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">=</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">9,</span> <span class="pre">11,</span> <span class="pre">13</span></code>, twice over:</p>
 <ul class="simple">
 <li><p>once on the raw wavenumbers, and</p></li>
 <li><p>once on <strong>centered</strong> wavenumbers, <code class="docutils literal notranslate"><span class="pre">x_band</span> <span class="pre">-</span> <span class="pre">x_band.mean()</span></code>.</p></li>
 </ul>
+<div class="warning admonition">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">order</span></code> counts columns, not degree</p>
+<p><code class="docutils literal notranslate"><span class="pre">vandermonde(x,</span> <span class="pre">order)</span></code> returns <code class="docutils literal notranslate"><span class="pre">order</span></code> columns holding <span class="math notranslate nohighlight">\(x^0, x^1, \ldots, x^{order-1}\)</span>, so
+<code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">=</span> <span class="pre">5</span></code> gives <span class="math notranslate nohighlight">\(1, x, x^2, x^3, x^4\)</span> — five columns spanning polynomials of degree up to
+<strong>four</strong>. Watch out for the clash with <a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a>,
+whose “2nd-order Vandermonde matrix” demonstration counts the other way and produces
+<strong>three</strong> columns. Here, and in the tables you are about to build, <code class="docutils literal notranslate"><span class="pre">order</span></code> is the column
+count.</p>
+</div>
 <p>For each fit record the SSE <strong>and</strong> the condition number of <span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\)</span>
 (<code class="docutils literal notranslate"><span class="pre">np.linalg.cond</span></code>, from <a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a>).
 The two versions describe the same family of curves — centering only moves the origin — so
 any difference between them is not about the model.</p>
-<p><strong>2. Gaussians, placed by hand.</strong> Extend the chapter’s two-column construction: allocate
-<code class="docutils literal notranslate"><span class="pre">np.zeros((len(x_band),</span> <span class="pre">N</span> <span class="pre">+</span> <span class="pre">1))</span></code>, fill column <span class="math notranslate nohighlight">\(j\)</span> with a Gaussian of your chosen center
-<span class="math notranslate nohighlight">\(c_j\)</span> and width <span class="math notranslate nohighlight">\(\sigma_j\)</span>, and make the last column ones for the baseline. Only the
-amplitudes come from the solve — the centers and widths are yours to choose.</p>
-<p>Work from <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> to <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code>. For each <code class="docutils literal notranslate"><span class="pre">N</span></code>, move and widen the Gaussians by eye until the
-fit tracks the data as well as you can get it, then record SSE and the condition number.
-Say in one line what you were trying to capture with each new component.</p>
+<p><strong>2. Gaussians, placed by hand.</strong> Extend the chapter’s two-column construction. For each
+<code class="docutils literal notranslate"><span class="pre">N</span></code>, allocate a design matrix of <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">+</span> <span class="pre">1</span></code> columns with <code class="docutils literal notranslate"><span class="pre">np.zeros((len(x_band),</span> <span class="pre">N</span> <span class="pre">+</span> <span class="pre">1))</span></code>,
+fill columns <span class="math notranslate nohighlight">\(0 \ldots N-1\)</span> with Gaussians of your chosen centers <span class="math notranslate nohighlight">\(c_j\)</span> and widths
+<span class="math notranslate nohighlight">\(\sigma_j\)</span>, and set the last column to ones for the baseline. Only the amplitudes come from
+the solve — the centers and widths are yours to choose.</p>
+<p>Work from <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code> to <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code>. For each <code class="docutils literal notranslate"><span class="pre">N</span></code>, move and widen the Gaussians by inspecting the
+spectrum until the fit tracks the data as well as you can get it, then record SSE and the
+condition number. <strong>Your choices will not match anyone else’s, and they are not supposed
+to</strong> — aim for a reasonable representation of the features you can see. Give one short
+description of what each new Gaussian is capturing.</p>
 <p><strong>3. Plot.</strong> The data with your <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">6</span></code> fits overlaid, and beneath it,
 on shared x-axes, the differences <span class="math notranslate nohighlight">\(y - \hat{y}\)</span> for those three.</p>
-<p><strong>4. Interpret</strong>, in <strong>4–6 sentences</strong>:</p>
-<ul class="simple">
-<li><p>Raw-wavenumber polynomials stop improving past about 7 columns, while centered ones keep
-improving. Explain this using your condition numbers. What is a condition number of
-<span class="math notranslate nohighlight">\(10^{40}\)</span> telling you about the weights that came back?</p></li>
-<li><p>The Gaussian condition numbers stay below about 40 no matter how many components you add,
-which is some thirty orders of magnitude better. What is different about those columns?</p></li>
-<li><p>Your Gaussian SSE should drop sharply somewhere and then nearly stop. Where, and what does
-that say about the band?</p></li>
-</ul>
+<p><strong>4. Three numbers from your own tables</strong>, then two sentences. Every number here is read
+off the results <em>you</em> produced — there is no target value to hit.</p>
+<ol class="arabic simple">
+<li><p><strong>Centering.</strong> At the largest <code class="docutils literal notranslate"><span class="pre">order</span></code> you ran, divide the raw-wavenumber condition
+number by the centered one. (Both are the same model on the same data; only the origin
+moved.)</p></li>
+<li><p><strong>Basis.</strong> The largest condition number across <em>all</em> your Gaussian fits, next to the
+largest across your polynomial fits. Compare orders of magnitude, not digits.</p></li>
+<li><p><strong>Saturation.</strong> For each <code class="docutils literal notranslate"><span class="pre">N</span></code>, the ratio <span class="math notranslate nohighlight">\(\mathrm{SSE}(N) / \mathrm{SSE}(N+1)\)</span>. Which
+single step is the biggest?</p></li>
+</ol>
+<p>Then, <strong>in one or two sentences</strong>: double precision carries about 16 significant digits, so
+which of your polynomial fits can still have returned meaningful weights — and what is it
+about the Gaussian columns that keeps their condition numbers where they are?</p>
 <p>Label your axes with units.</p>
 </section>
 </div>
@@ -708,13 +723,13 @@ center, <span class="math notranslate nohighlight">\(\sigma\)</span> and <span c
 shape parameters are chosen, not fitted.</p>
 <div class="exercise admonition" id="pr-nm-meoh-count-components">
 
-<p class="admonition-title"><span class="caption-number">Exercise 146 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 151 </span></p>
 <section id="exercise-content">
 <p>Use a Voigt basis on the same 950–1120 cm⁻¹ window to answer the question this problem set
 has been building toward:</p>
 <p><strong>How many distinct components does this band contain?</strong></p>
 <p>Support your answer with:</p>
-<ol class="arabic simple">
+<ol class="arabic">
 <li><p>Voigt fits for <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3</span></code> and at least one larger <code class="docutils literal notranslate"><span class="pre">N</span></code>, each with hand-chosen centers,
 <span class="math notranslate nohighlight">\(\sigma\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span>, reporting SSE and the condition number. Compare against your Part B
 Gaussian results at the same <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
@@ -722,10 +737,17 @@ Gaussian results at the same <code class="docutils literal notranslate"><span cl
 more than the individual values.</p></li>
 <li><p>Evidence that your chosen <code class="docutils literal notranslate"><span class="pre">N</span></code> is not merely the largest you tried: show what one more
 component buys, and show the difference plot <span class="math notranslate nohighlight">\(y - \hat{y}\)</span> has no obvious structure left.</p></li>
-<li><p>A short written argument (<strong>one paragraph</strong>). “Number of components” can mean the number
-of visible maxima, or the number of columns the data actually justifies, or the number of
-underlying physical features. These need not be the same number, and saying so with
-evidence is a better answer than picking one.</p></li>
+<li><p><strong>Three counts, then two sentences.</strong> “Number of components” can mean three different
+things, so count all three:</p>
+<ul class="simple">
+<li><p>how many resolved maxima you can pick out in the band by eye;</p></li>
+<li><p>how many columns your fits actually justify — the <code class="docutils literal notranslate"><span class="pre">N</span></code> past which SSE stops improving
+materially, by the same ratio test you used in Part B;</p></li>
+<li><p>how many of your fitted amplitudes are within a factor of about 3 of the largest one.</p></li>
+</ul>
+<p>Then, <strong>in one or two sentences</strong>: do your three numbers agree, and which one would you
+report if someone asked how many components this band has?</p>
+</li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -745,24 +767,8 @@ know some spectroscopy, say what it adds; if you do not, do not go looking for i
 </div>
 </section>
 <hr class="docutils" />
-<section id="summary">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Part A built a two-column design matrix by hand and solved the normal equations, exactly as
-the chapter does, and scored the result with the sum of squared errors: 11.8 against a
-mean-only baseline of 33.3.</p></li>
-<li><p>Part B set polynomial and Gaussian bases against each other on the same band. Polynomials
-on raw wavenumbers stall once the condition number passes what double precision can carry;
-centering the same model recovers thirty orders of magnitude of conditioning. A localized
-Gaussian basis stays well conditioned at any size, and its SSE stops improving once there is
-one component per resolved maximum.</p></li>
-<li><p>Part C changed the shape of the basis functions rather than their number, and found that
-three Voigt profiles describe the band better than thirteen polynomial columns or six
-Gaussians — then asked what “three components” actually means.</p></li>
-</ul>
-</section>
 <section id="additional-reading">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p>NIST Chemistry WebBook, SRD 69 — <a class="reference external" href="https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&amp;amp;Type=IR-SPEC">methanol IR spectrum</a>,
 Coblentz Society collection no. 8791.</p></li>
@@ -805,12 +811,12 @@ used here only to evaluate a fixed shape.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="Topic1.1-Python_Basics_Problems.html"
+       href="Topic1.2-Linear_Algebra_Problems.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Problems: Python Basics</p>
+        <p class="prev-next-title">Problems: Linear Algebra</p>
       </div>
     </a>
     <a class="right-next"
@@ -847,7 +853,6 @@ used here only to evaluate a fixed shape.</p></li>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
   </nav></div>

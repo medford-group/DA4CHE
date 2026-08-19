@@ -64,7 +64,7 @@
     <script src="../_static/version-switcher.js?v=03ab3a72"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Problems: Linear Regression" href="Topic1.3-Linear_Regression_Problems.html" />
+    <link rel="next" title="Problems: Linear Algebra" href="Topic1.2-Linear_Algebra_Problems.html" />
     <link rel="prev" title="Problem Sets" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -225,6 +225,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Problems: Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">Problems: Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
@@ -410,7 +411,6 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
             </nav>
@@ -435,8 +435,7 @@ document.write(`
 <li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
 <li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
 <li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
-<li><p><a class="reference internal" href="#summary" id="id6">Summary</a></p></li>
-<li><p><a class="reference internal" href="#additional-reading" id="id7">Additional Reading</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
 </ul>
 </li>
 </ul>
@@ -489,8 +488,14 @@ code gives you a number you can tell whether it is sensible. That is a habit wor
 now: the first question to ask of any computed result is whether it could possibly be right.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/water_properties.csv&#39;</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -613,6 +618,10 @@ it is written <code class="docutils literal notranslate"><span class="pre">np.so
 a comma-separated file into a <strong>DataFrame</strong>, a table that remembers its column names.
 <code class="docutils literal notranslate"><span class="pre">df.head(10)</span></code> shows the first ten rows, which is always worth doing before anything else:
 it is how you find out that the file is what you thought it was.</p>
+<p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> is the plotting library, imported as <code class="docutils literal notranslate"><span class="pre">plt</span></code>; you will need it in Part B.
+The <code class="docutils literal notranslate"><span class="pre">try</span></code>/<code class="docutils literal notranslate"><span class="pre">except</span></code> around the style sheet is there because that file exists inside the book
+but not next to a notebook you have downloaded — this way the plots simply fall back to
+matplotlib’s defaults instead of raising an error.</p>
 <p>As in the chapter, <code class="docutils literal notranslate"><span class="pre">.values</span></code> converts the table into a NumPy array, and columns are
 selected by slicing:</p>
 <div class="cell docutils container">
@@ -784,9 +793,10 @@ than a connecting line. Label both axes, <strong>including units</strong>.</p></
 figure.</p></li>
 <li><p><strong>Zoom in.</strong> Redraw the viscosity plot restricted to 0–40 °C using <code class="docutils literal notranslate"><span class="pre">ax.set_xlim</span></code>, and
 choose a <code class="docutils literal notranslate"><span class="pre">ax.set_ylim</span></code> that makes that range fill the axes.</p></li>
-<li><p>In <strong>3–4 sentences</strong>, describe the two curves. Is either one a straight line? Which
-changes more over the range, and roughly by what factor? Read the factor off your own
-plot rather than computing it — Part C will do the arithmetic.</p></li>
+<li><p><strong>Read two numbers off your plots.</strong> For viscosity and for thermal conductivity, give
+the approximate factor by which each changes from 0 to 100 °C — highest value divided by
+lowest. Read them off the axes rather than computing them; Part C does the arithmetic.
+Then, <strong>in one sentence</strong>, say which of the two curves is closer to a straight line.</p></li>
 </ol>
 <p>An unlabeled axis is the most common way to lose points on a plot, in this course and
 afterwards. Units belong on both axes of every figure you make from here on.</p>
@@ -845,13 +855,15 @@ you want to pair each index with a name.</p></li>
 row, so every curve starts at 1, and plot all four against temperature on one set of
 axes. Curves on one axes need a legend: pass <code class="docutils literal notranslate"><span class="pre">label='...'</span></code> to each <code class="docutils literal notranslate"><span class="pre">ax.plot</span></code> call and
 then call <code class="docutils literal notranslate"><span class="pre">ax.legend()</span></code>.</p></li>
-<li><p><strong>One paragraph.</strong> Which property is most sensitive to temperature, and by how much?
-Pick one of these and say what your numbers imply for it:</p>
+<li><p><strong>Rank and compare.</strong> List the four properties in order of the <strong>absolute value</strong> of
+their fractional change, largest first, and report the ratio of the largest to the
+smallest. Then, <strong>in one or two sentences</strong>, pick one of these —</p>
 <ul class="simple">
 <li><p>pumping the water through a pipe, where pressure drop rises with viscosity;</p></li>
 <li><p>heating it in a heat exchanger, where the heat needed depends on <span class="math notranslate nohighlight">\(C_p\)</span>;</p></li>
-<li><p>and say whether treating that property as constant over 0–100 °C would be reasonable.</p></li>
 </ul>
+<p>and say whether treating <em>that</em> property as constant over 0–100 °C would be defensible,
+given the number you computed for it.</p>
 </li>
 </ol>
 <p>You are not expected to know heat exchanger design. A sensible argument from your own
@@ -867,22 +879,8 @@ numbers is the whole requirement.</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="summary">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Part A loaded a real dataset, measured its size, averaged a column and converted units —
-and every answer was checkable against something already known about water, which is how
-you catch mistakes before they propagate.</p></li>
-<li><p>Part B introduced <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> through the chapter’s pattern: <code class="docutils literal notranslate"><span class="pre">plt.subplots</span></code> to make a
-figure and axes, <code class="docutils literal notranslate"><span class="pre">ax.plot</span></code> to draw, <code class="docutils literal notranslate"><span class="pre">ax.set_xlabel</span></code> and <code class="docutils literal notranslate"><span class="pre">ax.set_ylabel</span></code> to label, and
-<code class="docutils literal notranslate"><span class="pre">ax.set_xlim</span></code> / <code class="docutils literal notranslate"><span class="pre">ax.set_ylim</span></code> to zoom.</p></li>
-<li><p>Part C turned an impression from a plot into numbers by writing a function and looping
-over the columns, and found that water’s viscosity changes by 84% over the liquid range
-while its heat capacity changes by almost nothing.</p></li>
-</ul>
-</section>
 <section id="additional-reading">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p>NIST Chemistry WebBook, <a class="reference external" href="https://webbook.nist.gov/chemistry/fluid/">Thermophysical Properties of Fluid Systems</a>
 — the source of this dataset, and a useful reference throughout the course.</p></li>
@@ -932,11 +930,11 @@ examples with source code, the fastest way to find out how to draw something.</p
       </div>
     </a>
     <a class="right-next"
-       href="Topic1.3-Linear_Regression_Problems.html"
+       href="Topic1.2-Linear_Algebra_Problems.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Problems: Linear Regression</p>
+        <p class="prev-next-title">Problems: Linear Algebra</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -965,7 +963,6 @@ examples with source code, the fastest way to find out how to draw something.</p
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
   </nav></div>

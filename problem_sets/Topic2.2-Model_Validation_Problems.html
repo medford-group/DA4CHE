@@ -225,6 +225,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">Problems: Linear Algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Problems: Model Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
@@ -410,7 +411,6 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
             </nav>
@@ -435,8 +435,7 @@ document.write(`
 <li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
 <li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
 <li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
-<li><p><a class="reference internal" href="#summary" id="id6">Summary</a></p></li>
-<li><p><a class="reference internal" href="#additional-reading" id="id7">Additional Reading</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
 </ul>
 </li>
 </ul>
@@ -658,7 +657,7 @@ of <code class="docutils literal notranslate"><span class="pre">lnH</span></code
 <h3>A1. Fit the relationship (10 pts)<a class="headerlink" href="#a1-fit-the-relationship-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-reg-henry-lfer">
 
-<p class="admonition-title"><span class="caption-number">Exercise 147 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 152 </span></p>
 <section id="exercise-content">
 <p>Fit <code class="docutils literal notranslate"><span class="pre">sklearn.linear_model.LinearRegression</span></code> with <code class="docutils literal notranslate"><span class="pre">dHsol_kJ_mol</span></code> as the only feature and
 <code class="docutils literal notranslate"><span class="pre">lnH</span></code> as the target, using the whole dataset. Report the <span class="math notranslate nohighlight">\(r^2\)</span> <strong>on the same data you fit
@@ -686,7 +685,7 @@ on</strong>.</p>
 <h3>A2. Validate it honestly (10 pts)<a class="headerlink" href="#a2-validate-it-honestly-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-reg-henry-cv">
 
-<p class="admonition-title"><span class="caption-number">Exercise 148 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 153 </span></p>
 <section id="exercise-content">
 <p>The A1 number is optimistic — it scores the model on the data used to fit it. Redo the
 evaluation with <strong>5-fold cross-validation</strong>, built the way the chapter builds it: create</p>
@@ -719,9 +718,9 @@ cross-validation score means nothing unless the split is reproducible.</p>
 <h3>A3. Put the error in physical units (10 pts)<a class="headerlink" href="#a3-put-the-error-in-physical-units-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-reg-henry-rmse">
 
-<p class="admonition-title"><span class="caption-number">Exercise 149 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 154 </span></p>
 <section id="exercise-content">
-<p>An <span class="math notranslate nohighlight">\(r^2\)</span> of 0.59 does not say how wrong a prediction typically is. Collect the
+<p>An <span class="math notranslate nohighlight">\(r^2\)</span> alone does not say how wrong a prediction really is. Collect the
 <strong>out-of-fold predictions</strong> — inside the same loop as A2, store each fold’s predictions in
 the right positions of a full-length array, so that every row ends up predicted by a model
 that never saw it. Then report the root-mean-squared error of those predictions against
@@ -751,7 +750,7 @@ that never saw it. Then report the root-mean-squared error of those predictions 
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-reg-henry-diagnostics">
 
-<p class="admonition-title"><span class="caption-number">Exercise 150 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 155 </span></p>
 <section id="exercise-content">
 <p>Three panels, using the three diagnostics from the chapter.</p>
 <ol class="arabic simple">
@@ -792,10 +791,10 @@ relative to the dataset.</p></li>
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-reg-henry-headroom">
 
-<p class="admonition-title"><span class="caption-number">Exercise 151 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 156 </span></p>
 <section id="exercise-content">
-<p>An RMSE of 3.68 ln units sounds terrible. But no model can do better than the data it is
-checked against, and this dataset has something unusual that lets you find out how good
+<p>The cross-validated RMSE you computed in A3 sounds terrible. But no model can do better
+than the data it is checked against, and this dataset has something unusual that lets you find out how good
 “perfect” would even be: <strong>many species were measured independently by several different
 groups</strong>, so the disagreement among those repeated values is measurement scatter that no
 model could ever predict.</p>
@@ -835,23 +834,8 @@ evidence, not on reaching a particular verdict.</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="summary">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Part A produced three numbers that answer three different questions: how well the model
-fits data it has already seen (0.602), how well it predicts data it has not (0.594), and
-how large a typical prediction error actually is (3.68 ln units, a factor of about 40 in
-<span class="math notranslate nohighlight">\(H\)</span> itself).</p></li>
-<li><p>Part B looked at the same model three ways the chapter recommends — a parity plot, an
-error histogram, and the spread of the cross-validated score — and found that part of the
-apparent fit quality comes from rows that are model output rather than measurement.</p></li>
-<li><p>Part C set the model’s error against the disagreement between independent laboratories,
-and found both that the headroom is large and that the floor itself is not a single
-number.</p></li>
-</ul>
-</section>
 <section id="additional-reading">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p>R. Sander, <a class="reference external" href="https://doi.org/10.5194/acp-23-10901-2023">Compilation of Henry’s law constants (version 5.0.0) for water as solvent</a>,
 <em>Atmos. Chem. Phys.</em> <strong>23</strong>, 10901–12440 (2023).</p></li>
@@ -934,7 +918,6 @@ and <a class="reference external" href="https://scikit-learn.org/stable/modules/
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
 </ul>
   </nav></div>
