@@ -68,5 +68,4 @@ dependencies:
 
   - pip:
       - ghp-import>=2.1,<3      # `make publish` pushes _build/html to gh-pages
-      - otter-grader>=7.0,<8    # autogrades the Part A skill checks in *_Problems.md
       - pubchempy>=1.0,<2       # Topic4.3 PubChem ground-truth cross-check
