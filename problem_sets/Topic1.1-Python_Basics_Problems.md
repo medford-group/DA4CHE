@@ -80,8 +80,14 @@ code gives you a number you can tell whether it is sensible. That is a habit wor
 now: the first question to ask of any computed result is whether it could possibly be right.
 
 ```{code-cell} ipython3
+%matplotlib inline
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+try:
+    plt.style.use('../settings/plot_style.mplstyle')   # available inside the book
+except OSError:
+    pass                                              # downloaded notebook: use defaults
 
 df = pd.read_csv('data/water_properties.csv')
 df.head(10)
@@ -92,6 +98,11 @@ it is written `np.something` — this is why NumPy calls all look alike. `pd.rea
 a comma-separated file into a **DataFrame**, a table that remembers its column names.
 `df.head(10)` shows the first ten rows, which is always worth doing before anything else:
 it is how you find out that the file is what you thought it was.
+
+`matplotlib.pyplot` is the plotting library, imported as `plt`; you will need it in Part B.
+The `try`/`except` around the style sheet is there because that file exists inside the book
+but not next to a notebook you have downloaded — this way the plots simply fall back to
+matplotlib's defaults instead of raising an error.
 
 As in the chapter, `.values` converts the table into a NumPy array, and columns are
 selected by slicing:
@@ -261,9 +272,10 @@ name like this can be given in any order, and any you leave out fall back to a d
    figure.
 3. **Zoom in.** Redraw the viscosity plot restricted to 0–40 °C using `ax.set_xlim`, and
    choose a `ax.set_ylim` that makes that range fill the axes.
-4. In **3–4 sentences**, describe the two curves. Is either one a straight line? Which
-   changes more over the range, and roughly by what factor? Read the factor off your own
-   plot rather than computing it — Part C will do the arithmetic.
+4. **Read two numbers off your plots.** For viscosity and for thermal conductivity, give
+   the approximate factor by which each changes from 0 to 100 °C — highest value divided by
+   lowest. Read them off the axes rather than computing them; Part C does the arithmetic.
+   Then, **in one sentence**, say which of the two curves is closer to a straight line.
 
 An unlabeled axis is the most common way to lose points on a plot, in this course and
 afterwards. Units belong on both axes of every figure you make from here on.
@@ -329,11 +341,14 @@ it for all four.
    axes. Curves on one axes need a legend: pass `label='...'` to each `ax.plot` call and
    then call `ax.legend()`.
 
-4. **One paragraph.** Which property is most sensitive to temperature, and by how much?
-   Pick one of these and say what your numbers imply for it:
+4. **Rank and compare.** List the four properties in order of the **absolute value** of
+   their fractional change, largest first, and report the ratio of the largest to the
+   smallest. Then, **in one or two sentences**, pick one of these —
    - pumping the water through a pipe, where pressure drop rises with viscosity;
    - heating it in a heat exchanger, where the heat needed depends on $C_p$;
-   - and say whether treating that property as constant over 0–100 °C would be reasonable.
+
+   and say whether treating *that* property as constant over 0–100 °C would be defensible,
+   given the number you computed for it.
 
 You are not expected to know heat exchanger design. A sensible argument from your own
 numbers is the whole requirement.
@@ -348,17 +363,6 @@ numbers is the whole requirement.
 
 ---
 
-## Summary
-
-- Part A loaded a real dataset, measured its size, averaged a column and converted units —
-  and every answer was checkable against something already known about water, which is how
-  you catch mistakes before they propagate.
-- Part B introduced `matplotlib` through the chapter's pattern: `plt.subplots` to make a
-  figure and axes, `ax.plot` to draw, `ax.set_xlabel` and `ax.set_ylabel` to label, and
-  `ax.set_xlim` / `ax.set_ylim` to zoom.
-- Part C turned an impression from a plot into numbers by writing a function and looping
-  over the columns, and found that water's viscosity changes by 84% over the liquid range
-  while its heat capacity changes by almost nothing.
 
 ## Additional Reading
 

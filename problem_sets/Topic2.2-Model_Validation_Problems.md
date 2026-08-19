@@ -180,7 +180,7 @@ grader.check("q2")
 :::{exercise}
 :label: pr-reg-henry-rmse
 
-An $r^2$ of 0.59 does not say how wrong a prediction typically is. Collect the
+An $r^2$ alone does not say how wrong a prediction really is. Collect the
 **out-of-fold predictions** — inside the same loop as A2, store each fold's predictions in
 the right positions of a full-length array, so that every row ends up predicted by a model
 that never saw it. Then report the root-mean-squared error of those predictions against
@@ -250,8 +250,8 @@ fig, axes = plt.subplots(1, 3, figsize=(14, 4))
 :::{exercise}
 :label: pr-reg-henry-headroom
 
-An RMSE of 3.68 ln units sounds terrible. But no model can do better than the data it is
-checked against, and this dataset has something unusual that lets you find out how good
+The cross-validated RMSE you computed in A3 sounds terrible. But no model can do better
+than the data it is checked against, and this dataset has something unusual that lets you find out how good
 "perfect" would even be: **many species were measured independently by several different
 groups**, so the disagreement among those repeated values is measurement scatter that no
 model could ever predict.
@@ -294,18 +294,6 @@ evidence, not on reaching a particular verdict.
 
 ---
 
-## Summary
-
-- Part A produced three numbers that answer three different questions: how well the model
-  fits data it has already seen (0.602), how well it predicts data it has not (0.594), and
-  how large a typical prediction error actually is (3.68 ln units, a factor of about 40 in
-  $H$ itself).
-- Part B looked at the same model three ways the chapter recommends — a parity plot, an
-  error histogram, and the spread of the cross-validated score — and found that part of the
-  apparent fit quality comes from rows that are model output rather than measurement.
-- Part C set the model's error against the disagreement between independent laboratories,
-  and found both that the headroom is large and that the floor itself is not a single
-  number.
 
 ## Additional Reading
 
