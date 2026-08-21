@@ -672,7 +672,7 @@ of <code class="docutils literal notranslate"><span class="pre">lnH</span></code
 <h3>A1. Fit the relationship (10 pts)<a class="headerlink" href="#a1-fit-the-relationship-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-reg-henry-lfer">
 
-<p class="admonition-title"><span class="caption-number">Exercise 152 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
 <section id="exercise-content">
 <p>Fit <code class="docutils literal notranslate"><span class="pre">sklearn.linear_model.LinearRegression</span></code> with <code class="docutils literal notranslate"><span class="pre">dHsol_kJ_mol</span></code> as the only feature and
 <code class="docutils literal notranslate"><span class="pre">lnH</span></code> as the target, using the whole dataset. Report the <span class="math notranslate nohighlight">\(r^2\)</span> <strong>on the same data you fit
@@ -700,7 +700,7 @@ on</strong>.</p>
 <h3>A2. Validate it honestly (10 pts)<a class="headerlink" href="#a2-validate-it-honestly-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-reg-henry-cv">
 
-<p class="admonition-title"><span class="caption-number">Exercise 153 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
 <section id="exercise-content">
 <p>The A1 number is optimistic — it scores the model on the data used to fit it. Redo the
 evaluation with <strong>5-fold cross-validation</strong>, built the way the chapter builds it: create</p>
@@ -733,7 +733,7 @@ cross-validation score means nothing unless the split is reproducible.</p>
 <h3>A3. Put the error in physical units (10 pts)<a class="headerlink" href="#a3-put-the-error-in-physical-units-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-reg-henry-rmse">
 
-<p class="admonition-title"><span class="caption-number">Exercise 154 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
 <section id="exercise-content">
 <p>An <span class="math notranslate nohighlight">\(r^2\)</span> alone does not say how wrong a prediction really is. Collect the
 <strong>out-of-fold predictions</strong> — inside the same loop as A2, store each fold’s predictions in
@@ -765,7 +765,7 @@ that never saw it. Then report the root-mean-squared error of those predictions 
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-reg-henry-diagnostics">
 
-<p class="admonition-title"><span class="caption-number">Exercise 155 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
 <section id="exercise-content">
 <p>Three panels, using the three diagnostics from the chapter.</p>
 <ol class="arabic simple">
@@ -806,7 +806,7 @@ relative to the dataset.</p></li>
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-reg-henry-headroom">
 
-<p class="admonition-title"><span class="caption-number">Exercise 156 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
 <section id="exercise-content">
 <p>The cross-validated RMSE you computed in A3 sounds terrible. But no model can do better
 than the data it is checked against, and this dataset has something unusual that lets you find out how good

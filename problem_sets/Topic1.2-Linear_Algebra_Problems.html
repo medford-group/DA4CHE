@@ -690,7 +690,7 @@ variable. Run the check cell after each one; there is no limit on attempts.</p>
 <h3>A1. Count atoms with a matrix-vector product (10 pts)<a class="headerlink" href="#a1-count-atoms-with-a-matrix-vector-product-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-nm-smr-atom-matvec">
 
-<p class="admonition-title"><span class="caption-number">Exercise 142 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
 <section id="exercise-content">
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">matvec_loops(A,</span> <span class="pre">x)</span></code> computing <span class="math notranslate nohighlight">\(b_i = \sum_j A_{ij}x_j\)</span> with <strong>nested
 <code class="docutils literal notranslate"><span class="pre">for</span></code> loops only</strong> — no <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, no <code class="docutils literal notranslate"><span class="pre">np.dot</span></code>, no <code class="docutils literal notranslate"><span class="pre">np.matmul</span></code>. Read the sizes off <code class="docutils literal notranslate"><span class="pre">A.shape</span></code> so
@@ -725,7 +725,7 @@ has rows C, H, O, so hydrogen is row index <strong>1</strong>, not 0.</p>
 <h3>A2. Independent elements → independent rows (10 pts)<a class="headerlink" href="#a2-independent-elements-independent-rows-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-nm-smr-gram-schmidt">
 
-<p class="admonition-title"><span class="caption-number">Exercise 143 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
 <section id="exercise-content">
 <p>Each <strong>row</strong> of <span class="math notranslate nohighlight">\(\bar{\bar{N}}\)</span> is a vector in the same four-dimensional species space:</p>
 <div class="math notranslate nohighlight">
@@ -793,7 +793,7 @@ Clearly non-zero means all three are independent — row 2 of the table above.</
 <h3>A3. Conserved atoms → the direction the rows leave over (10 pts)<a class="headerlink" href="#a3-conserved-atoms-the-direction-the-rows-leave-over-10-pts" title="Link to this heading">#</a></h3>
 <div class="exercise admonition" id="pr-nm-smr-balance">
 
-<p class="admonition-title"><span class="caption-number">Exercise 144 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
 <section id="exercise-content">
 <p>Rank 3 in a 4-D space leaves one direction, and conserving atoms means the reaction is that
 direction: <span class="math notranslate nohighlight">\(\bar{\bar{N}}\vec{\nu} = \vec{0}\)</span>. <strong>You already know the answer</strong> —
@@ -845,7 +845,7 @@ constraint, which is what <span class="math notranslate nohighlight">\(\bar{\bar
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
 <div class="exercise admonition" id="pr-nm-smr-effective-rank">
 
-<p class="admonition-title"><span class="caption-number">Exercise 145 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
 <section id="exercise-content">
 <p>From Part A, the atom matrix predicts one independent reaction direction,</p>
 <div class="math notranslate nohighlight">
@@ -865,22 +865,35 @@ constraint, which is what <span class="math notranslate nohighlight">\(\bar{\bar
 <p>First examine a simple two-dimensional projection by plotting <strong>H₂ versus CO</strong>. Based on the stoichiometry, what shape should you expect if the reactor is primarily following the predicted reaction?</p>
 <p>Then use an SVD of the centered data to identify the directions along which the data vary most strongly. Project the data onto the first two SVD directions and visualize the result both with ordinary axis scaling and with equal aspect ratio.</p>
 <p>Which visualization gives a more honest impression of the dimensionality of the data, and why?</p>
-<p><strong>3. Quantify the dominant direction.</strong>
-Report the four singular values, and the percentage of total squared variation represented by each,</p>
+<p><strong>3. Quantify the dominant direction.</strong></p>
+<p>Report all four singular values and the percentage of the total squared variation
+represented by each,</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{\sigma_i^2}{\sum_k\sigma_k^2}.
+\frac{\sigma_i^2}{\sum_k \sigma_k^2}.
 \]</div>
-<p>A singular value is exactly how far
-the cloud extends along its direction — <span class="math notranslate nohighlight">\(\sigma_k = \lVert\)</span> <code class="docutils literal notranslate"><span class="pre">Xc</span> <span class="pre">&#64;</span> <span class="pre">vk</span></code> <span class="math notranslate nohighlight">\(\rVert\)</span></p>
-<p>What does this ratio tell you about how strongly the data are concentrated along the
+<p>Recall that each singular value tells you <strong>how much the data vary along that SVD
+direction</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_k = \lVert \texttt{Xc &#64; vk} \rVert.
+\]</div>
+<p>Also report the <strong>spread of the data along the first two SVD directions</strong> and their ratio.
+Finally, calculate</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\sigma_1}{\sigma_2}
+\qquad\text{and}\qquad
+\frac{\sigma_2}{\sigma_4}.
+\]</div>
+<p>What do these numbers tell you about how strongly the data are concentrated along the
 dominant direction?</p>
 <p><strong>4. Compare measured against predicted.</strong> <span class="math notranslate nohighlight">\(\vec{v}_1\)</span> is the direction the data actually
 moves along. Plot it with <code class="docutils literal notranslate"><span class="pre">ax.bar(species,</span> <span class="pre">v1)</span></code> alongside A3’s <span class="math notranslate nohighlight">\(\vec{\nu}\)</span> <strong>normalized to
 unit length</strong>, then compute the <strong>angle between them</strong> in degrees using <code class="docutils literal notranslate"><span class="pre">np.dot</span></code>,
 <code class="docutils literal notranslate"><span class="pre">np.arccos</span></code> and <code class="docutils literal notranslate"><span class="pre">np.degrees</span></code>.</p>
 <p>Do the measured and predicted directions have the same sign pattern? How closely do the two directions agree?</p>
-<p><strong>5. Two ratios.</strong> Reduce the singular values to the two ratios that summarize the data:</p>
+<p><strong>5. Two ratios.</strong> The two ratios you calculated in task 3 are what summarize the data:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\sigma_1/\sigma_2\)</span> — how much stronger the main direction is than the second direction.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\sigma_2/\sigma_4\)</span> — how similar the three smaller singular values are.</p></li>
@@ -916,7 +929,7 @@ flip it before comparing.</p>
 no CO₂ channel.</p>
 <div class="exercise admonition" id="pr-nm-smr-second-reaction">
 
-<p class="admonition-title"><span class="caption-number">Exercise 146 </span></p>
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
 <section id="exercise-content">
 <p><strong>How many reactions are running in this reactor, and would you know if there were two?</strong></p>
 <p>Three things to do, two of them arithmetic.</p>

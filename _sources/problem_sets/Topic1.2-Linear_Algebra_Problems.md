@@ -43,6 +43,7 @@ is linear algebra.
 :::
 
 
+
 ## Setup
 
 Steam methane reforming is how most of the world's hydrogen is made. **The reaction is:**
@@ -365,16 +366,31 @@ Then use an SVD of the centered data to identify the directions along which the 
 Which visualization gives a more honest impression of the dimensionality of the data, and why?
 
 **3. Quantify the dominant direction.**
-Report the four singular values, and the percentage of total squared variation represented by each,
+
+Report all four singular values and the percentage of the total squared variation
+represented by each,
 
 $$
-\frac{\sigma_i^2}{\sum_k\sigma_k^2}.
+\frac{\sigma_i^2}{\sum_k \sigma_k^2}.
 $$
 
-A singular value is exactly how far
-the cloud extends along its direction — $\sigma_k = \lVert$ `Xc @ vk` $\rVert$
+Recall that each singular value tells you **how much the data vary along that SVD
+direction**:
 
-What does this ratio tell you about how strongly the data are concentrated along the
+$$
+\sigma_k = \lVert \texttt{Xc @ vk} \rVert.
+$$
+
+Also report the **spread of the data along the first two SVD directions** and their ratio.
+Finally, calculate
+
+$$
+\frac{\sigma_1}{\sigma_2}
+\qquad\text{and}\qquad
+\frac{\sigma_2}{\sigma_4}.
+$$
+
+What do these numbers tell you about how strongly the data are concentrated along the
 dominant direction?
 
 **4. Compare measured against predicted.** $\vec{v}_1$ is the direction the data actually
@@ -384,7 +400,7 @@ unit length**, then compute the **angle between them** in degrees using `np.dot`
 
 Do the measured and predicted directions have the same sign pattern? How closely do the two directions agree?
 
-**5. Two ratios.** Reduce the singular values to the two ratios that summarize the data:
+**5. Two ratios.** The two ratios you calculated in task 3 are what summarize the data:
 
 - $\sigma_1/\sigma_2$ — how much stronger the main direction is than the second direction.
 - $\sigma_2/\sigma_4$ — how similar the three smaller singular values are.
