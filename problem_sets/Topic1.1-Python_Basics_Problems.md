@@ -36,7 +36,7 @@ Python and data files, and it shows you how every later problem set will be arra
 :::{admonition} How these problem sets work
 :class: tip
 
-Every set is worth **100 points** and has the same three parts.
+Every **graded** set is worth **100 points** and has the same three parts.
 
 **Part A — Skill Checks (30 pts).** Short questions with one right answer. You assign your
 answer to a named variable, then run a check cell that tells you immediately whether it is
@@ -67,6 +67,8 @@ mark the spot where your answer goes. Replace the `...`, do not add to it. If yo
 check cell without replacing it, it will tell you the question is unanswered rather
 than marking it wrong.
 :::
+
+
 
 ## Setup
 

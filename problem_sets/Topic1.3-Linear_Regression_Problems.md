@@ -44,6 +44,8 @@ The parts build on each other: Part A works out the syntax you need for Part B, 
 Part B produces the evidence you argue from in Part C. Do them in order.
 :::
 
+
+
 ## Setup
 
 The chapter fit basis functions to an **ethanol** infrared spectrum. Here you will work

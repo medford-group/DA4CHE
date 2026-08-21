@@ -72,6 +72,10 @@ sphinx:
     # this natively but only sets it up inside its Binder/Colab launch-button code, so a
     # book without launch buttons never offers the notebook. See _ext/ipynb_download.py.
     ipynb_download: _ext/
+    # Restarts the exercise counter at 1 on each problem_sets/ page. Sphinx keeps one
+    # numfig counter for the whole book, so the five exercises of a problem set were
+    # numbered 142-146. See _ext/exercise_numbering.py.
+    exercise_numbering: _ext/
   config:
     # jupyter-book leaves html_static_path unset, so this is additive rather than a
     # override of theme assets (verified against the resolved config).
