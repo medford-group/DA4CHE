@@ -571,15 +571,16 @@ collected at <a class="reference external" href="https://github.com/magrover">gi
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Images and microscopy</a><a class="headerlink" href="#images-and-microscopy" title="Link to this heading">#</a></h2>
 <p>The only image data in the chapters of this book is the 8 × 8 handwritten digit set built into
 scikit-learn, which stands in for image data rather than being an example of it. The datasets
-below are the real thing: in-situ microscope images of crystals captured through a process
-probe, annotated for a specific task. They connect most directly to
+below are the real thing, and they come in two flavors: still images of crystals captured
+through an in-line process probe, and video of nanoparticles moving in a liquid cell. Both
+connect most directly to
 <a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html"><span class="doc">Neural Network Architectures</span></a>.</p>
-<p>They are also the largest entries in this catalog, and they carry two access conditions worth
-settling before you plan around them: downloading requires a free Kaggle account, and all
-four are CC BY-SA 4.0, whose ShareAlike clause constrains what you may do with a derived
-dataset. All four come from <strong>OpenCrystalData</strong>, a maintained open-access database with
-Georgia Tech co-authors. Start with the EasyViewer set — it is an order of magnitude smaller
-than the largest.</p>
+<p>The four still-image sets are annotated for a specific task, and they carry two access
+conditions worth settling before you plan around them: downloading requires a free Kaggle
+account, and all four are CC BY-SA 4.0, whose ShareAlike clause constrains what you may do
+with a derived dataset. All four come from <strong>OpenCrystalData</strong>, a maintained open-access
+database with Georgia Tech co-authors. Start with the EasyViewer set — it is an order of
+magnitude smaller than the largest.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
@@ -611,7 +612,7 @@ than the largest.</p>
 <tr class="row-odd"><td><p><strong>Ag-Crystal needle images</strong></p></td>
 <td><p>Measured</p></td>
 <td><p>Estimating a particle size distribution from images and checking it against offline measurement</p></td>
-<td><p>3,888 in-situ images of needle-like crystals from an industrial agrochemical process, intended for models whose PSD output is comparable with offline PSD. Needles are far harder than spheres. 5.31 GB — the largest entry in this catalog. CC BY-SA 4.0</p></td>
+<td><p>3,888 in-situ images of needle-like crystals from an industrial agrochemical process, intended for models whose PSD output is comparable with offline PSD. Needles are far harder than spheres. 5.31 GB — the largest of the four. CC BY-SA 4.0</p></td>
 <td><p><a class="reference external" href="https://www.kaggle.com/datasets/opencrystaldata/agcrystal-images">Kaggle</a></p></td>
 </tr>
 </tbody>
@@ -621,6 +622,56 @@ than the largest.</p>
 <a class="reference external" href="https://doi.org/10.1016/j.dche.2024.100150">10.1016/j.dche.2024.100150</a>, which is the paper
 to cite and the best guide to what each one contains. Note that the per-dataset DOIs printed
 in that paper did not resolve when this section was last checked — use the Kaggle links above.</p>
+<p>The video set below is a different problem. A still image asks <em>what is in this frame</em>; a
+video asks that plus <em>which object here is the same object as in the last one</em>, and that
+second question is where the interesting failures live.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Data</p></th>
+<th class="head"><p>Good for</p></th>
+<th class="head"><p>Scale and notes</p></th>
+<th class="head"><p>Source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>SAM-EM liquid-phase TEM videos</strong></p></td>
+<td><p>Mixed</p></td>
+<td><p>Instance segmentation and single-particle tracking, against ground truth that carries identity across frames</p></td>
+<td><p>1,000 simulated liquid-cell TEM videos: 50,000 grayscale frames (1024 × 1024, 0.25 nm per pixel) with 50,000 matching instance masks, spanning liquid layer thickness 5–170 nm and electron flux 12.5–187.5. Plus a 3,600-frame held-out set over 12 layer and flux combinations, and two real experimental videos (237 and 75 frames) that carry no masks. 102 GB in total, but every piece downloads separately and the useful ones are small. No license file</p></td>
+<td><p><a class="reference external" href="https://doi.org/10.57967/hf/9700">10.57967/hf/9700</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Download one piece, not the repository.</strong> That 102 GB is the whole release, most of it a
+64 GB ablation training set and a 2.7 GB model checkpoint. Individual files can be downloaded
+on their own, and the two to start with are <code class="docutils literal notranslate"><span class="pre">holdoutValidationSet-4ParticlesOverlapping</span></code>
+(30 MB: one 50-frame video of four overlapping particles, with masks — note that it is a zip
+archive despite having no file extension) and <code class="docutils literal notranslate"><span class="pre">experimentalAggregation.zip</span></code> (3 MB: 237 frames
+of a real aggregation event, without masks). The full labeled validation set,
+<code class="docutils literal notranslate"><span class="pre">holdoutValidationSet.zip</span></code>, is 2.3 GB.</p>
+<p><strong>The annotations are instance masks, not binary masks.</strong> Each is a PNG the size of its frame:
+black background, one distinct color per particle, and the color assigned to a particle holds
+across every frame of its video. Two consequences worth planning around. You can recover
+per-particle trajectories from the labels alone, with no model involved, which makes this a
+mean-squared-displacement problem as much as a segmentation one
+(<a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html"><span class="doc">Time Series Basics</span></a>). And a model can
+be scored on whether it kept each particle’s identity, not just on how well its outlines
+overlap — which is the harder question, and the one this dataset exists to ask.</p>
+<p><strong>The labeled videos are simulated and the real videos are unlabeled.</strong> Every mask here
+belongs to a simulated video; the two experimental videos ship as raw frames. So a supervised
+result is trained and validated entirely on simulator output, and the experimental frames are
+where you find out whether it transferred. The caution in the note at the top of this page
+applies with unusual force, because here the simulator is what defines the noise you are
+learning to see through.</p>
+<p>The paper is <a class="reference external" href="https://doi.org/10.1039/d6dd00211k">10.1039/d6dd00211k</a> (<em>Digital Discovery</em>,
+2026, from a Georgia Tech group). The analysis code and a desktop application are at
+<a class="reference external" href="https://github.com/JamaliLab/SAM-EM">JamaliLab/SAM-EM</a> under Apache 2.0, and that repository
+carries a 50-frame worked example, so you can see the file layout before downloading anything.
+The data itself has <strong>no license file and no dataset card</strong> — its documentation lives in the
+paper and the code repository rather than alongside the data — so ask the authors before
+redistributing it or releasing anything derived from it.</p>
 </section>
 <section id="materials-and-molecules">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Materials and molecules</a><a class="headerlink" href="#materials-and-molecules" title="Link to this heading">#</a></h2>
