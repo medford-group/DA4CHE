@@ -29,6 +29,7 @@ is any good.
 | Polymer property prediction | Can polymerization outcomes be predicted well enough to narrow an experimental search? | Polymerization property data | 2.6, 6.3 |
 | Property prediction with uncertainty | Can a thermophysical property be predicted with an honest uncertainty estimate and a stated valid range? | NIST ThermoML | 1.5, 2.2 |
 | Inverse design | Given a target output, can a generative model propose inputs that produce it? | Light-color inverse problem | 5.4, 1.4 |
+| Single-particle tracking in video | Can nanoparticles be segmented and tracked through a noisy video well enough that the recovered trajectories support a diffusion measurement? | SAM-EM LPTEM videos | 6.4, 6.1, 2.2 |
 | Benchmark model comparison | Do the ranking differences between models on a benchmark survive a change in the evaluation split? | Matbench | 2.2, 2.3 |
 
 ## Three worked examples

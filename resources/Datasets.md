@@ -83,28 +83,69 @@ collected at [github.com/magrover](https://github.com/magrover).
 
 The only image data in the chapters of this book is the 8 × 8 handwritten digit set built into
 scikit-learn, which stands in for image data rather than being an example of it. The datasets
-below are the real thing: in-situ microscope images of crystals captured through a process
-probe, annotated for a specific task. They connect most directly to
+below are the real thing, and they come in two flavors: still images of crystals captured
+through an in-line process probe, and video of nanoparticles moving in a liquid cell. Both
+connect most directly to
 {doc}`Neural Network Architectures </6-advanced_topics/Topic6.4-Neural_Network_Architectures>`.
 
-They are also the largest entries in this catalog, and they carry two access conditions worth
-settling before you plan around them: downloading requires a free Kaggle account, and all
-four are CC BY-SA 4.0, whose ShareAlike clause constrains what you may do with a derived
-dataset. All four come from **OpenCrystalData**, a maintained open-access database with
-Georgia Tech co-authors. Start with the EasyViewer set — it is an order of magnitude smaller
-than the largest.
+The four still-image sets are annotated for a specific task, and they carry two access
+conditions worth settling before you plan around them: downloading requires a free Kaggle
+account, and all four are CC BY-SA 4.0, whose ShareAlike clause constrains what you may do
+with a derived dataset. All four come from **OpenCrystalData**, a maintained open-access
+database with Georgia Tech co-authors. Start with the EasyViewer set — it is an order of
+magnitude smaller than the largest.
 
 | Dataset | Data | Good for | Scale and notes | Source |
 |---|---|---|---|---|
 | **EasyViewer in-line images** | Measured | A first look at image-based process monitoring, at a size you can actually download | 120 in-situ images of wollastonite and L-glutamic acid, with size and chord length information. 0.45 GB — the smallest of the four and the place to start. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/easyviewer-based-image-characterization) |
 | **Crystallization impurity detection** | Measured | Anomaly and morphology detection — a classification problem where the classes are shapes | 400 raw and 6,000 cropped in-situ images of a cephalexin monohydrate slurry, captured with an EasyViewer-100 probe, with phenylglycine impurity crystals present in some. 1.47 GB. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/cephalexin-reactive-crystallization) |
 | **Standard polystyrene microspheres** | Measured | Object detection and segmentation against particle-level ground truth | 2,300 in-situ images of standard spheres with particle-level annotations. Known, uniform geometry is what makes this the fair test case before you attempt real crystals. 1.72 GB. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/standard-polystyrene-microspheres-polys) |
-| **Ag-Crystal needle images** | Measured | Estimating a particle size distribution from images and checking it against offline measurement | 3,888 in-situ images of needle-like crystals from an industrial agrochemical process, intended for models whose PSD output is comparable with offline PSD. Needles are far harder than spheres. 5.31 GB — the largest entry in this catalog. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/agcrystal-images) |
+| **Ag-Crystal needle images** | Measured | Estimating a particle size distribution from images and checking it against offline measurement | 3,888 in-situ images of needle-like crystals from an industrial agrochemical process, intended for models whose PSD output is comparable with offline PSD. Needles are far harder than spheres. 5.31 GB — the largest of the four. CC BY-SA 4.0 | [Kaggle](https://www.kaggle.com/datasets/opencrystaldata/agcrystal-images) |
 
 All four are described together in
 [10.1016/j.dche.2024.100150](https://doi.org/10.1016/j.dche.2024.100150), which is the paper
 to cite and the best guide to what each one contains. Note that the per-dataset DOIs printed
 in that paper did not resolve when this section was last checked — use the Kaggle links above.
+
+The video set below is a different problem. A still image asks *what is in this frame*; a
+video asks that plus *which object here is the same object as in the last one*, and that
+second question is where the interesting failures live.
+
+| Dataset | Data | Good for | Scale and notes | Source |
+|---|---|---|---|---|
+| **SAM-EM liquid-phase TEM videos** | Mixed | Instance segmentation and single-particle tracking, against ground truth that carries identity across frames | 1,000 simulated liquid-cell TEM videos: 50,000 grayscale frames (1024 × 1024, 0.25 nm per pixel) with 50,000 matching instance masks, spanning liquid layer thickness 5–170 nm and electron flux 12.5–187.5. Plus a 3,600-frame held-out set over 12 layer and flux combinations, and two real experimental videos (237 and 75 frames) that carry no masks. 102 GB in total, but every piece downloads separately and the useful ones are small. No license file | [10.57967/hf/9700](https://doi.org/10.57967/hf/9700) |
+
+**Download one piece, not the repository.** That 102 GB is the whole release, most of it a
+64 GB ablation training set and a 2.7 GB model checkpoint. Individual files can be downloaded
+on their own, and the two to start with are `holdoutValidationSet-4ParticlesOverlapping`
+(30 MB: one 50-frame video of four overlapping particles, with masks — note that it is a zip
+archive despite having no file extension) and `experimentalAggregation.zip` (3 MB: 237 frames
+of a real aggregation event, without masks). The full labeled validation set,
+`holdoutValidationSet.zip`, is 2.3 GB.
+
+**The annotations are instance masks, not binary masks.** Each is a PNG the size of its frame:
+black background, one distinct color per particle, and the color assigned to a particle holds
+across every frame of its video. Two consequences worth planning around. You can recover
+per-particle trajectories from the labels alone, with no model involved, which makes this a
+mean-squared-displacement problem as much as a segmentation one
+({doc}`Time Series Basics </6-advanced_topics/Topic6.1-Time_Series_Basics>`). And a model can
+be scored on whether it kept each particle's identity, not just on how well its outlines
+overlap — which is the harder question, and the one this dataset exists to ask.
+
+**The labeled videos are simulated and the real videos are unlabeled.** Every mask here
+belongs to a simulated video; the two experimental videos ship as raw frames. So a supervised
+result is trained and validated entirely on simulator output, and the experimental frames are
+where you find out whether it transferred. The caution in the note at the top of this page
+applies with unusual force, because here the simulator is what defines the noise you are
+learning to see through.
+
+The paper is [10.1039/d6dd00211k](https://doi.org/10.1039/d6dd00211k) (*Digital Discovery*,
+2026, from a Georgia Tech group). The analysis code and a desktop application are at
+[JamaliLab/SAM-EM](https://github.com/JamaliLab/SAM-EM) under Apache 2.0, and that repository
+carries a 50-frame worked example, so you can see the file layout before downloading anything.
+The data itself has **no license file and no dataset card** — its documentation lives in the
+paper and the code repository rather than alongside the data — so ask the authors before
+redistributing it or releasing anything derived from it.
 
 ## Materials and molecules
 

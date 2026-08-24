@@ -58,6 +58,7 @@ lectures, notebooks, and assignments you can work through independently.
 | [PySINDy examples](https://pysindy.readthedocs.io/en/latest/examples/index.html) | Discovering governing equations from dynamic data |
 | [IDAES surrogate modeling examples](https://idaes-examples.readthedocs.io/en/stable/docs/surrogates/index.html) | Surrogate models inside flowsheet optimization, from DOE and NETL |
 | [Streamlit](https://streamlit.io/) | Turning a finished model or analysis into a small interactive application |
+| [SAM-EM](https://github.com/JamaliLab/SAM-EM) | Segmenting and tracking particles in liquid-cell electron microscopy video, with the trajectory statistics attached |
 | [LearnChE statistics screencasts](http://www.learncheme.com/screencasts/statistics) (Colorado Boulder) | Sixty-plus short videos on statistics topics, including software tutorials |
 | [Virtual Laboratories in Probability and Statistics](http://www.math.uah.edu/stat/) | Interactive demonstrations of distributions and statistical concepts |
 
