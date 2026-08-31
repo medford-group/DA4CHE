@@ -46,6 +46,8 @@ chapters:
       - file: problem_sets/Topic1.1-Python_Basics_Problems
       - file: problem_sets/Topic1.2-Linear_Algebra_Problems
       - file: problem_sets/Topic1.3-Linear_Regression_Problems
+      - file: problem_sets/Topic1.4-Numerical_Optimization_Problems
+      - file: problem_sets/Topic1.5-Parameter_Estimation_Problems
       - file: problem_sets/Topic2.2-Model_Validation_Problems
       - file: problem_sets/Topic5.3-Clustering_Problems
   - file: resources/intro

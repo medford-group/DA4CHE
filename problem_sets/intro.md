@@ -22,6 +22,8 @@ Solutions are not published here.
 - **1.1 Python Basics** — {doc}`Topic1.1-Python_Basics_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.1-Python_Basics`) · {download}`zip <archives/Topic1.1-Python_Basics_Problems.zip>`
 - **1.2 Linear Algebra** — {doc}`Topic1.2-Linear_Algebra_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.2-Linear_Algebra`) · {download}`zip <archives/Topic1.2-Linear_Algebra_Problems.zip>`
 - **1.3 Linear Regression** — {doc}`Topic1.3-Linear_Regression_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.3-Linear_Regression`) · {download}`zip <archives/Topic1.3-Linear_Regression_Problems.zip>`
+- **1.4 Numerical Optimization** — {doc}`Topic1.4-Numerical_Optimization_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.4-Numerical_Optimization`) · {download}`zip <archives/Topic1.4-Numerical_Optimization_Problems.zip>`
+- **1.5 Nonlinear Parameter Estimation** — {doc}`Topic1.5-Parameter_Estimation_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.5-Parameter_Estimation`) · {download}`zip <archives/Topic1.5-Parameter_Estimation_Problems.zip>`
 
 ## Regression
 
