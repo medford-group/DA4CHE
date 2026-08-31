@@ -58,7 +58,14 @@ def list_markdown_files(d: Path):
 
 
 def build_chapter_for_dir(d: Path, repo_root: Path):
-    """Create a chapter dict for directory d. Use intro.md/index.md as chapter file if present."""
+    """Create a chapter dict for directory d. Use intro.md/index.md as chapter file if present.
+
+    A directory may carry a `_sections.json` manifest ({"sections": [{"file": ...,
+    "title": ..., "sections": [...]}, ...]}, paths repo-relative without extension).
+    When present it replaces the flat file listing, so a generator elsewhere (e.g.
+    DA4CHE-manager's build_problems.py) can express nesting and display titles that
+    the layout alone cannot. The chapter file is still intro.md/index.md.
+    """
     candidates = list_markdown_files(d)
     intro = d / "intro.md"
     index = d / "index.md"
@@ -72,6 +79,15 @@ def build_chapter_for_dir(d: Path, repo_root: Path):
 
     if not chapter_file:
         return None  # no content
+
+    manifest = d / "_sections.json"
+    if manifest.exists():
+        import json
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+        chapter = {"file": rel_no_ext(chapter_file, repo_root)}
+        if data.get("sections"):
+            chapter["sections"] = data["sections"]
+        return chapter
 
     sections = [p for p in candidates if p != chapter_file]
 
@@ -126,11 +142,15 @@ def build_yaml(repo_root: Path, root_file: Path, chapters):
     lines.append("chapters:")
 
     def emit_chapter(chap, indent="  "):
+        import json as _json
         lines.append(f"{indent}- file: {chap['file']}")
-        if "sections" in chap and chap["sections"]:
+        if chap.get("title"):
+            # json.dumps produces a valid YAML double-quoted scalar.
+            lines.append(f"{indent}  title: {_json.dumps(chap['title'])}")
+        if chap.get("sections"):
             lines.append(f"{indent}  sections:")
             for sec in chap["sections"]:
-                lines.append(f"{indent}{indent}  - file: {sec['file']}")
+                emit_chapter(sec, indent + "    ")
 
     # If discover_chapters returned a tuple, we are in generic mode with extra top-level mds.
     if isinstance(chapters, tuple):

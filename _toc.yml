@@ -43,13 +43,26 @@ chapters:
       - file: 6-advanced_topics/Topic6.4-Neural_Network_Architectures
   - file: problem_sets/intro
     sections:
-      - file: problem_sets/Topic1.1-Python_Basics_Problems
-      - file: problem_sets/Topic1.2-Linear_Algebra_Problems
-      - file: problem_sets/Topic1.3-Linear_Regression_Problems
-      - file: problem_sets/Topic1.4-Numerical_Optimization_Problems
-      - file: problem_sets/Topic1.5-Parameter_Estimation_Problems
-      - file: problem_sets/Topic2.2-Model_Validation_Problems
-      - file: problem_sets/Topic5.3-Clustering_Problems
+      - file: problem_sets/module-1-numerical_methods
+        sections:
+          - file: problem_sets/Topic1.1-Python_Basics_Problems
+            title: "1.1 - Python Basics - Water Properties"
+          - file: problem_sets/Topic1.2-Linear_Algebra_Problems
+            title: "1.2 - Linear Algebra - Steam Methane Reforming"
+          - file: problem_sets/Topic1.3-Linear_Regression_Problems
+            title: "1.3 - Linear Regression - Methanol IR Spectrum"
+          - file: problem_sets/Topic1.4-Numerical_Optimization_Problems
+            title: "1.4 - Numerical Optimization - CO2 Adsorption Isotherm"
+          - file: problem_sets/Topic1.5-Parameter_Estimation_Problems
+            title: "1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty"
+      - file: problem_sets/module-2-regression
+        sections:
+          - file: problem_sets/Topic2.2-Model_Validation_Problems
+            title: "2.2 - Model Validation - Henry's Law Constants"
+      - file: problem_sets/module-5-exploratory_data_analysis
+        sections:
+          - file: problem_sets/Topic5.3-Clustering_Problems
+            title: "5.3 - Clustering - Carbon XPS Spectra"
   - file: resources/intro
     sections:
       - file: resources/Datasets

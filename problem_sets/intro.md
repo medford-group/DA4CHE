@@ -19,16 +19,16 @@ Solutions are not published here.
 
 ## Numerical Methods
 
-- **1.1 Python Basics** — {doc}`Topic1.1-Python_Basics_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.1-Python_Basics`) · {download}`zip <archives/Topic1.1-Python_Basics_Problems.zip>`
-- **1.2 Linear Algebra** — {doc}`Topic1.2-Linear_Algebra_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.2-Linear_Algebra`) · {download}`zip <archives/Topic1.2-Linear_Algebra_Problems.zip>`
-- **1.3 Linear Regression** — {doc}`Topic1.3-Linear_Regression_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.3-Linear_Regression`) · {download}`zip <archives/Topic1.3-Linear_Regression_Problems.zip>`
-- **1.4 Numerical Optimization** — {doc}`Topic1.4-Numerical_Optimization_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.4-Numerical_Optimization`) · {download}`zip <archives/Topic1.4-Numerical_Optimization_Problems.zip>`
-- **1.5 Nonlinear Parameter Estimation** — {doc}`Topic1.5-Parameter_Estimation_Problems` (accompanies {doc}`/1-numerical_methods/Topic1.5-Parameter_Estimation`) · {download}`zip <archives/Topic1.5-Parameter_Estimation_Problems.zip>`
+- **{doc}`1.1 - Python Basics - Water Properties <Topic1.1-Python_Basics_Problems>`** (accompanies {doc}`/1-numerical_methods/Topic1.1-Python_Basics`) · {download}`zip <archives/Topic1.1-Python_Basics_Problems.zip>`
+- **{doc}`1.2 - Linear Algebra - Steam Methane Reforming <Topic1.2-Linear_Algebra_Problems>`** (accompanies {doc}`/1-numerical_methods/Topic1.2-Linear_Algebra`) · {download}`zip <archives/Topic1.2-Linear_Algebra_Problems.zip>`
+- **{doc}`1.3 - Linear Regression - Methanol IR Spectrum <Topic1.3-Linear_Regression_Problems>`** (accompanies {doc}`/1-numerical_methods/Topic1.3-Linear_Regression`) · {download}`zip <archives/Topic1.3-Linear_Regression_Problems.zip>`
+- **{doc}`1.4 - Numerical Optimization - CO2 Adsorption Isotherm <Topic1.4-Numerical_Optimization_Problems>`** (accompanies {doc}`/1-numerical_methods/Topic1.4-Numerical_Optimization`) · {download}`zip <archives/Topic1.4-Numerical_Optimization_Problems.zip>`
+- **{doc}`1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty <Topic1.5-Parameter_Estimation_Problems>`** (accompanies {doc}`/1-numerical_methods/Topic1.5-Parameter_Estimation`) · {download}`zip <archives/Topic1.5-Parameter_Estimation_Problems.zip>`
 
 ## Regression
 
-- **2.2 Model Validation** — {doc}`Topic2.2-Model_Validation_Problems` (accompanies {doc}`/2-regression/Topic2.2-Model_Validation`) · {download}`zip <archives/Topic2.2-Model_Validation_Problems.zip>`
+- **{doc}`2.2 - Model Validation - Henry's Law Constants <Topic2.2-Model_Validation_Problems>`** (accompanies {doc}`/2-regression/Topic2.2-Model_Validation`) · {download}`zip <archives/Topic2.2-Model_Validation_Problems.zip>`
 
 ## Exploratory Data Analysis
 
-- **5.3 Clustering** — {doc}`Topic5.3-Clustering_Problems` (accompanies {doc}`/5-exploratory_data_analysis/Topic5.3-Clustering`) · {download}`zip <archives/Topic5.3-Clustering_Problems.zip>`
+- **{doc}`5.3 - Clustering - Carbon XPS Spectra <Topic5.3-Clustering_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.3-Clustering`) · {download}`zip <archives/Topic5.3-Clustering_Problems.zip>`
