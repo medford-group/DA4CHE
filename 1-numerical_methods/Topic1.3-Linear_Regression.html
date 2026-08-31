@@ -224,13 +224,22 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../problem_sets/intro.html">Problem Sets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.2-Linear_Algebra_Problems.html">Problems: Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.4-Numerical_Optimization_Problems.html">Problems: Numerical Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic1.5-Parameter_Estimation_Problems.html">Problems: Nonlinear Parameter Estimation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-2-regression.html">Module 2 — Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -533,7 +542,7 @@ y_i = \sum_{j=0}^1 w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/64fcc8a72a3f131e9e78643f41df3bba4b1e46ccc2ed8ec88930f05c20d1c597.png" src="../_images/64fcc8a72a3f131e9e78643f41df3bba4b1e46ccc2ed8ec88930f05c20d1c597.png" />
+<img alt="../_images/8062cd9f105f903c42017b7f0a302ade2364bc3a2c9d71d405b240fec943e133.png" src="../_images/8062cd9f105f903c42017b7f0a302ade2364bc3a2c9d71d405b240fec943e133.png" />
 </div>
 </div>
 <p>The goal of linear regression is to use the data, <span class="math notranslate nohighlight">\(y_i\)</span>, to recover the best-fit line. In this case, we know the answer since we generated the data. However, we can also try to recover the line based only on the noisy data.</p>
@@ -638,7 +647,7 @@ g(\vec{w})
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.42073988 -2.5092338 ]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.45140772 -2.50526197]
 Original weights to generate data: [1.4, -2.5]
 </pre></div>
 </div>
@@ -657,7 +666,7 @@ Original weights to generate data: [1.4, -2.5]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/dae4054d7537ba55f4760bd6733efc1e07a634d30615d06a769a9b369385ebc2.png" src="../_images/dae4054d7537ba55f4760bd6733efc1e07a634d30615d06a769a9b369385ebc2.png" />
+<img alt="../_images/126dbc65955197d4eb0b7e4180a7d35a1995770bac8604460c01a4453bd84b6c.png" src="../_images/126dbc65955197d4eb0b7e4180a7d35a1995770bac8604460c01a4453bd84b6c.png" />
 </div>
 </div>
 <p>We can see that the best-fit line actually fits the data better than the original weights! We will explore more strategies for quantifying the fit in the “regression” lecture.</p>
@@ -709,7 +718,7 @@ y_i = \sum_{j=0}^m w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0dc99dce4e9292babd4fce73f9487d127fe6ef59c6a8fe46aca06ab951d32076.png" src="../_images/0dc99dce4e9292babd4fce73f9487d127fe6ef59c6a8fe46aca06ab951d32076.png" />
+<img alt="../_images/26e7c8d67de69044a692cfcaad22f8ad32d19c86eb3075471c824008e2e482ba.png" src="../_images/26e7c8d67de69044a692cfcaad22f8ad32d19c86eb3075471c824008e2e482ba.png" />
 </div>
 </div>
 <p>Now we can try to recover the weights, <span class="math notranslate nohighlight">\(w\)</span> using the same math as before:</p>
@@ -724,7 +733,7 @@ y_i = \sum_{j=0}^m w_j x_i^{j} + \epsilon_i
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.47514963  0.63291637 -0.24465444  0.01555065]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights from least-squares regression: [ 1.53940603  0.68438279 -0.26573682  0.01775781]
 Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </pre></div>
 </div>
@@ -742,7 +751,7 @@ Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/70fc35fb1c9632ddb81761aac8b8399cfc204ff2369797c6766ab9cd8924aef9.png" src="../_images/70fc35fb1c9632ddb81761aac8b8399cfc204ff2369797c6766ab9cd8924aef9.png" />
+<img alt="../_images/c14552159ca7716ba03b1e1d926422d370d2bbfbca5f32c87f65251758466669.png" src="../_images/c14552159ca7716ba03b1e1d926422d370d2bbfbca5f32c87f65251758466669.png" />
 </div>
 </div>
 <p>In this case we cheated a bit, since we knew that the data was generated from a third-order polynomial. We can also find fits based on lower (or higher) orders of polynomials by modifying the order of the Vandermonde matrix used in the least-squares equation. First, we can make a function that creates a Vandermonde matrix of any order:</p>
@@ -797,13 +806,13 @@ Original weights to generate data: [1.4, 0.8, -0.3, 0.02]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights: [ 1.50734417e+00 -1.55823534e+00  3.83262011e+00 -2.84026511e+00
-  9.97956017e-01 -1.91423614e-01  2.04437268e-02 -1.13814804e-03
-  2.57040818e-05]
-Sum of Squared Errors (g): 0.099678490828777
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights: [ 1.62432611e+00 -1.33566652e+00  2.91996733e+00 -1.96986294e+00
+  6.36454407e-01 -1.13696601e-01  1.13935765e-02 -5.95732313e-04
+  1.25794173e-05]
+Sum of Squared Errors (g): 0.005107035726366023
 </pre></div>
 </div>
-<img alt="../_images/541291bbd568704246133aa3a133136639668fea2d59ca2d41357fdf14df4718.png" src="../_images/541291bbd568704246133aa3a133136639668fea2d59ca2d41357fdf14df4718.png" />
+<img alt="../_images/d51b51cf6a136ce3bcbf377ab6f75fbc8fdd921ee8b5e09444201bb3c6819dd3.png" src="../_images/d51b51cf6a136ce3bcbf377ab6f75fbc8fdd921ee8b5e09444201bb3c6819dd3.png" />
 </div>
 </div>
 <p>We see that as the order of the polynomial increases, the sum of squared errors decreases. However, we are only checking the behavior of our model at the points we use to train it. We can also use the model to interpolate between points or extrapolate to new points by creating a new Vandermonde matrix with more rows. Increasing the resolution adds rows within the original range, and results in interpolation, while increasing the range will result in extrapolation. Let’s try both:</p>
@@ -846,7 +855,7 @@ Sum of Squared Errors (g): 0.099678490828777
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/43bbcc1c2373086b6544f8ca49e1159acc3c1ea2f34db61152ae20084a30e70e.png" src="../_images/43bbcc1c2373086b6544f8ca49e1159acc3c1ea2f34db61152ae20084a30e70e.png" />
+<img alt="../_images/ef2ad46260828f4fda73df7fc71f6045034f3adcde9d9d05ac53a74398712bca.png" src="../_images/ef2ad46260828f4fda73df7fc71f6045034f3adcde9d9d05ac53a74398712bca.png" />
 </div>
 </div>
 <p>We will discuss more techniques for validating the model and assessing the best order of the polynomial in future lectures.</p>
