@@ -1,0 +1,1029 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Numerical Optimization &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic1.4-Numerical_Optimization_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Problems: Nonlinear Parameter Estimation" href="Topic1.5-Parameter_Estimation_Problems.html" />
+    <link rel="prev" title="Problems: Linear Regression" href="Topic1.3-Linear_Regression_Problems.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">Problems: Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">Problems: Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">Problems: Linear Regression</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Problems: Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">Problems: Nonlinear Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">Problems: Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">Problems: Clustering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic1.4-Numerical_Optimization_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic1.4-Numerical_Optimization_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Numerical Optimization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-get-a-starting-guess-for-free-10-pts">A1. Get a starting guess for free (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-write-the-objective-and-differentiate-it-10-pts">A2. Write the objective and differentiate it (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-hand-it-to-a-real-optimizer-10-pts">A3. Hand it to a real optimizer (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic1.4-Numerical_Optimization/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-numerical-optimization" id="id1">Problems: Numerical Optimization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-numerical-optimization">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Numerical Optimization</a><a class="headerlink" href="#problems-numerical-optimization" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/47037c1c6dad286b2535cb17e5a296c3/Topic1.4-Numerical_Optimization_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic1.4-Numerical_Optimization_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">co2_isotherm_13x_298K.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="doc">Numerical Optimization</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, auto-graded, resubmit as often as
+you like until they pass.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation, peer graded.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem, peer graded.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>The chapter fit a sum of Gaussians to an infrared spectrum. Here the model is a
+<strong>Langmuir adsorption isotherm</strong>, and the data is a measurement of how much CO₂ a
+zeolite holds as the gas pressure rises.</p>
+<p><strong>Zeolite 13X</strong> is the benchmark sorbent for CO₂ capture: a crystalline aluminosilicate
+whose pores hold CO₂ far more strongly than N₂, which is what makes post-combustion
+separation possible at all. The isotherm below was measured at 298 K and digitized into
+the NIST/ARPA-E Adsorption Database from Yang et al., <em>Adsorption</em> <strong>26</strong>, 1305 (2020),
+<a class="reference external" href="https://doi.org/10.1007/s10450-020-00296-3">doi:10.1007/s10450-020-00296-3</a>.</p>
+<p>The Langmuir model assumes a fixed number of identical adsorption sites, each either
+empty or holding one molecule:</p>
+<div class="math notranslate nohighlight">
+\[
+q(P) \;=\; \frac{q_m\, b\, P}{1 + b\,P}
+\]</div>
+<p>Two parameters, both physically meaningful. <span class="math notranslate nohighlight">\(q_m\)</span> is the <strong>saturation loading</strong> in mmol/g
+— how much the material holds once every site is full — and <span class="math notranslate nohighlight">\(b\)</span> is the <strong>affinity
+constant</strong> in bar⁻¹, which sets how quickly it fills. At low pressure <span class="math notranslate nohighlight">\(bP \ll 1\)</span> and the
+isotherm is nearly a straight line of slope <span class="math notranslate nohighlight">\(q_m b\)</span>; at high pressure it flattens at
+<span class="math notranslate nohighlight">\(q_m\)</span>. This is the whole problem set: two parameters that live on completely different
+scales, in a model that is not linear in either of them.</p>
+<p>This set needs <code class="docutils literal notranslate"><span class="pre">autograd</span></code>, exactly as the chapter does. Run this once if you do not have
+it:</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>autograd
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">autograd.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>           <span class="c1"># a drop-in replacement, as in the chapter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hessian</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/co2_isotherm_13x_298K.csv&#39;</span><span class="p">)</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pressure [bar]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;loading [mmol/g]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">)</span><span class="si">}</span><span class="s2"> points;  P = </span><span class="si">{</span><span class="n">P</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">P</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> bar;  &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;q = </span><span class="si">{</span><span class="n">Q</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">Q</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> mmol/g&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>35 points;  P = 2.0e-05 to 0.9629 bar;  q = 0.0373 to 5.196 mmol/g
+</pre></div>
+</div>
+</div>
+</div>
+<p>The pressures span nearly five decades, so every plot of the isotherm itself wants a
+<strong>logarithmic pressure axis</strong>. On a linear axis two thirds of the measurements pile up
+against the left edge.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;pressure [bar]&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;loading [mmol g$^{-1}$]&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;linear axis&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;pressure [bar]&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;log axis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/def95ecf7dcac3ea9670f4b58dc8a0de57d15c738437cf7c84a0ca98980cd347.png" src="../_images/def95ecf7dcac3ea9670f4b58dc8a0de57d15c738437cf7c84a0ca98980cd347.png" />
+</div>
+</div>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;169d073b8ac8&#39;</span><span class="p">,</span> <span class="s1">&#39;071dfcbba161&#39;</span><span class="p">,</span> <span class="s1">&#39;fdbb2c44676d&#39;</span><span class="p">,</span> <span class="s1">&#39;04ff40ff6ae9&#39;</span><span class="p">,</span> <span class="s1">&#39;f51cf1b3beb5&#39;</span><span class="p">,</span> <span class="s1">&#39;409b57cd5c5d&#39;</span><span class="p">,</span> <span class="s1">&#39;743e55710c19&#39;</span><span class="p">,</span> <span class="s1">&#39;125ea834e92b&#39;</span><span class="p">,</span> <span class="s1">&#39;9df62094f6be&#39;</span><span class="p">,</span> <span class="s1">&#39;a710098349c2&#39;</span><span class="p">,</span> <span class="s1">&#39;53d876e4a777&#39;</span><span class="p">,</span> <span class="s1">&#39;20fa38593026&#39;</span><span class="p">,</span> <span class="s1">&#39;4377fb02a3f1&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;969327c99e19&#39;</span><span class="p">,</span> <span class="s1">&#39;a1e4593b21fd&#39;</span><span class="p">,</span> <span class="s1">&#39;d00367ce8982&#39;</span><span class="p">,</span> <span class="s1">&#39;c5f98ac682b0&#39;</span><span class="p">,</span> <span class="s1">&#39;bbe420df909d&#39;</span><span class="p">,</span> <span class="s1">&#39;ede4b6829e38&#39;</span><span class="p">,</span> <span class="s1">&#39;74471c58c19d&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;8a8d1d835236&#39;</span><span class="p">,</span> <span class="s1">&#39;08a9e2dfca87&#39;</span><span class="p">,</span> <span class="s1">&#39;2468af0552a0&#39;</span><span class="p">,</span> <span class="s1">&#39;2cb5ff75daf4&#39;</span><span class="p">,</span> <span class="s1">&#39;20b29d7c2521&#39;</span><span class="p">,</span> <span class="s1">&#39;3236770c0897&#39;</span><span class="p">,</span> <span class="s1">&#39;98930a3d2c61&#39;</span><span class="p">,</span> <span class="s1">&#39;a55e4bef86ad&#39;</span><span class="p">,</span> <span class="s1">&#39;50d16e3878a2&#39;</span><span class="p">,</span> <span class="s1">&#39;c71e5032ab39&#39;</span><span class="p">,</span> <span class="s1">&#39;c34755801579&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Three questions, 10 points each. Each asks you to assign a single number to a named
+variable. Run the check cell after each one; there is no limit on attempts.</p>
+<section id="a1-get-a-starting-guess-for-free-10-pts">
+<h3>A1. Get a starting guess for free (10 pts)<a class="headerlink" href="#a1-get-a-starting-guess-for-free-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-lang-linearize">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>The Langmuir equation is not linear in <span class="math notranslate nohighlight">\(q_m\)</span> or <span class="math notranslate nohighlight">\(b\)</span>, but it can be rearranged until it is
+linear in something. Divide both sides into <span class="math notranslate nohighlight">\(P\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{P}{q} \;=\; \frac{1}{q_m b} \;+\; \frac{P}{q_m}
+\]</div>
+<p>So plotting <span class="math notranslate nohighlight">\(P/q\)</span> against <span class="math notranslate nohighlight">\(P\)</span> should give a straight line whose <strong>slope is <span class="math notranslate nohighlight">\(1/q_m\)</span></strong> and
+whose <strong>intercept is <span class="math notranslate nohighlight">\(1/(q_m b)\)</span></strong>. That is an ordinary linear least-squares problem of
+exactly the kind <a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html"><span class="doc">Linear Regression</span></a>
+solves.</p>
+<p>Build the two-column design matrix <span class="math notranslate nohighlight">\(\bar{\bar{X}}\)</span> — a column of ones for the intercept
+and a column of <span class="math notranslate nohighlight">\(P\)</span> for the slope — and solve the normal equations
+<span class="math notranslate nohighlight">\(\bar{\bar{X}}^T\bar{\bar{X}}\vec{w} = \bar{\bar{X}}^T\vec{y}\)</span> with <code class="docutils literal notranslate"><span class="pre">np.linalg.solve</span></code>,
+where <span class="math notranslate nohighlight">\(\vec{y}\)</span> is <span class="math notranslate nohighlight">\(P/q\)</span>. Use all 35 points.</p>
+<p>Assign the saturation loading <span class="math notranslate nohighlight">\(q_m = 1/\text{slope}\)</span>, in mmol/g, to <code class="docutils literal notranslate"><span class="pre">q_m_linear</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">q_m_linear</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">q_m_linear</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-write-the-objective-and-differentiate-it-10-pts">
+<h3>A2. Write the objective and differentiate it (10 pts)<a class="headerlink" href="#a2-write-the-objective-and-differentiate-it-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-lang-gradnorm">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>Now set up the real problem. Pack the parameters into a single vector
+<span class="math notranslate nohighlight">\(\vec{\lambda} = [q_m,\, b]\)</span> and write the <strong>plain sum of squared errors</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+g(\vec{\lambda}) \;=\; \sum_i \left( \frac{q_m b P_i}{1 + b P_i} - q_i \right)^2
+\]</div>
+<p>Note this is the plain sum — <strong>do not</strong> divide by the number of points, as the chapter’s
+<code class="docutils literal notranslate"><span class="pre">gaussian_loss</span></code> did. Write it as a function of one argument, as the chapter does, so
+<code class="docutils literal notranslate"><span class="pre">autograd</span></code> can differentiate it, then get the gradient function with <code class="docutils literal notranslate"><span class="pre">grad</span></code>.</p>
+<p>Every part of this problem set starts from the same round-number guess:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{\lambda}_0 = [\,5.0,\; 65.0\,]
+\]</div>
+<p>Assign the norm of the gradient at <span class="math notranslate nohighlight">\(\vec{\lambda}_0\)</span>, via <code class="docutils literal notranslate"><span class="pre">np.linalg.norm</span></code>, to
+<code class="docutils literal notranslate"><span class="pre">grad_norm_init</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">grad_norm_init</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">grad_norm_init</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-hand-it-to-a-real-optimizer-10-pts">
+<h3>A3. Hand it to a real optimizer (10 pts)<a class="headerlink" href="#a3-hand-it-to-a-real-optimizer-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-nm-lang-bfgs">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<p>Pass the same objective and the same starting guess <span class="math notranslate nohighlight">\(\vec{\lambda}_0\)</span> to
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> with <code class="docutils literal notranslate"><span class="pre">method='BFGS'</span></code> and default settings, exactly as the
+chapter does.</p>
+<p>Assign the sum of squared errors <strong>at the optimum</strong> to <code class="docutils literal notranslate"><span class="pre">sse_bfgs</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">sse_bfgs</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">sse_bfgs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>BFGS got there in a handful of iterations. Now do it yourself, with the chapter’s own
+gradient descent, and find out what that costs.</p>
+<p>Everything in this part is a picture of the <strong>same two-dimensional surface</strong>: the SSE as a
+function of <span class="math notranslate nohighlight">\((q_m, b)\)</span>. Use this helper to draw it — it is provided so that everyone’s
+figures are comparable, and so the work goes into the optimization rather than into
+matplotlib.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sse_surface</span><span class="p">(</span><span class="n">qm_range</span><span class="o">=</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">),</span> <span class="n">b_range</span><span class="o">=</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">120</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SSE on a grid of (q_m, b). Returns meshgrids QM, B and the SSE values Z.&quot;&quot;&quot;</span>
+    <span class="n">qm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">qm_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">qm_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">b_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">b_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">QM</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">qm</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">QM</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">P</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> \
+        <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">B</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">P</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">pred</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">QM</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">Z</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_landscape</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">qm_range</span><span class="o">=</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">),</span> <span class="n">b_range</span><span class="o">=</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">),</span>
+                   <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">120</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contour the SSE surface onto `ax`. Returns the contour set.&quot;&quot;&quot;</span>
+    <span class="n">QM</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">sse_surface</span><span class="p">(</span><span class="n">qm_range</span><span class="p">,</span> <span class="n">b_range</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">levels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">4.4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">QM</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;0.65&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">logy</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$q_m$ [mmol g$^{-1}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$b$ [bar$^{-1}$]&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
+<span class="n">plot_landscape</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;the surface every task in Part B is about&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8b6d3e9c0eda86fd0cd9bde9ec6d0452419dd3c7fc66e9a6a088e5c47511c679.png" src="../_images/8b6d3e9c0eda86fd0cd9bde9ec6d0452419dd3c7fc66e9a6a088e5c47511c679.png" />
+</div>
+</div>
+<div class="exercise admonition" id="pr-nm-lang-step-size">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p>Write the chapter’s fixed-step gradient descent: repeatedly replace
+<span class="math notranslate nohighlight">\(\vec{\lambda} \leftarrow \vec{\lambda} - h\,\nabla g(\vec{\lambda})\)</span> for a fixed
+<strong>1,000 iterations</strong>, the same <code class="docutils literal notranslate"><span class="pre">N_iter</span></code> the chapter uses. Unlike the chapter’s loop, keep
+the whole history — every task below plots it.</p>
+<p><strong>1. Where the descent actually goes.</strong> Run it from <span class="math notranslate nohighlight">\(\vec{\lambda}_0 = [5.0,\, 65.0]\)</span> at
+<span class="math notranslate nohighlight">\(h = 10^{-5}\)</span>, <span class="math notranslate nohighlight">\(10^{-3}\)</span> and <span class="math notranslate nohighlight">\(10^{-1}\)</span>. Plot all three <strong>trajectories on the contour map</strong>
+with <code class="docutils literal notranslate"><span class="pre">plot_landscape</span></code>, marking the start and the A3 optimum. Beside the figure, give a
+short table: final SSE, and the <strong>fraction of the required change each parameter achieved</strong>,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\lambda_j^{\text{final}} - \lambda_j^{(0)}}{\lambda_j^{\text{opt}} - \lambda_j^{(0)}}
+\times 100\%
+\]</div>
+<p>for <span class="math notranslate nohighlight">\(j = q_m\)</span> and <span class="math notranslate nohighlight">\(j = b\)</span>, using your A3 optimum as <span class="math notranslate nohighlight">\(\lambda^{\text{opt}}\)</span>.</p>
+<div class="warning admonition">
+<p class="admonition-title">Guard against overflow</p>
+<p>At the largest step size the SSE overflows within a few iterations. Break out of the loop
+when the SSE stops being finite or exceeds, say, <span class="math notranslate nohighlight">\(10^{12}\)</span>, and record the iteration at
+which that happened — otherwise you will spend the rest of the run propagating <code class="docutils literal notranslate"><span class="pre">inf</span></code> and
+<code class="docutils literal notranslate"><span class="pre">nan</span></code>, and nothing will plot.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When plotting the trajectories, set the axis limits explicitly to the suggested
+<code class="docutils literal notranslate"><span class="pre">plot_landscape</span></code> range (i.e., <code class="docutils literal notranslate"><span class="pre">qm_range=(3.0,</span> <span class="pre">7.0)</span></code>) — otherwise the contour-map domain
+will be dominated by the diverged direction.</p>
+</div>
+<p><strong>2. Two views of the same failure.</strong> A two-panel figure: SSE against iteration on a
+<strong>logarithmic <span class="math notranslate nohighlight">\(y\)</span> axis</strong> for all three step sizes, with a horizontal reference line at your
+A3 optimum; and beside it <span class="math notranslate nohighlight">\(q_m\)</span> and <span class="math notranslate nohighlight">\(b\)</span> against iteration (two panels or twin axes), each
+with a horizontal line at its optimal value. One of those parameter traces will be visibly
+flat.</p>
+<p><strong>3. Does the starting guess matter?</strong> Re-run at <span class="math notranslate nohighlight">\(h = 10^{-5}\)</span> and <span class="math notranslate nohighlight">\(10^{-3}\)</span> from</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\([5.0,\; 0.65]\)</span> — the affinity constant 100× too small, and</p></li>
+<li><p><span class="math notranslate nohighlight">\([500,\; 6500]\)</span> — both parameters 100× too large,</p></li>
+</ul>
+<p>and plot these trajectories on the contour map as well. You will need wider axis ranges to
+see the second one; say what you chose. Report the final SSE each run reaches.</p>
+<p><strong>4. The shape of the valley.</strong> The surface has a direction that is steep and a direction
+that is flat, and the ratio is what defeated task 1. Measure it. The matrix of second
+derivatives — the <strong>Hessian</strong> — is available from <code class="docutils literal notranslate"><span class="pre">autograd</span></code> exactly as the gradient was:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">hessian</span><span class="p">(</span><span class="n">sse</span><span class="p">)(</span><span class="n">lam_opt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Take its eigenvalues and eigenvectors with <code class="docutils literal notranslate"><span class="pre">np.linalg.eigh</span></code>. Each eigenvector points along
+a principal direction of the surface, and moving a distance <span class="math notranslate nohighlight">\(1/\sqrt{\lambda_i}\)</span> along it
+raises the SSE by the same amount in every direction — so those distances measure how far
+you can travel before the fit degrades.</p>
+<p>Plot a <strong>zoomed</strong> contour map near the optimum on a <strong>linear</strong> <span class="math notranslate nohighlight">\(b\)</span> axis (the Hessian is a
+local statement, so zoom in until the contours look like ellipses), and draw both
+eigenvector directions as arrows of length <span class="math notranslate nohighlight">\(1/\sqrt{\lambda_i}\)</span> from the optimum.</p>
+<p>Report the two arrow lengths and their ratio, then <strong>in one or two sentences</strong> say why no
+single step size could have worked in task 1.</p>
+<p>Label your axes with units.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>Part B measured the problem: the loss surface is a long narrow valley, and the ratio of its
+two curvatures — the <strong>condition number</strong> of the Hessian, <span class="math notranslate nohighlight">\(\lambda_{\max}/\lambda_{\min}\)</span> —
+is what a single step size cannot cope with. You met condition numbers in
+<a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html"><span class="doc">Linear Algebra</span></a>, where a large one
+meant a linear solve had lost its accuracy; here it has a shape.</p>
+<p>There are two completely different things you can change about a fitting problem, and this
+part is about telling them apart:</p>
+<ul class="simple">
+<li><p>the <strong>parameterization</strong> — the coordinates you search in, and</p></li>
+<li><p>the <strong>model</strong> and the <strong>loss</strong> — what you are fitting and what counts as a good fit.</p></li>
+</ul>
+<p>One of them moves the answer. The other does not.</p>
+<div class="exercise admonition" id="pr-nm-lang-rescale">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. Change the coordinates.</strong> Your two fitted parameters differ by more than an order of
+magnitude and both must stay positive, and both problems go away if you search in the
+<em>logarithms</em> instead. Define <span class="math notranslate nohighlight">\(\vec{z} = [\ln q_m,\, \ln b]\)</span>, write an objective that takes
+<span class="math notranslate nohighlight">\(\vec z\)</span>, exponentiates it, and returns the same SSE, then run <strong>the same gradient descent,
+at the same three step sizes, for the same 1,000 iterations</strong> from
+<span class="math notranslate nohighlight">\(\vec{z}_0 = \ln\vec{\lambda}_0\)</span>.</p>
+<p>Report the same quantities as Part B task 1, remembering to exponentiate before quoting
+<span class="math notranslate nohighlight">\(q_m\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, and report <code class="docutils literal notranslate"><span class="pre">np.linalg.cond(H)</span></code> for the Hessian in <strong>both</strong> parameterizations.
+Plot the log-parameter trajectories on the contour map alongside the raw ones from Part B —
+on the same <span class="math notranslate nohighlight">\((q_m, b)\)</span> axes, so the two are comparable.</p>
+<p><strong>2. Change the model.</strong> Langmuir assumes every adsorption site is identical, which for a
+real zeolite is optimistic. Pick <strong>at least one</strong> other isotherm model, fit it to the same
+data, and plot it against the Langmuir fit. Some standard choices, all fittable with what
+you already have:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>model</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(q(P)\)</span></p></th>
+<th class="head"><p>parameters</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Freundlich</p></td>
+<td><p><span class="math notranslate nohighlight">\(K P^{n}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(K, n\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Sips</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_m (bP)^{t} / \left[1 + (bP)^{t}\right]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(q_m, b, t\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Tóth</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_m b P / \left[1 + (bP)^{t}\right]^{1/t}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(q_m, b, t\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>dual-site Langmuir</p></td>
+<td><p><span class="math notranslate nohighlight">\(\dfrac{q_1 b_1 P}{1 + b_1 P} + \dfrac{q_2 b_2 P}{1 + b_2 P}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(q_1, b_1, q_2, b_2\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Fit in log parameters — you have just seen why. For each model you try, report the SSE and
+<code class="docutils literal notranslate"><span class="pre">np.linalg.cond(H)</span></code> at its optimum, and say in one sentence what the extra freedom bought.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Tóth model comes back in
+<a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html"><span class="doc">Nonlinear Parameter Estimation</span></a>,
+where the question becomes how <em>certain</em> its parameters are. You are welcome to use it here.</p>
+</div>
+<p><strong>3. Change the loss.</strong> Everything so far has minimized the plain sum of squared errors in
+<span class="math notranslate nohighlight">\(q\)</span>. That is a choice. Compare <strong>at least three</strong> different loss functions on the same
+model, on two axes — the quality of the fit they produce, and how numerically well behaved
+they are. Required: the plain SSE in <span class="math notranslate nohighlight">\(q\)</span>; the SSE of the <strong>log-transformed</strong> residuals,</p>
+<div class="math notranslate nohighlight">
+\[
+g_{\log}(\vec\lambda) \;=\; \sum_i \left[\ln q(P_i;\vec\lambda) - \ln q_i\right]^2 ,
+\]</div>
+<p>and the loss for whichever model you chose in task 2. Others you may add: the mean squared
+error, or an SSE with a soft penalty added as the chapter describes.</p>
+<p>For each loss, report where it lands (the fitted parameters), the <strong>plain</strong> SSE evaluated at
+that optimum so the comparison is on one scale, and <code class="docutils literal notranslate"><span class="pre">np.linalg.cond(H)</span></code>.</p>
+<p><strong>4. Two numbers, then one or two sentences.</strong> Report the condition-number improvement from
+task 1, and the largest difference in fitted <span class="math notranslate nohighlight">\(q_m\)</span> between any two of your task-3 losses.</p>
+<p>Then, <strong>in one or two sentences</strong>: which of the three changes altered <em>where the optimum is</em>,
+and which only altered <em>how hard it was to get there</em>?</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic1.3-Linear_Regression_Problems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Problems: Linear Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic1.5-Parameter_Estimation_Problems.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Problems: Nonlinear Parameter Estimation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-get-a-starting-guess-for-free-10-pts">A1. Get a starting guess for free (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-write-the-objective-and-differentiate-it-10-pts">A2. Write the objective and differentiate it (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-hand-it-to-a-real-optimizer-10-pts">A3. Hand it to a real optimizer (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
