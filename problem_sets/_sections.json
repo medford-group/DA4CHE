@@ -30,8 +30,16 @@
       "file": "problem_sets/module-2-regression",
       "sections": [
         {
+          "file": "problem_sets/Topic2.1-Non-parametric_Models_Problems",
+          "title": "2.1 - Non-parametric Models - Refrigerant VLE Azeotrope"
+        },
+        {
           "file": "problem_sets/Topic2.2-Model_Validation_Problems",
           "title": "2.2 - Model Validation - Henry's Law Constants"
+        },
+        {
+          "file": "problem_sets/Topic2.3-Complexity_Optimization_Problems",
+          "title": "2.3 - Complexity Optimization - Coffee NMR Spectrum"
         }
       ]
     },

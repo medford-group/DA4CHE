@@ -44,6 +44,8 @@ The parts build on each other: Part A works out the syntax you need for Part B, 
 Part B produces the evidence you argue from in Part C. Do them in order.
 :::
 
+
+
 ## Setup
 
 Henry's law constant $H$ describes how much of a gas dissolves in water at equilibrium.
@@ -225,27 +227,27 @@ check("q3", rmse_cv)
 :::{exercise}
 :label: pr-reg-henry-diagnostics
 
-Three panels, using the three diagnostics from the chapter.
+Three plots, using the three diagnostics from the chapter.
 
 1. **Parity plot.** Out-of-fold prediction against actual `lnH`, with the 1:1 line drawn.
    Color the points by whether `htype` is `'Q'` (a QSAR estimate — a value produced by a
    correlation rather than measured) or anything else. You can select rows of a NumPy array
    with a boolean array, e.g. `is_q = (df['htype'].values == 'Q')` and then `y[is_q]`.
+
+   The `'Q'` points sit closer to the 1:1 line than the rest. In **two sentences**, explain
+   why that is expected given how a QSAR value is produced, and say what it implies about
+   using this pooled dataset as evidence that the relationship is physically real.
 2. **Error histogram.** The out-of-fold errors $y - \hat{y}$. Mark the mean and, using
    `np.percentile`, the 5th and 95th percentiles.
+
+   In **one sentence**, say whether the histogram is centered and symmetric, and what its
+   shape and width add that $r^2$ alone does not.
 3. **How stable is the estimate?** Recompute the mean cross-validated $r^2$ for
    `n_splits` in $\{2, 5, 10, 20\}$, each for at least 10 different `random_state` values,
    and show the spread as a boxplot per `n_splits`.
 
-Then, in **4–6 sentences**:
-
-- The `'Q'` points sit closer to the 1:1 line than the rest. Explain why that is expected,
-  given how a QSAR value is produced, and say what it implies about using this pooled
-  dataset as evidence that the relationship is physically real.
-- Is the error histogram centered and symmetric? Say what its shape and width add that
-  $r^2$ alone does not.
-- Does the choice of `n_splits` matter much here? Say why, referring to the model's size
-  relative to the dataset.
+   In **one sentence**, say whether the choice of `n_splits` matters much here and why,
+   referring to the model's size relative to the dataset.
 
 Label all axes with units.
 :::
@@ -254,7 +256,7 @@ Label all axes with units.
 :tags: [skip-execution]
 
 # YOUR CODE HERE
-fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+fig, ax = plt.subplots()
 ```
 
 
@@ -282,19 +284,19 @@ Your answer should include:
    trichloromethane, methylbenzene.
 2. A comparison of your `rmse_cv` from A3 against those spreads. How many times larger is
    the model's error than the disagreement between laboratories?
-3. A statement of how much of the model's error could *in principle* be removed, with your
-   assumptions stated. Note that your four species will not agree with each other — say
-   what that does to the argument.
+3. A statement, in **two sentences**, of how much of the model's error could *in principle*
+   be removed, with your assumptions stated. Your four species will not agree with each
+   other — say what that does to the argument.
 4. At least one concrete attempt to improve things, evaluated with the **same**
    cross-validation procedure as A2. A second feature, a different model from
    {doc}`Non-parametric Models </2-regression/Topic2.1-Non-parametric_Models>`, or a
    restriction of the dataset are all fair game.
-5. A short written argument (**one paragraph**) about whether the effort is warranted,
-   citing your own numbers.
+5. A verdict, in **two sentences**, on whether the effort is warranted, citing your own
+   numbers.
 
 Be careful with step 4: at least one obvious-looking move makes the reported score *worse*,
 for a reason that is a property of the data rather than a failure of the model. If you hit
-it, explain it.
+it, explain it in **one sentence**.
 
 There is more than one defensible conclusion. You are graded on the reasoning and the
 evidence, not on reaching a particular verdict.
