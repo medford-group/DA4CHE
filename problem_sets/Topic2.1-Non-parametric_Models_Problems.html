@@ -1,0 +1,980 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Non-parametric Models &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic2.1-Non-parametric_Models_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Problems: Model Validation" href="Topic2.2-Model_Validation_Problems.html" />
+    <link rel="prev" title="Module 2 — Regression" href="module-2-regression.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic2.1-Non-parametric_Models_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic2.1-Non-parametric_Models_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Non-parametric Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-build-the-hinge-basis-and-predict-between-two-measurements-10-pts">A1. Build the hinge basis and predict between two measurements (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-swap-in-a-gaussian-kernel-10-pts">A2. Swap in a Gaussian kernel (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-locate-the-azeotrope-10-pts">A3. Locate the azeotrope (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic2.1-Non-parametric_Models/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-non-parametric-models" id="id1">Problems: Non-parametric Models</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-non-parametric-models">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Non-parametric Models</a><a class="headerlink" href="#problems-non-parametric-models" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/85049695b434dd9f215e8a5b1d430c87/Topic2.1-Non-parametric_Models_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic2.1-Non-parametric_Models_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">r32_propane_vle.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html"><span class="doc">Non-parametric Models</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, auto-graded, resubmit as often as
+you like until they pass.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation, peer graded.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem, peer graded.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>A <strong>refrigerant blend</strong> is a mixture of two or more working fluids chosen to hit a
+pressure and temperature that neither component reaches on its own. Blends have one
+awkward property: when a charge leaks, the vapor that escapes is richer in the more
+volatile component, so the composition left in the system drifts and its performance
+drifts with it. Unless the blend is <strong>azeotropic</strong> — at the azeotrope the vapor and
+liquid have the <em>same</em> composition, nothing fractionates, and a leaking system can simply
+be topped up.</p>
+<p>So for a blend, one number matters more than any other: the composition at which</p>
+<div class="math notranslate nohighlight">
+\[
+y_1 = x_1 ,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_1\)</span> is the mole fraction of a component in the liquid and <span class="math notranslate nohighlight">\(y_1\)</span> its mole fraction
+in the vapor it is in equilibrium with. Finding it is a job for interpolation. Nobody
+measures <em>at</em> the azeotrope, because you do not know where it is until you have measured
+around it.</p>
+<p>This set uses vapor-liquid equilibrium measurements for <strong>difluoromethane (R32) +
+propane</strong>, an azeotropic pair, from Coquelet et al., <em>J. Chem. Eng. Data</em> <strong>48</strong>, 317
+(2003), <a class="reference external" href="https://doi.org/10.1021/je020115d">doi:10.1021/je020115d</a>, retrieved from the
+NIST ThermoML Archive. Each row is one equilibrium measurement: a temperature, the
+pressure, the liquid composition, and the vapor composition.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/r32_propane_vle.csv&#39;</span><span class="p">)</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature [K]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> measurements across </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)</span><span class="si">}</span><span class="s2"> isotherms: </span><span class="si">{</span><span class="n">temperatures</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Parts A and B work on one isotherm: 294.83 K.</span>
+<span class="n">iso</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature [K]&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mf">294.83</span><span class="p">]</span>
+<span class="n">x_liq</span> <span class="o">=</span> <span class="n">iso</span><span class="p">[</span><span class="s1">&#39;x_R32&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_vap</span> <span class="o">=</span> <span class="n">iso</span><span class="p">[</span><span class="s1">&#39;y_R32&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">p_iso</span> <span class="o">=</span> <span class="n">iso</span><span class="p">[</span><span class="s1">&#39;pressure [MPa]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;294.83 K: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x_liq</span><span class="p">)</span><span class="si">}</span><span class="s2"> points, x_R32 from </span><span class="si">{</span><span class="n">x_liq</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">x_liq</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>79 measurements across 5 isotherms: [np.float64(278.1), np.float64(294.83), np.float64(303.23), np.float64(313.26), np.float64(343.26)]
+294.83 K: 16 points, x_R32 from 0.0 to 1.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compositions are mole fractions of <strong>R32</strong>, named <code class="docutils literal notranslate"><span class="pre">x_R32</span></code> and <code class="docutils literal notranslate"><span class="pre">y_R32</span></code> rather than <code class="docutils literal notranslate"><span class="pre">x1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y1</span></code>. The paper’s tables number R32 as component 1 and the NIST record numbers it as
+component 2, so the column name spells out which component is meant and you never have to
+guess.</p>
+</div>
+<p>Every isotherm runs from pure propane to pure R32. Both endpoints are pure components,
+where <span class="math notranslate nohighlight">\(y = x\)</span> exactly and trivially — worth remembering later.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">temperatures</span><span class="p">:</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature [K]&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">T</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;x_R32&#39;</span><span class="p">],</span> <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;y_R32&#39;</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">T</span><span class="si">}</span><span class="s1"> K&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$y = x$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x_{</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{R32}</span><span class="s1">}$ (liquid)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$y_{</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{R32}</span><span class="s1">}$ (vapor)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;R32 + propane vapor-liquid equilibrium&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/de29ddd746ffad72f582970f30bc23a845908bc963bd403e4295f3de95b3870f.png" src="../_images/de29ddd746ffad72f582970f30bc23a845908bc963bd403e4295f3de95b3870f.png" />
+</div>
+</div>
+<p>Where a curve crosses the dashed line, the vapor and the liquid have the same composition.
+That crossing is the azeotrope, and locating it precisely is what the rest of this set is
+about.</p>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;bb9342764bdf&#39;</span><span class="p">,</span> <span class="s1">&#39;bea70f72b935&#39;</span><span class="p">,</span> <span class="s1">&#39;ec31b08195fc&#39;</span><span class="p">,</span> <span class="s1">&#39;7b9b3c5f3a9b&#39;</span><span class="p">,</span> <span class="s1">&#39;ce2b9e208124&#39;</span><span class="p">,</span> <span class="s1">&#39;c31e01e874f2&#39;</span><span class="p">,</span> <span class="s1">&#39;893d03fec242&#39;</span><span class="p">,</span> <span class="s1">&#39;e1e0dc9abc96&#39;</span><span class="p">,</span> <span class="s1">&#39;e1e0dc9abc96&#39;</span><span class="p">,</span> <span class="s1">&#39;197f3102c9d2&#39;</span><span class="p">,</span> <span class="s1">&#39;197f3102c9d2&#39;</span><span class="p">,</span> <span class="s1">&#39;e4f1cda190fb&#39;</span><span class="p">,</span> <span class="s1">&#39;e4f1cda190fb&#39;</span><span class="p">,</span> <span class="s1">&#39;7e3c910e8d63&#39;</span><span class="p">,</span> <span class="s1">&#39;7e3c910e8d63&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;98c4b36d7031&#39;</span><span class="p">,</span> <span class="s1">&#39;9d8eb8427f1f&#39;</span><span class="p">,</span> <span class="s1">&#39;cca6b6eeb75c&#39;</span><span class="p">,</span> <span class="s1">&#39;239778d8a4fc&#39;</span><span class="p">,</span> <span class="s1">&#39;c3f810582dfe&#39;</span><span class="p">,</span> <span class="s1">&#39;7fe6a1d3abf9&#39;</span><span class="p">,</span> <span class="s1">&#39;e0a151545283&#39;</span><span class="p">,</span> <span class="s1">&#39;1d30eabb09fb&#39;</span><span class="p">,</span> <span class="s1">&#39;0b17efa442ae&#39;</span><span class="p">,</span> <span class="s1">&#39;a6df06296caa&#39;</span><span class="p">,</span> <span class="s1">&#39;90ebd94c8ca1&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;35883b904c9c&#39;</span><span class="p">,</span> <span class="s1">&#39;33f74ad61065&#39;</span><span class="p">,</span> <span class="s1">&#39;8a001a88b75b&#39;</span><span class="p">,</span> <span class="s1">&#39;7e4c47919e48&#39;</span><span class="p">,</span> <span class="s1">&#39;d67623fd1254&#39;</span><span class="p">,</span> <span class="s1">&#39;520678fa90fd&#39;</span><span class="p">,</span> <span class="s1">&#39;79b5fd85948d&#39;</span><span class="p">,</span> <span class="s1">&#39;ee1962aa23c7&#39;</span><span class="p">,</span> <span class="s1">&#39;3fd819b1a30c&#39;</span><span class="p">,</span> <span class="s1">&#39;e6546605b6b4&#39;</span><span class="p">,</span> <span class="s1">&#39;3f4be80b8046&#39;</span><span class="p">,</span> <span class="s1">&#39;d6d5e4d8bb0d&#39;</span><span class="p">,</span> <span class="s1">&#39;30665e5c4697&#39;</span><span class="p">,</span> <span class="s1">&#39;0d646490e891&#39;</span><span class="p">,</span> <span class="s1">&#39;43829aa0fedc&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Three questions, 10 points each. Each asks you to assign a single number to a named
+variable. Run the check cell after each one; there is no limit on attempts.</p>
+<p>All three work on the <strong>294.83 K isotherm only</strong>, using the arrays <code class="docutils literal notranslate"><span class="pre">x_liq</span></code> and <code class="docutils literal notranslate"><span class="pre">y_vap</span></code>
+defined above. A1 and A2 build the two design matrices from the chapter; A3 puts one of
+them to work. The functions you write in A1 and A2 are used again in Parts B and C, so
+write them to be reusable.</p>
+<section id="a1-build-the-hinge-basis-and-predict-between-two-measurements-10-pts">
+<h3>A1. Build the hinge basis and predict between two measurements (10 pts)<a class="headerlink" href="#a1-build-the-hinge-basis-and-predict-between-two-measurements-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-reg-hinge-interp">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>The chapter frames linear interpolation as ordinary linear regression with a <strong>hinge</strong>
+design matrix,</p>
+<div class="math notranslate nohighlight">
+\[
+X_{ij} = \max(0,\; x_i - x_j),
+\]</div>
+<p>one column per training point, with the last column replaced by a column of ones so that
+it acts as an intercept.</p>
+<p>Write a function</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hinge_features</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>that returns this matrix, and — this is the part that matters — returns it with <strong>one row
+per evaluation point and one column per training point</strong>. When <code class="docutils literal notranslate"><span class="pre">x_test</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> it should
+fall back to <code class="docutils literal notranslate"><span class="pre">x_train</span></code>, giving the square matrix you fit with. Remember to add the intercept
+column.</p>
+<p>Fit <code class="docutils literal notranslate"><span class="pre">LinearRegression(fit_intercept=False)</span></code> to all 16 points of the 294.83 K isotherm,
+predicting <code class="docutils literal notranslate"><span class="pre">y_vap</span></code> from <code class="docutils literal notranslate"><span class="pre">x_liq</span></code>. Then use it to predict the vapor composition at a liquid
+composition of <span class="math notranslate nohighlight">\(x_{\mathrm{R32}} = 0.55\)</span>, which is not one of the measured points.</p>
+<p>Assign that prediction to <code class="docutils literal notranslate"><span class="pre">y_hinge</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">y_hinge</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">y_hinge</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-swap-in-a-gaussian-kernel-10-pts">
+<h3>A2. Swap in a Gaussian kernel (10 pts)<a class="headerlink" href="#a2-swap-in-a-gaussian-kernel-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-reg-rbf-width">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>Now change the basis and nothing else. A radial basis function places a smooth bump at
+every training point,</p>
+<div class="math notranslate nohighlight">
+\[
+X_{ij} = \exp\!\left(-\gamma \,(x_i - x_j)^2\right),
+\qquad
+\gamma = \frac{1}{2\sigma^2},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> is the width of each bump, measured in the same units as <span class="math notranslate nohighlight">\(x\)</span> — here, mole
+fraction.</p>
+<p>Write a function</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rbf_features</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the same row-and-column convention as <code class="docutils literal notranslate"><span class="pre">hinge_features</span></code>. This basis needs no intercept
+column.</p>
+<p>Using <span class="math notranslate nohighlight">\(\sigma = 0.05\)</span>, fit <code class="docutils literal notranslate"><span class="pre">LinearRegression(fit_intercept=False)</span></code> to the same 16 points and
+predict the vapor composition at the same <span class="math notranslate nohighlight">\(x_{\mathrm{R32}} = 0.55\)</span>.</p>
+<p>Assign the prediction to <code class="docutils literal notranslate"><span class="pre">y_rbf</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">y_rbf</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">y_rbf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-locate-the-azeotrope-10-pts">
+<h3>A3. Locate the azeotrope (10 pts)<a class="headerlink" href="#a3-locate-the-azeotrope-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-reg-azeotrope">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<p>The azeotrope is the composition where the interpolated vapor composition equals the liquid
+composition. Using the <strong>hinge</strong> model from A1, find it by minimizing</p>
+<div class="math notranslate nohighlight">
+\[
+\left[\hat{y}(x) - x\right]^2
+\]</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code>, starting from <span class="math notranslate nohighlight">\(x_{\mathrm{R32}} = 0.6\)</span>.</p>
+<p>Assign the composition to <code class="docutils literal notranslate"><span class="pre">x_azeotrope</span></code>.</p>
+<p><em>The starting point is not arbitrary. Both pure components satisfy <span class="math notranslate nohighlight">\(y = x\)</span> exactly, so
+<span class="math notranslate nohighlight">\(x = 0\)</span> and <span class="math notranslate nohighlight">\(x = 1\)</span> are also solutions of this equation, and an optimizer started too near
+either end will find one of them and report it with complete confidence.</em></p>
+<p><em><code class="docutils literal notranslate"><span class="pre">minimize</span></code> stops on its default tolerances, which here leaves the answer correct to about
+five digits. That is inside the checker’s tolerance, so the default is fine; tightening it
+(for Nelder-Mead, <code class="docutils literal notranslate"><span class="pre">options={'xatol':</span> <span class="pre">1e-12,</span> <span class="pre">'fatol':</span> <span class="pre">1e-18}</span></code>) gets you the exact root and
+costs nothing.</em></p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">x_azeotrope</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">x_azeotrope</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>Part A gave you two design matrices and two very different answers at the same
+composition. This part is about seeing why. Everything here uses the 294.83 K isotherm and
+the two functions you wrote, <code class="docutils literal notranslate"><span class="pre">hinge_features</span></code> and <code class="docutils literal notranslate"><span class="pre">rbf_features</span></code>.</p>
+<p>Evaluate every model on a fine grid so you are looking at the model, not at the points:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="exercise admonition" id="pr-reg-basis-compare">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p><strong>1. Two bases, all the data.</strong> Fit the hinge model and an RBF model with <span class="math notranslate nohighlight">\(\sigma = 0.05\)</span> to
+<strong>all 16</strong> points, exactly as in A1 and A2. Plot both curves over <code class="docutils literal notranslate"><span class="pre">grid</span></code>, with the measured
+points, on a <span class="math notranslate nohighlight">\(y_{\mathrm{R32}}\)</span> against <span class="math notranslate nohighlight">\(x_{\mathrm{R32}}\)</span> diagram. Report the <span class="math notranslate nohighlight">\(r^2\)</span> of each
+model on those same 16 points.</p>
+<p>Then, in <strong>one sentence</strong>: the two curves pass through every measured point and have the
+same <span class="math notranslate nohighlight">\(r^2\)</span>, yet at <span class="math notranslate nohighlight">\(x = 0.55\)</span> they differ by nearly 0.2 in mole fraction. Say what that
+tells you about what <span class="math notranslate nohighlight">\(r^2\)</span> can and cannot measure here.</p>
+<p><strong>2. Two bases, half the data.</strong> Refit both models on <strong>every other point</strong>,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <span class="n">x_liq</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_vap</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>which leaves 8 training points. Plot both curves again, marking the training points and the
+8 held-out points differently. Now score each model with <code class="docutils literal notranslate"><span class="pre">.score()</span></code> against the <strong>full</strong>
+16-point isotherm, by evaluating its design matrix at <code class="docutils literal notranslate"><span class="pre">x_liq</span></code>.</p>
+<p>Report both <span class="math notranslate nohighlight">\(r^2\)</span> values and say in <strong>one sentence</strong> what changed from task 1 that let
+<span class="math notranslate nohighlight">\(r^2\)</span> tell the two models apart.</p>
+<p><strong>3. What the kernel width does.</strong> Keeping the same 8 training points, fit RBF models at
+<span class="math notranslate nohighlight">\(\sigma = 0.02,\ 0.05,\ 0.1,\ 0.2\)</span> and <span class="math notranslate nohighlight">\(0.3\)</span>. Plot all five curves on one set of axes with
+the training points, and report a small table of <span class="math notranslate nohighlight">\(\sigma\)</span>, the <span class="math notranslate nohighlight">\(r^2\)</span> against the full
+isotherm, and <code class="docutils literal notranslate"><span class="pre">np.linalg.cond</span></code> of each training design matrix.</p>
+<p>Then, in <strong>two sentences</strong>: say which end of the <span class="math notranslate nohighlight">\(\sigma\)</span> range is dangerous here and what
+goes wrong to the curve between the training points there, and say what eventually limits how
+wide a kernel you can use.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>At 294.83 K the answer has been stable: the interpolant put the azeotrope in a narrow range,
+and A3’s teaching note told you it agrees closely with the published measurement. This part
+asks whether that stability holds elsewhere in the dataset, and — the real question — how you
+would know if it did not, <strong>without a published answer to check against</strong>. That is the
+situation you are normally in.</p>
+<p>Work with three of the five isotherms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="mf">294.83</span><span class="p">,</span> <span class="mf">313.26</span><span class="p">,</span> <span class="mf">343.26</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Two things you are given rather than asked to work out.</p>
+<div class="note admonition">
+<p class="admonition-title">What the source says, and one number to check against</p>
+<p>The paper publishes an azeotropic composition at <strong>four</strong> of its five temperatures. For
+313.26 K that value is <strong>0.702</strong>, which is your check that the method works. (It also
+publishes one for 294.83 K; your A3 answer matches it to better than half a percent.)</p>
+<p>At <strong>343.26 K it publishes none.</strong> The reason is physical and you are not asked to derive
+it: near that temperature the mixture approaches its critical region, where liquid and vapor
+become hard to tell apart and the experimental method cannot sample. That is why the
+343.26 K measurements are distributed the way they are — and the consequences of <em>that</em>, for
+interpolation, are the entire subject of this part.</p>
+</div>
+<p>You also need a third basis. The chapter introduces <strong>splines</strong> — piecewise polynomials
+joined at knots — used through a pipeline, with exactly the settings it demonstrates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SplineTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+
+<span class="n">spline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">SplineTransformer</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_knots</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">LinearRegression</span><span class="p">(),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A spline’s flexibility is set by its <strong>knot count</strong> rather than by the number of training
+points, so it is a genuinely different way of interpolating the same data — which is the
+property this part depends on.</p>
+<div class="exercise admonition" id="pr-reg-method-spread">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. One method, three isotherms.</strong> Using the hinge basis and all of each isotherm’s points,
+extract the azeotropic composition at each of the three temperatures, the same way you did in
+A3. Report them with the number of points in each isotherm, and compare the 313.26 K result
+with the published 0.702. In <strong>one sentence</strong>, say how well the method does where it can be
+checked.</p>
+<p><strong>2. Three methods, three isotherms.</strong> Repeat the extraction with two more bases on the same
+data: RBF at <span class="math notranslate nohighlight">\(\sigma = 0.1\)</span>, and the cubic spline above. Report a table of the azeotropic
+composition from each of the three methods on each of the three isotherms, together with each
+model’s <span class="math notranslate nohighlight">\(r^2\)</span> on its own training points.</p>
+<p><strong>3. Where the methods disagree.</strong> Reduce your table to three numbers per isotherm: the
+<strong>spread</strong> across the three methods (largest minus smallest), the range of their <span class="math notranslate nohighlight">\(r^2\)</span>
+values, and the <strong>largest gap between adjacent training compositions</strong> — a property of the
+inputs alone, which <code class="docutils literal notranslate"><span class="pre">np.diff</span></code> on the sorted compositions and <code class="docutils literal notranslate"><span class="pre">np.max</span></code> will give you.</p>
+<p>Then plot the 343.26 K isotherm on its own: the measured points, the <span class="math notranslate nohighlight">\(y = x\)</span> line, all three
+interpolants over <code class="docutils literal notranslate"><span class="pre">grid</span></code>, and the interval between <span class="math notranslate nohighlight">\(x_{\mathrm{R32}} = 0.457\)</span> and <span class="math notranslate nohighlight">\(0.858\)</span>
+shaded.</p>
+<p>In <strong>one sentence</strong>, say which of your two model-derived columns — the spread or the <span class="math notranslate nohighlight">\(r^2\)</span>
+range — separates the isotherms from one another, and which does not.</p>
+<p><strong>4. What the spread is measuring.</strong> In <strong>two sentences</strong>: say what distinguishes the
+343.26 K isotherm from the other two in terms of the training inputs alone, and state the
+rule you would apply to decide whether to trust a non-parametric interpolant at a given
+input.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="mf">294.83</span><span class="p">,</span> <span class="mf">313.26</span><span class="p">,</span> <span class="mf">343.26</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module-2-regression.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Module 2 — Regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic2.2-Model_Validation_Problems.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Problems: Model Validation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-build-the-hinge-basis-and-predict-between-two-measurements-10-pts">A1. Build the hinge basis and predict between two measurements (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-swap-in-a-gaussian-kernel-10-pts">A2. Swap in a Gaussian kernel (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-locate-the-azeotrope-10-pts">A3. Locate the azeotrope (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

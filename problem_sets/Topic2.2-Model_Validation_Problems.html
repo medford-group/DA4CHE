@@ -64,8 +64,8 @@
     <script src="../_static/version-switcher.js?v=03ab3a72"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Module 5 — Exploratory Data Analysis" href="module-5-exploratory_data_analysis.html" />
-    <link rel="prev" title="Module 2 — Regression" href="module-2-regression.html" />
+    <link rel="next" title="Problems: Complexity Optimization" href="Topic2.3-Complexity_Optimization_Problems.html" />
+    <link rel="prev" title="Problems: Non-parametric Models" href="Topic2.1-Non-parametric_Models_Problems.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -233,7 +233,9 @@
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -778,35 +780,35 @@ that never saw it. Then report the root-mean-squared error of those predictions 
 
 <p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
 <section id="exercise-content">
-<p>Three panels, using the three diagnostics from the chapter.</p>
-<ol class="arabic simple">
+<p>Three plots, using the three diagnostics from the chapter.</p>
+<ol class="arabic">
 <li><p><strong>Parity plot.</strong> Out-of-fold prediction against actual <code class="docutils literal notranslate"><span class="pre">lnH</span></code>, with the 1:1 line drawn.
 Color the points by whether <code class="docutils literal notranslate"><span class="pre">htype</span></code> is <code class="docutils literal notranslate"><span class="pre">'Q'</span></code> (a QSAR estimate — a value produced by a
 correlation rather than measured) or anything else. You can select rows of a NumPy array
-with a boolean array, e.g. <code class="docutils literal notranslate"><span class="pre">is_q</span> <span class="pre">=</span> <span class="pre">(df['htype'].values</span> <span class="pre">==</span> <span class="pre">'Q')</span></code> and then <code class="docutils literal notranslate"><span class="pre">y[is_q]</span></code>.</p></li>
+with a boolean array, e.g. <code class="docutils literal notranslate"><span class="pre">is_q</span> <span class="pre">=</span> <span class="pre">(df['htype'].values</span> <span class="pre">==</span> <span class="pre">'Q')</span></code> and then <code class="docutils literal notranslate"><span class="pre">y[is_q]</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">'Q'</span></code> points sit closer to the 1:1 line than the rest. In <strong>two sentences</strong>, explain
+why that is expected given how a QSAR value is produced, and say what it implies about
+using this pooled dataset as evidence that the relationship is physically real.</p>
+</li>
 <li><p><strong>Error histogram.</strong> The out-of-fold errors <span class="math notranslate nohighlight">\(y - \hat{y}\)</span>. Mark the mean and, using
-<code class="docutils literal notranslate"><span class="pre">np.percentile</span></code>, the 5th and 95th percentiles.</p></li>
+<code class="docutils literal notranslate"><span class="pre">np.percentile</span></code>, the 5th and 95th percentiles.</p>
+<p>In <strong>one sentence</strong>, say whether the histogram is centered and symmetric, and what its
+shape and width add that <span class="math notranslate nohighlight">\(r^2\)</span> alone does not.</p>
+</li>
 <li><p><strong>How stable is the estimate?</strong> Recompute the mean cross-validated <span class="math notranslate nohighlight">\(r^2\)</span> for
 <code class="docutils literal notranslate"><span class="pre">n_splits</span></code> in <span class="math notranslate nohighlight">\(\{2, 5, 10, 20\}\)</span>, each for at least 10 different <code class="docutils literal notranslate"><span class="pre">random_state</span></code> values,
-and show the spread as a boxplot per <code class="docutils literal notranslate"><span class="pre">n_splits</span></code>.</p></li>
+and show the spread as a boxplot per <code class="docutils literal notranslate"><span class="pre">n_splits</span></code>.</p>
+<p>In <strong>one sentence</strong>, say whether the choice of <code class="docutils literal notranslate"><span class="pre">n_splits</span></code> matters much here and why,
+referring to the model’s size relative to the dataset.</p>
+</li>
 </ol>
-<p>Then, in <strong>4–6 sentences</strong>:</p>
-<ul class="simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">'Q'</span></code> points sit closer to the 1:1 line than the rest. Explain why that is expected,
-given how a QSAR value is produced, and say what it implies about using this pooled
-dataset as evidence that the relationship is physically real.</p></li>
-<li><p>Is the error histogram centered and symmetric? Say what its shape and width add that
-<span class="math notranslate nohighlight">\(r^2\)</span> alone does not.</p></li>
-<li><p>Does the choice of <code class="docutils literal notranslate"><span class="pre">n_splits</span></code> matter much here? Say why, referring to the model’s size
-relative to the dataset.</p></li>
-</ul>
 <p>Label all axes with units.</p>
 </section>
 </div>
 <div class="cell tag_skip-execution docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -834,19 +836,19 @@ Some species with many entries: carbon dioxide, methane, benzene, ammonia, oxyge
 trichloromethane, methylbenzene.</p></li>
 <li><p>A comparison of your <code class="docutils literal notranslate"><span class="pre">rmse_cv</span></code> from A3 against those spreads. How many times larger is
 the model’s error than the disagreement between laboratories?</p></li>
-<li><p>A statement of how much of the model’s error could <em>in principle</em> be removed, with your
-assumptions stated. Note that your four species will not agree with each other — say
-what that does to the argument.</p></li>
+<li><p>A statement, in <strong>two sentences</strong>, of how much of the model’s error could <em>in principle</em>
+be removed, with your assumptions stated. Your four species will not agree with each
+other — say what that does to the argument.</p></li>
 <li><p>At least one concrete attempt to improve things, evaluated with the <strong>same</strong>
 cross-validation procedure as A2. A second feature, a different model from
 <a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html"><span class="doc">Non-parametric Models</span></a>, or a
 restriction of the dataset are all fair game.</p></li>
-<li><p>A short written argument (<strong>one paragraph</strong>) about whether the effort is warranted,
-citing your own numbers.</p></li>
+<li><p>A verdict, in <strong>two sentences</strong>, on whether the effort is warranted, citing your own
+numbers.</p></li>
 </ol>
 <p>Be careful with step 4: at least one obvious-looking move makes the reported score <em>worse</em>,
 for a reason that is a property of the data rather than a failure of the model. If you hit
-it, explain it.</p>
+it, explain it in <strong>one sentence</strong>.</p>
 <p>There is more than one defensible conclusion. You are graded on the reasoning and the
 evidence, not on reaching a particular verdict.</p>
 </section>
@@ -902,20 +904,20 @@ and <a class="reference external" href="https://scikit-learn.org/stable/modules/
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="module-2-regression.html"
+       href="Topic2.1-Non-parametric_Models_Problems.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Module 2 — Regression</p>
+        <p class="prev-next-title">Problems: Non-parametric Models</p>
       </div>
     </a>
     <a class="right-next"
-       href="module-5-exploratory_data_analysis.html"
+       href="Topic2.3-Complexity_Optimization_Problems.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Module 5 — Exploratory Data Analysis</p>
+        <p class="prev-next-title">Problems: Complexity Optimization</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

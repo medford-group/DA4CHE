@@ -1,0 +1,1017 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Complexity Optimization &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic2.3-Complexity_Optimization_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Module 5 — Exploratory Data Analysis" href="module-5-exploratory_data_analysis.html" />
+    <link rel="prev" title="Problems: Model Validation" href="Topic2.2-Model_Validation_Problems.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic2.3-Complexity_Optimization_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic2.3-Complexity_Optimization_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Complexity Optimization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-fit-the-model-and-predict-between-two-measurements-10-pts">A1. Fit the model and predict between two measurements (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-narrow-the-kernel-and-score-it-honestly-10-pts">A2. Narrow the kernel and score it honestly (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-search-both-hyperparameters-10-pts">A3. Search both hyperparameters (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic2.3-Complexity_Optimization/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-complexity-optimization" id="id1">Problems: Complexity Optimization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-complexity-optimization">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Complexity Optimization</a><a class="headerlink" href="#problems-complexity-optimization" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/b6ba82aa6397f28fc59734fce31b406f/Topic2.3-Complexity_Optimization_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic2.3-Complexity_Optimization_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">coffee_nmr.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html"><span class="doc">Complexity Optimization</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, auto-graded, resubmit as often as
+you like until they pass.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation, peer graded.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem, peer graded.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>NMR spectra take time to collect, and the finer the resolution the longer the measurement
+runs. So it is fair to ask how much of a spectrum you actually need. If we kept only every
+twentieth point, could we rebuild the rest? That is a regression problem, and how well it
+works depends on choosing the right model complexity.</p>
+<p>The data here are proton NMR spectra of the lipophilic extract of ground roast Arabica
+coffee. This is the fraction that holds the lipids and fatty acids, and food chemists use it
+to tell one coffee from another. The measurements come from Gunning et al.,
+<em>Food Chemistry</em> <strong>248</strong>, 52 (2018),
+<a class="reference external" href="https://doi.org/10.1016/j.foodchem.2017.12.034">doi:10.1016/j.foodchem.2017.12.034</a>.</p>
+<p>The file holds one window, 0.80 to 1.70 ppm, sampled at 704 points, for three coffee
+samples. This window was chosen because the peaks in it differ so much in height: there is a
+large methylene peak near 1.26 ppm and several much smaller ones beside it. A single kernel
+width has to cover both, which is what makes the complexity choice matter here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.kernel_ridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">KernelRidge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/coffee_nmr.csv&#39;</span><span class="p">)</span>
+<span class="n">shift</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;shift_ppm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CS01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">shift</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>          <span class="c1"># scikit-learn wants one column, not one row</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>
+<span class="c1"># The split is written as a rule about the index, not as a slice, because Part C needs</span>
+<span class="c1"># three training sets that nest inside one another and that is easier to see this way.</span>
+<span class="n">i_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>   <span class="c1"># 633 pts, never trained on</span>
+<span class="n">i_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># 36 pts, Parts A and B</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> points, </span><span class="si">{</span><span class="n">shift</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">shift</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ppm, &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;spacing </span><span class="si">{</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> ppm&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;training set </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">i_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> points, spacing </span><span class="si">{</span><span class="n">shift</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ppm&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test set     </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">i_test</span><span class="p">)</span><span class="si">}</span><span class="s2"> points&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>704 points, 0.8004 to 1.6988 ppm, spacing 0.00128 ppm
+training set 36 points, spacing 0.0256 ppm
+test set     633 points
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>One test set, three training sets.</strong> Part C trains on every 10th, every 20th and every
+40th point. These three sets are nested: every 40th point is also every 20th, and every 20th
+is also every 10th. So we reserve every index divisible by 10, and <code class="docutils literal notranslate"><span class="pre">i_test</span></code> is the 633 points
+left over. Using one fixed test set for all of them is what lets you compare Part C’s three
+rows directly. If each density were scored against its own leftovers, the three numbers would
+come from three different test sets and could not be lined up.</p>
+<p>Nothing here uses <code class="docutils literal notranslate"><span class="pre">train_test_split</span></code>. The split is deterministic, so there is no
+<code class="docutils literal notranslate"><span class="pre">random_state</span></code> anywhere and none of your answers depend on a seed.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.6&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;all 704 points&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shift</span><span class="p">[</span><span class="n">i_train</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i_train</span><span class="p">],</span> <span class="s1">&#39;ko&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;training (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">i_train</span><span class="p">)</span><span class="si">}</span><span class="s1"> points)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;chemical shift [ppm]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;intensity [arb. units]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Coffee sample CS01, aliphatic window&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>                 <span class="c1"># NMR spectra are drawn with shift decreasing</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/9cb0945e7489abe6456cb741a0704ba3d8e522ecdedafa98b611bb0c7b07ce71.png" src="../_images/9cb0945e7489abe6456cb741a0704ba3d8e522ecdedafa98b611bb0c7b07ce71.png" />
+</div>
+</div>
+<p>The model throughout is kernel ridge regression with the radial basis function kernel, as
+in the chapter:</p>
+<div class="math notranslate nohighlight">
+\[
+K_{ij} = \exp\!\left(-\gamma\,(x_i - x_j)^2\right),
+\qquad
+\gamma = \frac{1}{2\sigma^2},
+\]</div>
+<p>It has two hyperparameters, and this problem set is about choosing them:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\sigma\)</span>, the <strong>kernel width</strong>, in ppm — how far one measurement’s influence reaches.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span>, the <strong>regularization strength</strong> — how strongly large coefficients are penalized.</p></li>
+</ul>
+<p>In scikit-learn this is <code class="docutils literal notranslate"><span class="pre">KernelRidge(kernel='rbf',</span> <span class="pre">alpha=alpha,</span> <span class="pre">gamma=gamma)</span></code>. Note that it
+takes <span class="math notranslate nohighlight">\(\gamma\)</span> rather than <span class="math notranslate nohighlight">\(\sigma\)</span>, so converting between the two is the first thing to get
+right.</p>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;98bc529e03cf&#39;</span><span class="p">,</span> <span class="s1">&#39;d3d417e465e8&#39;</span><span class="p">,</span> <span class="s1">&#39;58b464af71ce&#39;</span><span class="p">,</span> <span class="s1">&#39;9a606e68e5b7&#39;</span><span class="p">,</span> <span class="s1">&#39;47901bd675f8&#39;</span><span class="p">,</span> <span class="s1">&#39;8cc2a2ff00ce&#39;</span><span class="p">,</span> <span class="s1">&#39;d9088a3e2036&#39;</span><span class="p">,</span> <span class="s1">&#39;a476e07923da&#39;</span><span class="p">,</span> <span class="s1">&#39;70cf47ddf33b&#39;</span><span class="p">,</span> <span class="s1">&#39;3b36c3b24b1e&#39;</span><span class="p">,</span> <span class="s1">&#39;9b8563f27aa3&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;6fba6daf702e&#39;</span><span class="p">,</span> <span class="s1">&#39;2f0456c6a967&#39;</span><span class="p">,</span> <span class="s1">&#39;ff42fd7b8660&#39;</span><span class="p">,</span> <span class="s1">&#39;9dd841b19e85&#39;</span><span class="p">,</span> <span class="s1">&#39;e0af7d47fb6d&#39;</span><span class="p">,</span> <span class="s1">&#39;a01d90511560&#39;</span><span class="p">,</span> <span class="s1">&#39;e132dc961afa&#39;</span><span class="p">,</span> <span class="s1">&#39;8da57ece22cb&#39;</span><span class="p">,</span> <span class="s1">&#39;f9d42113a005&#39;</span><span class="p">,</span> <span class="s1">&#39;e22d118b4199&#39;</span><span class="p">,</span> <span class="s1">&#39;7a6360713029&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;bde167485f11&#39;</span><span class="p">,</span> <span class="s1">&#39;835434230103&#39;</span><span class="p">,</span> <span class="s1">&#39;5403115ab6ff&#39;</span><span class="p">,</span> <span class="s1">&#39;a4853cac7d1a&#39;</span><span class="p">,</span> <span class="s1">&#39;3a98ce353e50&#39;</span><span class="p">,</span> <span class="s1">&#39;5665f9f3eee1&#39;</span><span class="p">,</span> <span class="s1">&#39;3d8ea8a5c89b&#39;</span><span class="p">,</span> <span class="s1">&#39;3e0549477122&#39;</span><span class="p">,</span> <span class="s1">&#39;b9e88dbb5a17&#39;</span><span class="p">,</span> <span class="s1">&#39;6dea55f19c07&#39;</span><span class="p">,</span> <span class="s1">&#39;952bcb21b556&#39;</span><span class="p">,</span> <span class="s1">&#39;6b4111d39aa6&#39;</span><span class="p">,</span> <span class="s1">&#39;33517f0d5088&#39;</span><span class="p">,</span> <span class="s1">&#39;b55f2aa6e20c&#39;</span><span class="p">,</span> <span class="s1">&#39;673f026a51b7&#39;</span><span class="p">,</span> <span class="s1">&#39;fa90b332e2ef&#39;</span><span class="p">,</span> <span class="s1">&#39;55ab4977c932&#39;</span><span class="p">,</span> <span class="s1">&#39;eeb890cbfdb5&#39;</span><span class="p">,</span> <span class="s1">&#39;ac4d3319b7b5&#39;</span><span class="p">,</span> <span class="s1">&#39;0541c2f27bdb&#39;</span><span class="p">,</span> <span class="s1">&#39;9a10e6521459&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Three questions, 10 points each. Each asks you to assign a single number to a named
+variable. Run the check cell after each one; there is no limit on attempts.</p>
+<p>All three train on <code class="docutils literal notranslate"><span class="pre">i_train</span></code>, the 36-point subsample; A2 and A3 score on <code class="docutils literal notranslate"><span class="pre">i_test</span></code>. A1 fixes
+both hyperparameters, A2 changes one to see what it costs, and A3 searches for the best pair.</p>
+<section id="a1-fit-the-model-and-predict-between-two-measurements-10-pts">
+<h3>A1. Fit the model and predict between two measurements (10 pts)<a class="headerlink" href="#a1-fit-the-model-and-predict-between-two-measurements-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-reg-krr-predict">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>Fit <code class="docutils literal notranslate"><span class="pre">KernelRidge</span></code> with the RBF kernel to the 36 training points, using</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma = 0.02 \ \text{ppm}, \qquad \alpha = 10^{-4},
+\]</div>
+<p>remembering that the constructor takes <span class="math notranslate nohighlight">\(\gamma = 1/(2\sigma^2)\)</span> rather than <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<p>Then predict the intensity at a chemical shift of <strong>1.25 ppm</strong>. This is not one of the 704
+measured points, and it sits about 0.010 ppm from the nearest training point, on the side of
+the large peak where the curve is steepest.</p>
+<p>Assign the prediction to <code class="docutils literal notranslate"><span class="pre">y_pred</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-narrow-the-kernel-and-score-it-honestly-10-pts">
+<h3>A2. Narrow the kernel and score it honestly (10 pts)<a class="headerlink" href="#a2-narrow-the-kernel-and-score-it-honestly-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-reg-narrow-kernel">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>Now change one thing. Refit the same model on the same 36 training points with</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma = 0.005 \ \text{ppm}, \qquad \alpha = 10^{-8},
+\]</div>
+<p>a kernel four times narrower than A1’s.</p>
+<p>Report the <span class="math notranslate nohighlight">\(r^2\)</span> of this model on the <strong>test set</strong>, <code class="docutils literal notranslate"><span class="pre">i_test</span></code> — the 633 points it was not
+trained on. Use <code class="docutils literal notranslate"><span class="pre">r2_score</span></code>, or the model’s own <code class="docutils literal notranslate"><span class="pre">.score()</span></code>.</p>
+<p>Assign it to <code class="docutils literal notranslate"><span class="pre">r2_test_narrow</span></code>.</p>
+<p><em>Compute the <span class="math notranslate nohighlight">\(r^2\)</span> on the training points as well and keep both numbers handy. The training
+value is not graded, but you will need it in Part B, and the relationship between the two is
+what this problem set is about.</em></p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">r2_test_narrow</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">r2_test_narrow</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-search-both-hyperparameters-10-pts">
+<h3>A3. Search both hyperparameters (10 pts)<a class="headerlink" href="#a3-search-both-hyperparameters-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-reg-grid-optimum">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<p>A1 and A2 each fixed both hyperparameters by hand. Now search. Over the grid</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">]</span>
+<span class="n">alphas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-8</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>fit all 25 models on <code class="docutils literal notranslate"><span class="pre">i_train</span></code> and score each on <code class="docutils literal notranslate"><span class="pre">i_test</span></code>. Report the <strong>largest test <span class="math notranslate nohighlight">\(r^2\)</span></strong>
+you find.</p>
+<p>Assign it to <code class="docutils literal notranslate"><span class="pre">r2_test_best</span></code>.</p>
+<p><em>Both hyperparameters have to move. The chapter warns that they can be coupled, and they are
+here: sweeping <span class="math notranslate nohighlight">\(\sigma\)</span> alone with <span class="math notranslate nohighlight">\(\alpha\)</span> fixed at <span class="math notranslate nohighlight">\(10^{-4}\)</span> gets close, but does not reach
+the best value on this grid.</em></p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">r2_test_best</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">r2_test_best</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>In A2 you fit a model that scored a perfect 1.000000 on its training points and did far worse
+on the points it had not seen. This part plots that, then looks at two things you might expect
+to settle the complexity question for you.</p>
+<p>You need two helpers from the chapter: the information criterion, and a Gaussian basis with
+<code class="docutils literal notranslate"><span class="pre">N</span></code> evenly spaced centers. The second is a different model from kernel ridge, because its
+complexity is the <em>number</em> of basis functions rather than their width.</p>
+<div class="note admonition">
+<p class="admonition-title">What an “edge optimum” is, and why it matters in task 3</p>
+<p>Whenever you pick a hyperparameter off a grid, look at <em>where</em> on the grid the winner sits. A
+grid search only tells you the best of the values you asked about, so a winner at the smallest
+or largest value you tried usually means something better lies just outside the range. The
+chapter states this as a rule:</p>
+<blockquote>
+<div><p><strong>Do not accept an “edge” optimum.</strong> If the best score occurs at the <strong>minimum or maximum</strong>
+of any grid axis, <strong>expand that axis</strong> and re-run.</p>
+</div></blockquote>
+<p>A winner in the middle is what you want: values on both sides were tried and were worse, so
+the search has bracketed the optimum. Task 3 applies this test to a case where it fails, and
+where the usual fix is not available.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">BIC</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bayesian information criterion, as defined in the chapter.&quot;&quot;&quot;</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">-</span> <span class="n">y_hat</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_features</span><span class="p">(</span><span class="n">x_eval</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One Gaussian bump per center, evaluated at x_eval. Rows are points, columns basis.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x_eval</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">centers</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">width</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="exercise admonition" id="pr-reg-complexity-curve">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p><strong>1. Three complexities, one spectrum.</strong> Fit kernel ridge on <code class="docutils literal notranslate"><span class="pre">i_train</span></code> at
+<span class="math notranslate nohighlight">\(\sigma = 0.005\)</span>, <span class="math notranslate nohighlight">\(0.02\)</span> and <span class="math notranslate nohighlight">\(0.08\)</span>, holding <span class="math notranslate nohighlight">\(\alpha = 10^{-4}\)</span>. For each, plot the model
+over all 704 shifts together with the measured curve and the 36 training points, and report
+its training <span class="math notranslate nohighlight">\(r^2\)</span> and its test <span class="math notranslate nohighlight">\(r^2\)</span>. Three plots; arrange them however you like.</p>
+<p>Then, in <strong>two sentences</strong>: say which of the three is overfit and which is underfit, and
+state what the training <span class="math notranslate nohighlight">\(r^2\)</span> column does and does not tell you about that.</p>
+<p><strong>2. The complexity curve.</strong> Sweep</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0025</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.16</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>at <span class="math notranslate nohighlight">\(\alpha = 10^{-4}\)</span>, and plot training <span class="math notranslate nohighlight">\(r^2\)</span> and test <span class="math notranslate nohighlight">\(r^2\)</span> against <span class="math notranslate nohighlight">\(\sigma\)</span> on a
+<strong>logarithmic</strong> <span class="math notranslate nohighlight">\(\sigma\)</span> axis, with a vertical line at the <span class="math notranslate nohighlight">\(\sigma\)</span> that maximizes the test
+score. Clip the <span class="math notranslate nohighlight">\(y\)</span> axis so the curve is readable.</p>
+<p>In <strong>one sentence</strong>: say over what range of <span class="math notranslate nohighlight">\(\sigma\)</span> the training score is unable to
+distinguish between these models, and what the test score is doing across that same range.</p>
+<p><strong>3. A criterion that selects nothing.</strong> Now the parametric model. For
+<code class="docutils literal notranslate"><span class="pre">N</span></code> in <code class="docutils literal notranslate"><span class="pre">range(2,</span> <span class="pre">35,</span> <span class="pre">2)</span></code>, place <code class="docutils literal notranslate"><span class="pre">N</span></code> evenly spaced centers across the window, set each bump’s
+<code class="docutils literal notranslate"><span class="pre">width</span></code> to the spacing between adjacent centers, fit <code class="docutils literal notranslate"><span class="pre">LinearRegression(fit_intercept=False)</span></code>
+on <code class="docutils literal notranslate"><span class="pre">i_train</span></code>, and record <code class="docutils literal notranslate"><span class="pre">BIC(...)</span></code> on the training points along with the test <span class="math notranslate nohighlight">\(r^2\)</span>. Plot
+BIC against <code class="docutils literal notranslate"><span class="pre">N</span></code>, and report the <code class="docutils literal notranslate"><span class="pre">N</span></code> that minimizes it.</p>
+<p>Then, in <strong>two sentences</strong>: say what the rule above tells you about the <code class="docutils literal notranslate"><span class="pre">N</span></code> you found, and
+why you cannot fix it the way the rule says to.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The grid stops at <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">34</span></code> on purpose. There are 36 training points, so at <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">36</span></code> the
+basis can pass through all of them exactly, the residuals go to zero, and <span class="math notranslate nohighlight">\(\ln(\sigma_e^2)\)</span>
+goes to minus infinity — BIC returns whatever the floating-point noise in a vanishing
+residual happens to be. Nothing to learn from a number like that, so the grid stays below it.</p>
+</div>
+<p><strong>4. When does <span class="math notranslate nohighlight">\(\alpha\)</span> matter?</strong> So far <span class="math notranslate nohighlight">\(\alpha\)</span> has been held fixed. Using the same grid as
+A3, make two plots side by side:</p>
+<ul class="simple">
+<li><p><strong>Left:</strong> test <span class="math notranslate nohighlight">\(r^2\)</span> against <span class="math notranslate nohighlight">\(\alpha\)</span>, with a logarithmic <span class="math notranslate nohighlight">\(\alpha\)</span> axis and <strong>one curve per
+<span class="math notranslate nohighlight">\(\sigma\)</span></strong>. Label the curves.</p></li>
+<li><p><strong>Right:</strong> the size of the fitted coefficients, <code class="docutils literal notranslate"><span class="pre">np.linalg.norm(model.dual_coef_)</span></code>, against
+<span class="math notranslate nohighlight">\(\sigma\)</span>, with both axes logarithmic, at fixed <span class="math notranslate nohighlight">\(\alpha = 10^{-4}\)</span>.</p></li>
+</ul>
+<p>In <strong>one sentence</strong>: say which kernel widths are barely affected by the choice of <span class="math notranslate nohighlight">\(\alpha\)</span> and
+which are strongly affected, and what the right-hand plot suggests is different about them.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>So far the training set has been fixed at 36 points and the model has moved. This part does
+the opposite: the search stays the same and the amount of training data changes, which is what
+an experimentalist actually controls. That answers the question the Setup started with — how
+coarsely could this spectrum have been sampled?</p>
+<p>Three training densities, nested so that they all share the one test set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">densities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>          <span class="c1"># every 10th, every 20th, every 40th point</span>
+</pre></div>
+</div>
+<p>For each, the training set is <code class="docutils literal notranslate"><span class="pre">[i</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span> <span class="pre">range(n)</span> <span class="pre">if</span> <span class="pre">i</span> <span class="pre">%</span> <span class="pre">d</span> <span class="pre">==</span> <span class="pre">0]</span></code> and <code class="docutils literal notranslate"><span class="pre">i_test</span></code> is
+unchanged. Because 40 and 20 are multiples of 10, those three sets nest inside one another
+and none of them touches <code class="docutils literal notranslate"><span class="pre">i_test</span></code>. Reuse the A3 grid throughout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">]</span>
+<span class="n">alphas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-8</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="warning admonition">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">CS02</span></code> and <code class="docutils literal notranslate"><span class="pre">CS03</span></code> are a validation set — keep them out of the fitting</p>
+<p>Nothing in this problem set has touched <code class="docutils literal notranslate"><span class="pre">CS02</span></code> or <code class="docutils literal notranslate"><span class="pre">CS03</span></code> so far, and nothing you do now may
+fit them or use them to choose <span class="math notranslate nohighlight">\(\sigma\)</span> or <span class="math notranslate nohighlight">\(\alpha\)</span>. Treat them as two spectra measured
+<em>after</em> your model was finished: they arrive, you run the model on them once, and whatever
+comes out is the number you report.</p>
+<p>That restriction is what makes them worth having. Every score so far has been measured on
+<code class="docutils literal notranslate"><span class="pre">i_test</span></code>, which is exactly what you tuned <span class="math notranslate nohighlight">\(\sigma\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span> against in A3 and in task 1
+below. In the chapter’s terminology that makes <code class="docutils literal notranslate"><span class="pre">i_test</span></code> a <strong>test</strong> set rather than a
+<strong>validation</strong> set: it helped set the model up, so a score measured on it is optimistic. The
+chapter calls this <strong>data leakage</strong> and lists hyperparameter tuning first:</p>
+<blockquote>
+<div><p>Once data has been used to optimize the hyperparameters of a model, the model is biased
+toward that data. […] If you want the most reliable evaluation of how your model will
+perform on new data, you should use the performance on the <em>validation</em> set that is not
+used in any way in hyperparameter tuning.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">CS02</span></code> and <code class="docutils literal notranslate"><span class="pre">CS03</span></code> are that validation set. They are the only numbers here that nothing has
+been tuned against, and task 4 is where you find out what the tuning was worth.</p>
+<p>They serve a second purpose in task 5: two separately prepared extracts differ for real
+reasons — the beans, the extraction, the sample tube — so the agreement between them tells you
+how close any model of one spectrum could sensibly be asked to get.</p>
+</div>
+<div class="exercise admonition" id="pr-reg-data-density">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. Optimal complexity at three densities.</strong> For each density, run the full 25-point grid
+search on that training set, scoring on <code class="docutils literal notranslate"><span class="pre">i_test</span></code>. Report a table with one row per density: the
+number of training points, the spacing between them in ppm, the <span class="math notranslate nohighlight">\(\sigma\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span> that
+win, and the best test <span class="math notranslate nohighlight">\(r^2\)</span>.</p>
+<p><strong>2. How the optimum moves.</strong> Plot the winning <span class="math notranslate nohighlight">\(\sigma\)</span> against the number of training points,
+and the best test <span class="math notranslate nohighlight">\(r^2\)</span> against the number of training points. In <strong>one sentence</strong>: say which
+way the optimal kernel width moves as training data is removed, and why that is the direction
+to expect.</p>
+<p><strong>3. What a fixed hyperparameter costs.</strong> Now suppose you tuned once and never again. At the
+single setting <span class="math notranslate nohighlight">\(\sigma = 0.005\)</span>, <span class="math notranslate nohighlight">\(\alpha = 10^{-8}\)</span>, report the training <span class="math notranslate nohighlight">\(r^2\)</span> <strong>and</strong> the test
+<span class="math notranslate nohighlight">\(r^2\)</span> at all three densities. In <strong>one sentence</strong>: say what the training column does as data is
+removed, and what the test column does.</p>
+<p><strong>4. Score the models on data nothing was tuned against.</strong> Take the winning model at each
+density from task 1 and use it to predict <code class="docutils literal notranslate"><span class="pre">CS02</span></code> and <code class="docutils literal notranslate"><span class="pre">CS03</span></code> over <code class="docutils literal notranslate"><span class="pre">i_test</span></code>. Report three numbers
+per density: the test <span class="math notranslate nohighlight">\(r^2\)</span> from task 1, and the <span class="math notranslate nohighlight">\(r^2\)</span> against each of the two unseen spectra.</p>
+<p>In <strong>one sentence</strong>: say how far the unseen-sample scores sit below the number you tuned to,
+and which of the three you would quote if you had to report a single figure for this model.</p>
+<p><strong>5. How sparsely could this spectrum have been sampled?</strong> As a reference, compute the <span class="math notranslate nohighlight">\(r^2\)</span>
+of <code class="docutils literal notranslate"><span class="pre">CS01</span></code> used directly as a prediction of <code class="docutils literal notranslate"><span class="pre">CS02</span></code>, and the same for <code class="docutils literal notranslate"><span class="pre">CS03</span></code> — no model, one
+spectrum standing in for another. That is how well two real coffees agree.</p>
+<p>Using those numbers and task 4’s, state a criterion and name the sparsest of the three
+densities that meets it. In <strong>one or two sentences</strong>, justify the criterion and say what it
+implies about how much of this spectrum was needed. More than one answer is defensible, and
+the two references disagree, so say which you are using.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">densities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic2.2-Model_Validation_Problems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Problems: Model Validation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="module-5-exploratory_data_analysis.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Module 5 — Exploratory Data Analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-fit-the-model-and-predict-between-two-measurements-10-pts">A1. Fit the model and predict between two measurements (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-narrow-the-kernel-and-score-it-honestly-10-pts">A2. Narrow the kernel and score it honestly (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-search-both-hyperparameters-10-pts">A3. Search both hyperparameters (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
