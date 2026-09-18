@@ -261,6 +261,18 @@ check("q3", n_pc_95)
 
 ## Part B — Visualization (35 pts)
 
+Part A scored one partition, at a `k` you were simply given. Both scores were needed to do
+it: silhouette judged how tidy the clusters are, purity judged whether they are the *right*
+clusters, and the two did not agree. That difference is the point of this part. Only one of
+them can be computed without knowing the answer, so only one of them could have chosen `k`
+for you — the other can only grade a choice already made.
+
+The two panels are the evidence for that claim. The first asks what each metric does as `k`
+varies, which is where purity's behavior gives the game away. The second asks what the
+clusters actually *are*: projecting onto the first two principal components and coloring the
+same points twice, once by cluster and once by true chemistry, shows you the shape of the
+disagreement rather than just its size.
+
 :::{exercise}
 :label: pr-eda-xps-kcurve
 
@@ -297,6 +309,18 @@ fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 ---
 
 ## Part C — Open Ended (35 pts)
+
+Part B left an unresolved question. Even at the `k` that best matches the number of
+chemistries present, a large share of spectra still land in a cluster whose majority
+chemistry is not their own — and the projection suggests why, since the data does not
+occupy as many independent directions as there are chemistries.
+
+So this part asks where the blame belongs. Is that shortfall a limitation of k-means, which
+assumes roughly round, equally sized clusters, or is it a property of the data that no
+clustering algorithm could argue its way out of? The way to find out is to try algorithms
+that make different assumptions and see whether any of them does better. A method that
+fails loudly is as informative as one that succeeds, so read what it does rather than
+tuning it away.
 
 ::::{exercise}
 :label: pr-eda-xps-continuum

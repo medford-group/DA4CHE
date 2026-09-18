@@ -736,6 +736,16 @@ whose cumulative explained variance ratio reaches 0.95</strong>.</p>
 <hr class="docutils" />
 <section id="part-b-visualization-35-pts">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>Part A scored one partition, at a <code class="docutils literal notranslate"><span class="pre">k</span></code> you were simply given. Both scores were needed to do
+it: silhouette judged how tidy the clusters are, purity judged whether they are the <em>right</em>
+clusters, and the two did not agree. That difference is the point of this part. Only one of
+them can be computed without knowing the answer, so only one of them could have chosen <code class="docutils literal notranslate"><span class="pre">k</span></code>
+for you — the other can only grade a choice already made.</p>
+<p>The two panels are the evidence for that claim. The first asks what each metric does as <code class="docutils literal notranslate"><span class="pre">k</span></code>
+varies, which is where purity’s behavior gives the game away. The second asks what the
+clusters actually <em>are</em>: projecting onto the first two principal components and coloring the
+same points twice, once by cluster and once by true chemistry, shows you the shape of the
+disagreement rather than just its size.</p>
 <div class="exercise admonition" id="pr-eda-xps-kcurve">
 
 <p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
@@ -774,6 +784,16 @@ why purity stalls near 0.72 rather than approaching 1.</p></li>
 <hr class="docutils" />
 <section id="part-c-open-ended-35-pts">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>Part B left an unresolved question. Even at the <code class="docutils literal notranslate"><span class="pre">k</span></code> that best matches the number of
+chemistries present, a large share of spectra still land in a cluster whose majority
+chemistry is not their own — and the projection suggests why, since the data does not
+occupy as many independent directions as there are chemistries.</p>
+<p>So this part asks where the blame belongs. Is that shortfall a limitation of k-means, which
+assumes roughly round, equally sized clusters, or is it a property of the data that no
+clustering algorithm could argue its way out of? The way to find out is to try algorithms
+that make different assumptions and see whether any of them does better. A method that
+fails loudly is as informative as one that succeeds, so read what it does rather than
+tuning it away.</p>
 <div class="exercise admonition" id="pr-eda-xps-continuum">
 
 <p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
