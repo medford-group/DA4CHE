@@ -40,6 +40,27 @@
         {
           "file": "problem_sets/Topic2.3-Complexity_Optimization_Problems",
           "title": "2.3 - Complexity Optimization - Coffee NMR Spectrum"
+        },
+        {
+          "file": "problem_sets/Topic2.4-High_dimensional_data_Problems",
+          "title": "2.4 - High-dimensional Data - Solvent Vapor IR Mixtures"
+        },
+        {
+          "file": "problem_sets/Topic2.5-High_dimensional_regression_Problems",
+          "title": "2.5 - High-dimensional Regression - Solvent Vapor IR Calibration"
+        }
+      ]
+    },
+    {
+      "file": "problem_sets/module-3-classification",
+      "sections": [
+        {
+          "file": "problem_sets/Topic3.1-Classification_Basics_Problems",
+          "title": "3.1 - Classification Basics - Flammability Testing"
+        },
+        {
+          "file": "problem_sets/Topic3.2-Generalized_Linear_Models_Problems",
+          "title": "3.2 - Generalized Linear Models - Flammability Envelopes"
         }
       ]
     },
