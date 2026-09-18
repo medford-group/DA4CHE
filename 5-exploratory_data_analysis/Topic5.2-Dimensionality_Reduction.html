@@ -236,6 +236,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic2.4-High_dimensional_data_Problems.html">2.4 - High-dimensional Data - Solvent Vapor IR Mixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic2.5-High_dimensional_regression_Problems.html">2.5 - High-dimensional Regression - Solvent Vapor IR Calibration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -718,7 +725,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12cf17dc0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x134ba9ae0&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -870,7 +877,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x138cfd300&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1392b5300&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -928,7 +935,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12df2eb00&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x1373ed2a0&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -1158,11 +1165,11 @@ SVC on raw features  (64 dims): accuracy = 0.990
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3393
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3431
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/625cea21e21caeb1310cb5cab4edd93f591c45eadb2097bd47a98db39e37adeb.png" src="../_images/625cea21e21caeb1310cb5cab4edd93f591c45eadb2097bd47a98db39e37adeb.png" />
+<img alt="../_images/f89b78f4befe465543733ba14db56778c019b4f074b005daac322852d3d5b1b6.png" src="../_images/f89b78f4befe465543733ba14db56778c019b4f074b005daac322852d3d5b1b6.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1487,9 +1494,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07367
-Epoch  20  loss = 0.07211
-Epoch  30  loss = 0.05907
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07379
+Epoch  20  loss = 0.07261
+Epoch  30  loss = 0.06275
 </pre></div>
 </div>
 </div>
@@ -1513,7 +1520,7 @@ Epoch  30  loss = 0.05907
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f61217bab53f31fb5b2660ec20258e785f8af119535b1bc20227abf850184498.png" src="../_images/f61217bab53f31fb5b2660ec20258e785f8af119535b1bc20227abf850184498.png" />
+<img alt="../_images/ffb32f6df481bf0c6c26cd6173ed1bd10026b2d6314a46ef6e02a61d5616130e.png" src="../_images/ffb32f6df481bf0c6c26cd6173ed1bd10026b2d6314a46ef6e02a61d5616130e.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1541,7 +1548,7 @@ Epoch  30  loss = 0.05907
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2124e4967806ea3c3aee2090ccff30e342db6a0f0ae666aa40d0d92a1aeb86c3.png" src="../_images/2124e4967806ea3c3aee2090ccff30e342db6a0f0ae666aa40d0d92a1aeb86c3.png" />
+<img alt="../_images/194d95a35ccb605e7b20fdcc007c2449a751b3c053f1147a39a568c04944e339.png" src="../_images/194d95a35ccb605e7b20fdcc007c2449a751b3c053f1147a39a568c04944e339.png" />
 </div>
 </div>
 <div class="admonition note">

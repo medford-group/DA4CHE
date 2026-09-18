@@ -30,6 +30,13 @@ Solutions are not published here.
 - **{doc}`2.1 - Non-parametric Models - Refrigerant VLE Azeotrope <Topic2.1-Non-parametric_Models_Problems>`** (accompanies {doc}`/2-regression/Topic2.1-Non-parametric_Models`) · {download}`zip <archives/Topic2.1-Non-parametric_Models_Problems.zip>`
 - **{doc}`2.2 - Model Validation - Henry's Law Constants <Topic2.2-Model_Validation_Problems>`** (accompanies {doc}`/2-regression/Topic2.2-Model_Validation`) · {download}`zip <archives/Topic2.2-Model_Validation_Problems.zip>`
 - **{doc}`2.3 - Complexity Optimization - Coffee NMR Spectrum <Topic2.3-Complexity_Optimization_Problems>`** (accompanies {doc}`/2-regression/Topic2.3-Complexity_Optimization`) · {download}`zip <archives/Topic2.3-Complexity_Optimization_Problems.zip>`
+- **{doc}`2.4 - High-dimensional Data - Solvent Vapor IR Mixtures <Topic2.4-High_dimensional_data_Problems>`** (accompanies {doc}`/2-regression/Topic2.4-High_dimensional_data`) · {download}`zip <archives/Topic2.4-High_dimensional_data_Problems.zip>`
+- **{doc}`2.5 - High-dimensional Regression - Solvent Vapor IR Calibration <Topic2.5-High_dimensional_regression_Problems>`** (accompanies {doc}`/2-regression/Topic2.5-High_dimensional_regression`) · {download}`zip <archives/Topic2.5-High_dimensional_regression_Problems.zip>`
+
+## Classification
+
+- **{doc}`3.1 - Classification Basics - Flammability Testing <Topic3.1-Classification_Basics_Problems>`** (accompanies {doc}`/3-classification/Topic3.1-Classification_Basics`) · {download}`zip <archives/Topic3.1-Classification_Basics_Problems.zip>`
+- **{doc}`3.2 - Generalized Linear Models - Flammability Envelopes <Topic3.2-Generalized_Linear_Models_Problems>`** (accompanies {doc}`/3-classification/Topic3.2-Generalized_Linear_Models`) · {download}`zip <archives/Topic3.2-Generalized_Linear_Models_Problems.zip>`
 
 ## Exploratory Data Analysis
 

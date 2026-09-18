@@ -1,0 +1,962 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Classification Basics &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic3.1-Classification_Basics_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Problems: Generalized Linear Models" href="Topic3.2-Generalized_Linear_Models_Problems.html" />
+    <link rel="prev" title="Module 3 — Classification" href="module-3-classification.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.4-High_dimensional_data_Problems.html">2.4 - High-dimensional Data - Solvent Vapor IR Mixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.5-High_dimensional_regression_Problems.html">2.5 - High-dimensional Regression - Solvent Vapor IR Calibration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="module-3-classification.html">Module 3 — Classification</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">3.1 - Classification Basics - Flammability Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic3.1-Classification_Basics_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic3.1-Classification_Basics_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Classification Basics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-how-often-does-the-hazard-occur-10-pts">A1. How often does the hazard occur? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-score-the-alarm-rule-the-plant-already-uses-10-pts">A2. Score the alarm rule the plant already uses (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-how-good-a-warning-signal-is-fuel-concentration-10-pts">A3. How good a warning signal is fuel concentration? (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic3.1-Classification_Basics/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-classification-basics" id="id1">Problems: Classification Basics</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-classification-basics">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Classification Basics</a><a class="headerlink" href="#problems-classification-basics" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/664568bbb9e72919ab67b3a237f38138/Topic3.1-Classification_Basics_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic3.1-Classification_Basics_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">flammability_campaignA.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html"><span class="doc">Classification Basics</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, auto-graded, resubmit as often as
+you like until they pass.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation, peer graded.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem, peer graded.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>A process-safety laboratory is mapping out when a methane–air mixture will ignite. Each
+test fills a spherical vessel with a known mixture of <strong>methane</strong>, <strong>added nitrogen</strong> and
+<strong>air</strong>, fires a spark, and records whether a flame propagated. You have 800 such tests,
+all run at 25 °C and 1 atm.</p>
+<p>Every mixture is described by two numbers you control:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code> — the methane content, in volume percent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n2_added_vol_pct</span></code> — the nitrogen added on top of what the air already contains</p></li>
+</ul>
+<p>The rest of the vessel is air, so <code class="docutils literal notranslate"><span class="pre">o2_vol_pct</span></code> follows from the other two: air is 20.95%
+oxygen, and the air fraction is whatever is left over. It is in the file because it is what
+a gas analyser actually reports, but it is not independent information.</p>
+<p>Three things can stop a mixture from burning, and you will have met all three in a process
+safety course:</p>
+<ul class="simple">
+<li><p>there is too little fuel — the mixture is <strong>lean</strong></p></li>
+<li><p>there is too much fuel, so there is not enough oxygen to go round — the mixture is <strong>rich</strong></p></li>
+<li><p>so much nitrogen has been added that the oxygen is diluted below the level any flame can
+propagate at, whatever the fuel concentration — the mixture is <strong>inerted</strong></p></li>
+</ul>
+<p>This set is about measuring where those boundaries are and how well a classifier can be
+made to respect them. <strong>No numerical limit values are given to you</strong> — published values
+exist for methane and you will compare against them at the end of Part C, but everything
+before that comes out of the data.</p>
+<p>Each test carries two labels:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ignited</span></code></p></td>
+<td><p>1 if a flame propagated, 0 if not</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">regime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flammable</span></code> if it ignited; otherwise which of the three conditions above was binding — <code class="docutils literal notranslate"><span class="pre">lean</span></code>, <code class="docutils literal notranslate"><span class="pre">rich</span></code> or <code class="docutils literal notranslate"><span class="pre">inerted</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The two agree by construction: a test that ignites is recorded <code class="docutils literal notranslate"><span class="pre">flammable</span></code>, and a test that
+does not is recorded by the reason it did not. So <code class="docutils literal notranslate"><span class="pre">regime</span></code> is <code class="docutils literal notranslate"><span class="pre">ignited</span></code> with the failures
+itemized, and neither tells you anything the other hides.</p>
+<p>The <strong>flammability parameters</strong> behind this data are real published measurements
+(<a class="reference external" href="https://doi.org/10.1016/j.jlp.2009.03.006">Zlochower and Green, <em>J. Loss Prev. Process Ind.</em> <strong>22</strong>, 499–505,
+2009</a>). What is simulated is the campaign
+itself: which mixtures were tested, and the outcome of each test. Real limit determinations
+are not sharp — close to a limit, nominally identical mixtures ignite some of the time and
+not others — so the outcome of each test near a boundary is drawn rather than decided. A
+few percent of these 800 tests sit in that uncertain band.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/flammability_campaignA.csv&#39;</span><span class="p">)</span>
+
+<span class="n">fuel</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;fuel_vol_pct&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>        <span class="c1"># vol % methane</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;n2_added_vol_pct&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>      <span class="c1"># vol % nitrogen added on top of the air</span>
+<span class="n">o2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;o2_vol_pct&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>            <span class="c1"># vol % oxygen, = 20.95/100 * (100 - fuel - n2)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ignited&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>                <span class="c1"># 1 = flame propagated, 0 = did not</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> tests, all at </span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature_C&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> C&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;columns: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fuel  spans </span><span class="si">{</span><span class="n">fuel</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">fuel</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> vol%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;added N2 spans </span><span class="si">{</span><span class="n">n2</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">n2</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> vol%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>800 tests, all at 25 C
+columns: [&#39;test_id&#39;, &#39;temperature_C&#39;, &#39;fuel_vol_pct&#39;, &#39;n2_added_vol_pct&#39;, &#39;o2_vol_pct&#39;, &#39;ignited&#39;, &#39;regime&#39;]
+fuel  spans 0.07 to 19.99 vol%
+added N2 spans 0.01 to 49.92 vol%
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is where the campaign looked, with the outcomes left off — putting the outcomes on
+this plot is Part B task 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fuel</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;0.6&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;methane [vol %]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;added nitrogen [vol %]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Where the 800 tests were run&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b3e0d6191768ff100e542bb34f66611fe842b1d4a462f4b1d808547e11744a90.png" src="../_images/b3e0d6191768ff100e542bb34f66611fe842b1d4a462f4b1d808547e11744a90.png" />
+</div>
+</div>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;5f0f3cbe19c1&#39;</span><span class="p">,</span> <span class="s1">&#39;bcf31beea8f8&#39;</span><span class="p">,</span> <span class="s1">&#39;cf243bd18f64&#39;</span><span class="p">,</span> <span class="s1">&#39;48ca1eb9ff7a&#39;</span><span class="p">,</span> <span class="s1">&#39;d5a97bac95e3&#39;</span><span class="p">,</span> <span class="s1">&#39;7fa32ce32b20&#39;</span><span class="p">,</span> <span class="s1">&#39;a94516eecc7b&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;afcba4cd7b8e&#39;</span><span class="p">,</span> <span class="s1">&#39;25d379d33393&#39;</span><span class="p">,</span> <span class="s1">&#39;77ee4da84b54&#39;</span><span class="p">,</span> <span class="s1">&#39;094d7911ca11&#39;</span><span class="p">,</span> <span class="s1">&#39;86cba77344bf&#39;</span><span class="p">,</span> <span class="s1">&#39;f9c58eeee75a&#39;</span><span class="p">,</span> <span class="s1">&#39;d7ffc17fa9f9&#39;</span><span class="p">,</span> <span class="s1">&#39;fdf6b4e1b98f&#39;</span><span class="p">,</span> <span class="s1">&#39;a9d60c811299&#39;</span><span class="p">,</span> <span class="s1">&#39;15aa0af9fcbc&#39;</span><span class="p">,</span> <span class="s1">&#39;84d8f5437444&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;f73c6671ee41&#39;</span><span class="p">,</span> <span class="s1">&#39;08946eae18a9&#39;</span><span class="p">,</span> <span class="s1">&#39;f265a9071014&#39;</span><span class="p">,</span> <span class="s1">&#39;5dd14fd4961a&#39;</span><span class="p">,</span> <span class="s1">&#39;6217a22b7dba&#39;</span><span class="p">,</span> <span class="s1">&#39;2818cedd8b6d&#39;</span><span class="p">,</span> <span class="s1">&#39;cd04c4567b3c&#39;</span><span class="p">,</span> <span class="s1">&#39;a449962402b5&#39;</span><span class="p">,</span> <span class="s1">&#39;c449a4737a06&#39;</span><span class="p">,</span> <span class="s1">&#39;bf2aa1f6bcd5&#39;</span><span class="p">,</span> <span class="s1">&#39;0f0c8c00ae42&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Three questions, 10 points each. Each asks you to assign a single number to a named
+variable. Run the check cell after each one; there is no limit on attempts.</p>
+<p>A1 counts how often the hazard actually occurs, A2 scores the alarm rule the plant
+currently uses, and A3 asks how good fuel concentration is as a warning signal on its own.</p>
+<section id="a1-how-often-does-the-hazard-occur-10-pts">
+<h3>A1. How often does the hazard occur? (10 pts)<a class="headerlink" href="#a1-how-often-does-the-hazard-occur-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-cls-hazard-rate">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>Report the fraction of the 800 tests that ignited.</p>
+<p>Assign it to <code class="docutils literal notranslate"><span class="pre">frac_flammable</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">frac_flammable</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">frac_flammable</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-score-the-alarm-rule-the-plant-already-uses-10-pts">
+<h3>A2. Score the alarm rule the plant already uses (10 pts)<a class="headerlink" href="#a2-score-the-alarm-rule-the-plant-already-uses-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-cls-threshold-f1">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>The plant currently runs a single alarm: <strong>declare the mixture flammable when
+<code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code> is above 5.0</strong>. Nothing else is measured.</p>
+<p>Build that rule’s predictions, score them against <code class="docutils literal notranslate"><span class="pre">ignited</span></code> with the chapter’s
+<code class="docutils literal notranslate"><span class="pre">acc_prec_recall</span></code>, and combine precision and recall into the F1 score</p>
+<div class="math notranslate nohighlight">
+\[F_1 = \frac{2 \, p \, r}{p + r}\]</div>
+<p>Assign the F1 score to <code class="docutils literal notranslate"><span class="pre">f1_threshold</span></code>.</p>
+<p>You will need <code class="docutils literal notranslate"><span class="pre">acc_prec_recall</span></code> from the chapter; it is reproduced here so the notebook
+runs on its own.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">acc_prec_recall</span><span class="p">(</span><span class="n">y_model</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">):</span>
+    <span class="n">TP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_model</span> <span class="o">==</span> <span class="n">y_actual</span><span class="p">,</span> <span class="n">y_model</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">TN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_model</span> <span class="o">==</span> <span class="n">y_actual</span><span class="p">,</span> <span class="n">y_model</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">FP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_model</span> <span class="o">!=</span> <span class="n">y_actual</span><span class="p">,</span> <span class="n">y_model</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">FN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_model</span> <span class="o">!=</span> <span class="n">y_actual</span><span class="p">,</span> <span class="n">y_model</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">TP</span> <span class="o">+</span> <span class="n">TN</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">TP</span> <span class="o">+</span> <span class="n">TN</span> <span class="o">+</span> <span class="n">FP</span> <span class="o">+</span> <span class="n">FN</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">TP</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">prec</span><span class="p">,</span> <span class="n">recall</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">prec</span> <span class="o">=</span> <span class="n">TP</span> <span class="o">/</span> <span class="p">(</span><span class="n">TP</span> <span class="o">+</span> <span class="n">FP</span><span class="p">)</span>
+        <span class="n">recall</span> <span class="o">=</span> <span class="n">TP</span> <span class="o">/</span> <span class="p">(</span><span class="n">TP</span> <span class="o">+</span> <span class="n">FN</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">acc</span><span class="p">,</span> <span class="n">prec</span><span class="p">,</span> <span class="n">recall</span>
+
+<span class="c1"># YOUR CODE HERE</span>
+<span class="n">f1_threshold</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">f1_threshold</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-how-good-a-warning-signal-is-fuel-concentration-10-pts">
+<h3>A3. How good a warning signal is fuel concentration? (10 pts)<a class="headerlink" href="#a3-how-good-a-warning-signal-is-fuel-concentration-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-cls-auc-onesided">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<p>Forget the fixed threshold and treat <code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code> itself as a continuous score: the
+higher it is, the more dangerous the mixture is supposed to be.</p>
+<p>Build the ROC curve for that score with <code class="docutils literal notranslate"><span class="pre">roc_curve</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>, then report the
+<strong>area under it</strong>. <code class="docutils literal notranslate"><span class="pre">roc_curve</span></code> returns the false-positive and true-positive rates but not
+the area, so integrate it yourself with <code class="docutils literal notranslate"><span class="pre">np.trapezoid</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+<span class="n">area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Assign the area to <code class="docutils literal notranslate"><span class="pre">auc_fuel</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">np.trapezoid</span></code> is the NumPy 2.0 name. On older NumPy it is <code class="docutils literal notranslate"><span class="pre">np.trapz</span></code>, with the same
+signature.</p>
+</div>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">auc_fuel</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">auc_fuel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>Part A returned three numbers about the campaign. This part draws them.</p>
+<div class="exercise admonition" id="pr-cls-envelope-shape">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p><strong>1. Where the hazard lives.</strong> Scatter the campaign in the (<code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code>,
+<code class="docutils literal notranslate"><span class="pre">n2_added_vol_pct</span></code>) plane, colored by <code class="docutils literal notranslate"><span class="pre">ignited</span></code>, with a legend. Beside it, plot a bar chart
+of the four <code class="docutils literal notranslate"><span class="pre">regime</span></code> counts.</p>
+<p>Report the <strong>imbalance ratio</strong>, non-flammable to flammable, as a single number. Then split
+the ignited tests by added nitrogen — those below 10 vol% and those above 30 vol% — and
+report the range of <code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code> each group spans.</p>
+<p>In <strong>one or two sentences</strong>: say what those two ranges tell you about the shape of the
+region, and why no single cut on <code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code> can describe it.</p>
+<p><strong>2. What the score is actually worth.</strong> Take the median <code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span></code> among the tests
+that ignited, call it <span class="math notranslate nohighlight">\(m\)</span>, and build a second score that measures distance from it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">score_two_sided</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fuel</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the ROC curve for <code class="docutils literal notranslate"><span class="pre">fuel</span></code> (from A3) and the ROC curve for <code class="docutils literal notranslate"><span class="pre">score_two_sided</span></code> on the same
+axes, with the chance diagonal, and report both areas.</p>
+<p>In <strong>two sentences</strong>: say what the second score knows that the first does not, given that
+both are built from the same single column.</p>
+<p><strong>3. What the alarm rule costs.</strong> Build the 2×2 confusion matrix for A2’s rule
+(<code class="docutils literal notranslate"><span class="pre">fuel_vol_pct</span> <span class="pre">&gt;</span> <span class="pre">5.0</span></code>) against <code class="docutils literal notranslate"><span class="pre">ignited</span></code> using <code class="docutils literal notranslate"><span class="pre">confusion_matrix</span></code> from <code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>,
+and display it as a labelled heatmap. Separately, build the 4×4 confusion matrix of
+<code class="docutils literal notranslate"><span class="pre">regime</span></code> against the same rule’s prediction, treating the rule as predicting <code class="docutils literal notranslate"><span class="pre">flammable</span></code> or
+<code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">flammable</span></code>, so you can see which regimes the false alarms come from.</p>
+<p>Report the number of <strong>false positives</strong> and the number of <strong>false negatives</strong>.</p>
+<p>In <strong>one or two sentences</strong>: say which of the two is the safety failure here, and which
+regime supplies most of the false alarms.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>Part B showed that the flammable region is closed on more than one side, and that the
+plant’s one-sided alarm pays for its recall with 410 false alarms. This part builds a
+better detector out of the same kind of parts — threshold conditions — by adding one side
+at a time and measuring what each one buys.</p>
+<p>You are not fitting a model here. Every rule below is a boolean expression, and you tune it
+by searching a grid.</p>
+<div class="exercise admonition" id="pr-cls-operating-point">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. Close the band.</strong> Replace the one-sided alarm with a two-sided window: declare the
+mixture flammable when <code class="docutils literal notranslate"><span class="pre">lo</span> <span class="pre">&lt;</span> <span class="pre">fuel_vol_pct</span> <span class="pre">&lt;</span> <span class="pre">hi</span></code>. Search <code class="docutils literal notranslate"><span class="pre">lo</span></code> over 4.0 to 7.0 and <code class="docutils literal notranslate"><span class="pre">hi</span></code> over
+8.0 to 18.0, both in steps of 0.1, and keep the pair with the best F1 score against
+<code class="docutils literal notranslate"><span class="pre">ignited</span></code>.</p>
+<p>Report the best <code class="docutils literal notranslate"><span class="pre">lo</span></code>, <code class="docutils literal notranslate"><span class="pre">hi</span></code> and F1, along with the accuracy, precision, recall, false-alarm
+count and missed-ignition count at that setting.</p>
+<p>In <strong>one sentence</strong>: say how much of A2’s problem the upper edge alone fixed.</p>
+<p><strong>2. Add the third side.</strong> Part B’s scatter shows the band closing off at high added
+nitrogen, and the Setup says why: below some oxygen level nothing propagates. Add a third
+condition, <code class="docutils literal notranslate"><span class="pre">o2_vol_pct</span> <span class="pre">&gt;</span> <span class="pre">c</span></code>, and search <code class="docutils literal notranslate"><span class="pre">c</span></code> over 9.0 to 14.0 in steps of 0.1 alongside <code class="docutils literal notranslate"><span class="pre">lo</span></code>
+and <code class="docutils literal notranslate"><span class="pre">hi</span></code>.</p>
+<p>Report the best rule and its F1, and the change in F1 and in the false-alarm count against
+task 1.</p>
+<p>Then check that the improvement is real rather than an artifact of tuning and scoring on
+the same 800 rows. Using <code class="docutils literal notranslate"><span class="pre">StratifiedKFold(n_splits=5,</span> <span class="pre">shuffle=True,</span> <span class="pre">random_state=0)</span></code>,
+<strong>re-tune the rule on each training fold</strong> and score it on the held-out fold. Report the
+five fold scores and their mean, and compare to the number you got by tuning on everything.</p>
+<p>In <strong>two sentences</strong>: say what the oxygen cut added, and what the gap between the two
+numbers tells you.</p>
+<p><strong>3. Choose an operating point.</strong> A process-safety review will not accept a detector that
+misses ignitions. Impose a floor: <strong>recall ≥ 0.98</strong> on the flammable class.</p>
+<p>Among all <code class="docutils literal notranslate"><span class="pre">(lo,</span> <span class="pre">hi,</span> <span class="pre">c)</span></code> on your grid that meet it, report how many qualify, and for the one
+with the highest precision report the cuts, the precision, the recall and the false-alarm
+count. Compare that false-alarm count to A2’s 410.</p>
+<p>Then compare your three cuts to the published values for methane at 25 °C: a lower limit of
+<strong>5.0 vol %</strong>, an upper limit of <strong>15.8 vol %</strong>, and a limiting oxygen concentration of
+<strong>11.1 vol % O₂</strong> (<a class="reference external" href="https://doi.org/10.1016/j.jlp.2009.03.006">Zlochower and Green,
+2009</a>, Table 1, 120-L chamber).</p>
+<p>In <strong>two sentences</strong>: say what you give up to meet the recall floor, and name one thing
+about how this campaign was run that limits how precisely you could ever locate these
+boundaries.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module-3-classification.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Module 3 — Classification</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic3.2-Generalized_Linear_Models_Problems.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Problems: Generalized Linear Models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-how-often-does-the-hazard-occur-10-pts">A1. How often does the hazard occur? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-score-the-alarm-rule-the-plant-already-uses-10-pts">A2. Score the alarm rule the plant already uses (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-how-good-a-warning-signal-is-fuel-concentration-10-pts">A3. How good a warning signal is fuel concentration? (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
