@@ -54,11 +54,11 @@ clrs = np.array(['#003057', '#EAAA00', '#4B8B9B', '#B3A369', '#377117', '#1879DB
 ```{code-cell} ipython3
 from sklearn.datasets import make_blobs, make_moons, make_circles
 
-np.random.seed(1)  # fix random state for reproducibility
+np.random.seed(0)  # fix random state for reproducibility
 noisiness = 1
 
-X_blob, y_blob = make_blobs(n_samples=200, centers=2, cluster_std=2*noisiness, n_features=2)
-X_mc, y_mc = make_blobs(n_samples=200, centers=3, cluster_std=0.5*noisiness, n_features=2)
+X_blob, y_blob = make_blobs(n_samples=200, centers=[[-1.7, 4.4], [-10.0, -4.0]], cluster_std=2*noisiness, n_features=2)
+X_mc, y_mc = make_blobs(n_samples=200, centers=[[-6.2, 0.6], [4.8, -7.0], [1.0, -5.7]], cluster_std=0.5*noisiness, n_features=2)
 X_circles, y_circles = make_circles(n_samples=200, factor=0.3, noise=0.1*noisiness)
 X_moons, y_moons = make_moons(n_samples=200, noise=0.1*noisiness)
 
@@ -77,7 +77,8 @@ plt.show()
 
 A few things to note:
 
-- The random seed is fixed so results are reproducible.
+- The random seed is fixed so results are reproducible. Here the value itself is arbitrary (we use `np.random.seed(0)` throughout, as in the regression chapters), because the blob `centers` are pinned explicitly: any seed gives datasets with the same structure.
+- A seed is not always arbitrary, though. In the next cell, seeds 9 and 5 were chosen deliberately because they happen to produce blobs that are linearly separable and inseparable, and it is common to select a seed that illustrates a property like this. Try changing the seeds, or removing the pinned `centers`, and see how the datasets (and the results later in this chapter) change.
 - The `noisiness` variable controls how much overlap exists between classes.
 - The outputs $y$ are approximately evenly divided between classes.
 
@@ -381,8 +382,8 @@ When there are more than two classes the problem is called **multi-class** class
 ```{code-cell} ipython3
 from sklearn.svm import SVC
 
-np.random.seed(1)
-X_mc3, y_mc3 = make_blobs(n_samples=200, centers=3, cluster_std=0.5*noisiness, n_features=2)
+np.random.seed(0)
+X_mc3, y_mc3 = make_blobs(n_samples=200, centers=[[-1.7, 4.4], [-10.0, -4.0], [-7.1, -8.2]], cluster_std=0.5*noisiness, n_features=2)
 
 # Train a linear SVM with one-vs-rest multi-class strategy
 model = SVC(kernel='linear', C=1, decision_function_shape='ovr')
