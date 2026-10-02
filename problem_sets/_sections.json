@@ -61,6 +61,10 @@
         {
           "file": "problem_sets/Topic3.2-Generalized_Linear_Models_Problems",
           "title": "3.2 - Generalized Linear Models - Flammability Envelopes"
+        },
+        {
+          "file": "problem_sets/Topic3.3-Alternate_Classification_Models_Problems",
+          "title": "3.3 - Alternate Classification Methods - Aqueous Solubility"
         }
       ]
     },

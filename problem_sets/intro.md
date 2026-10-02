@@ -37,6 +37,7 @@ Solutions are not published here.
 
 - **{doc}`3.1 - Classification Basics - Flammability Testing <Topic3.1-Classification_Basics_Problems>`** (accompanies {doc}`/3-classification/Topic3.1-Classification_Basics`) · {download}`zip <archives/Topic3.1-Classification_Basics_Problems.zip>`
 - **{doc}`3.2 - Generalized Linear Models - Flammability Envelopes <Topic3.2-Generalized_Linear_Models_Problems>`** (accompanies {doc}`/3-classification/Topic3.2-Generalized_Linear_Models`) · {download}`zip <archives/Topic3.2-Generalized_Linear_Models_Problems.zip>`
+- **{doc}`3.3 - Alternate Classification Methods - Aqueous Solubility <Topic3.3-Alternate_Classification_Models_Problems>`** (accompanies {doc}`/3-classification/Topic3.3-Alternate_Classification_Models`) · {download}`zip <archives/Topic3.3-Alternate_Classification_Models_Problems.zip>`
 
 ## Exploratory Data Analysis
 
