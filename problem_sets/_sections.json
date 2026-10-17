@@ -65,6 +65,10 @@
         {
           "file": "problem_sets/Topic3.3-Alternate_Classification_Models_Problems",
           "title": "3.3 - Alternate Classification Methods - Aqueous Solubility"
+        },
+        {
+          "file": "problem_sets/Topic3.4-High-dimensional_Classification_Problems",
+          "title": "3.4 - High-dimensional Classification - Membrane Database Audit"
         }
       ]
     },
