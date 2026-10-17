@@ -72,6 +72,14 @@
       "file": "problem_sets/module-5-exploratory_data_analysis",
       "sections": [
         {
+          "file": "problem_sets/Topic5.1-High_Dimensional_Data_Problems",
+          "title": "5.1 - High-Dimensional Data - Tennessee Eastman Sensors"
+        },
+        {
+          "file": "problem_sets/Topic5.2-Dimensionality_Reduction_Problems",
+          "title": "5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring"
+        },
+        {
           "file": "problem_sets/Topic5.3-Clustering_Problems",
           "title": "5.3 - Clustering - Carbon XPS Spectra"
         }
