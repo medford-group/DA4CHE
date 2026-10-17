@@ -243,9 +243,13 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
 </ul>
 </details></li>
@@ -510,11 +514,11 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span><span class="p">,</span> <span class="n">make_moons</span><span class="p">,</span> <span class="n">make_circles</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># fix random state for reproducibility</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># fix random state for reproducibility</span>
 <span class="n">noisiness</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="n">X_blob</span><span class="p">,</span> <span class="n">y_blob</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">X_mc</span><span class="p">,</span> <span class="n">y_mc</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_blob</span><span class="p">,</span> <span class="n">y_blob</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_mc</span><span class="p">,</span> <span class="n">y_mc</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">6.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.7</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">X_circles</span><span class="p">,</span> <span class="n">y_circles</span> <span class="o">=</span> <span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
 <span class="n">X_moons</span><span class="p">,</span> <span class="n">y_moons</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
 
@@ -533,12 +537,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2101ca785a31d06a9afc1e3e8e045e3c44cb04aad7dcdc02e8996c826a73ba27.png" src="../_images/2101ca785a31d06a9afc1e3e8e045e3c44cb04aad7dcdc02e8996c826a73ba27.png" />
+<img alt="../_images/7353e09facbd2274898547ebfb425e47c8e0489944f5fc2a6f7baee4c4264423.png" src="../_images/7353e09facbd2274898547ebfb425e47c8e0489944f5fc2a6f7baee4c4264423.png" />
 </div>
 </div>
 <p>A few things to note:</p>
 <ul class="simple">
-<li><p>The random seed is fixed so results are reproducible.</p></li>
+<li><p>The random seed is fixed so results are reproducible. Here the value itself is arbitrary (we use <code class="docutils literal notranslate"><span class="pre">np.random.seed(0)</span></code> throughout, as in the regression chapters), because the blob <code class="docutils literal notranslate"><span class="pre">centers</span></code> are pinned explicitly: any seed gives datasets with the same structure.</p></li>
+<li><p>A seed is not always arbitrary, though. In the next cell, seeds 9 and 5 were chosen deliberately because they happen to produce blobs that are linearly separable and inseparable, and it is common to select a seed that illustrates a property like this. Try changing the seeds, or removing the pinned <code class="docutils literal notranslate"><span class="pre">centers</span></code>, and see how the datasets (and the results later in this chapter) change.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">noisiness</span></code> variable controls how much overlap exists between classes.</p></li>
 <li><p>The outputs <span class="math notranslate nohighlight">\(y\)</span> are approximately evenly divided between classes.</p></li>
 </ul>
@@ -868,8 +873,8 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">X_mc3</span><span class="p">,</span> <span class="n">y_mc3</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_mc3</span><span class="p">,</span> <span class="n">y_mc3</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">7.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">8.2</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Train a linear SVM with one-vs-rest multi-class strategy</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">decision_function_shape</span><span class="o">=</span><span class="s1">&#39;ovr&#39;</span><span class="p">)</span>
@@ -897,7 +902,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/507f7c1d9b06e976cd0ebe7bff3fd99d68a28e528a0b1ad0915cfc56606d3a7b.png" src="../_images/507f7c1d9b06e976cd0ebe7bff3fd99d68a28e528a0b1ad0915cfc56606d3a7b.png" />
+<img alt="../_images/1e30b5492e4af65d980d86b0dbe1eaa04dcdb0b00811a949e36e642065af940a.png" src="../_images/1e30b5492e4af65d980d86b0dbe1eaa04dcdb0b00811a949e36e642065af940a.png" />
 </div>
 </div>
 <p>The SVM above uses the one-vs-rest strategy: three binary classifiers are trained, and the class with the highest decision function value is selected. The shaded regions show the three decision regions learned by the model.</p>
@@ -956,7 +961,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8bcdabfb0b8ad91cb54d765099940cca1e70ea421239639ae3495422ef4d556a.png" src="../_images/8bcdabfb0b8ad91cb54d765099940cca1e70ea421239639ae3495422ef4d556a.png" />
+<img alt="../_images/4e89659226c4857a2672290b9ab74c89595a4bea2d3f792436611dd8a6245e1e.png" src="../_images/4e89659226c4857a2672290b9ab74c89595a4bea2d3f792436611dd8a6245e1e.png" />
 </div>
 </div>
 </section>
@@ -983,7 +988,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Max cost at initial w: 3.7510
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Max cost at initial w: 2.4170
 </pre></div>
 </div>
 </div>
@@ -1039,7 +1044,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number wrong after optimization: 1
 </pre></div>
 </div>
-<img alt="../_images/d9152ab838e99b9bef0fa11c94f97fb53bf2f7f905b4d71ef78e7a385c11448c.png" src="../_images/d9152ab838e99b9bef0fa11c94f97fb53bf2f7f905b4d71ef78e7a385c11448c.png" />
+<img alt="../_images/2f7593693e99793594444f2498180715f524adf00d7a0253c1bc153f5ee41055.png" src="../_images/2f7593693e99793594444f2498180715f524adf00d7a0253c1bc153f5ee41055.png" />
 </div>
 </div>
 <div class="admonition note">

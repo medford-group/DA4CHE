@@ -243,9 +243,13 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
 </ul>
 </details></li>
@@ -487,15 +491,15 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span><span class="p">,</span> <span class="n">make_moons</span><span class="p">,</span> <span class="n">make_circles</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># centers are pinned, so the datasets match Topic 3.1 for any seed</span>
 
 <span class="c1"># GT color palette — derived from the prop_cycle in plot_style.mplstyle</span>
 <span class="n">clrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">])</span>
 
 <span class="n">noisiness</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="n">X_blob</span><span class="p">,</span>    <span class="n">y_blob</span>    <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">X_mc</span><span class="p">,</span>      <span class="n">y_mc</span>      <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_blob</span><span class="p">,</span>    <span class="n">y_blob</span>    <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_mc</span><span class="p">,</span>      <span class="n">y_mc</span>      <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">6.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.7</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">X_circles</span><span class="p">,</span> <span class="n">y_circles</span> <span class="o">=</span> <span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
 <span class="n">X_moons</span><span class="p">,</span>   <span class="n">y_moons</span>   <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
 
@@ -589,14 +593,14 @@ document.write(`
   success: True
    status: 0
       fun: 0.0
-        x: [-1.069e+01 -2.422e+00 -9.679e+00]
+        x: [-1.032e+01 -3.042e+00 -9.985e+00]
       nit: 1
       jac: [ 0.000e+00  0.000e+00  0.000e+00]
  hess_inv: [[1 0 0]
             [0 1 0]
             [0 0 1]]
-     nfev: 16
-     njev: 4
+     nfev: 8
+     njev: 2
 </pre></div>
 </div>
 </div>
@@ -745,7 +749,7 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Perceptron loss   (optimized): 0.0000
-Logistic loss     (optimized): 53.9395
+Logistic loss     (optimized): 55.3789
 </pre></div>
 </div>
 </div>

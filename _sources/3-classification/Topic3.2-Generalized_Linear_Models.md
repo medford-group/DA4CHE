@@ -45,15 +45,15 @@ import matplotlib.pyplot as plt
 plt.style.use('../settings/plot_style.mplstyle')
 from sklearn.datasets import make_blobs, make_moons, make_circles
 
-np.random.seed(1)
+np.random.seed(0)  # centers are pinned, so the datasets match Topic 3.1 for any seed
 
 # GT color palette — derived from the prop_cycle in plot_style.mplstyle
 clrs = np.array(plt.rcParams['axes.prop_cycle'].by_key()['color'])
 
 noisiness = 1
 
-X_blob,    y_blob    = make_blobs(n_samples=200, centers=2, cluster_std=2*noisiness, n_features=2)
-X_mc,      y_mc      = make_blobs(n_samples=200, centers=3, cluster_std=0.5*noisiness, n_features=2)
+X_blob,    y_blob    = make_blobs(n_samples=200, centers=[[-1.7, 4.4], [-10.0, -4.0]], cluster_std=2*noisiness, n_features=2)
+X_mc,      y_mc      = make_blobs(n_samples=200, centers=[[-6.2, 0.6], [4.8, -7.0], [1.0, -5.7]], cluster_std=0.5*noisiness, n_features=2)
 X_circles, y_circles = make_circles(n_samples=200, factor=0.3, noise=0.1*noisiness)
 X_moons,   y_moons   = make_moons(n_samples=200, noise=0.1*noisiness)
 

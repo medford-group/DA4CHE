@@ -37,7 +37,11 @@ Solutions are not published here.
 
 - **{doc}`3.1 - Classification Basics - Flammability Testing <Topic3.1-Classification_Basics_Problems>`** (accompanies {doc}`/3-classification/Topic3.1-Classification_Basics`) · {download}`zip <archives/Topic3.1-Classification_Basics_Problems.zip>`
 - **{doc}`3.2 - Generalized Linear Models - Flammability Envelopes <Topic3.2-Generalized_Linear_Models_Problems>`** (accompanies {doc}`/3-classification/Topic3.2-Generalized_Linear_Models`) · {download}`zip <archives/Topic3.2-Generalized_Linear_Models_Problems.zip>`
+- **{doc}`3.3 - Alternate Classification Methods - Aqueous Solubility <Topic3.3-Alternate_Classification_Models_Problems>`** (accompanies {doc}`/3-classification/Topic3.3-Alternate_Classification_Models`) · {download}`zip <archives/Topic3.3-Alternate_Classification_Models_Problems.zip>`
+- **{doc}`3.4 - High-dimensional Classification - Membrane Database Audit <Topic3.4-High-dimensional_Classification_Problems>`** (accompanies {doc}`/3-classification/Topic3.4-High-dimensional_Classification`) · {download}`zip <archives/Topic3.4-High-dimensional_Classification_Problems.zip>`
 
 ## Exploratory Data Analysis
 
+- **{doc}`5.1 - High-Dimensional Data - Tennessee Eastman Sensors <Topic5.1-High_Dimensional_Data_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data`) · {download}`zip <archives/Topic5.1-High_Dimensional_Data_Problems.zip>`
+- **{doc}`5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring <Topic5.2-Dimensionality_Reduction_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction`) · {download}`zip <archives/Topic5.2-Dimensionality_Reduction_Problems.zip>`
 - **{doc}`5.3 - Clustering - Carbon XPS Spectra <Topic5.3-Clustering_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.3-Clustering`) · {download}`zip <archives/Topic5.3-Clustering_Problems.zip>`

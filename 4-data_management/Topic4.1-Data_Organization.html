@@ -243,9 +243,13 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
 </ul>
 </details></li>
@@ -2137,7 +2141,7 @@ like HDF5 and Parquet have all three.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.65 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Excel load time: 1.55 s
 </pre></div>
 </div>
 </div>
@@ -2241,9 +2245,9 @@ Attributes: {&#39;columns&#39;: &quot;[&#39;x1:Primary Column Reflux Flow&#39;, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0009 s
-HDF5 one column:  0.0005 s
-In-memory slice:  0.000212 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HDF5 full load:   0.0016 s
+HDF5 one column:  0.0004 s
+In-memory slice:  0.000209 s
 </pre></div>
 </div>
 </div>
@@ -2288,8 +2292,8 @@ It is natively supported by <code class="docutils literal notranslate"><span cla
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0785 s
-Parquet read:  0.1017 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parquet write: 0.0866 s
+Parquet read:  0.0944 s
 
 Shape preserved: (8042, 46)
 Dtypes after round-trip:

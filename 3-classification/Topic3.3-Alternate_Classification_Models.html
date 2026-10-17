@@ -243,9 +243,13 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
 </ul>
 </details></li>
@@ -500,11 +504,11 @@ model selection.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_blobs</span><span class="p">,</span> <span class="n">make_moons</span><span class="p">,</span> <span class="n">make_circles</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># centers are pinned, so the datasets match Topic 3.1 for any seed</span>
 <span class="n">noisiness</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="n">X_blob</span><span class="p">,</span>    <span class="n">y_blob</span>    <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">X_mc</span><span class="p">,</span>      <span class="n">y_mc</span>      <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_blob</span><span class="p">,</span>    <span class="n">y_blob</span>    <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_mc</span><span class="p">,</span>      <span class="n">y_mc</span>      <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">6.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.7</span><span class="p">]],</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">noisiness</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">X_circles</span><span class="p">,</span> <span class="n">y_circles</span> <span class="o">=</span> <span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
 <span class="n">X_moons</span><span class="p">,</span>   <span class="n">y_moons</span>   <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">*</span><span class="n">noisiness</span><span class="p">)</span>
 
@@ -524,7 +528,7 @@ model selection.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/9bd9df5a20421e52742f200e4de3a7c91472d9391f20039e15724eda65fcf1cf.png" src="../_images/9bd9df5a20421e52742f200e4de3a7c91472d9391f20039e15724eda65fcf1cf.png" />
+<img alt="../_images/729691c98643564fec32fcfd16395f21c285d7c165e7785c4ea9be010488f8ed.png" src="../_images/729691c98643564fec32fcfd16395f21c285d7c165e7785c4ea9be010488f8ed.png" />
 </div>
 </div>
 <section id="k-nearest-neighbors">
@@ -600,7 +604,7 @@ neighbors <span class="math notranslate nohighlight">\(k\)</span> and the choice
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/7b355ea67b382f0c5c57468194feb5f543067a4df813de79cc678f63257d48bc.png" src="../_images/7b355ea67b382f0c5c57468194feb5f543067a4df813de79cc678f63257d48bc.png" />
+<img alt="../_images/47856c3a2093bc89be368a16f525b5e3a39155d9d3bc1febc486e6fed3050039.png" src="../_images/47856c3a2093bc89be368a16f525b5e3a39155d9d3bc1febc486e6fed3050039.png" />
 </div>
 </div>
 <p>The model predicts every point correctly — but this is not a fair test because every
@@ -624,7 +628,7 @@ point is its own neighbor. Let’s use a proper train/test split:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f5aecab33fe221c747d63c05e55405a8e45b7c375acd68d515357baf354f1d6b.png" src="../_images/f5aecab33fe221c747d63c05e55405a8e45b7c375acd68d515357baf354f1d6b.png" />
+<img alt="../_images/87b7d82f03eac36c86e5336081a69180723eb21837b29c46a034352473436d19.png" src="../_images/87b7d82f03eac36c86e5336081a69180723eb21837b29c46a034352473436d19.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -654,7 +658,7 @@ generalization.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fcf74c7c08e1c49688f84c98a5b953d46f893038b92e311acae5ae192a3a8f26.png" src="../_images/fcf74c7c08e1c49688f84c98a5b953d46f893038b92e311acae5ae192a3a8f26.png" />
+<img alt="../_images/3ab4ee14f20b92a643b14ac6af6301c9e9d49e691540232ac823086d81eca288.png" src="../_images/3ab4ee14f20b92a643b14ac6af6301c9e9d49e691540232ac823086d81eca288.png" />
 </div>
 </div>
 </section>
@@ -687,7 +691,7 @@ visualization:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/87a3246033ebf8d050d775edc75e0c043ac4c3bde7f5b1dd122bbcae64b99258.png" src="../_images/87a3246033ebf8d050d775edc75e0c043ac4c3bde7f5b1dd122bbcae64b99258.png" />
+<img alt="../_images/494f679c9871458e48117a798ee9e20caa8604b3c2e49547211223237113bf20.png" src="../_images/494f679c9871458e48117a798ee9e20caa8604b3c2e49547211223237113bf20.png" />
 </div>
 </div>
 </section>
@@ -784,7 +788,7 @@ which class distribution assigns it the highest probability.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/673e3d6441f0b29fda2133b9aa2eac7f0e4fd7fe01b638156cf99e63c415a0e8.png" src="../_images/673e3d6441f0b29fda2133b9aa2eac7f0e4fd7fe01b638156cf99e63c415a0e8.png" />
+<img alt="../_images/985612d8679723afc0613e5dd1b8363af9c2ffaa3e8785d2a2ecfb96d3f6fe37.png" src="../_images/985612d8679723afc0613e5dd1b8363af9c2ffaa3e8785d2a2ecfb96d3f6fe37.png" />
 </div>
 </div>
 </section>
@@ -815,7 +819,7 @@ which class distribution assigns it the highest probability.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8c1aab27ae14f399406fb120ad806cec9773e537672f3d381f37661140bb2f30.png" src="../_images/8c1aab27ae14f399406fb120ad806cec9773e537672f3d381f37661140bb2f30.png" />
+<img alt="../_images/1cd73b7b468a3a5e3bda93547cf4a32c6bdf659ef10671ddaec8a57168038b28.png" src="../_images/1cd73b7b468a3a5e3bda93547cf4a32c6bdf659ef10671ddaec8a57168038b28.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -912,7 +916,7 @@ predictions, similar to the bootstrapping techniques seen in the regression chap
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8291e06a3df1b6a18fee093c2ea259a16ff4d9eb24ef94063afc776fb40bbbb0.png" src="../_images/8291e06a3df1b6a18fee093c2ea259a16ff4d9eb24ef94063afc776fb40bbbb0.png" />
+<img alt="../_images/03a7819f27c9038f2b15a197426934bd4b49dd7c05f305ba7bfbbd9e97c7b765.png" src="../_images/03a7819f27c9038f2b15a197426934bd4b49dd7c05f305ba7bfbbd9e97c7b765.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -940,7 +944,7 @@ predictions, similar to the bootstrapping techniques seen in the regression chap
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f9f55709c5a1a27ceaf5dabb50b7907b6c0163bc5eef7a2b899a9fd402083f34.png" src="../_images/f9f55709c5a1a27ceaf5dabb50b7907b6c0163bc5eef7a2b899a9fd402083f34.png" />
+<img alt="../_images/de212f052a9e8af10a3d216a864bee9e45051fd29442e7131c3d3b3112d2b793.png" src="../_images/de212f052a9e8af10a3d216a864bee9e45051fd29442e7131c3d3b3112d2b793.png" />
 </div>
 </div>
 </section>
@@ -961,7 +965,7 @@ predictions, similar to the bootstrapping techniques seen in the regression chap
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/92eb449a4052496141914fe22682d090b2d20ce864d91293932a110e70d9aec7.png" src="../_images/92eb449a4052496141914fe22682d090b2d20ce864d91293932a110e70d9aec7.png" />
+<img alt="../_images/304e3c29dc8840d9400b3c1fe69ac8f4eae2df242008f5681b00dee60b08436b.png" src="../_images/304e3c29dc8840d9400b3c1fe69ac8f4eae2df242008f5681b00dee60b08436b.png" />
 </div>
 </div>
 <p>Each node shows the splitting rule, the Gini impurity, the sample count, and the
