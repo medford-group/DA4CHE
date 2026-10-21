@@ -84,6 +84,17 @@ The module title "Advanced Topics" reflects a broader truth: architectures are t
 feature engineering decisions of deep learning. A well-chosen architecture encodes
 domain knowledge that would otherwise need to be hand-crafted.
 
+Note that every architecture ends the same way. For regression, the last layer is
+linear regression on the learned features. For classification, it is the softmax
+(multinomial logistic) regression from
+[Generalized Linear Models](../3-classification/Topic3.2-Generalized_Linear_Models).
+The architecture decides how the features are generated. This is also the reason that
+transfer learning works. Features learned on one problem are often a good basis for
+another one, so we only need to refit the last linear layer. This way of thinking about
+networks comes from John Kitchin's post
+["Interpretations of what a neural network is"](https://kitchingroup.cheme.cmu.edu/posts/neural-network-interpretations/),
+which also connects it to Fourier series (see Topic 6.3).
+
 :::{exercise}
 :label: ex-eda-nn-arch-table
 
@@ -810,4 +821,8 @@ Compare CNN and MLP on the MNIST digits dataset.
 - Nguyen, T. & Karolak, A. (2025), "Transformer graph variational autoencoder for
   generative molecular design," *Biophysical Journal* 124(3) —
   [doi:10.1016/j.bpj.2025.01.022](https://doi.org/10.1016/j.bpj.2025.01.022)
+- Kitchin, J. R. (2026), "Interpretations of what a neural network is" — a Fourier
+  series read as a one-hidden-layer network, and a network read as a learned feature
+  transform feeding linear regression:
+  [kitchingroup.cheme.cmu.edu](https://kitchingroup.cheme.cmu.edu/posts/neural-network-interpretations/)
 - PyTorch tutorials: [pytorch.org/tutorials](https://pytorch.org/tutorials/)
