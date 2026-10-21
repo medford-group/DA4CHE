@@ -643,6 +643,65 @@ early stopping ends the run. A training curve plays the same role for a neural
 network that a convergence check did for the optimizers of Topic 1.4: it is the first
 thing to check when results are unexpected.
 
+### The Output Layer Is Linear Regression
+
+If you look closely at the last MLP equation, $\hat{y} = W^{(3)}\mathbf{h} + b^{(3)}$,
+you will see that it is linear in the hidden activations $\mathbf{h}$. In other words,
+the network generates features (the hidden units) and then does general linear
+regression on them, just like in [Linear Regression](../1-numerical_methods/Topic1.3-Linear_Regression).
+Let's check this by taking the 64 hidden features
+from `mlp_reg` and solving for the output weights with least squares:
+
+```{code-cell} ipython3
+# Hidden-layer features: the "basis functions" the network learned
+H_tr = np.maximum(0, X_tr @ mlp_reg.coefs_[0] + mlp_reg.intercepts_[0])
+H_te = np.maximum(0, X_te @ mlp_reg.coefs_[0] + mlp_reg.intercepts_[0])
+A_tr = np.column_stack([np.ones(len(H_tr)), H_tr])
+A_te = np.column_stack([np.ones(len(H_te)), H_te])
+
+w_lstsq, *_ = np.linalg.lstsq(A_tr, y_train, rcond=None)
+w_net = np.concatenate([mlp_reg.intercepts_[1], mlp_reg.coefs_[1].ravel()])
+
+def r2(y, yhat):
+    return 1 - np.sum((y - yhat)**2) / np.sum((y - y.mean())**2)
+
+print(f'Correlation, lstsq vs. network weights: {np.corrcoef(w_lstsq, w_net)[0, 1]:.3f}')
+print(f'Network  train/test r²: {mlp_reg.score(X_tr, y_train):.3f} / {mlp_reg.score(X_te, y_test):.3f}')
+print(f'Refit    train/test r²: {r2(y_train, A_tr @ w_lstsq):.3f} / {r2(y_test, A_te @ w_lstsq):.3f}')
+```
+
+We can see that least squares finds nearly the same output weights as adam. They differ
+because early stopping ends training before the optimum. For fixed
+features the least-squares solution is the optimum, so its training $r^2$ is a bit
+higher.
+
+It turns out that a Fourier series is also a network with one hidden layer. The hidden
+units are $\cos(kx + \beta)$, and the frequencies are fixed in advance. These units
+are orthogonal, so each coefficient can be computed separately, and adding terms does
+not change the others. A trained network learns its features along with the output
+weights. These features are not orthogonal, and one hidden unit usually means little
+by itself.
+
+:::{note}
+This subsection is based on John Kitchin's post
+["Interpretations of what a neural network is"](https://kitchingroup.cheme.cmu.edu/posts/neural-network-interpretations/)
+(Carnegie Mellon, 2026), which covers the Fourier-series network in more detail.
+:::
+
+:::{exercise}
+:label: ex-eda-nn-random-feat
+
+Fit a network without training its first layer (a "random features" model).
+
+1. Draw `W = rng.normal(size=(X_tr.shape[1], n))` and `b = rng.normal(size=n)` with
+   `rng = np.random.default_rng(0)`, compute `H = np.maximum(0, X_tr @ W + b)`, and
+   fit the output weights (plus an intercept) by least squares.
+2. Report train and test $r^2$ for `n` in `[8, 32, 128, 512]`.
+3. Plot test $r^2$ against `n`, with a horizontal line at the test $r^2$ of `mlp_reg`.
+   Does any `n` match the 64-unit trained network? What does the gap say about the
+   value of learning the features?
+:::
+
 ### Effect of Hidden Layer Size
 
 ```{code-cell} ipython3
@@ -746,6 +805,10 @@ Explore the effect of L2 regularization on the Dow MLPRegressor.
   back through each layer, enabling efficient computation of $\nabla_\theta \mathcal{L}$
   for any depth.
 
+- The output layer is **linear regression on learned features**. A Fourier series is
+  a special case with fixed, orthogonal features. A network learns
+  its features.
+
 - `sklearn.neural_network.MLPRegressor` provides a practical interface for regression
   with MLPs. Training loss curves and width/depth sweeps are essential diagnostics for
   understanding capacity and overfitting.
@@ -756,6 +819,9 @@ Explore the effect of L2 regularization on the Dow MLPRegressor.
   reference, free at [deeplearningbook.org](https://www.deeplearningbook.org/)
 - Nielsen, M. A. (2015), *Neural Networks and Deep Learning* — free online book
   with excellent visual intuitions: [neuralnetworksanddeeplearning.com](http://neuralnetworksanddeeplearning.com/)
+- Kitchin, J. R. (2026), "Interpretations of what a neural network is" — Fourier series
+  as one-hidden-layer networks, and networks as learned features plus linear regression:
+  [kitchingroup.cheme.cmu.edu](https://kitchingroup.cheme.cmu.edu/posts/neural-network-interpretations/)
 - scikit-learn User Guide:
   [MLPRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html),
   [Neural network models](https://scikit-learn.org/stable/modules/neural_networks_supervised.html)
