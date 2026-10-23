@@ -64,7 +64,7 @@
     <script src="../_static/version-switcher.js?v=03ab3a72"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Datasets and Resources" href="../resources/intro.html" />
+    <link rel="next" title="Problems: Generative Models" href="Topic5.4-Generative_Models_Problems.html" />
     <link rel="prev" title="Problems: Dimensionality Reduction" href="Topic5.2-Dimensionality_Reduction_Problems.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -251,6 +251,7 @@
 <li class="toctree-l3"><a class="reference internal" href="Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">5.3 - Clustering - Carbon XPS Spectra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.4-Generative_Models_Problems.html">5.4 - Generative Models - XPS Batch Screening</a></li>
 </ul>
 </details></li>
 </ul>
@@ -771,7 +772,7 @@ to it if you allowed one cluster per spectrum.</p></li>
 <li><p>Given that, which of the two metrics can be used to <em>choose</em> <code class="docutils literal notranslate"><span class="pre">k</span></code>, and which can only be
 used to <em>report</em> on a choice already made?</p></li>
 <li><p>The PC1–PC2 scatter shows the same points twice. Say what the comparison tells you about
-why purity stalls near 0.72 rather than approaching 1.</p></li>
+why purity stays well below 1.</p></li>
 </ul>
 <p>Label all axes with units.</p>
 </section>
@@ -810,8 +811,9 @@ Work out why, and say what — if anything — would do better.</p>
 by purity against <code class="docutils literal notranslate"><span class="pre">y_true</span></code> at a comparable number of clusters. Gaussian mixtures, a
 density-based method, and hierarchical clustering via <code class="docutils literal notranslate"><span class="pre">scipy.cluster.hierarchy.linkage</span></code>
 with <code class="docutils literal notranslate"><span class="pre">fcluster</span></code> are the obvious choices.</p></li>
-<li><p>An explanation of the A3 result: four chemical components, three principal components.
-What constraint links them, and what shape does that force the data into?</p></li>
+<li><p>An explanation of your A3 result: why the number of principal components differs from
+the number of chemical components. What constraint links them, and what shape does that
+force the data into?</p></li>
 <li><p>A short written argument (<strong>one paragraph</strong>) about whether <em>any</em> clustering algorithm
 should be expected to recover these four chemistries, citing your own numbers.</p></li>
 </ol>
@@ -889,11 +891,11 @@ question can be answered entirely from the scores, the projections and the clust
       </div>
     </a>
     <a class="right-next"
-       href="../resources/intro.html"
+       href="Topic5.4-Generative_Models_Problems.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Datasets and Resources</p>
+        <p class="prev-next-title">Problems: Generative Models</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

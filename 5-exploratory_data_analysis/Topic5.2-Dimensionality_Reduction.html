@@ -251,6 +251,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.4-Generative_Models_Problems.html">5.4 - Generative Models - XPS Batch Screening</a></li>
 </ul>
 </details></li>
 </ul>
@@ -729,7 +730,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12ba85ae0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x137c87dc0&gt;
 </pre></div>
 </div>
 <img alt="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" src="../_images/6b39b128dfd4333af77a4110797f006410df86b625f6a2404d23935e2cea0962.png" />
@@ -881,7 +882,7 @@ Smallest eigenvalue:       0.0000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x138291300&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x145659300&gt;
 </pre></div>
 </div>
 <img alt="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" src="../_images/4eda22f678fe049aa11cc87b8e16c18840d9ac1b708b6cc32c3c2e39e4026a27.png" />
@@ -939,7 +940,7 @@ Retained variance: 0.890
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x12bd6e110&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x137c85d50&gt;
 </pre></div>
 </div>
 <img alt="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" src="../_images/b32bf4e52d9d07bfec1f8d777e42f08a985fbbb2a5551f045ed210fe47905ad6.png" />
@@ -1169,11 +1170,11 @@ SVC on raw features  (64 dims): accuracy = 0.990
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3629
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stress MDS: 0.3428
 Stress PCA: 0.5405
 </pre></div>
 </div>
-<img alt="../_images/61b25b286bacb019982c1eea59df000c5a1bf2a397aa95ea25c0bdbc7f497aa8.png" src="../_images/61b25b286bacb019982c1eea59df000c5a1bf2a397aa95ea25c0bdbc7f497aa8.png" />
+<img alt="../_images/3910d311c21d797bc20887c48f86199518db7d87ffa714a9bc1874506cd06bfa.png" src="../_images/3910d311c21d797bc20887c48f86199518db7d87ffa714a9bc1874506cd06bfa.png" />
 </div>
 </div>
 <p>MDS directly optimizes stress and therefore achieves lower stress than PCA, but the visual cluster separation is not dramatically better with a limited number of iterations.</p>
@@ -1498,9 +1499,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07361
-Epoch  20  loss = 0.07267
-Epoch  30  loss = 0.06903
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch  10  loss = 0.07347
+Epoch  20  loss = 0.07253
+Epoch  30  loss = 0.07053
 </pre></div>
 </div>
 </div>
@@ -1524,7 +1525,7 @@ Epoch  30  loss = 0.06903
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2f99eee6b4c33e2d1eba034946b948f07a3444ea23f4ce0b5bc69f057f41898f.png" src="../_images/2f99eee6b4c33e2d1eba034946b948f07a3444ea23f4ce0b5bc69f057f41898f.png" />
+<img alt="../_images/c65007476ca1810cd57ad9d4186d80f293fb4cddfd4c6ecf902cb1233847d084.png" src="../_images/c65007476ca1810cd57ad9d4186d80f293fb4cddfd4c6ecf902cb1233847d084.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1552,7 +1553,7 @@ Epoch  30  loss = 0.06903
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a4b88bb7958d96802b7dcf886db619301e0010a6e1277f2513ddac4e628c7466.png" src="../_images/a4b88bb7958d96802b7dcf886db619301e0010a6e1277f2513ddac4e628c7466.png" />
+<img alt="../_images/89f020258d659d8718cee6f83b56b7f34118fc6c480779802e17e9591b207a8b.png" src="../_images/89f020258d659d8718cee6f83b56b7f34118fc6c480779802e17e9591b207a8b.png" />
 </div>
 </div>
 <div class="admonition note">

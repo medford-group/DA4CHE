@@ -1,0 +1,989 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Generative Models &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic5.4-Generative_Models_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets and Resources" href="../resources/intro.html" />
+    <link rel="prev" title="Problems: Clustering" href="Topic5.3-Clustering_Problems.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.4-High_dimensional_data_Problems.html">2.4 - High-dimensional Data - Solvent Vapor IR Mixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.5-High_dimensional_regression_Problems.html">2.5 - High-dimensional Regression - Solvent Vapor IR Calibration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">5.4 - Generative Models - XPS Batch Screening</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic5.4-Generative_Models_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic5.4-Generative_Models_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Generative Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-how-many-gaussians-does-the-library-need-10-pts">A1. How many Gaussians does the library need? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-choose-a-kde-bandwidth-by-cross-validation-10-pts">A2. Choose a KDE bandwidth by cross-validation (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-an-alarm-threshold-from-the-library-10-pts">A3. An alarm threshold from the library (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic5.4-Generative_Models/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-generative-models" id="id1">Problems: Generative Models</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-generative-models">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Generative Models</a><a class="headerlink" href="#problems-generative-models" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/253364fb207dc26895119f2864b02579/Topic5.4-Generative_Models_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic5.4-Generative_Models_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">xps_carbon_monitoring.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.
+On Vocareum everything is already set up for you.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html"><span class="doc">Generative Models</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, auto-graded, resubmit as often as
+you like until they pass.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation, peer graded.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem, peer graded.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>This set uses the carbon XPS spectra from the
+<a class="reference internal" href="Topic5.3-Clustering_Problems.html"><span class="doc">Clustering problem set</span></a>. You do not need
+to have done that set first; what you need from it is below.</p>
+<p>X-ray photoelectron spectroscopy measures the binding energy of core electrons, which
+shifts as the atom’s chemical environment changes. For carbon, the C 1s line moves to
+higher binding energy as the carbon becomes more oxidized:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>component</p></th>
+<th class="head"><p>binding energy</p></th>
+<th class="head"><p>environment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C–C / C–H</p></td>
+<td><p>284.8 eV</p></td>
+<td><p>hydrocarbon</p></td>
+</tr>
+<tr class="row-odd"><td><p>C–O</p></td>
+<td><p>286.3 eV</p></td>
+<td><p>alcohol, ether</p></td>
+</tr>
+<tr class="row-even"><td><p>C=O</p></td>
+<td><p>287.8 eV</p></td>
+<td><p>carbonyl</p></td>
+</tr>
+<tr class="row-odd"><td><p>O–C=O</p></td>
+<td><p>289.0 eV</p></td>
+<td><p>carboxyl, ester</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">data/xps_carbon_monitoring.csv</span></code> holds <strong>520 simulated C 1s spectra</strong> from 280 to 295 eV
+in 0.05 eV steps, in two batches:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">batch</span> <span class="pre">==</span> <span class="pre">'library'</span></code> — <strong>400 reference spectra</strong>, 100 from each of four surface
+chemistries, with the true class in <code class="docutils literal notranslate"><span class="pre">label</span></code> (0–3) and <code class="docutils literal notranslate"><span class="pre">chemistry</span></code>. Every spectrum is a
+<em>mixture</em>: a dominant component plus adventitious hydrocarbon and some of the neighboring
+oxidation states, so the four classes overlap.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch</span> <span class="pre">==</span> <span class="pre">'new'</span></code> — <strong>120 spectra</strong> from a later campaign on the same instrument. Nobody
+has looked at them yet, so <code class="docutils literal notranslate"><span class="pre">label</span></code> and <code class="docutils literal notranslate"><span class="pre">chemistry</span></code> are blank. They are the subject of
+Part C.</p></li>
+</ul>
+<p>Parts A and B use only the library.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">GaussianMixture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KernelDensity</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/xps_carbon_monitoring.csv&#39;</span><span class="p">)</span>
+<span class="n">ecols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;E_&#39;</span><span class="p">)]</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ecols</span><span class="p">])</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;batch&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;library&#39;</span><span class="p">]</span>
+<span class="n">new</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;batch&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;new&#39;</span><span class="p">]</span>
+<span class="n">y_lib</span> <span class="o">=</span> <span class="n">lib</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;library: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span><span class="si">}</span><span class="s2"> spectra;  new batch: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new</span><span class="p">)</span><span class="si">}</span><span class="s2"> spectra;  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ecols</span><span class="p">)</span><span class="si">}</span><span class="s2"> channels&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>library: 400 spectra;  new batch: 120 spectra;  301 channels
+</pre></div>
+</div>
+</div>
+</div>
+<p>The preprocessing is the one from the Clustering set, and is given here. It subtracts a
+linear background drawn between the means of the first and last 20 channels, then scales
+each spectrum to sum to 100, so that each channel is a percentage of that sample’s total
+signal. The density models in Parts A and B are fit to the first three PCA scores, <code class="docutils literal notranslate"><span class="pre">Z_lib</span></code>,
+rather than to all 301 channels. The Clustering set’s A3 asks why three is enough.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear background subtraction, then scale every spectrum to sum to 100.&quot;&quot;&quot;</span>
+    <span class="n">bg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">raw</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">raw</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">20</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">raw</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">raw</span> <span class="o">-</span> <span class="n">bg</span>
+    <span class="k">return</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">sub</span> <span class="o">/</span> <span class="n">sub</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="n">X_lib</span> <span class="o">=</span> <span class="n">preprocess</span><span class="p">(</span><span class="n">lib</span><span class="p">[</span><span class="n">ecols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">X_new</span> <span class="o">=</span> <span class="n">preprocess</span><span class="p">(</span><span class="n">new</span><span class="p">[</span><span class="n">ecols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_lib</span><span class="p">)</span>   <span class="c1"># fit to the library only</span>
+<span class="n">Z_lib</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_lib</span><span class="p">)</span>
+<span class="n">Z_new</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Z_lib </span><span class="si">{</span><span class="n">Z_lib</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Z_new </span><span class="si">{</span><span class="n">Z_new</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Z_lib (400, 3), Z_new (120, 3)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;41b7574f6abc&#39;</span><span class="p">,</span> <span class="s1">&#39;228cbaaacbc7&#39;</span><span class="p">,</span> <span class="s1">&#39;128452833d44&#39;</span><span class="p">,</span> <span class="s1">&#39;1430ee8a8510&#39;</span><span class="p">,</span> <span class="s1">&#39;243fe7404b25&#39;</span><span class="p">,</span> <span class="s1">&#39;47e7b4509d40&#39;</span><span class="p">,</span> <span class="s1">&#39;7c21e1e8fed4&#39;</span><span class="p">,</span> <span class="s1">&#39;32ab71fb401f&#39;</span><span class="p">,</span> <span class="s1">&#39;829ed3e6ac20&#39;</span><span class="p">,</span> <span class="s1">&#39;ad829fee4e62&#39;</span><span class="p">,</span> <span class="s1">&#39;84d1bc2bee5c&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;6ed02f37bc7b&#39;</span><span class="p">,</span> <span class="s1">&#39;813fa72c2d1b&#39;</span><span class="p">,</span> <span class="s1">&#39;c7a2b60c3538&#39;</span><span class="p">,</span> <span class="s1">&#39;296a6bdba4e6&#39;</span><span class="p">,</span> <span class="s1">&#39;2a2429d9178e&#39;</span><span class="p">,</span> <span class="s1">&#39;04c5418d2192&#39;</span><span class="p">,</span> <span class="s1">&#39;cff78b96728d&#39;</span><span class="p">,</span> <span class="s1">&#39;961500042fc7&#39;</span><span class="p">,</span> <span class="s1">&#39;9024a2d603ed&#39;</span><span class="p">,</span> <span class="s1">&#39;17f95c430532&#39;</span><span class="p">,</span> <span class="s1">&#39;2b247686f82c&#39;</span><span class="p">,</span> <span class="s1">&#39;6ee13507013b&#39;</span><span class="p">,</span> <span class="s1">&#39;fee77879547b&#39;</span><span class="p">,</span> <span class="s1">&#39;f54fefb41403&#39;</span><span class="p">,</span> <span class="s1">&#39;e824af8e78c8&#39;</span><span class="p">,</span> <span class="s1">&#39;69087a95b4d3&#39;</span><span class="p">,</span> <span class="s1">&#39;9b152c5291e1&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;d05b348c3e33&#39;</span><span class="p">,</span> <span class="s1">&#39;3eb63dc3d942&#39;</span><span class="p">,</span> <span class="s1">&#39;c2c0132ab5b2&#39;</span><span class="p">,</span> <span class="s1">&#39;e6ef08438bd7&#39;</span><span class="p">,</span> <span class="s1">&#39;a0fd81aca156&#39;</span><span class="p">,</span> <span class="s1">&#39;dc03145f08fd&#39;</span><span class="p">,</span> <span class="s1">&#39;12a2f0b59673&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>The chapter’s two density models are a Gaussian mixture, with a number of components you
+choose, and a kernel density estimate, with a bandwidth you choose. Each has one setting
+that controls how detailed it is, and the chapter gives each a principled way to set it:
+the BIC for the mixture, cross-validated log-likelihood for the KDE. A1 and A2 use those on
+the library. A3 then turns the mixture into the thing Part C needs, a rule for deciding
+whether a new spectrum looks like the library.</p>
+<section id="a1-how-many-gaussians-does-the-library-need-10-pts">
+<h3>A1. How many Gaussians does the library need? (10 pts)<a class="headerlink" href="#a1-how-many-gaussians-does-the-library-need-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-eda-xps-gmmbic">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>For <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">…,</span> <span class="pre">8</span></code>, fit</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to <code class="docutils literal notranslate"><span class="pre">Z_lib</span></code> and compute its BIC on <code class="docutils literal notranslate"><span class="pre">Z_lib</span></code>.</p>
+<p>Assign the number of components with the <strong>lowest</strong> BIC to <code class="docutils literal notranslate"><span class="pre">n_bic</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">n_bic</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">n_bic</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-choose-a-kde-bandwidth-by-cross-validation-10-pts">
+<h3>A2. Choose a KDE bandwidth by cross-validation (10 pts)<a class="headerlink" href="#a2-choose-a-kde-bandwidth-by-cross-validation-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-eda-xps-kdebw">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>Use <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> to choose the bandwidth of a Gaussian <code class="docutils literal notranslate"><span class="pre">KernelDensity</span></code> model of <code class="docutils literal notranslate"><span class="pre">Z_lib</span></code>,
+searching</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">cv=5</span></code>, as in the chapter’s Bandwidth Selection section.</p>
+<p>Assign the selected bandwidth to <code class="docutils literal notranslate"><span class="pre">h_cv</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">h_cv</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">h_cv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-an-alarm-threshold-from-the-library-10-pts">
+<h3>A3. An alarm threshold from the library (10 pts)<a class="headerlink" href="#a3-an-alarm-threshold-from-the-library-10-pts" title="Link to this heading">#</a></h3>
+<p>The chapter’s anomaly-detection section scores every sample with <code class="docutils literal notranslate"><span class="pre">score_samples</span></code>, which
+returns its log-probability <span class="math notranslate nohighlight">\(\ln P(\mathbf{x})\)</span> under the fitted density, and flags the
+lowest 1% as unusual. Applied to a reference set, that gives a <strong>threshold</strong>: a new sample
+whose log-probability falls below it is less typical than 99% of the library.</p>
+<div class="exercise admonition" id="pr-eda-xps-lllimit">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<p>Fit <code class="docutils literal notranslate"><span class="pre">GaussianMixture(n_bic,</span> <span class="pre">covariance_type='full',</span> <span class="pre">n_init=10,</span> <span class="pre">random_state=0)</span></code> to
+<code class="docutils literal notranslate"><span class="pre">Z_lib</span></code>, using your answer to A1 for the number of components. Compute the log-probability of every library spectrum with <code class="docutils literal notranslate"><span class="pre">score_samples</span></code>, and take its
+<strong>1st percentile</strong> with <code class="docutils literal notranslate"><span class="pre">np.percentile</span></code>.</p>
+<p>Assign that value to <code class="docutils literal notranslate"><span class="pre">ll_limit</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">ll_limit</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">ll_limit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>The clustering set ended with an unanswered question. k-means recovered the four chemistries
+with a purity well short of 1 at <span class="math notranslate nohighlight">\(k = 4\)</span>, and it was not clear whether to blame the
+clustering or the data. A generative classifier can settle it. Fit a density to each
+chemistry separately, using the labels this time, and combine them with Bayes’ theorem as in
+the chapter’s not-so-naive Bayes section. If even that classifier cannot do much better than
+the clustering did, the classes overlap in the data, and no clustering algorithm could have
+separated them.</p>
+<p>The second question is about the other thing a generative model is for. A3’s mixture is a
+model of the library’s density, and you can draw new samples from it. Do the samples look
+like XPS spectra?</p>
+<div class="exercise admonition" id="pr-eda-xps-labels">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p><strong>1. What would labels have bought?</strong> Split the library with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_test_split</span><span class="p">(</span><span class="n">Z_lib</span><span class="p">,</span> <span class="n">y_lib</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and classify the test spectra with the chapter’s not-so-naive Bayes classifier: a Gaussian
+KDE fit to each chemistry’s training spectra, plus the log of that chemistry’s prior. Do this
+for 21 bandwidths, <code class="docutils literal notranslate"><span class="pre">np.logspace(-1,</span> <span class="pre">1,</span> <span class="pre">21)</span></code>, and plot test accuracy against bandwidth on a
+logarithmic x-axis. On the same axes, draw horizontal lines for:</p>
+<ul class="simple">
+<li><p>the test accuracy of <code class="docutils literal notranslate"><span class="pre">GaussianNB</span></code> on the same split;</p></li>
+<li><p>the purity of <code class="docutils literal notranslate"><span class="pre">KMeans(4,</span> <span class="pre">n_init=50,</span> <span class="pre">random_state=0)</span></code> fit to <code class="docutils literal notranslate"><span class="pre">X_lib</span></code>, scored against
+<code class="docutils literal notranslate"><span class="pre">y_lib</span></code> as in the Clustering set’s A2 (the sum of the confusion matrix’s column maxima,
+divided by the number of spectra).</p></li>
+</ul>
+<p>Mark <code class="docutils literal notranslate"><span class="pre">h_cv</span></code> from A2. Report the best accuracy and the bandwidth it occurs at.</p>
+<p><strong>2. Generate spectra.</strong> Draw 400 samples from A3’s mixture with <code class="docutils literal notranslate"><span class="pre">.sample(400)</span></code>, and map
+them back to spectra with <code class="docutils literal notranslate"><span class="pre">pca.inverse_transform</span></code>. Make two panels:</p>
+<ul class="simple">
+<li><p>the PC1–PC2 scores of the real library and of the samples, overlaid;</p></li>
+<li><p>five real and five synthetic spectra, from 282 to 292 eV.</p></li>
+</ul>
+<p><strong>3. Interpret.</strong> Answer each in <strong>one or two sentences</strong>:</p>
+<ul class="simple">
+<li><p>Compare your best accuracy from task 1 with the purity. Was the clustering’s purity a
+failure of k-means, or a property of the data?</p></li>
+<li><p>In the chapter, Gaussian naive Bayes lost to the not-so-naive classifier by 16 points on
+the digits. Compare the gap you found here, and explain the difference.</p></li>
+<li><p>Name <strong>one</strong> way the synthetic spectra differ from real ones, and explain where the
+difference comes from.</p></li>
+</ul>
+<p>Label all axes, with units where there are any.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>Now the new batch. The instrument’s log shows three things went wrong at some point during
+the campaign, and nobody recorded which spectra were affected:</p>
+<ul class="simple">
+<li><p><strong>Sample charging.</strong> An insulating sample charged up, shifting its whole spectrum to
+higher binding energy by an unknown amount.</p></li>
+<li><p><strong>Fluoropolymer contamination.</strong> PTFE tape was used on the sample holder for part of the
+campaign. Fluorinated carbon (CF<span class="math notranslate nohighlight">\(_2\)</span>) appears near 292 eV, where no library spectrum has
+a peak.</p></li>
+<li><p><strong>A new oxidation treatment.</strong> A few samples came from a harsher treatment than anything
+in the library.</p></li>
+</ul>
+<p>Your job is to find the affected spectra using only the library as a reference. The
+mixture from A3 is a natural first tool, but it has a blind spot: it only ever sees the
+three PCA scores. Anything a spectrum does outside those three directions is removed by the
+projection before the density model sees it. The <strong>squared prediction error</strong> from the
+Dimensionality Reduction problem set measures exactly that part:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{SPE} = \lVert \mathbf{x} - \hat{\mathbf{x}} \rVert^2, \qquad
+\hat{\mathbf{x}} = \texttt{pca\_k.inverse\_transform}(\texttt{pca\_k.transform}(\mathbf{x}))
+\]</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">pca_k</span></code> is a PCA with <span class="math notranslate nohighlight">\(k\)</span> components fit to <code class="docutils literal notranslate"><span class="pre">X_lib</span></code>. So the two alarms ask different
+questions: the <strong>density alarm</strong> asks whether a spectrum sits in a typical place <em>inside</em>
+the library’s subspace, and the <strong>residual alarm</strong> asks whether it sits <em>in</em> that subspace
+at all.</p>
+<div class="exercise admonition" id="pr-eda-xps-monitor">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. Density alarm.</strong> Score <code class="docutils literal notranslate"><span class="pre">Z_new</span></code> with A3’s mixture and flag every new spectrum whose
+log-probability is below <code class="docutils literal notranslate"><span class="pre">ll_limit</span></code>. Plot histograms of the library’s and the new batch’s
+log-probabilities on one set of axes with the threshold marked, and report how many new
+spectra are flagged.</p>
+<p><strong>2. Residual alarm.</strong> For <span class="math notranslate nohighlight">\(k = 3, 4, \ldots, 10\)</span>, fit <code class="docutils literal notranslate"><span class="pre">PCA(k,</span> <span class="pre">random_state=0)</span></code> to <code class="docutils literal notranslate"><span class="pre">X_lib</span></code>
+and set the SPE limit at the 99th percentile of the library’s SPE. Plot the limit against
+<span class="math notranslate nohighlight">\(k\)</span>, choose a <span class="math notranslate nohighlight">\(k\)</span>, and explain the choice in <strong>one sentence</strong>. Then report how many new
+spectra are above the limit at your <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p><strong>3. Diagnose.</strong> Sort the flagged spectra into three groups: flagged by the density alarm
+only, by the residual alarm only, and by both. For each flagged spectrum, decide which of
+the three incidents explains it, or whether it is a false alarm, using evidence from the
+spectrum itself. Report the count for each diagnosis. Plotting a few of each group against
+the library’s mean spectrum is a good place to start.</p>
+<p><strong>4. Recommend.</strong> In <strong>three sentences</strong>, tell the lab how to screen future batches. Say
+which alarm or combination of alarms to use, which incident your screen still misses and
+why, and how many false alarms they should expect per 100 ordinary spectra. Use your
+numbers.</p>
+<p>There is more than one defensible diagnosis method. You are graded on whether your evidence
+supports each diagnosis.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>NIST X-ray Photoelectron Spectroscopy Database, <a class="reference external" href="https://srdata.nist.gov/xps/">SRD 20 Version 5.0</a>
+— the source of the C 1s chemical shifts used to build this dataset.</p></li>
+<li><p>scikit-learn documentation, <a class="reference external" href="https://scikit-learn.org/stable/modules/mixture.html">Gaussian mixture models</a>
+and <a class="reference external" href="https://scikit-learn.org/stable/modules/density.html">density estimation</a>.</p></li>
+<li><p>J. E. Jackson and G. S. Mudholkar, “Control procedures for residuals associated with
+principal component analysis,” <em>Technometrics</em> <strong>21</strong>, 341–349 (1979) — the origin of
+the residual (Q, or SPE) statistic used in Part C.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic5.3-Clustering_Problems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Problems: Clustering</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../resources/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Datasets and Resources</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-how-many-gaussians-does-the-library-need-10-pts">A1. How many Gaussians does the library need? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-choose-a-kde-bandwidth-by-cross-validation-10-pts">A2. Choose a KDE bandwidth by cross-validation (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-an-alarm-threshold-from-the-library-10-pts">A3. An alarm threshold from the library (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
