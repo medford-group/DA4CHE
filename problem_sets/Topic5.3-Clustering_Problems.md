@@ -293,7 +293,7 @@ Then, in **3–5 sentences**:
 - Given that, which of the two metrics can be used to *choose* `k`, and which can only be
   used to *report* on a choice already made?
 - The PC1–PC2 scatter shows the same points twice. Say what the comparison tells you about
-  why purity stalls near 0.72 rather than approaching 1.
+  why purity stays well below 1.
 
 Label all axes with units.
 :::
@@ -334,8 +334,9 @@ Your answer should include:
    by purity against `y_true` at a comparable number of clusters. Gaussian mixtures, a
    density-based method, and hierarchical clustering via `scipy.cluster.hierarchy.linkage`
    with `fcluster` are the obvious choices.
-2. An explanation of the A3 result: four chemical components, three principal components.
-   What constraint links them, and what shape does that force the data into?
+2. An explanation of your A3 result: why the number of principal components differs from
+   the number of chemical components. What constraint links them, and what shape does that
+   force the data into?
 3. A short written argument (**one paragraph**) about whether *any* clustering algorithm
    should be expected to recover these four chemistries, citing your own numbers.
 

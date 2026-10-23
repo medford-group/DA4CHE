@@ -86,6 +86,10 @@
         {
           "file": "problem_sets/Topic5.3-Clustering_Problems",
           "title": "5.3 - Clustering - Carbon XPS Spectra"
+        },
+        {
+          "file": "problem_sets/Topic5.4-Generative_Models_Problems",
+          "title": "5.4 - Generative Models - XPS Batch Screening"
         }
       ]
     }
