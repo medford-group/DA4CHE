@@ -47,8 +47,8 @@ env: ## Create or update the conda environment if needed
 	else \
 	  echo ">> Found conda env $(ENV_NAME)", proceeding without updating; \
 	fi
-	@echo ">> Ensuring kernel registration as 'Python 3'"
-	@$(CONDA_RUN) python -m ipykernel install --user --name=python3 --display-name="Python 3" >/dev/null 2>&1 || true
+	@echo ">> Ensuring kernel registration as 'Python 3' (inside the env; --user would override every other env)"
+	@$(CONDA_RUN) python -m ipykernel install --sys-prefix --name=python3 --display-name="Python 3" >/dev/null 2>&1 || true
 
 # ---------- ToC autogeneration ----------
 $(TOC): $(TOCGEN)

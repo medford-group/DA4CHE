@@ -27,7 +27,6 @@ kernelspec:
 `water_properties.csv`, in a folder that is ready to run as-is.
 
 The Download badge at the top of the page will also give you the notebook on its own.
-On Vocareum everything is already set up for you.
 :::
 
 This is the first problem set of the course, so it does two jobs: it gets you started with
@@ -40,20 +39,18 @@ Every **graded** set is worth **100 points** and has the same three parts.
 
 **Part A — Skill Checks (30 pts).** Short questions with one right answer. You assign your
 answer to a named variable, then run a check cell that tells you immediately whether it is
-accepted. **You may resubmit as often as you like**, so there is no reason to hand in a
-Part A that does not pass. The check cells look like this:
+accepted.
+Run it as often as you like. The check cells look like this:
 
 ```
 check("q1", n_rows)
 ```
 
-**Part B — Visualization (35 pts).** Make a plot and say what it shows. Graded by your
-peers against a rubric, so there is usually more than one acceptable answer — but the
-rubric is specific about what has to be there.
+**Part B — Visualization (35 pts).** Make a plot and say what it shows. There is usually
+more than one acceptable answer, but each question is specific about what has to be there.
 
-**Part C — Open Ended (35 pts).** A question with no single right answer, where you are
-graded on the reasoning and on whether your conclusions follow from what you actually
-computed. Also peer graded.
+**Part C — Open Ended (35 pts).** A question with no single right answer, where what counts
+is the reasoning and whether your conclusions follow from what you actually computed.
 
 The parts build on each other. Part A works out the syntax you need for Part B, and Part B
 produces the evidence you argue from in Part C, so do them in order.

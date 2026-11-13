@@ -27,7 +27,6 @@ kernelspec:
 `solvent_ir_batchA.csv`, in a folder that is ready to run as-is.
 
 The Download badge at the top of the page will also give you the notebook on its own.
-On Vocareum everything is already set up for you.
 :::
 
 :::{admonition} Before you start
@@ -35,10 +34,10 @@ On Vocareum everything is already set up for you.
 
 This problem set accompanies {doc}`High-dimensional Data </2-regression/Topic2.4-High_dimensional_data>`. It is worth **100 points**:
 
-- **Part A — Skill Checks (30 pts)** — short answers, auto-graded, resubmit as often as
-  you like until they pass.
-- **Part B — Visualization (35 pts)** — plots plus written interpretation, peer graded.
-- **Part C — Open Ended (35 pts)** — one synthesis problem, peer graded.
+- **Part A — Skill Checks (30 pts)** — short answers, each with a `check` that tells you
+  whether it is right; run it as often as you like.
+- **Part B — Visualization (35 pts)** — plots plus written interpretation.
+- **Part C — Open Ended (35 pts)** — one synthesis problem.
 
 The parts build on each other: Part A works out the syntax you need for Part B, and
 Part B produces the evidence you argue from in Part C. Do them in order.

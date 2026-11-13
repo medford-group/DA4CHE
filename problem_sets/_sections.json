@@ -92,6 +92,19 @@
           "title": "5.4 - Generative Models - XPS Batch Screening"
         }
       ]
+    },
+    {
+      "file": "problem_sets/module-6-advanced_topics",
+      "sections": [
+        {
+          "file": "problem_sets/Topic6.1-Time_Series_Basics_Problems",
+          "title": "6.1 - Time Series Basics - Boiler Historian Audit"
+        },
+        {
+          "file": "problem_sets/Topic6.3-Neural_Network_Basics_Problems",
+          "title": "6.3 - Neural Network Basics - Titration Endpoints"
+        }
+      ]
     }
   ]
 }
