@@ -27,15 +27,14 @@ kernelspec:
 `smr_ms.csv`, in a folder that is ready to run as-is.
 
 The Download badge at the top of the page will also give you the notebook on its own.
-On Vocareum everything is already set up for you.
 :::
 
 :::{admonition} Before you start
 :class: tip
 
 This problem set accompanies {doc}`Linear Algebra </1-numerical_methods/Topic1.2-Linear_Algebra>`.
-It is worth **100 points**: **Part A** (30, auto-graded, unlimited attempts), **Part B**
-(35, plots plus interpretation, peer graded) and **Part C** (35, open ended, peer graded).
+It is worth **100 points**: **Part A** (30, short answers with a built-in check), **Part B**
+(35, plots plus interpretation) and **Part C** (35, open ended).
 The parts build on each other, so do them in order.
 
 **No chemistry is required.** Every chemical fact you need is given to you below. The work

@@ -1,11 +1,12 @@
 # Problem Sets
 
-One graded problem set per chapter. Each is worth **100 points**, split across
+One problem set per chapter. Each is worth **100 points**, split across
 three parts that build on each other:
 
-- **Part A — Skill Checks (30 pts)**: short answers, auto-graded, unlimited attempts.
-- **Part B — Visualization (35 pts)**: plots and interpretation, peer graded.
-- **Part C — Open Ended (35 pts)**: one synthesis problem, peer graded.
+- **Part A — Skill Checks (30 pts)**: short answers, each with a built-in `check`
+  that tells you whether it is right; run it as often as you like.
+- **Part B — Visualization (35 pts)**: plots and written interpretation.
+- **Part C — Open Ended (35 pts)**: one synthesis problem.
 
 :::{note}
 Each problem set is a standalone Jupyter notebook. The **zip** link below gives
@@ -15,6 +16,17 @@ the top of any problem page gives you the notebook on its own. The cells marked
 receive them blank and ready to fill in.
 
 Solutions are not published here.
+:::
+
+:::{admonition} How these are used in ChBE 4745/6745
+:class: note
+
+In the Georgia Tech course these problem sets are the weekly homework. They are
+hosted on **Vocareum**, where Part A is graded by an autograder with unlimited
+resubmissions, and Parts B and C are **peer graded** against a detailed rubric.
+Some weeks combine two sets into one assignment, and the course page for each
+homework says which. If you are not in the course, the checks in Part A are all
+the feedback you need to work through any of them on your own.
 :::
 
 ## Numerical Methods
@@ -46,3 +58,8 @@ Solutions are not published here.
 - **{doc}`5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring <Topic5.2-Dimensionality_Reduction_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction`) · {download}`zip <archives/Topic5.2-Dimensionality_Reduction_Problems.zip>`
 - **{doc}`5.3 - Clustering - Carbon XPS Spectra <Topic5.3-Clustering_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.3-Clustering`) · {download}`zip <archives/Topic5.3-Clustering_Problems.zip>`
 - **{doc}`5.4 - Generative Models - XPS Batch Screening <Topic5.4-Generative_Models_Problems>`** (accompanies {doc}`/5-exploratory_data_analysis/Topic5.4-Generative_Models`) · {download}`zip <archives/Topic5.4-Generative_Models_Problems.zip>`
+
+## Advanced Topics
+
+- **{doc}`6.1 - Time Series Basics - Boiler Historian Audit <Topic6.1-Time_Series_Basics_Problems>`** (accompanies {doc}`/6-advanced_topics/Topic6.1-Time_Series_Basics`) · {download}`zip <archives/Topic6.1-Time_Series_Basics_Problems.zip>`
+- **{doc}`6.3 - Neural Network Basics - Titration Endpoints <Topic6.3-Neural_Network_Basics_Problems>`** (accompanies {doc}`/6-advanced_topics/Topic6.3-Neural_Network_Basics`) · {download}`zip <archives/Topic6.3-Neural_Network_Basics_Problems.zip>`

@@ -1,0 +1,1086 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Time Series Basics &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic6.1-Time_Series_Basics_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Problems: Neural Network Basics" href="Topic6.3-Neural_Network_Basics_Problems.html" />
+    <link rel="prev" title="Module 6 — Advanced Topics" href="module-6-advanced_topics.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.4-High_dimensional_data_Problems.html">2.4 - High-dimensional Data - Solvent Vapor IR Mixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.5-High_dimensional_regression_Problems.html">2.5 - High-dimensional Regression - Solvent Vapor IR Calibration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.4-Generative_Models_Problems.html">5.4 - Generative Models - XPS Batch Screening</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="module-6-advanced_topics.html">Module 6 — Advanced Topics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">6.1 - Time Series Basics - Boiler Historian Audit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic6.3-Neural_Network_Basics_Problems.html">6.3 - Neural Network Basics - Titration Endpoints</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic6.1-Time_Series_Basics_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic6.1-Time_Series_Basics_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Time Series Basics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-how-much-of-the-furnace-pressure-is-fast-fluctuation-10-pts">A1. How much of the furnace pressure is fast fluctuation? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-how-long-does-the-furnace-temperature-remember-10-pts">A2. How long does the furnace temperature remember? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-filling-a-gap-10-pts">A3. Filling a gap (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic6.1-Time_Series_Basics/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-time-series-basics" id="id1">Problems: Time Series Basics</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-time-series-basics">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Time Series Basics</a><a class="headerlink" href="#problems-time-series-basics" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/24f50f10f78c1887ea2ee0031caf4ecd/Topic6.1-Time_Series_Basics_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic6.1-Time_Series_Basics_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">boiler_historian.csv</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html"><span class="doc">Time Series Basics</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, each with a <code class="docutils literal notranslate"><span class="pre">check</span></code> that tells you
+whether it is right; run it as often as you like.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>In this problem set we will work with real data from the control system of a coal-fired
+boiler at a chemical plant in China, published by Hu et al. (2025). The plant’s
+distributed control system (DCS) saves every sensor reading, or “tag”, in a database
+called a <strong>data historian</strong>. An engineer exported one day of it, 28 March 2022, at the
+historian’s 5 s interval, so <code class="docutils literal notranslate"><span class="pre">data/boiler_historian.csv</span></code> has <strong>17,280 rows</strong> of eight
+tags:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>column</p></th>
+<th class="head"><p>tag</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">furnace_pressure</span></code></p></td>
+<td><p>PT_8313A</p></td>
+<td><p>upper furnace pressure (a negative draft)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">furnace_temp</span></code></p></td>
+<td><p>TE_8313B</p></td>
+<td><p>temperature in the upper furnace chamber</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">steam_temp</span></code></p></td>
+<td><p>TE_8332A</p></td>
+<td><p>boiler outlet steam temperature, °C</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">primary_air_flow</span></code></p></td>
+<td><p>FT_8301</p></td>
+<td><p>primary fan outlet flow rate</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">flue_o2</span></code></p></td>
+<td><p>AIR_8301A</p></td>
+<td><p>flue gas oxygen at the economizer inlet</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drum_pressure</span></code></p></td>
+<td><p>PTCA_8322A</p></td>
+<td><p>steam drum pressure</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">main_steam_flow</span></code></p></td>
+<td><p>ZZQBCHLL</p></td>
+<td><p>main steam flow</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">desuperheat_water_flow</span></code></p></td>
+<td><p>YJJWSLL</p></td>
+<td><p>desuperheating water flow</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Note that the paper only gives units for the steam temperature, which normally stays
+between 530 and 545 °C, so we will use the other tags as they are stored. Every value has
+<strong>two decimal places</strong>, and otherwise the file is exactly what the historian exported,
+including a real gap in one of the tags.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">acf</span><span class="p">,</span> <span class="n">adfuller</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/boiler_historian.csv&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(17280, 8)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>furnace_pressure</th>
+      <th>furnace_temp</th>
+      <th>steam_temp</th>
+      <th>primary_air_flow</th>
+      <th>flue_o2</th>
+      <th>drum_pressure</th>
+      <th>main_steam_flow</th>
+      <th>desuperheat_water_flow</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2022-03-28 00:00:04</th>
+      <td>-201.62</td>
+      <td>775.00</td>
+      <td>541.46</td>
+      <td>45040.86</td>
+      <td>2.33</td>
+      <td>9.87</td>
+      <td>60.59</td>
+      <td>2.83</td>
+    </tr>
+    <tr>
+      <th>2022-03-28 00:00:09</th>
+      <td>-189.87</td>
+      <td>775.03</td>
+      <td>541.40</td>
+      <td>45320.32</td>
+      <td>2.35</td>
+      <td>9.86</td>
+      <td>60.59</td>
+      <td>2.83</td>
+    </tr>
+    <tr>
+      <th>2022-03-28 00:00:14</th>
+      <td>-196.67</td>
+      <td>774.93</td>
+      <td>541.40</td>
+      <td>45359.98</td>
+      <td>2.38</td>
+      <td>9.86</td>
+      <td>60.37</td>
+      <td>2.82</td>
+    </tr>
+    <tr>
+      <th>2022-03-28 00:00:19</th>
+      <td>-188.02</td>
+      <td>774.63</td>
+      <td>541.34</td>
+      <td>46088.86</td>
+      <td>2.38</td>
+      <td>9.87</td>
+      <td>60.37</td>
+      <td>2.82</td>
+    </tr>
+    <tr>
+      <th>2022-03-28 00:00:24</th>
+      <td>-201.37</td>
+      <td>774.17</td>
+      <td>541.27</td>
+      <td>44937.00</td>
+      <td>2.40</td>
+      <td>9.87</td>
+      <td>61.01</td>
+      <td>2.82</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;08788f53c263&#39;</span><span class="p">,</span> <span class="s1">&#39;46926fb6df4c&#39;</span><span class="p">,</span> <span class="s1">&#39;cc62c9fbe9ee&#39;</span><span class="p">,</span> <span class="s1">&#39;7cd12e0af9eb&#39;</span><span class="p">,</span> <span class="s1">&#39;98ae7e1a1c96&#39;</span><span class="p">,</span> <span class="s1">&#39;96f40cdb4921&#39;</span><span class="p">,</span> <span class="s1">&#39;81068923bebf&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a9f63b26ad16&#39;</span><span class="p">,</span> <span class="s1">&#39;2df00558be66&#39;</span><span class="p">,</span> <span class="s1">&#39;a011be0d7b1b&#39;</span><span class="p">,</span> <span class="s1">&#39;bdd71b8165a1&#39;</span><span class="p">,</span> <span class="s1">&#39;e546b5c35bb2&#39;</span><span class="p">,</span> <span class="s1">&#39;27b4cf12b9b5&#39;</span><span class="p">,</span> <span class="s1">&#39;167bbfae6488&#39;</span><span class="p">,</span> <span class="s1">&#39;f7b9ef9470a7&#39;</span><span class="p">,</span> <span class="s1">&#39;dfd0c7dd25a7&#39;</span><span class="p">,</span> <span class="s1">&#39;a91ac615b7cd&#39;</span><span class="p">,</span> <span class="s1">&#39;8cf1190cb6d8&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;5933d2a95aae&#39;</span><span class="p">,</span> <span class="s1">&#39;be75d9a3e7ec&#39;</span><span class="p">,</span> <span class="s1">&#39;e4003449cc94&#39;</span><span class="p">,</span> <span class="s1">&#39;6d007932096a&#39;</span><span class="p">,</span> <span class="s1">&#39;180e6f44c027&#39;</span><span class="p">,</span> <span class="s1">&#39;be607312f8ae&#39;</span><span class="p">,</span> <span class="s1">&#39;4e32151b4fab&#39;</span><span class="p">,</span> <span class="s1">&#39;712f11e87620&#39;</span><span class="p">,</span> <span class="s1">&#39;9b5d8901b873&#39;</span><span class="p">,</span> <span class="s1">&#39;97e666d87405&#39;</span><span class="p">,</span> <span class="s1">&#39;d9ceb37fb904&#39;</span><span class="p">,</span> <span class="s1">&#39;0599527ed58b&#39;</span><span class="p">,</span> <span class="s1">&#39;456fa3bce642&#39;</span><span class="p">,</span> <span class="s1">&#39;b66b38208299&#39;</span><span class="p">,</span> <span class="s1">&#39;2df492a3062b&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>We will start with some basic questions that we should always ask before building a
+model from time series data. First, how much of the signal is fast noise that a moving
+average would remove? Second, how long does the signal “remember” its past values? Third,
+if some data are missing, how well can we fill them in? Each question below looks at one
+of these for one of the tags.</p>
+<section id="a1-how-much-of-the-furnace-pressure-is-fast-fluctuation-10-pts">
+<h3>A1. How much of the furnace pressure is fast fluctuation? (10 pts)<a class="headerlink" href="#a1-how-much-of-the-furnace-pressure-is-fast-fluctuation-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-adv-ts-ma-resid">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>A moving average splits a signal into two parts. The average itself keeps the slow
+changes. What is left over, the <strong>residual</strong> (raw signal minus the average), holds the
+changes that are faster than the window. Comparing the residual’s variance with the raw
+signal’s variance tells us what fraction of the signal’s variability is fast fluctuation.
+A value near 0 means the signal is mostly slow drift, and a value near 1 means it is mostly
+fast noise.</p>
+<ol class="arabic simple">
+<li><p>Smooth <code class="docutils literal notranslate"><span class="pre">furnace_pressure</span></code> with a <strong>trailing</strong> 5-minute moving average,
+<code class="docutils literal notranslate"><span class="pre">.rolling(60).mean()</span></code> (60 samples at 5 s each). Trailing means each average uses only the
+current and past samples, which is the default for <code class="docutils literal notranslate"><span class="pre">.rolling</span></code>.</p></li>
+<li><p>Compute the residual, <code class="docutils literal notranslate"><span class="pre">furnace_pressure</span> <span class="pre">-</span> <span class="pre">moving_average</span></code>. Its first 59 values are NaN,
+which <code class="docutils literal notranslate"><span class="pre">.var()</span></code> skips.</p></li>
+<li><p>Divide the residual’s variance by the raw signal’s variance,
+<code class="docutils literal notranslate"><span class="pre">residual.var()</span> <span class="pre">/</span> <span class="pre">furnace_pressure.var()</span></code>.</p></li>
+</ol>
+<p>Assign that fraction to <code class="docutils literal notranslate"><span class="pre">frac_resid</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">frac_resid</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">frac_resid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-how-long-does-the-furnace-temperature-remember-10-pts">
+<h3>A2. How long does the furnace temperature remember? (10 pts)<a class="headerlink" href="#a2-how-long-does-the-furnace-temperature-remember-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-adv-ts-acf-half">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>Compute the autocorrelation function of <code class="docutils literal notranslate"><span class="pre">furnace_temp</span></code> with <code class="docutils literal notranslate"><span class="pre">acf(...,</span> <span class="pre">nlags=720)</span></code> (one hour
+of lags). Find the <strong>first lag at which the ACF falls below 0.5</strong>.</p>
+<p>Assign that lag, <strong>in minutes</strong>, to <code class="docutils literal notranslate"><span class="pre">lag_half_min</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">lag_half_min</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">lag_half_min</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-filling-a-gap-10-pts">
+<h3>A3. Filling a gap (10 pts)<a class="headerlink" href="#a3-filling-a-gap-10-pts" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">desuperheat_water_flow</span></code> tag has a real 2.3-minute gap at 06:22. We would like to know
+how well linear interpolation fills a gap like that, but we cannot check a fill of a real
+gap, because the true values are missing. The standard trick is to <strong>make artificial gaps
+in data we do have</strong>, fill them, and compare the fill with the values we removed.</p>
+<p>Here we make gaps about as long as the real one: 2 minutes, which is 24 samples at 5 s each.
+A single gap could land on a quiet stretch or a busy one by luck, so we make six of them,
+one every 4 hours, and average the error over all six. The data start at midnight and there
+are 720 samples per hour, so the gap starting at hour <span class="math notranslate nohighlight">\(h\)</span> begins at row <span class="math notranslate nohighlight">\(720h\)</span>.</p>
+<div class="exercise admonition" id="pr-adv-ts-interp-mae">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<ol class="arabic">
+<li><p>Make a copy of <code class="docutils literal notranslate"><span class="pre">steam_temp</span></code>, so the original keeps the true values.</p></li>
+<li><p>In the copy, set 24 consecutive samples to <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> starting at each of these row
+positions (02:00, 06:00, 10:00, 14:00, 18:00 and 22:00):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1440</span><span class="p">,</span> <span class="mi">4320</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="mi">10080</span><span class="p">,</span> <span class="mi">12960</span><span class="p">,</span> <span class="mi">15840</span>
+</pre></div>
+</div>
+<p>That is 6 × 24 = 144 blanked samples. Use <code class="docutils literal notranslate"><span class="pre">.iloc</span></code> with row positions, not times.</p>
+</li>
+<li><p>Fill the gaps with <code class="docutils literal notranslate"><span class="pre">.interpolate(method='linear')</span></code>.</p></li>
+<li><p>Compute the mean absolute error between the filled values and the true values at the
+<strong>144 blanked positions only</strong>. Everywhere else the copy is identical to the original, so
+including those rows would make the error look tiny.</p></li>
+</ol>
+<p>Assign that error, in °C, to <code class="docutils literal notranslate"><span class="pre">mae_linear</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">mae_linear</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">mae_linear</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Checkpoint</p>
+<p>You now have the three tools Part B uses: a trailing moving average, the first lag where the
+ACF drops below 0.5, and a measure of how well a fill reproduces known values.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>A1 and A2 described one tag each with one number. Part B looks at the whole day, and asks
+how the eight tags differ in their noise, their memory and their stationarity. These are the
+properties you would check before choosing a smoothing window or a model.</p>
+<div class="exercise admonition" id="pr-adv-ts-boiler-day">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p><strong>1. Smoothing.</strong> Plot <code class="docutils literal notranslate"><span class="pre">furnace_pressure</span></code> for the full day and, in a second panel, for one
+hour (10:00 to 11:00). In both panels overlay the raw signal, the trailing 5-minute moving
+average from A1, and an exponential moving average with <code class="docutils literal notranslate"><span class="pre">ewm(span=60)</span></code>. In the full-day panel,
+add the 30-minute rolling standard deviation, <code class="docutils literal notranslate"><span class="pre">.rolling(360).std()</span></code>, on a twin y-axis.
+<code class="docutils literal notranslate"><span class="pre">span=60</span></code> gives the <code class="docutils literal notranslate"><span class="pre">ewm</span></code> the same average delay as the moving average (2.5 minutes). In
+<strong>one sentence</strong>, say which of the two follows the raw signal more closely in the one-hour
+panel, and why.</p>
+<p><strong>2. Memory.</strong> For <code class="docutils literal notranslate"><span class="pre">furnace_pressure</span></code> and <code class="docutils literal notranslate"><span class="pre">furnace_temp</span></code>, plot the ACF out to 30 minutes
+(<code class="docutils literal notranslate"><span class="pre">nlags=360</span></code>) and the PACF out to 60 lags, in a 2 × 2 grid. For each tag, count the PACF
+lags outside the 95% band and report the size of the largest PACF value beyond lag 1. One
+tag has more lags outside the band, and the other has larger PACF values. In <strong>one
+sentence</strong>, say which tag needs more past values to describe its present value, and why the
+count is misleading here.</p>
+<p><strong>3. Stationarity.</strong> Use the Augmented Dickey-Fuller (ADF) test from the chapter
+(<code class="docutils literal notranslate"><span class="pre">adfuller</span></code>) to make a table of the p-value for every tag, raw and after first differencing
+(drop the NaNs in <code class="docutils literal notranslate"><span class="pre">desuperheat_water_flow</span></code> first). Then plot <code class="docutils literal notranslate"><span class="pre">steam_temp</span></code> for the day with
+its 530–545 °C band shaded and its 30-minute rolling mean and rolling standard deviation
+overlaid, and report the fraction of samples outside the band. The ADF test calls the steam
+temperature stationary. In <strong>one sentence</strong>, use your plot to say what this does and does
+not tell us about the signal.</p>
+<p>Label all axes, with units where there are any.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>One thing that is easy to forget is that the numbers in this file are not exactly what
+the sensors measured. The historian rounded each value to two decimals, and many plant
+historians also compress the data with the swinging-door algorithm from the chapter. This
+does not change a trend plot very much, but it can change the statistics we computed in
+Part B. In Part C we will see how much, and how fine the historian’s settings need to be
+before we can trust those statistics.</p>
+<p>Use the chapter’s swinging-door function, given here:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">swinging_door</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Swinging-door (SDT) compression: indices of the points a historian keeps.&quot;&quot;&quot;</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">t0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">s_max</span><span class="p">,</span> <span class="n">s_min</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>          <span class="c1"># lower-door / upper-door slopes</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">t0</span>
+        <span class="n">s_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">s_min</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span><span class="p">)</span>
+        <span class="n">s_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">s_max</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">delta</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s_max</span> <span class="o">&gt;</span> <span class="n">s_min</span><span class="p">:</span>                   <span class="c1"># corridor closed: archive previous point</span>
+            <span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">t0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">t0</span>
+            <span class="n">s_min</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
+            <span class="n">s_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">delta</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
+    <span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keep</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="exercise admonition" id="pr-adv-ts-historian-audit">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. Rounding.</strong> The historian stored every value to two decimals, so the true readings
+are gone and we cannot undo the rounding. We can still measure how much noise it adds.
+Rounding to two decimals moves each value by a random amount between −0.005 and +0.005, so
+simulate that error with <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">=</span> <span class="pre">np.random.default_rng(0).uniform(-0.005,</span> <span class="pre">0.005,</span> <span class="pre">len(df))</span></code>
+and compute the variance of its first difference, <code class="docutils literal notranslate"><span class="pre">np.diff(e).var()</span></code>. This is how much
+the rounding alone adds to the variance of a tag’s sample-to-sample changes. For every tag,
+divide it by the variance of the tag’s own first difference, and also compute the fraction
+of consecutive samples that are unchanged. Identify the tag for which rounding matters,
+and plot 15 minutes of it. In <strong>one sentence</strong>, say which statistic of that tag you would
+still trust and which you would not.</p>
+<p><strong>2. Compression.</strong> Compress <code class="docutils literal notranslate"><span class="pre">steam_temp</span></code> with <code class="docutils literal notranslate"><span class="pre">swinging_door</span></code> at
+<span class="math notranslate nohighlight">\(\delta = 0.01, 0.02, 0.05, 0.1, 0.25, 0.5\)</span> times its standard deviation, and rebuild each
+compressed signal with <code class="docutils literal notranslate"><span class="pre">np.interp</span></code>. For each δ, record the compression ratio, the maximum
+reconstruction error, the first lag (minutes) at which the ACF falls below 0.5 (A2’s
+statistic), and the lag-1 ACF of the first difference. Plot all four against δ.</p>
+<p><strong>3. Recommend.</strong> In <strong>one or two sentences</strong>, tell the plant’s data engineer what δ to use
+for this tag if analysts will rely on its ACF. Use the largest δ on your grid that keeps the
+ACF-0.5 lag within 10% of the uncompressed value, give its compression ratio, and say which
+statistic is distorted even at that δ. Use your numbers.</p>
+<p>There is more than one defensible way to present the trade-off. You are graded on whether
+your numbers support your recommendation.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>W. Hu, A. Jiang, K. Chen, J. Zheng, W. Shang and Z. Cao, “A long-tailed distribution
+time-series dataset in boiler equipment,” <em>Scientific Data</em> <strong>12</strong>, 742 (2025),
+<a class="reference external" href="https://doi.org/10.1038/s41597-025-05096-4">doi:10.1038/s41597-025-05096-4</a> — the
+source of this dataset; the data record is
+<a class="reference external" href="https://doi.org/10.6084/m9.figshare.28868849">doi:10.6084/m9.figshare.28868849</a> (CC0).</p></li>
+<li><p>N. F. Thornhill, M. A. A. Shoukat Choudhury and S. L. Shah, “The impact of compression
+on data-driven process analyses,” <em>Journal of Process Control</em> <strong>14</strong>, 389–398 (2004),
+<a class="reference external" href="https://doi.org/10.1016/j.jprocont.2003.06.003">doi:10.1016/j.jprocont.2003.06.003</a> —
+what Part C finds on one tag, measured across loop benchmarking, fault detection and data
+reconciliation, with the conclusion that compressed archives should be used with caution.</p></li>
+<li><p>N. F. Thornhill, B. Huang and H. Zhang, “Detection of multiple oscillations in control
+loops,” <em>Journal of Process Control</em> <strong>13</strong>, 91–100 (2003),
+<a class="reference external" href="https://doi.org/10.1016/S0959-1524(02)00007-0">doi:10.1016/S0959-1524(02)00007-0</a> — the
+ACF as a working tool on plant historian data.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module-6-advanced_topics.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Module 6 — Advanced Topics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Topic6.3-Neural_Network_Basics_Problems.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Problems: Neural Network Basics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-how-much-of-the-furnace-pressure-is-fast-fluctuation-10-pts">A1. How much of the furnace pressure is fast fluctuation? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-how-long-does-the-furnace-temperature-remember-10-pts">A2. How long does the furnace temperature remember? (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-filling-a-gap-10-pts">A3. Filling a gap (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

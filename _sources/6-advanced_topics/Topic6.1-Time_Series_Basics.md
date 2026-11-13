@@ -333,7 +333,7 @@ itself a historian export.
 
 Historian compression is *lossy but bounded*: it discards readings that fall within a set
 tolerance of a straight line, keeping only the points needed to reconstruct the signal to
-within that tolerance. The classic method is **swinging-door trending (SDT)**. Picture
+within a known bound. The classic method is **swinging-door trending (SDT)**. Picture
 standing at the last stored point and opening two "doors" — an upper slope and a lower
 slope — just wide enough to keep every later point inside a corridor of half-width δ. As
 each new reading arrives the doors may swing only *open*, never shut. The instant the two
@@ -399,9 +399,21 @@ In the left panel two readings still admit a wide wedge of representable lines. 
 reading 5 the wedge has narrowed but survives; reading 6 (whose tolerance band sits
 entirely below the wedge) makes it impossible for any single line to represent all six
 readings, so the algorithm archives reading 5 and restarts the corridor from there.
-Every archived point extends the stored piecewise-linear approximation by one segment,
-and the guarantee $|$reconstruction $-$ signal$| \le \delta$ holds everywhere by
-construction.
+Every archived point extends the stored piecewise-linear approximation by one segment.
+
+Notice what the doors actually promise: *some* line from the pivot stays within δ of every
+reading. The historian does not store that line. It stores reading 5 itself, and the
+reconstruction is the straight line from the pivot to that raw value, with slope
+$c = (y_k - y_0)/(t_k - t_0)$ for archived reading $k$. That chord sits at the center of
+reading $k$'s own slope interval, which has half-width $\delta/(t_k - t_0)$, and the
+surviving wedge lies somewhere inside that interval, so $c$ differs from a good slope by
+at most $\delta/(t_k - t_0)$. At any reading $j$ in the segment the error is therefore
+
+$$\left|\,\text{reconstruction} - y_j\,\right| \;\le\; \delta + \delta\,\frac{t_j - t_0}{t_k - t_0} \;<\; 2\delta .$$
+
+The bound approaches 2δ for readings just before the archived one, and real signals get
+close to it. Storing a point on the wedge instead of the raw reading would restore the
+δ bound, but it stores values that were never measured and compresses less.
 
 The full algorithm is only a few lines:
 
@@ -441,11 +453,12 @@ plt.legend(); plt.title('Swinging-door compression of the Dow impurity signal')
 plt.tight_layout()
 
 print(f'Compression ratio: {len(y) / len(kept):.1f}x')
-print(f'Max reconstruction error: {np.max(np.abs(recon - y)):.4f}  (tolerance δ = {delta:.4f})')
+max_err = np.max(np.abs(recon - y))
+print(f'Max reconstruction error: {max_err:.4f}  (tolerance δ = {delta:.4f}, ratio {max_err/delta:.2f})')
 ```
 
-The archived series follows the original closely while storing a fraction of the points,
-and — by construction — never deviates by more than δ. At plant scale, with tens of
+The archived series follows the original closely while storing a fraction of the points.
+The maximum error is larger than δ but below 2δ, as the bound above predicts. At plant scale, with tens of
 thousands of tags sampled every second, this is the difference between an affordable data
 system and an impossible one — and it means the data you later pull from a historian *has
 already been compressed*, at a resolution someone chose upstream.

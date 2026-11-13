@@ -1,0 +1,975 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problems: Neural Network Basics &#8212; Data Analytics for Chemical Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/exercise.css?v=982b99e0" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'problem_sets/Topic6.3-Neural_Network_Basics_Problems';</script>
+    <script src="../_static/version-switcher.js?v=03ab3a72"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets and Resources" href="../resources/intro.html" />
+    <link rel="prev" title="Problems: Time Series Basics" href="Topic6.1-Time_Series_Basics_Problems.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Analytics for Chemical Engineers</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../1-numerical_methods/intro.html">Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.1-Python_Basics.html">Python Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.2-Linear_Algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html">Numerical Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-numerical_methods/Topic1.5-Parameter_Estimation.html">Nonlinear Parameter Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../2-regression/intro.html">Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.1-Non-parametric_Models.html">Non-parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.2-Model_Validation.html">Model Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.3-Complexity_Optimization.html">Complexity Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.4-High_dimensional_data.html">High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.5-High_dimensional_regression.html">High-dimensional Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2-regression/Topic2.6-Nonlinear_Feature_Engineering.html">Nonlinear Feature Engineering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../3-classification/intro.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.1-Classification_Basics.html">Classification Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.2-Generalized_Linear_Models.html">Generalized Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.3-Alternate_Classification_Models.html">Alternate Classification Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-classification/Topic3.4-High-dimensional_Classification.html">High-dimensional Classification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../4-data_management/intro.html">Data Management</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.1-Data_Organization.html">Data Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.2-Online_Data_Access.html">Online Data Access and APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.3-Accessing_Data_with_AI_Tools.html">Accessing Data with AI Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-data_management/Topic4.4-Complex_Structured_Data.html">Complex Structured Data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../5-exploratory_data_analysis/intro.html">Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.1-High_Dimensional_Data.html">High-Dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.2-Dimensionality_Reduction.html">Dimensionality Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.3-Clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5-exploratory_data_analysis/Topic5.4-Generative_Models.html">Generative Models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../6-advanced_topics/intro.html">Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.1-Time_Series_Basics.html">Time Series Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.2-Time_Series_Models.html">Time Series Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html">Neural Network Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6-advanced_topics/Topic6.4-Neural_Network_Architectures.html">Neural Network Architectures</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Problem Sets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-1-numerical_methods.html">Module 1 — Numerical Methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.1-Python_Basics_Problems.html">1.1 - Python Basics - Water Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.2-Linear_Algebra_Problems.html">1.2 - Linear Algebra - Steam Methane Reforming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.3-Linear_Regression_Problems.html">1.3 - Linear Regression - Methanol IR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.4-Numerical_Optimization_Problems.html">1.4 - Numerical Optimization - CO2 Adsorption Isotherm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic1.5-Parameter_Estimation_Problems.html">1.5 - Nonlinear Parameter Estimation - Isotherm Uncertainty</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-2-regression.html">Module 2 — Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.1-Non-parametric_Models_Problems.html">2.1 - Non-parametric Models - Refrigerant VLE Azeotrope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.2-Model_Validation_Problems.html">2.2 - Model Validation - Henry's Law Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.3-Complexity_Optimization_Problems.html">2.3 - Complexity Optimization - Coffee NMR Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.4-High_dimensional_data_Problems.html">2.4 - High-dimensional Data - Solvent Vapor IR Mixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic2.5-High_dimensional_regression_Problems.html">2.5 - High-dimensional Regression - Solvent Vapor IR Calibration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-3-classification.html">Module 3 — Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.1-Classification_Basics_Problems.html">3.1 - Classification Basics - Flammability Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.2-Generalized_Linear_Models_Problems.html">3.2 - Generalized Linear Models - Flammability Envelopes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.3-Alternate_Classification_Models_Problems.html">3.3 - Alternate Classification Methods - Aqueous Solubility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic3.4-High-dimensional_Classification_Problems.html">3.4 - High-dimensional Classification - Membrane Database Audit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="module-5-exploratory_data_analysis.html">Module 5 — Exploratory Data Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.1-High_Dimensional_Data_Problems.html">5.1 - High-Dimensional Data - Tennessee Eastman Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.2-Dimensionality_Reduction_Problems.html">5.2 - Dimensionality Reduction - Tennessee Eastman Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.3-Clustering_Problems.html">5.3 - Clustering - Carbon XPS Spectra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Topic5.4-Generative_Models_Problems.html">5.4 - Generative Models - XPS Batch Screening</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="module-6-advanced_topics.html">Module 6 — Advanced Topics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Topic6.1-Time_Series_Basics_Problems.html">6.1 - Time Series Basics - Boiler Historian Audit</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">6.3 - Neural Network Basics - Titration Endpoints</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Project_Ideas.html">Project Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/Resources.html">External Resources</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic6.3-Neural_Network_Basics_Problems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="Download notebook file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../_sources/problem_sets/Topic6.3-Neural_Network_Basics_Problems.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problems: Neural Network Basics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-steps-on-a-fixed-grid-10-pts">A1. Steps on a fixed grid (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-let-the-steps-move-nonlinear-regression-10-pts">A2. Let the steps move: nonlinear regression (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-a-network-is-the-same-model-find-the-unknown-s-first-endpoint-10-pts">A3. A network is the same model: find the unknown’s first endpoint (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- GENERATED by scripts/build_problems.py from
+     DA4CHE-admin/problems/Topic6.3-Neural_Network_Basics/master.md
+     Do not edit this file directly — your changes will be overwritten.
+     Solutions and rubrics live in the private repo and must never appear here. -->
+<nav class="contents local" id="contents" role="doc-toc">
+<ul class="simple">
+<li><p><a class="reference internal" href="#problems-neural-network-basics" id="id1">Problems: Neural Network Basics</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup" id="id2">Setup</a></p></li>
+<li><p><a class="reference internal" href="#part-a-skill-checks-30-pts" id="id3">Part A — Skill Checks (30 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-b-visualization-35-pts" id="id4">Part B — Visualization (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#part-c-open-ended-35-pts" id="id5">Part C — Open Ended (35 pts)</a></p></li>
+<li><p><a class="reference internal" href="#additional-reading" id="id6">Additional Reading</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="problems-neural-network-basics">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Problems: Neural Network Basics</a><a class="headerlink" href="#problems-neural-network-basics" title="Link to this heading">#</a></h1>
+<div class="seealso admonition">
+<p class="admonition-title">Get this problem set</p>
+<p><a class="reference download internal" download="" href="../_downloads/b16ec269de8b20f8dfc7fc7948d5415e/Topic6.3-Neural_Network_Basics_Problems.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">everything</span> <span class="pre">(Topic6.3-Neural_Network_Basics_Problems.zip)</span></code></a> — the notebook and
+<code class="docutils literal notranslate"><span class="pre">titration_h3po4.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">titration_overview.png</span></code>, in a folder that is ready to run as-is.</p>
+<p>The Download badge at the top of the page will also give you the notebook on its own.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Before you start</p>
+<p>This problem set accompanies <a class="reference internal" href="../6-advanced_topics/Topic6.3-Neural_Network_Basics.html"><span class="doc">Neural Network Basics</span></a>. It is worth <strong>100 points</strong>:</p>
+<ul class="simple">
+<li><p><strong>Part A — Skill Checks (30 pts)</strong> — short answers, each with a <code class="docutils literal notranslate"><span class="pre">check</span></code> that tells you
+whether it is right; run it as often as you like.</p></li>
+<li><p><strong>Part B — Visualization (35 pts)</strong> — plots plus written interpretation.</p></li>
+<li><p><strong>Part C — Open Ended (35 pts)</strong> — one synthesis problem.</p></li>
+</ul>
+<p>The parts build on each other: Part A works out the syntax you need for Part B, and
+Part B produces the evidence you argue from in Part C. Do them in order.</p>
+</div>
+<section id="setup">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup</a><a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>A titration adds base to an acid a little at a time and records the pH after each addition.
+Phosphoric acid, H<span class="math notranslate nohighlight">\(_3\)</span>PO<span class="math notranslate nohighlight">\(_4\)</span>, gives up its three protons one after another, so its curve rises
+in <strong>steps</strong>. Each step is centered on an <strong>equivalence point</strong>, where the base added equals
+one more proton per acid molecule:</p>
+<div class="math notranslate nohighlight">
+\[
+V_{\text{eq},n} = \frac{n\, C_a V_0}{C_b}, \qquad n = 1, 2, 3,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(V_0\)</span> is the volume of acid, <span class="math notranslate nohighlight">\(C_a\)</span> its concentration and <span class="math notranslate nohighlight">\(C_b\)</span> the base concentration.
+Finding <span class="math notranslate nohighlight">\(V_{\text{eq}}\)</span> is how a titration measures <span class="math notranslate nohighlight">\(C_a\)</span>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">data/titration_h3po4.csv</span></code> holds two runs from an <strong>autotitrator</strong>, both with
+<span class="math notranslate nohighlight">\(V_0 = 25.00\)</span> mL of acid and <span class="math notranslate nohighlight">\(C_b = 0.1000\)</span> M NaOH:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">==</span> <span class="pre">'calibration'</span></code>: acid of known concentration, <span class="math notranslate nohighlight">\(C_a = 0.0500\)</span> M, so its
+equivalence volumes are 12.5, 25.0 and 37.5 mL.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">==</span> <span class="pre">'unknown'</span></code>: the same acid at a concentration nobody has written down. It is the
+subject of A3 and Part C.</p></li>
+</ul>
+<p><img alt="Both titration runs. The calibration run's equivalence volumes are marked; the unknown's are what this problem set finds." src="../_images/titration_overview.png" /></p>
+<p>The data are simulated, but with the habits of real equipment. An autotitrator doses in
+small steps where the pH changes quickly and in large steps where it does not, so the points
+are far from evenly spaced, and dense on the steep rises. The pH readings carry the flaws of a
+real glass electrode: a small calibration offset and slope error, and random noise of about
+0.01 pH. The third step, at 37.5 mL, is barely visible, because the last proton of
+H<span class="math notranslate nohighlight">\(_3\)</span>PO<span class="math notranslate nohighlight">\(_4\)</span> is too weak to titrate cleanly in water.</p>
+<p>A tanh unit is a smoothed step, and a titration curve is a sum of smoothed steps. That makes
+this curve a good place to look inside a network. As in the chapter’s section “The Output
+Layer Is Linear Regression”, a one-hidden-layer network is a set of features <span class="math notranslate nohighlight">\(h_j(V)\)</span> plus a
+linear regression on them:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{pH} \approx w_0 + \sum_j w_j\, h_j(V), \qquad h_j(V) = \tanh(a_j z + b_j),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(z\)</span> is the standardized volume. Part A builds the features three ways: placed by
+hand, fitted by nonlinear regression, and learned by training a network.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neural_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;../settings/plot_style.mplstyle&#39;</span><span class="p">)</span>   <span class="c1"># available inside the book</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>                                              <span class="c1"># downloaded notebook: use defaults</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/titration_h3po4.csv&#39;</span><span class="p">)</span>
+<span class="n">cal</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;calibration&#39;</span><span class="p">]</span>
+<span class="n">unk</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;unknown&#39;</span><span class="p">]</span>
+<span class="n">V0</span><span class="p">,</span> <span class="n">Cb</span><span class="p">,</span> <span class="n">Ca_cal</span> <span class="o">=</span> <span class="mf">25.00</span><span class="p">,</span> <span class="mf">0.1000</span><span class="p">,</span> <span class="mf">0.0500</span>                <span class="c1"># mL, M, M</span>
+
+<span class="c1"># The calibration run, split once for Parts A and B</span>
+<span class="n">V_tr</span><span class="p">,</span> <span class="n">V_te</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_te</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">cal</span><span class="p">[</span><span class="s1">&#39;volume_mL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cal</span><span class="p">[</span><span class="s1">&#39;pH&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                                          <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">V_tr</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+<span class="n">z_tr</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">V_tr</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">z_te</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">V_te</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rmse</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">true</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">true</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;calibration: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cal</span><span class="p">)</span><span class="si">}</span><span class="s2"> points (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">V_tr</span><span class="p">)</span><span class="si">}</span><span class="s2"> train, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">V_te</span><span class="p">)</span><span class="si">}</span><span class="s2"> test); unknown: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unk</span><span class="p">)</span><span class="si">}</span><span class="s2"> points&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>calibration: 152 points (114 train, 38 test); unknown: 146 points
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run this once. It defines the <code class="docutils literal notranslate"><span class="pre">check</span></code> helper used after each Part A answer. It will
+not run inside the book — use the downloaded notebook.</p>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this once. It defines `check`, used after each Part A answer below.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">_EXPECTED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;q1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;1aeed5b36de3&#39;</span><span class="p">,</span> <span class="s1">&#39;f604d33d2014&#39;</span><span class="p">,</span> <span class="s1">&#39;060d51522e2d&#39;</span><span class="p">,</span> <span class="s1">&#39;95d464cefefe&#39;</span><span class="p">,</span> <span class="s1">&#39;c72a0896c8f5&#39;</span><span class="p">,</span> <span class="s1">&#39;f0fe8961dc23&#39;</span><span class="p">,</span> <span class="s1">&#39;752ebcd05c37&#39;</span><span class="p">,</span> <span class="s1">&#39;152256816eb5&#39;</span><span class="p">,</span> <span class="s1">&#39;b02be3479e53&#39;</span><span class="p">,</span> <span class="s1">&#39;cf2fec62d958&#39;</span><span class="p">,</span> <span class="s1">&#39;aa877ed2890a&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;f708b59c8e46&#39;</span><span class="p">,</span> <span class="s1">&#39;1c20f8798a88&#39;</span><span class="p">,</span> <span class="s1">&#39;dc3d95f2bd3a&#39;</span><span class="p">,</span> <span class="s1">&#39;c27aaf132f4a&#39;</span><span class="p">,</span> <span class="s1">&#39;746bd38059a1&#39;</span><span class="p">,</span> <span class="s1">&#39;1c531f5d947b&#39;</span><span class="p">,</span> <span class="s1">&#39;1604535ba7db&#39;</span><span class="p">,</span> <span class="s1">&#39;f06a5513975d&#39;</span><span class="p">,</span> <span class="s1">&#39;e1079cf5f278&#39;</span><span class="p">,</span> <span class="s1">&#39;e251575b39ee&#39;</span><span class="p">,</span> <span class="s1">&#39;5679fea0aba3&#39;</span><span class="p">,</span> <span class="s1">&#39;b480d8ae0626&#39;</span><span class="p">,</span> <span class="s1">&#39;3006df55faf6&#39;</span><span class="p">,</span> <span class="s1">&#39;644d2e11659d&#39;</span><span class="p">,</span> <span class="s1">&#39;63967ca399d2&#39;</span><span class="p">,</span> <span class="s1">&#39;27b6c5f5a803&#39;</span><span class="p">,</span> <span class="s1">&#39;31ef77da50e4&#39;</span><span class="p">,</span> <span class="s1">&#39;4eaa3d0dee3e&#39;</span><span class="p">,</span> <span class="s1">&#39;5ecc6cc295cb&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;q3&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;f419f2705b73&#39;</span><span class="p">,</span> <span class="s1">&#39;f72a4011ae45&#39;</span><span class="p">,</span> <span class="s1">&#39;b095e93883e3&#39;</span><span class="p">,</span> <span class="s1">&#39;c00f874d7e78&#39;</span><span class="p">,</span> <span class="s1">&#39;e7ebb9b4907c&#39;</span><span class="p">,</span> <span class="s1">&#39;b03f309488a7&#39;</span><span class="p">,</span> <span class="s1">&#39;aede16824fc4&#39;</span><span class="p">,</span> <span class="s1">&#39;f60bda3e5bdd&#39;</span><span class="p">,</span> <span class="s1">&#39;cc1ed3d75752&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">qid</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare an answer against a stored digest. Practice only -- nothing is recorded.&quot;&quot;&quot;</span>
+    <span class="n">places</span><span class="p">,</span> <span class="n">digests</span> <span class="o">=</span> <span class="n">_EXPECTED</span><span class="p">[</span><span class="n">qid</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: not answered yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;correct&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">got</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">digests</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not the expected value&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-a-skill-checks-30-pts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Part A — Skill Checks (30 pts)</a><a class="headerlink" href="#part-a-skill-checks-30-pts" title="Link to this heading">#</a></h2>
+<p>Part A retraces a path you have already walked with spectra. In
+<a class="reference internal" href="../1-numerical_methods/Topic1.3-Linear_Regression.html"><span class="doc">Linear Regression</span></a> we fit an IR
+spectrum with Gaussian features on an evenly spaced grid: the features were fixed, so only
+their weights were fitted, and that was linear regression. In
+<a class="reference internal" href="../1-numerical_methods/Topic1.4-Numerical_Optimization.html"><span class="doc">Numerical Optimization</span></a> we let
+the Gaussians’ positions and widths be fitted too, which made it nonlinear regression. Here
+we do the same two things with tanh steps instead of Gaussian peaks (A1 and A2), and then
+see that a neural network is the second one with a different way of choosing starting values
+(A3).</p>
+<section id="a1-steps-on-a-fixed-grid-10-pts">
+<h3>A1. Steps on a fixed grid (10 pts)<a class="headerlink" href="#a1-steps-on-a-fixed-grid-10-pts" title="Link to this heading">#</a></h3>
+<div class="exercise admonition" id="pr-adv-nn-fixed-basis">
+
+<p class="admonition-title"><span class="caption-number">Exercise 1 </span></p>
+<section id="exercise-content">
+<p>Build 9 tanh features of the volume, centered every 5 mL from 0 to 40 mL, each with a width
+of 2 mL:</p>
+<div class="math notranslate nohighlight">
+\[
+h_j(V) = \tanh\!\left(\frac{V - c_j}{2}\right), \qquad c_j = 0, 5, 10, \ldots, 40 .
+\]</div>
+<p>This is the spectrum fit from Topic 1.3 with steps in place of peaks. Add a column of ones
+for the intercept, fit the 10 weights to the <strong>training</strong> points with <code class="docutils literal notranslate"><span class="pre">np.linalg.lstsq</span></code>,
+and predict the <strong>test</strong> points.</p>
+<p>Assign the test RMSE, in pH units, to <code class="docutils literal notranslate"><span class="pre">rmse_fixed</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">rmse_fixed</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="n">rmse_fixed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a2-let-the-steps-move-nonlinear-regression-10-pts">
+<h3>A2. Let the steps move: nonlinear regression (10 pts)<a class="headerlink" href="#a2-let-the-steps-move-nonlinear-regression-10-pts" title="Link to this heading">#</a></h3>
+<p>A1 fixed where the steps are and how sharp they are. If instead we fit the center <span class="math notranslate nohighlight">\(c_j\)</span> and
+width <span class="math notranslate nohighlight">\(s_j\)</span> of each step along with its weight, as Topic 1.4 did for Gaussian peaks, a few
+steps should be enough. Each step is</p>
+<div class="math notranslate nohighlight">
+\[
+h_j(V)=\tanh\left(\frac{V-c_j}{s_j}\right),
+\qquad j=1,2,3,
+\]</div>
+<p>and the model is a weighted sum of the three plus a constant.</p>
+<div class="exercise admonition" id="pr-adv-nn-nonlin-fit">
+
+<p class="admonition-title"><span class="caption-number">Exercise 2 </span></p>
+<section id="exercise-content">
+<p>Fit this three-step model to the <strong>training</strong> points with <code class="docutils literal notranslate"><span class="pre">scipy.optimize.curve_fit</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">three_steps</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">w3</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">s3</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">w0</span> <span class="o">+</span> <span class="n">w1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">V</span> <span class="o">-</span> <span class="n">c1</span><span class="p">)</span> <span class="o">/</span> <span class="n">s1</span><span class="p">)</span>
+               <span class="o">+</span> <span class="n">w2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">V</span> <span class="o">-</span> <span class="n">c2</span><span class="p">)</span> <span class="o">/</span> <span class="n">s2</span><span class="p">)</span>
+               <span class="o">+</span> <span class="n">w3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">V</span> <span class="o">-</span> <span class="n">c3</span><span class="p">)</span> <span class="o">/</span> <span class="n">s3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Start from <code class="docutils literal notranslate"><span class="pre">p0</span> <span class="pre">=</span> <span class="pre">[7,</span> <span class="pre">1.5,</span> <span class="pre">10,</span> <span class="pre">1,</span> <span class="pre">1.5,</span> <span class="pre">20,</span> <span class="pre">1,</span> <span class="pre">1.5,</span> <span class="pre">30,</span> <span class="pre">1]</span></code> (three steps of width 1 mL at
+10, 20 and 30 mL) and pass <code class="docutils literal notranslate"><span class="pre">maxfev=20000</span></code>. Predict the <strong>test</strong> points with the fitted
+parameters, and print the fitted centers and widths.</p>
+<p>Assign the test RMSE, in pH units, to <code class="docutils literal notranslate"><span class="pre">rmse_nonlin</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">rmse_nonlin</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="n">rmse_nonlin</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a3-a-network-is-the-same-model-find-the-unknown-s-first-endpoint-10-pts">
+<h3>A3. A network is the same model: find the unknown’s first endpoint (10 pts)<a class="headerlink" href="#a3-a-network-is-the-same-model-find-the-unknown-s-first-endpoint-10-pts" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MLPRegressor</span></code> with one hidden layer of tanh units fits exactly A2’s model, written in the
+standardized volume <span class="math notranslate nohighlight">\(z = (V - \mu_V)/\sigma_V\)</span>: each unit is <span class="math notranslate nohighlight">\(\tanh(a_j z + b_j)\)</span>, which is a
+step centered where <span class="math notranslate nohighlight">\(a_j z + b_j = 0\)</span>. In mL, unit <span class="math notranslate nohighlight">\(j\)</span> is centered at</p>
+<div class="math notranslate nohighlight">
+\[
+c_j = \mu_V + \sigma_V \left(-\frac{b_j}{a_j}\right),
+\]</div>
+<p>and <code class="docutils literal notranslate"><span class="pre">scaler.inverse_transform</span></code> does that conversion for you. The network differs from A2 in
+only two ways: it chooses its starting values at random instead of taking your guesses, and
+we give it more units than it needs, because random starts waste some of them. Since the
+steps land on the equivalence points, we can read an endpoint straight off the fitted
+weights.</p>
+<div class="exercise admonition" id="pr-adv-nn-endpoint">
+
+<p class="admonition-title"><span class="caption-number">Exercise 3 </span></p>
+<section id="exercise-content">
+<p>Fit a network to <strong>all</strong> the points of the <code class="docutils literal notranslate"><span class="pre">unknown</span></code> run:</p>
+<ul class="simple">
+<li><p>standardize its volumes with a new <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>, fit to the unknown volumes;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MLPRegressor(hidden_layer_sizes=(6,),</span> <span class="pre">activation='tanh',</span> <span class="pre">solver='lbfgs',</span> <span class="pre">max_iter=5000,</span> <span class="pre">random_state=0)</span></code>.</p></li>
+</ul>
+<p>Get <span class="math notranslate nohighlight">\(a_j\)</span> from <code class="docutils literal notranslate"><span class="pre">coefs_[0]</span></code>, <span class="math notranslate nohighlight">\(b_j\)</span> from <code class="docutils literal notranslate"><span class="pre">intercepts_[0]</span></code> and the output weights <span class="math notranslate nohighlight">\(w_j\)</span> from
+<code class="docutils literal notranslate"><span class="pre">coefs_[1]</span></code>. Compute each unit’s center in mL, and how steep its contribution is,
+<span class="math notranslate nohighlight">\(|w_j a_j|\)</span>. The first equivalence point is the center of the <strong>steepest unit whose center
+lies between 0 and 16 mL</strong>.</p>
+<p>Assign that volume, in mL, to <code class="docutils literal notranslate"><span class="pre">V_eq1</span></code>.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+<span class="n">V_eq1</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="n">V_eq1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Checkpoint</p>
+<p>You now have three versions of the same model: steps on a fixed grid, steps placed by
+nonlinear regression, and steps placed by a trained network. Part B puts them side by side
+and opens up the trained one.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-b-visualization-35-pts">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Part B — Visualization (35 pts)</a><a class="headerlink" href="#part-b-visualization-35-pts" title="Link to this heading">#</a></h2>
+<p>The chapter argues that training a network is mostly a way of choosing good features,
+and that once the features are chosen the last layer is just linear regression. In Part B
+we will check both of these ideas on the calibration run, where we know exactly where the
+equivalence points are.</p>
+<div class="exercise admonition" id="pr-adv-nn-inside">
+
+<p class="admonition-title"><span class="caption-number">Exercise 4 </span></p>
+<section id="exercise-content">
+<p><strong>1. Compare the fits.</strong> Train <code class="docutils literal notranslate"><span class="pre">MLPRegressor(hidden_layer_sizes=(6,),</span> <span class="pre">activation='tanh',</span> <span class="pre">solver='lbfgs',</span> <span class="pre">max_iter=5000,</span> <span class="pre">random_state=0)</span></code> on <code class="docutils literal notranslate"><span class="pre">z_tr</span></code>, <code class="docutils literal notranslate"><span class="pre">y_tr</span></code>. On one plot, show the calibration data
+and the predictions on a fine grid of volumes of four models: this network, A2’s three-step
+fit, A1’s fixed grid and a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> fit. Report the test RMSE of each. In <strong>one
+sentence</strong>, say why the network and A2 beat A1 with fewer or similar numbers of units.</p>
+<p><strong>2. Examine the learned features.</strong> Compute the six hidden features
+<span class="math notranslate nohighlight">\(h_j = \tanh(a_j z + b_j)\)</span> from <code class="docutils literal notranslate"><span class="pre">coefs_[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">intercepts_[0]</span></code>, and each unit’s center in
+mL, as in A3. Make two panels on a grid from 0 to 40 mL:</p>
+<ul class="simple">
+<li><p>the six features <span class="math notranslate nohighlight">\(h_j(V)\)</span>;</p></li>
+<li><p>each weighted contribution <span class="math notranslate nohighlight">\(w_j h_j(V)\)</span>, plus their sum with the intercept, over the data.</p></li>
+</ul>
+<p>Mark the equivalence volumes <span class="math notranslate nohighlight">\(V_{\text{eq},1}\)</span>, <span class="math notranslate nohighlight">\(V_{\text{eq},2}\)</span>, <span class="math notranslate nohighlight">\(V_{\text{eq},3}\)</span> on both
+panels. In <strong>one sentence</strong>, say where the centers of the units are, how they compare with
+A2’s centers, and why they end up there.</p>
+<p><strong>3. Refit the output layer with linear regression.</strong> Keep the network’s hidden features
+fixed. Add an intercept column to the training feature matrix and refit the output weights
+using <code class="docutils literal notranslate"><span class="pre">np.linalg.lstsq</span></code>. Report the network’s and the refit’s
+training RMSE, the largest difference between their predictions on the grid, the largest
+difference between their weights, and the condition number of the feature matrix. Make two
+panels: the network’s and the refit’s predictions on the grid, with their difference on a
+second axis; and the seven weights (intercept plus six) of each, side by side as bars. In
+<strong>one sentence</strong>, say why the weights can be so different when the predictions agree.</p>
+<p>Label all axes, with units where there are any.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-c-open-ended-35-pts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Part C — Open Ended (35 pts)</a><a class="headerlink" href="#part-c-open-ended-35-pts" title="Link to this heading">#</a></h2>
+<p>There are two questions left. The chapter’s other way to build a first layer is to draw it
+at random and fit only the output weights; maybe enough random units would match trained
+ones. And if training is what puts the units on the equivalence points, we should be able to
+use the network as an instrument to measure the concentration of the unknown, and see which
+units the measurement depends on.</p>
+<div class="exercise admonition" id="pr-adv-nn-endpoint-audit">
+
+<p class="admonition-title"><span class="caption-number">Exercise 5 </span></p>
+<section id="exercise-content">
+<p><strong>1. Compare random features with trained features.</strong> Freeze a random first layer of <span class="math notranslate nohighlight">\(n\)</span> units in the standardized volume:
+for <code class="docutils literal notranslate"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">…,</span> <span class="pre">4</span></code>, draw <code class="docutils literal notranslate"><span class="pre">rng</span> <span class="pre">=</span> <span class="pre">np.random.default_rng(seed)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">rng.normal(0,</span> <span class="pre">3,</span> <span class="pre">size=n)</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">rng.normal(0,</span> <span class="pre">3,</span> <span class="pre">size=n)</span></code>, form
+<span class="math notranslate nohighlight">\(\tanh(a_j z + b_j)\)</span> for <code class="docutils literal notranslate"><span class="pre">z_tr</span></code> and <code class="docutils literal notranslate"><span class="pre">z_te</span></code>, add a column of ones, fit the output weights by
+<code class="docutils literal notranslate"><span class="pre">np.linalg.lstsq</span></code> and compute the test RMSE. Do this for <span class="math notranslate nohighlight">\(n = 5, 10, 20, 50, 100\)</span>, and plot
+the mean test RMSE over the five draws against <span class="math notranslate nohighlight">\(n\)</span> on log axes, with horizontal lines for A1,
+A2 and Part B’s network. Report the best mean RMSE and the <span class="math notranslate nohighlight">\(n\)</span> where it occurs, and say in
+<strong>one sentence</strong> why it gets worse past that point.</p>
+<p><strong>2. Identify important hidden units.</strong> For Part B’s network, drop one hidden unit at a time, refit the output weights
+of the remaining five by <code class="docutils literal notranslate"><span class="pre">np.linalg.lstsq</span></code>, and report the training RMSE. Rank the units by
+how much the RMSE increases, and plot the increase against each unit’s center.</p>
+<p><strong>3. Measure the unknown.</strong> Use A3’s network to find <strong>both</strong> visible equivalence volumes of
+the unknown from its unit centers: the steepest unit centered below 16 mL and the steepest
+centered between 16 and 36 mL. Compute <span class="math notranslate nohighlight">\(C_a\)</span> from each one
+(<span class="math notranslate nohighlight">\(C_a = C_b V_{\text{eq},n} / (n V_0)\)</span>), and compare them. Do the same with the largest
+finite differences of the raw data, <code class="docutils literal notranslate"><span class="pre">np.diff(pH)</span> <span class="pre">/</span> <span class="pre">np.diff(V)</span></code>, below and above 16 mL, and
+plot the unknown’s data and network fit with both methods’ endpoints marked. Then tell the
+lab, in <strong>one or two sentences</strong> with your numbers, which <span class="math notranslate nohighlight">\(C_a\)</span> to report and from which
+method.</p>
+</section>
+</div>
+<div class="cell tag_skip-execution docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR CODE HERE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="additional-reading">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Additional Reading</a><a class="headerlink" href="#additional-reading" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>J. R. Kitchin, “Interpretations of what a neural network is” (2026),
+<a class="reference external" href="https://kitchingroup.cheme.cmu.edu/posts/neural-network-interpretations/">https://kitchingroup.cheme.cmu.edu/posts/neural-network-interpretations/</a> — the
+basis-function, random-feature and “last layer is linear regression” readings this set
+puts to work, on a one-dimensional test function.</p></li>
+<li><p>D. C. Harris, <em>Quantitative Chemical Analysis</em> (W. H. Freeman), the chapters on
+polyprotic acid–base titrations — the chemistry behind the curve and its three
+equivalence points.</p></li>
+<li><p>G.-B. Huang, Q.-Y. Zhu and C.-K. Siew, “Extreme learning machine: theory and
+applications,” <em>Neurocomputing</em> <strong>70</strong>, 489–501 (2006),
+<a class="reference external" href="https://doi.org/10.1016/j.neucom.2005.12.126">doi:10.1016/j.neucom.2005.12.126</a> — random
+first layers with least-squares output weights, as in Part C.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./problem_sets"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Topic6.1-Time_Series_Basics_Problems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Problems: Time Series Basics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../resources/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Datasets and Resources</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-a-skill-checks-30-pts">Part A — Skill Checks (30 pts)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-steps-on-a-fixed-grid-10-pts">A1. Steps on a fixed grid (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a2-let-the-steps-move-nonlinear-regression-10-pts">A2. Let the steps move: nonlinear regression (10 pts)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-a-network-is-the-same-model-find-the-unknown-s-first-endpoint-10-pts">A3. A network is the same model: find the unknown’s first endpoint (10 pts)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-b-visualization-35-pts">Part B — Visualization (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-c-open-ended-35-pts">Part C — Open Ended (35 pts)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-reading">Additional Reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By A.J. Medford
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  © 2026 A.J. Medford · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

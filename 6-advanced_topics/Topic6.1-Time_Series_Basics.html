@@ -254,6 +254,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic5.4-Generative_Models_Problems.html">5.4 - Generative Models - XPS Batch Screening</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../problem_sets/module-6-advanced_topics.html">Module 6 — Advanced Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic6.1-Time_Series_Basics_Problems.html">6.1 - Time Series Basics - Boiler Historian Audit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../problem_sets/Topic6.3-Neural_Network_Basics_Problems.html">6.3 - Neural Network Basics - Titration Endpoints</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../resources/intro.html">Datasets and Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -922,7 +927,7 @@ that ingest and <em>compress</em> these streams as they arrive. The Dow dataset 
 itself a historian export.</p>
 <p>Historian compression is <em>lossy but bounded</em>: it discards readings that fall within a set
 tolerance of a straight line, keeping only the points needed to reconstruct the signal to
-within that tolerance. The classic method is <strong>swinging-door trending (SDT)</strong>. Picture
+within a known bound. The classic method is <strong>swinging-door trending (SDT)</strong>. Picture
 standing at the last stored point and opening two “doors” — an upper slope and a lower
 slope — just wide enough to keep every later point inside a corridor of half-width δ. As
 each new reading arrives the doors may swing only <em>open</em>, never shut. The instant the two
@@ -990,9 +995,19 @@ within <span class="math notranslate nohighlight">\(\delta\)</span> of <em>all</
 reading 5 the wedge has narrowed but survives; reading 6 (whose tolerance band sits
 entirely below the wedge) makes it impossible for any single line to represent all six
 readings, so the algorithm archives reading 5 and restarts the corridor from there.
-Every archived point extends the stored piecewise-linear approximation by one segment,
-and the guarantee <span class="math notranslate nohighlight">\(|\)</span>reconstruction <span class="math notranslate nohighlight">\(-\)</span> signal<span class="math notranslate nohighlight">\(| \le \delta\)</span> holds everywhere by
-construction.</p>
+Every archived point extends the stored piecewise-linear approximation by one segment.</p>
+<p>Notice what the doors actually promise: <em>some</em> line from the pivot stays within δ of every
+reading. The historian does not store that line. It stores reading 5 itself, and the
+reconstruction is the straight line from the pivot to that raw value, with slope
+<span class="math notranslate nohighlight">\(c = (y_k - y_0)/(t_k - t_0)\)</span> for archived reading <span class="math notranslate nohighlight">\(k\)</span>. That chord sits at the center of
+reading <span class="math notranslate nohighlight">\(k\)</span>’s own slope interval, which has half-width <span class="math notranslate nohighlight">\(\delta/(t_k - t_0)\)</span>, and the
+surviving wedge lies somewhere inside that interval, so <span class="math notranslate nohighlight">\(c\)</span> differs from a good slope by
+at most <span class="math notranslate nohighlight">\(\delta/(t_k - t_0)\)</span>. At any reading <span class="math notranslate nohighlight">\(j\)</span> in the segment the error is therefore</p>
+<div class="math notranslate nohighlight">
+\[\left|\,\text{reconstruction} - y_j\,\right| \;\le\; \delta + \delta\,\frac{t_j - t_0}{t_k - t_0} \;&lt;\; 2\delta .\]</div>
+<p>The bound approaches 2δ for readings just before the archived one, and real signals get
+close to it. Storing a point on the wedge instead of the raw reading would restore the
+δ bound, but it stores values that were never measured and compresses less.</p>
 <p>The full algorithm is only a few lines:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1034,20 +1049,21 @@ construction.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Compression ratio: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">kept</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">x&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Max reconstruction error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">recon</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">  (tolerance δ = </span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">max_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">recon</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Max reconstruction error: </span><span class="si">{</span><span class="n">max_err</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">  (tolerance δ = </span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">, ratio </span><span class="si">{</span><span class="n">max_err</span><span class="o">/</span><span class="n">delta</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compression ratio: 7.8x
-Max reconstruction error: 0.0768  (tolerance δ = 0.0422)
+Max reconstruction error: 0.0768  (tolerance δ = 0.0422, ratio 1.82)
 </pre></div>
 </div>
 <img alt="../_images/3f01284a11960d7710f38cf3eb9d91f68c62f4cdccfa31c09724bc3082a20ee7.png" src="../_images/3f01284a11960d7710f38cf3eb9d91f68c62f4cdccfa31c09724bc3082a20ee7.png" />
 </div>
 </div>
-<p>The archived series follows the original closely while storing a fraction of the points,
-and — by construction — never deviates by more than δ. At plant scale, with tens of
+<p>The archived series follows the original closely while storing a fraction of the points.
+The maximum error is larger than δ but below 2δ, as the bound above predicts. At plant scale, with tens of
 thousands of tags sampled every second, this is the difference between an affordable data
 system and an impossible one — and it means the data you later pull from a historian <em>has
 already been compressed</em>, at a resolution someone chose upstream.</p>
